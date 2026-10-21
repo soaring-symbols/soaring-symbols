@@ -144,6 +144,10 @@
             "colors": {
                 "icon": [
                     "#a48c5d"
+                ],
+                "logo": [
+                    "#9b804d",
+                    "#253168"
                 ]
             }
         },
@@ -184,6 +188,10 @@
             "colors": {
                 "icon": [
                     "#ed1c24"
+                ],
+                "logo": [
+                    "#e60012",
+                    "#000"
                 ]
             }
         },
@@ -200,6 +208,10 @@
             "colors": {
                 "icon": [
                     "#009eb3"
+                ],
+                "logo": [
+                    "#009eb3",
+                    "#062647"
                 ]
             }
         },
@@ -709,6 +721,12 @@
                     "#0093d0",
                     "#fff",
                     "#ed1b2f"
+                ],
+                "logo": [
+                    "#0093d0",
+                    "#fff",
+                    "#ed1b2f",
+                    "#002052"
                 ]
             }
         },
@@ -749,6 +767,11 @@
                 "icon": [
                     "#98002e",
                     "#e31837"
+                ],
+                "logo": [
+                    "#98002e",
+                    "#e31837",
+                    "#003d79"
                 ]
             }
         },
@@ -855,6 +878,11 @@
                 "icon": [
                     "#d06537",
                     "#409e54"
+                ],
+                "logo": [
+                    "#00a64f",
+                    "#fff",
+                    "#f0451c"
                 ]
             }
         },
@@ -889,6 +917,9 @@
             "colors": {
                 "icon": [
                     "#473729"
+                ],
+                "logo": [
+                    "#2c1e16"
                 ]
             }
         },
@@ -1369,6 +1400,28 @@
         "slug": "oman-air"
     },
     {
+        "name": "Pacific Airlines",
+        "iata": "BL",
+        "icao": "PIC",
+        "country": "VN",
+        "flag_carrier": false,
+        "website": "https://www.pacificairlines.com",
+        "branding": {
+            "primary_color": "#324471",
+            "colors": {
+                "icon": [
+                    "#f79633",
+                    "#324471"
+                ],
+                "logo": [
+                    "#f79633",
+                    "#324471"
+                ]
+            }
+        },
+        "slug": "pacific-airlines"
+    },
+    {
         "name": "Paranair",
         "iata": "ZP",
         "icao": "AZP",
@@ -1440,7 +1493,13 @@
         "alliance": "oneworld",
         "branding": {
             "primary_color": "",
-            "colors": {}
+            "colors": {
+                "logo": [
+                    "#e40000",
+                    "#fff",
+                    "#323232"
+                ]
+            }
         },
         "slug": "qantas"
     },
@@ -1565,6 +1624,9 @@
             "colors": {
                 "icon": [
                     "#0a6937"
+                ],
+                "logo": [
+                    "#006631"
                 ]
             }
         },
@@ -1804,6 +1866,11 @@
                     "#fc0",
                     "#306",
                     "#c09"
+                ],
+                "logo": [
+                    "#f5c300",
+                    "#370e62",
+                    "#b6007d"
                 ]
             }
         },
