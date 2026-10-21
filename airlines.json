@@ -194,6 +194,27 @@
         "slug": "air-berlin"
     },
     {
+        "name": "Air Cambodia",
+        "iata": "K6",
+        "icao": "KHV",
+        "country": "KH",
+        "flag_carrier": true,
+        "website": "https://www.aircambodia.com",
+        "vectorized": true,
+        "branding": {
+            "primary_color": "#002f6c",
+            "colors": {
+                "icon": [
+                    "#002f6c"
+                ],
+                "logo": [
+                    "#002f6c"
+                ]
+            }
+        },
+        "slug": "air-cambodia"
+    },
+    {
         "name": "Air Canada",
         "iata": "AC",
         "icao": "ACA",
