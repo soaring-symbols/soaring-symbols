@@ -592,6 +592,27 @@
         "slug": "atlantic-airways"
     },
     {
+        "name": "Atlas Air",
+        "iata": "5Y",
+        "icao": "GTI",
+        "country": "US",
+        "website": "https://www.atlasair.com",
+        "branding": {
+            "primary_color": "#002663",
+            "colors": {
+                "icon": [
+                    "#002663",
+                    "#ffb608"
+                ],
+                "logo": [
+                    "#ffb608",
+                    "#002663"
+                ]
+            }
+        },
+        "slug": "atlas-air"
+    },
+    {
         "name": "Austrian Airlines",
         "iata": "OS",
         "icao": "AUA",
