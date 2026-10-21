@@ -1857,6 +1857,27 @@
         "slug": "malaysia-airlines"
     },
     {
+        "name": "Myanmar Airways International",
+        "iata": "8M",
+        "icao": "MMA",
+        "country": "MM",
+        "website": "https://www.maiair.com",
+        "branding": {
+            "primary_color": "#015396",
+            "colors": {
+                "icon": [
+                    "#fee407",
+                    "#015396"
+                ],
+                "logo": [
+                    "#fee407",
+                    "#015396"
+                ]
+            }
+        },
+        "slug": "myanmar-airways-international"
+    },
+    {
         "name": "Myanmar National Airlines",
         "iata": "UB",
         "icao": "UBA",
