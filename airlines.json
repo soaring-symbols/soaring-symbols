@@ -1235,6 +1235,23 @@
         "slug": "ewa-air"
     },
     {
+        "name": "FedEx Express",
+        "iata": "FX",
+        "icao": "FDX",
+        "country": "US",
+        "website": "https://www.fedex.com",
+        "branding": {
+            "primary_color": "#4d148c",
+            "colors": {
+                "logo": [
+                    "#ff6200",
+                    "#4d148c"
+                ]
+            }
+        },
+        "slug": "fedex-express"
+    },
+    {
         "name": "Fiji Airways",
         "iata": "FJ",
         "icao": "FJI",
