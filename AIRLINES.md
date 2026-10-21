@@ -128,6 +128,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Transavia](https://www.transavia.com) | NL | HV | TRA |  | ![#00d66c](https://place-hold.it/10x10/00d66c/00d66c.png) | ✅ | ✅ |  |
 | [Turkish Airlines](https://www.turkishairlines.com) 🇹🇷 | TR | TK | THY | Star Alliance | ![#c90019](https://place-hold.it/10x10/c90019/c90019.png) | ✅ | ✅ |  |
 | [United Airlines](https://www.united.com) | US | UA | UAL | Star Alliance | ![#1414d2](https://place-hold.it/10x10/1414d2/1414d2.png) | ✅ | ✅ |  |
+| [UPS Airlines](https://www.ups.com) | US | 5X | UPS |  | ![#330000](https://place-hold.it/10x10/330000/330000.png) | ✅ | ✅ |  |
 | [VietJet Air](https://www.vietjetair.com) | VN | VJ | VJC |  | ![#e12127](https://place-hold.it/10x10/e12127/e12127.png) |  | ✅ |  |
 | [Vietnam Airlines](https://www.vietnamairlines.com) 🇻🇳 | VN | VN | HVN | SkyTeam | ![#d99e09](https://place-hold.it/10x10/d99e09/d99e09.png) | ✅ | ✅ |  |
 | [Vietravel Airlines](https://www.vietravelairlines.com) | VN | VU | VAG |  | ![#0066b3](https://place-hold.it/10x10/0066b3/0066b3.png) | ✅ | ✅ |  |

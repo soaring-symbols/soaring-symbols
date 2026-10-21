@@ -2499,6 +2499,27 @@
         "slug": "united-airlines"
     },
     {
+        "name": "UPS Airlines",
+        "iata": "5X",
+        "icao": "UPS",
+        "country": "US",
+        "website": "https://www.ups.com",
+        "branding": {
+            "primary_color": "#330000",
+            "colors": {
+                "icon": [
+                    "#330000",
+                    "#ffbe00"
+                ],
+                "logo": [
+                    "#330000",
+                    "#ffbe00"
+                ]
+            }
+        },
+        "slug": "ups-airlines"
+    },
+    {
         "name": "VietJet Air",
         "iata": "VJ",
         "icao": "VJC",
