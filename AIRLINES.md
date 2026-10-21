@@ -137,6 +137,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Volaris](https://www.volaris.com) | MX | Y4 | VOI |  | ![#5b2d82](https://place-hold.it/10x10/5b2d82/5b2d82.png) | ☑️ | ☑️ |  |
 | [Volotea](https://www.volotea.com) | ES | V7 | VOE |  | ![#ed164a](https://place-hold.it/10x10/ed164a/ed164a.png) | ✅ | ✅ |  |
 | [Vueling](https://www.vueling.com) | ES | VY | VLG |  | ![#ffcc00](https://place-hold.it/10x10/ffcc00/ffcc00.png) |  | ☑️ |  |
+| [West Air](https://www.westair.cn) | CN | PN | CHB |  | ![#602a7a](https://place-hold.it/10x10/602a7a/602a7a.png) | ✅ | ✅ |  |
 | [WestJet](https://www.westjet.com) | CA | WS | WJA |  | ![#00aaa6](https://place-hold.it/10x10/00aaa6/00aaa6.png) | ✅ | ✅ |  |
 | [Wizz Air](https://www.wizzair.com) | HU | W6 | WZZ |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
 | Wizz Air Abu Dhabi | AE | 5W | WAZ |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
