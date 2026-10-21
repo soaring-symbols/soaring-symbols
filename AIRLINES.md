@@ -71,6 +71,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Frontier Airlines](https://www.flyfrontier.com) | US | F9 | FFT |  | ![#008c44](https://place-hold.it/10x10/008c44/008c44.png) | ✅ | ✅ |  |
 | [Garuda Indonesia](https://www.garuda-indonesia.com) 🇮🇩 | ID | GA | GIA | SkyTeam | ![#002560](https://place-hold.it/10x10/002560/002560.png) | ✅ | ✅ |  |
 | [GOL](https://www.voegol.com.br) | BR | G3 | GLO |  | ![#f58220](https://place-hold.it/10x10/f58220/f58220.png) | ☑️ | ☑️ |  |
+| [GX Airlines](https://www.gxairlines.com) | CN | GX | CBG |  | ![#da3731](https://place-hold.it/10x10/da3731/da3731.png) |  | ✅ |  |
 | [Hainan Airlines](https://www.hainanairlines.com) | CN | HU | CHH |  | ![#d71920](https://place-hold.it/10x10/d71920/d71920.png) | ✅ | ✅ |  |
 | [Hawaiian Airlines](https://www.hawaiianairlines.com) | US | HA | HAL | oneworld | ![#4e2582](https://place-hold.it/10x10/4e2582/4e2582.png) | ☑️ | ☑️ |  |
 | [HK Express](https://www.hkexpress.com) | HK | UO | HKE |  | ![#702b91](https://place-hold.it/10x10/702b91/702b91.png) | ✅ | ✅ |  |
