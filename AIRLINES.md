@@ -6,6 +6,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | [Aegean Airlines](https://en.aegeanair.com) 🇬🇷 | GR | A3 | AEE | Star Alliance | ![#002677](https://place-hold.it/10x10/002677/002677.png) | ✅ | ✅ |  |
 | [Aer Lingus](https://www.aerlingus.com) 🇮🇪 | IE | EI | EIN |  | ![#006472](https://place-hold.it/10x10/006472/006472.png) | ☑️ | ☑️ |  |
+| [AeroLogic](https://www.aerologic.aero) | DE | 3S | BOX |  | ![#ffcc00](https://place-hold.it/10x10/ffcc00/ffcc00.png) | ✅ | ✅ |  |
 | [Aerolíneas Argentinas](https://www.aerolineas.com.ar) 🇦🇷 | AR | AR | ARG | SkyTeam | ![#0080be](https://place-hold.it/10x10/0080be/0080be.png) | ✅ | ✅ |  |
 | [Aeroméxico](https://www.aeromexico.com) 🇲🇽 | MX | AM | AMX | SkyTeam | ![#020c41](https://place-hold.it/10x10/020c41/020c41.png) | ✅ | ✅ |  |
 | [Air Albania](https://www.airalbania.com.al) 🇦🇱 | AL | ZB | ABN |  | ![#ce1f2e](https://place-hold.it/10x10/ce1f2e/ce1f2e.png) | ✅ | ✅ |  |

@@ -47,6 +47,27 @@
         "slug": "aer-lingus"
     },
     {
+        "name": "AeroLogic",
+        "iata": "3S",
+        "icao": "BOX",
+        "country": "DE",
+        "website": "https://www.aerologic.aero",
+        "branding": {
+            "primary_color": "#ffcc00",
+            "colors": {
+                "icon": [
+                    "#5f6a6d",
+                    "#ffcc00"
+                ],
+                "logo": [
+                    "#ffcc00",
+                    "#5f6a6d"
+                ]
+            }
+        },
+        "slug": "aerologic"
+    },
+    {
         "name": "Aerolíneas Argentinas",
         "iata": "AR",
         "icao": "ARG",
