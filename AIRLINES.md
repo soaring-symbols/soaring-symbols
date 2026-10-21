@@ -19,6 +19,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Air Europa](https://www.aireuropa.com) | ES | UX | AEA | SkyTeam | ![#006fde](https://place-hold.it/10x10/006fde/006fde.png) | ✅ | ✅ |  |
 | [Air France](https://airfrance.com) 🇫🇷 | FR | AF | AFR | SkyTeam | ![#051039](https://place-hold.it/10x10/051039/051039.png) | ✅ | ✅ |  |
 | [Air India](https://www.airindia.com) 🇮🇳 | IN | AI | AIC | Star Alliance | ![#da0e29](https://place-hold.it/10x10/da0e29/da0e29.png) | ✅ | ✅ |  |
+| [Air Macau](https://www.airmacau.com.mo) 🇲🇴 | MO | NX | AMU |  | ![#312667](https://place-hold.it/10x10/312667/312667.png) | ✅ | ✅ |  |
 | [Air Mauritius](https://www.airmauritius.com) 🇲🇺 | MU | MK | MAU | Vanilla Alliance | ![#be2239](https://place-hold.it/10x10/be2239/be2239.png) | ✅ | ✅ |  |
 | [Air New Zealand](https://www.airnewzealand.co.nz) 🇳🇿 | NZ | NZ | ANZ | Star Alliance | ![#000000](https://place-hold.it/10x10/000000/000000.png) | ✅ | ✅ |  |
 | [Air Serbia](https://www.airserbia.com) 🇷🇸 | RS | JU | ASL |  | ![#0e203f](https://place-hold.it/10x10/0e203f/0e203f.png) | ✅ | ✅ |  |

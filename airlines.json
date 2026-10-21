@@ -322,6 +322,30 @@
         "slug": "air-india"
     },
     {
+        "name": "Air Macau",
+        "iata": "NX",
+        "icao": "AMU",
+        "country": "MO",
+        "flag_carrier": true,
+        "website": "https://www.airmacau.com.mo",
+        "branding": {
+            "primary_color": "#312667",
+            "colors": {
+                "icon": [
+                    "#ffffff",
+                    "#312667",
+                    "#e6001f"
+                ],
+                "logo": [
+                    "#ffffff",
+                    "#312667",
+                    "#e6001f"
+                ]
+            }
+        },
+        "slug": "air-macau"
+    },
+    {
         "name": "Air Mauritius",
         "iata": "MK",
         "icao": "MAU",
