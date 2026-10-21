@@ -833,6 +833,33 @@
         "slug": "bangkok-airways"
     },
     {
+        "name": "Batik Air Malaysia",
+        "iata": "OD",
+        "icao": "MXD",
+        "country": "MY",
+        "website": "https://www.batikair.com.my",
+        "branding": {
+            "primary_color": "#c02555",
+            "colors": {
+                "icon": [
+                    "#c02555",
+                    "#ffde00",
+                    "#e7b000",
+                    "#743c12",
+                    "#583319"
+                ],
+                "logo": [
+                    "#c02555",
+                    "#ffde00",
+                    "#e7b000",
+                    "#743c12",
+                    "#583319"
+                ]
+            }
+        },
+        "slug": "batik-air-malaysia"
+    },
+    {
         "name": "British Airways",
         "iata": "BA",
         "icao": "BAW",
