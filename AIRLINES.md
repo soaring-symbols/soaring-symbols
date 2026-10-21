@@ -97,6 +97,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [LOT Polish Airlines](https://www.lot.com) 🇵🇱 | PL | LO | LOT | Star Alliance | ![#252668](https://place-hold.it/10x10/252668/252668.png) | ✅ | ✅ |  |
 | [Lufthansa](https://www.lufthansa.com) 🇩🇪 | DE | LH | DLH | Star Alliance | ![#05164d](https://place-hold.it/10x10/05164d/05164d.png) | ✅ | ✅ |  |
 | [Malaysia Airlines](https://www.malaysiaairlines.com) 🇲🇾 | MY | MH | MAS | oneworld | ![#174887](https://place-hold.it/10x10/174887/174887.png) | ✅ | ✅ |  |
+| [Myanmar Airways International](https://www.maiair.com) | MM | 8M | MMA |  | ![#015396](https://place-hold.it/10x10/015396/015396.png) | ✅ | ✅ |  |
 | [Myanmar National Airlines](https://www.flymna.com) 🇲🇲 | MM | UB | UBA |  | ![#fdb515](https://place-hold.it/10x10/fdb515/fdb515.png) | ✅ | ✅ |  |
 | [Norwegian Air Shuttle](https://www.norwegian.com) | NO | DY | NOZ |  | ![#d81939](https://place-hold.it/10x10/d81939/d81939.png) | ☑️ | ✅ |  |
 | [Oman Air](https://www.omanair.com) 🇴🇲 | OM | WY | OMA | oneworld | ![#b39759](https://place-hold.it/10x10/b39759/b39759.png) | ✅ | ✅ |  |
