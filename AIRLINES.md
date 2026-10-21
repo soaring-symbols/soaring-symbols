@@ -46,6 +46,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Bangkok Airways](https://www.bangkokair.com) | TH | PG | BKP |  | ![#000f8f](https://place-hold.it/10x10/000f8f/000f8f.png) | ✅ | ✅ |  |
 | [British Airways](https://www.britishairways.com) 🇬🇧 | GB | BA | BAW | oneworld | ![#2e5c99](https://place-hold.it/10x10/2e5c99/2e5c99.png) | ✅ | ✅ |  |
 | [Brussels Airlines](https://www.brusselsairlines.com) 🇧🇪 | BE | SN | BEL | Star Alliance | ![#051446](https://place-hold.it/10x10/051446/051446.png) | ✅ | ✅ |  |
+| [Cargolux](https://www.cargolux.com) | LU | CV | CLX |  | ![#cc0033](https://place-hold.it/10x10/cc0033/cc0033.png) | ✅ | ✅ |  |
 | [Cathay Pacific](https://www.cathaypacific.com) 🇭🇰 | HK | CX | CPA | oneworld | ![#005d63](https://place-hold.it/10x10/005d63/005d63.png) | ✅ | ✅ |  |
 | [Cebu Pacific](https://www.cebupacificair.com) | PH | 5J | CEB |  | ![#0096d6](https://place-hold.it/10x10/0096d6/0096d6.png) | ✅ | ✅ |  |
 | [China Airlines](https://www.china-airlines.com) 🇹🇼 | TW | CI | CAL | SkyTeam | ![#2b3088](https://place-hold.it/10x10/2b3088/2b3088.png) | ☑️ | ☑️ |  |
