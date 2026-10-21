@@ -2278,6 +2278,17 @@
         }
     },
     {
+        "name": "Parata Air",
+        "slug": "parata-air",
+        "iata": "WE",
+        "icao": "PTA",
+        "country": "KR",
+        "website": "https://www.parataair.com",
+        "branding": {
+            "primary_color": "#001ee6"
+        }
+    },
+    {
         "name": "Peach Aviation",
         "slug": "peach-aviation",
         "iata": "MM",
