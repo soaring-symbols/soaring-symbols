@@ -87,6 +87,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [KLM](https://www.klm.com) 🇳🇱 | NL | KL | KLM | SkyTeam | ![#009fd9](https://place-hold.it/10x10/009fd9/009fd9.png) | ✅ | ✅ |  |
 | [Korean Air](https://www.koreanair.com) 🇰🇷 | KR | KE | KAL |  | ![#051766](https://place-hold.it/10x10/051766/051766.png) | ✅ | ✅ |  |
 | [Kuwait Airways](https://www.kuwaitairways.com) 🇰🇼 | KW | KU | KAC |  | ![#1c285b](https://place-hold.it/10x10/1c285b/1c285b.png) | ✅ | ✅ |  |
+| [Lao Airlines](https://laoairlines.com) 🇱🇦 | LA | QV | LAO |  | ![#3660ab](https://place-hold.it/10x10/3660ab/3660ab.png) | ✅ | ✅ |  |
 | [LATAM Airlines](https://www.latamairlines.com) | CL | LA | LAN |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
 | LATAM Airlines Brasil | BR | JJ | TAM |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
 | LATAM Airlines Colombia | CO | 4C | ARE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |

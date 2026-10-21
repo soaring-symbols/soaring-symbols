@@ -1722,6 +1722,31 @@
         "slug": "kuwait-airways"
     },
     {
+        "name": "Lao Airlines",
+        "iata": "QV",
+        "icao": "LAO",
+        "country": "LA",
+        "flag_carrier": true,
+        "website": "https://laoairlines.com",
+        "branding": {
+            "primary_color": "#3660ab",
+            "colors": {
+                "icon": [
+                    "#ffffff",
+                    "#ea3639",
+                    "#8dc640"
+                ],
+                "logo": [
+                    "#ffffff",
+                    "#3660ab",
+                    "#ea3639",
+                    "#8dc640"
+                ]
+            }
+        },
+        "slug": "lao-airlines"
+    },
+    {
         "name": "LATAM Airlines",
         "iata": "LA",
         "icao": "LAN",
