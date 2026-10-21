@@ -1584,6 +1584,10 @@
         "branding": {
             "primary_color": "#ff5000",
             "colors": {
+                "icon": [
+                    "#ff5000",
+                    "#ffffff"
+                ],
                 "logo": [
                     "#00a7e1",
                     "#ff5000"
