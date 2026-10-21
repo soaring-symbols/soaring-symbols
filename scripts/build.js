@@ -73,7 +73,7 @@ function transformToCJS(content) {
                 "const { toSlug, getAirlineAssets } = require('./utils')",
             )
             .replace(
-                /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+assert\s*{\s*type:\s*['"]json['"]\s*}/,
+                /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+(?:assert|with)\s*{\s*type:\s*['"]json['"]\s*}/,
                 "const airlines = require('./airlines.json')",
             )
             // Remove fileURLToPath import and __dirname setup since CJS has __dirname built-in
