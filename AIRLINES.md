@@ -35,6 +35,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [American Airlines](https://www.aa.com) | US | AA | AAL | oneworld | ![#0078d2](https://place-hold.it/10x10/0078d2/0078d2.png) | ✅ | ✅ |  |
 | [Asiana Airlines](https://flyasiana.com) | KR | OZ | AAR | Star Alliance | ![#4a4f54](https://place-hold.it/10x10/4a4f54/4a4f54.png) | ✅ | ✅ |  |
 | [Atlantic Airways](https://www.atlanticairways.com) 🇫🇴 | FO | RC | FLI |  | ![#004c93](https://place-hold.it/10x10/004c93/004c93.png) | ✅ | ✅ |  |
+| [Atlas Air](https://www.atlasair.com) | US | 5Y | GTI |  | ![#002663](https://place-hold.it/10x10/002663/002663.png) | ✅ | ✅ |  |
 | [Austrian Airlines](https://www.austrian.com) 🇦🇹 | AT | OS | AUA | Star Alliance | ![#d81824](https://place-hold.it/10x10/d81824/d81824.png) | ✅ | ☑️ |  |
 | [avianca](https://www.avianca.com) 🇨🇴 | CO | AV | AVA | Star Alliance | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
 | Avianca Costa Rica 🇨🇷 | CR | LR | LRC |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
