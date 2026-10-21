@@ -55,6 +55,10 @@
         "branding": {
             "primary_color": "#ffcc00",
             "colors": {
+                "icon": [
+                    "#5f6a6d",
+                    "#ffcc00"
+                ],
                 "logo": [
                     "#ffcc00",
                     "#5f6a6d"
