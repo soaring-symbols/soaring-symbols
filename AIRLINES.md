@@ -106,6 +106,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [United Airlines](https://www.united.com) | US | UA | UAL | Star Alliance | ![#1414d2](https://place-hold.it/10x10/1414d2/1414d2.png) | ✅ | ✅ |  |
 | [VietJet Air](https://www.vietjetair.com) | VN | VJ | VJC |  | ![#e12127](https://place-hold.it/10x10/e12127/e12127.png) |  | ✅ |  |
 | [Vietnam Airlines](https://www.vietnamairlines.com) 🇻🇳 | VN | VN | HVN | SkyTeam | ![#d99e09](https://place-hold.it/10x10/d99e09/d99e09.png) | ✅ | ✅ |  |
+| [Vietravel Airlines](https://www.vietravelairlines.com) | VN | VU | VAG |  | ![#0066b3](https://place-hold.it/10x10/0066b3/0066b3.png) | ✅ | ✅ |  |
 | [Virgin Atlantic](https://www.virginatlantic.com) | GB | VS | VIR | SkyTeam | ![#da0530](https://place-hold.it/10x10/da0530/da0530.png) | ✅ | ✅ |  |
 | [Virgin Australia](https://www.virginaustralia.com) | AU | VA | VOZ |  | ![#e31e23](https://place-hold.it/10x10/e31e23/e31e23.png) | ✅ | ✅ |  |
 | [WestJet](https://www.westjet.com) | CA | WS | WJA |  | ![#00aaa6](https://place-hold.it/10x10/00aaa6/00aaa6.png) | ✅ | ✅ |  |
