@@ -1243,6 +1243,11 @@
         "branding": {
             "primary_color": "#4d148c",
             "colors": {
+                "icon": [
+                    "#4d148c",
+                    "#ffffff",
+                    "#ff6200"
+                ],
                 "logo": [
                     "#ff6200",
                     "#4d148c"

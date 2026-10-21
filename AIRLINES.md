@@ -62,7 +62,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Eurowings](https://www.eurowings.com) | DE | EW | EWG |  | ![#7c2045](https://place-hold.it/10x10/7c2045/7c2045.png) | ✅ | ✅ |  |
 | [EVA Air](https://www.evaair.com) | TW | BR | EVA | Star Alliance | ![#00a64f](https://place-hold.it/10x10/00a64f/00a64f.png) | ☑️ | ✅ | ☑️ |
 | [Ewa Air](https://ewa-air.com) | FR | ZD | EWR |  | ![#e1251b](https://place-hold.it/10x10/e1251b/e1251b.png) |  | ✅ |  |
-| [FedEx Express](https://www.fedex.com) | US | FX | FDX |  | ![#4d148c](https://place-hold.it/10x10/4d148c/4d148c.png) |  | ✅ |  |
+| [FedEx Express](https://www.fedex.com) | US | FX | FDX |  | ![#4d148c](https://place-hold.it/10x10/4d148c/4d148c.png) | ✅ | ✅ |  |
 | [Fiji Airways](https://www.fijiairways.com) 🇫🇯 | FJ | FJ | FJI | oneworld | ![#473729](https://place-hold.it/10x10/473729/473729.png) | ✅ | ✅ |  |
 | [Finnair](http://www.finnair.com) 🇫🇮 | FI | AY | FIN | oneworld | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ |  |
 | [Firefly](https://www.fireflyz.com.my) | MY | FY | FFM |  | ![#ef5713](https://place-hold.it/10x10/ef5713/ef5713.png) | ✅ | ✅ |  |
