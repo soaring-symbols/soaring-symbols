@@ -1576,6 +1576,27 @@
         "slug": "japan-airlines"
     },
     {
+        "name": "Jeju Air",
+        "iata": "7C",
+        "icao": "JJA",
+        "country": "KR",
+        "website": "https://www.jejuair.net",
+        "branding": {
+            "primary_color": "#ff5000",
+            "colors": {
+                "icon": [
+                    "#ff5000",
+                    "#ffffff"
+                ],
+                "logo": [
+                    "#00a7e1",
+                    "#ff5000"
+                ]
+            }
+        },
+        "slug": "jeju-air"
+    },
+    {
         "name": "Jet2.com",
         "iata": "LS",
         "icao": "EXS",
