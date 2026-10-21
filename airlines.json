@@ -2218,6 +2218,25 @@
         "slug": "scoot"
     },
     {
+        "name": "Sichuan Airlines",
+        "iata": "3U",
+        "icao": "CSC",
+        "country": "CN",
+        "website": "https://www.sichuanair.com",
+        "branding": {
+            "primary_color": "#d7000f",
+            "colors": {
+                "icon": [
+                    "#d7000f"
+                ],
+                "logo": [
+                    "#d7000f"
+                ]
+            }
+        },
+        "slug": "sichuan-airlines"
+    },
+    {
         "name": "Singapore Airlines",
         "iata": "SQ",
         "icao": "SIA",
