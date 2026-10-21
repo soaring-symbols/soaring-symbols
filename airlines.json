@@ -1479,6 +1479,26 @@
         "slug": "hk-express"
     },
     {
+        "name": "Hong Kong Air Cargo",
+        "iata": "RH",
+        "icao": "HKC",
+        "country": "HK",
+        "website": "https://www.hkaircargo.com",
+        "branding": {
+            "primary_color": "#e50112",
+            "colors": {
+                "icon": [
+                    "#e50112"
+                ],
+                "logo": [
+                    "#e50112",
+                    "#231815"
+                ]
+            }
+        },
+        "slug": "hong-kong-air-cargo"
+    },
+    {
         "name": "Iberia",
         "iata": "IB",
         "icao": "IBE",
