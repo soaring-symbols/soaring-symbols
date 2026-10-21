@@ -1274,6 +1274,16 @@
         }
     },
     {
+        "name": "Juneyao Air",
+        "iata": "HO",
+        "icao": "DKH",
+        "country": "CN",
+        "website": "https://www.juneyaoair.com",
+        "branding": {
+            "primary_color": "#801c39"
+        }
+    },
+    {
         "name": "Kenya Airways",
         "iata": "KQ",
         "icao": "KQA",
