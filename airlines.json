@@ -1964,6 +1964,25 @@
         "slug": "paranair"
     },
     {
+        "name": "Parata Air",
+        "iata": "WE",
+        "icao": "PTA",
+        "country": "KR",
+        "website": "https://www.parataair.com",
+        "branding": {
+            "primary_color": "#001ee6",
+            "colors": {
+                "icon": [
+                    "#001ee6"
+                ],
+                "logo": [
+                    "#001ee6"
+                ]
+            }
+        },
+        "slug": "parata-air"
+    },
+    {
         "name": "Peach Aviation",
         "iata": "MM",
         "icao": "APJ",
