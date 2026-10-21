@@ -464,6 +464,27 @@
         "slug": "airbaltic"
     },
     {
+        "name": "AirZeta",
+        "iata": "KJ",
+        "icao": "AIH",
+        "country": "KR",
+        "website": "https://www.airzetacargo.com",
+        "branding": {
+            "primary_color": "#1e388d",
+            "colors": {
+                "icon": [
+                    "#ee3e60",
+                    "#1e388d"
+                ],
+                "logo": [
+                    "#ee3e60",
+                    "#1e388d"
+                ]
+            }
+        },
+        "slug": "airzeta"
+    },
+    {
         "name": "Akasa Air",
         "iata": "QP",
         "icao": "AKJ",
