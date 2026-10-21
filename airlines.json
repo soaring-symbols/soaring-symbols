@@ -1640,6 +1640,28 @@
         "slug": "jetstar"
     },
     {
+        "name": "K-Mile Air",
+        "iata": "8K",
+        "icao": "KMI",
+        "country": "TH",
+        "website": "https://k-mile.co.th",
+        "branding": {
+            "primary_color": "#0053a1",
+            "colors": {
+                "icon": [
+                    "#0053a1",
+                    "#ffd300",
+                    "#ffffff"
+                ],
+                "logo": [
+                    "#0053a1",
+                    "#ffd300"
+                ]
+            }
+        },
+        "slug": "k-mile-air"
+    },
+    {
         "name": "Kenya Airways",
         "iata": "KQ",
         "icao": "KQA",
