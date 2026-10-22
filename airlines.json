@@ -1640,6 +1640,26 @@
         "slug": "jetstar"
     },
     {
+        "name": "Juneyao Air",
+        "iata": "HO",
+        "icao": "DKH",
+        "country": "CN",
+        "website": "https://www.juneyaoair.com",
+        "branding": {
+            "primary_color": "#791d4a",
+            "colors": {
+                "icon": [
+                    "#c5996b"
+                ],
+                "logo": [
+                    "#c5996b",
+                    "#791d4a"
+                ]
+            }
+        },
+        "slug": "juneyao-air"
+    },
+    {
         "name": "Kenya Airways",
         "iata": "KQ",
         "icao": "KQA",
