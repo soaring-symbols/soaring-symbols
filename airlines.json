@@ -877,6 +877,26 @@
         "slug": "brussels-airlines"
     },
     {
+        "name": "Cargolux",
+        "iata": "CV",
+        "icao": "CLX",
+        "country": "LU",
+        "website": "https://www.cargolux.com",
+        "branding": {
+            "primary_color": "#cc0033",
+            "colors": {
+                "icon": [
+                    "#cc0033"
+                ],
+                "logo": [
+                    "#cc0033",
+                    "#000000"
+                ]
+            }
+        },
+        "slug": "cargolux"
+    },
+    {
         "name": "Cathay Pacific",
         "iata": "CX",
         "icao": "CPA",
