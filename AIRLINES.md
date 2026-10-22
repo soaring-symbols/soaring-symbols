@@ -48,6 +48,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Brussels Airlines](https://www.brusselsairlines.com) 🇧🇪 | BE | SN | BEL | Star Alliance | ![#051446](https://place-hold.it/10x10/051446/051446.png) | ✅ | ✅ |  |
 | [Cathay Pacific](https://www.cathaypacific.com) 🇭🇰 | HK | CX | CPA | oneworld | ![#005d63](https://place-hold.it/10x10/005d63/005d63.png) | ✅ | ✅ |  |
 | [Cebu Pacific](https://www.cebupacificair.com) | PH | 5J | CEB |  | ![#0096d6](https://place-hold.it/10x10/0096d6/0096d6.png) | ✅ | ✅ |  |
+| [Chengdu Airlines](https://www.cdal.com.cn) | CN | EU | UEA |  | ![#d82128](https://place-hold.it/10x10/d82128/d82128.png) | ✅ | ✅ |  |
 | [China Airlines](https://www.china-airlines.com) 🇹🇼 | TW | CI | CAL | SkyTeam | ![#2b3088](https://place-hold.it/10x10/2b3088/2b3088.png) | ☑️ | ☑️ |  |
 | [China Eastern Airlines](https://www.ceair.com) | CN | MU | CES | SkyTeam | ![#1a4fa3](https://place-hold.it/10x10/1a4fa3/1a4fa3.png) | ☑️ | ☑️ |  |
 | [China Southern Airlines](https://www.csair.com) | CN | CZ | CSN |  | ![#0093D0](https://place-hold.it/10x10/0093D0/0093D0.png) | ☑️ | ✅ | ☑️ |

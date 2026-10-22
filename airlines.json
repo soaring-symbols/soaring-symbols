@@ -920,6 +920,27 @@
         "slug": "cebu-pacific"
     },
     {
+        "name": "Chengdu Airlines",
+        "iata": "EU",
+        "icao": "UEA",
+        "country": "CN",
+        "website": "https://www.cdal.com.cn",
+        "vectorized": true,
+        "branding": {
+            "primary_color": "#d82128",
+            "colors": {
+                "icon": [
+                    "#deae13"
+                ],
+                "logo": [
+                    "#deae13",
+                    "#d82128"
+                ]
+            }
+        },
+        "slug": "chengdu-airlines"
+    },
+    {
         "name": "China Airlines",
         "iata": "CI",
         "icao": "CAL",
