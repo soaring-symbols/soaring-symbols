@@ -102,6 +102,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Oman Air](https://www.omanair.com) 🇴🇲 | OM | WY | OMA | oneworld | ![#b39759](https://place-hold.it/10x10/b39759/b39759.png) | ✅ | ✅ |  |
 | [Pacific Airlines](https://www.pacificairlines.com) | VN | BL | PIC |  | ![#324471](https://place-hold.it/10x10/324471/324471.png) | ✅ | ✅ |  |
 | [Paranair](https://www.paranair.com) | PY | ZP | AZP |  | ![#0037a2](https://place-hold.it/10x10/0037a2/0037a2.png) | ✅ | ✅ |  |
+| [Parata Air](https://www.parataair.com) | KR | WE | PTA |  | ![#001ee6](https://place-hold.it/10x10/001ee6/001ee6.png) | ✅ | ✅ |  |
 | [Peach Aviation](https://www.flypeach.com) | JP | MM | APJ |  | ![#9b308c](https://place-hold.it/10x10/9b308c/9b308c.png) |  | ✅ |  |
 | [Pegasus Airlines](https://www.flypgs.com) | TR | PC | PGT |  | ![#fdb913](https://place-hold.it/10x10/fdb913/fdb913.png) | ✅ | ✅ |  |
 | [Philippine Airlines](https://www.philippineairlines.com) 🇵🇭 | PH | PR | PAL |  | ![#001f60](https://place-hold.it/10x10/001f60/001f60.png) | ✅ | ✅ |  |
