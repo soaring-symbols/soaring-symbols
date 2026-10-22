@@ -2218,6 +2218,26 @@
         "slug": "scoot"
     },
     {
+        "name": "Shandong Airlines",
+        "iata": "SC",
+        "icao": "CDG",
+        "country": "CN",
+        "website": "https://www.sda.cn",
+        "branding": {
+            "primary_color": "#1e406c",
+            "colors": {
+                "icon": [
+                    "#1e406c"
+                ],
+                "logo": [
+                    "#1e406c",
+                    "#eb6127"
+                ]
+            }
+        },
+        "slug": "shandong-airlines"
+    },
+    {
         "name": "Singapore Airlines",
         "iata": "SQ",
         "icao": "SIA",
