@@ -13,6 +13,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Air Arabia](https://www.airarabia.com) | AE | G9 | ABY |  | ![#ed1b48](https://place-hold.it/10x10/ed1b48/ed1b48.png) | ✅ | ✅ |  |
 | [Air Astana](https://airastana.com) 🇰🇿 | KZ | KC | KZR |  | ![#a48c5d](https://place-hold.it/10x10/a48c5d/a48c5d.png) | ✅ | ✅ |  |
 | [Air Berlin](https://www.airberlin.com) | DE | AB | BER | oneworld | ![#cc2234](https://place-hold.it/10x10/cc2234/cc2234.png) | ✅ | ✅ |  |
+| [Air Cambodia](https://www.aircambodia.com) 🇰🇭 | KH | K6 | KHV |  | ![#002f6c](https://place-hold.it/10x10/002f6c/002f6c.png) | ✅ | ✅ |  |
 | [Air Canada](https://www.aircanada.com) 🇨🇦 | CA | AC | ACA | Star Alliance | ![#f01428](https://place-hold.it/10x10/f01428/f01428.png) | ✅ | ✅ |  |
 | [Air China](https://www.airchina.com) 🇨🇳 | CN | CA | CCA | Star Alliance | ![#ED1C24](https://place-hold.it/10x10/ED1C24/ED1C24.png) | ✅ | ✅ |  |
 | [Air Dolomiti](https://www.airdolomiti.eu) | IT | EN | DLA |  | ![#009eb3](https://place-hold.it/10x10/009eb3/009eb3.png) | ✅ | ✅ |  |
