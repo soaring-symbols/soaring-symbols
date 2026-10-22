@@ -83,7 +83,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [JetBlue Airways](https://www.jetblue.com) | US | B6 | JBU |  | ![#003876](https://place-hold.it/10x10/003876/003876.png) |  | ✅ |  |
 | [Jetstar](https://www.jetstar.com) | AU | JQ | JST |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
 | Jetstar Japan | JP | GK | JJP |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
-| [Juneyao Air](https://www.juneyaoair.com) | CN | HO | DKH |  | ![#801c39](https://place-hold.it/10x10/801c39/801c39.png) | ✅ | ✅ |  |
+| [Juneyao Air](https://www.juneyaoair.com) | CN | HO | DKH |  | ![#791d4a](https://place-hold.it/10x10/791d4a/791d4a.png) | ✅ | ✅ |  |
 | [Kenya Airways](https://www.kenya-airways.com) 🇰🇪 | KE | KQ | KQA | SkyTeam | ![#ed1c24](https://place-hold.it/10x10/ed1c24/ed1c24.png) | ✅ | ✅ |  |
 | [KLM](https://www.klm.com) 🇳🇱 | NL | KL | KLM | SkyTeam | ![#009fd9](https://place-hold.it/10x10/009fd9/009fd9.png) | ✅ | ✅ |  |
 | [Korean Air](https://www.koreanair.com) 🇰🇷 | KR | KE | KAL |  | ![#051766](https://place-hold.it/10x10/051766/051766.png) | ✅ | ✅ |  |

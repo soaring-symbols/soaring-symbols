@@ -1646,14 +1646,14 @@
         "country": "CN",
         "website": "https://www.juneyaoair.com",
         "branding": {
-            "primary_color": "#801c39",
+            "primary_color": "#791d4a",
             "colors": {
                 "icon": [
-                    "#c09669"
+                    "#c5996b"
                 ],
                 "logo": [
-                    "#c09669",
-                    "#801c39"
+                    "#c5996b",
+                    "#791d4a"
                 ]
             }
         },
