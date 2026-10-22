@@ -1417,6 +1417,26 @@
         "slug": "gol"
     },
     {
+        "name": "GX Airlines",
+        "iata": "GX",
+        "icao": "CBG",
+        "country": "CN",
+        "website": "https://www.gxairlines.com",
+        "branding": {
+            "primary_color": "#da3731",
+            "colors": {
+                "icon": [
+                    "#da3731",
+                    "#ffe900"
+                ],
+                "logo": [
+                    "#da3731"
+                ]
+            }
+        },
+        "slug": "gx-airlines"
+    },
+    {
         "name": "Hainan Airlines",
         "iata": "HU",
         "icao": "CHH",
