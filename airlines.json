@@ -2218,6 +2218,27 @@
         "slug": "scoot"
     },
     {
+        "name": "Shenzhen Airlines",
+        "iata": "ZH",
+        "icao": "CSZ",
+        "country": "CN",
+        "website": "https://www.shenzhenair.com",
+        "alliance": "Star Alliance",
+        "branding": {
+            "primary_color": "#cc0100",
+            "colors": {
+                "icon": [
+                    "#cc0100"
+                ],
+                "logo": [
+                    "#cc0100",
+                    "#000000"
+                ]
+            }
+        },
+        "slug": "shenzhen-airlines"
+    },
+    {
         "name": "Singapore Airlines",
         "iata": "SQ",
         "icao": "SIA",
