@@ -118,6 +118,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Singapore Airlines](https://www.singaporeair.com) 🇸🇬 | SG | SQ | SIA | Star Alliance | ![#232f67](https://place-hold.it/10x10/232f67/232f67.png) | ✅ | ✅ |  |
 | [Southwest Airlines](https://www.southwest.com) | US | WN | SWA |  | ![#304cb2](https://place-hold.it/10x10/304cb2/304cb2.png) | ✅ | ☑️ |  |
 | [Spirit Airlines](https://www.spirit.com) | US | NK | NKS |  | ![#ffec00](https://place-hold.it/10x10/ffec00/ffec00.png) |  | ✅ |  |
+| [Spring Airlines](https://www.ch.com) | CN | 9C | CQH |  | ![#008856](https://place-hold.it/10x10/008856/008856.png) | ✅ | ✅ |  |
 | [Starlux Airlines](https://www.starlux-airlines.com) | TW | JX | SJX |  | ![#996a4e](https://place-hold.it/10x10/996a4e/996a4e.png) | ✅ | ✅ |  |
 | [Sun PhuQuoc Airways](https://www.sunphuquocairways.com) | VN | 9G | SPQ |  | ![#ca1c2a](https://place-hold.it/10x10/ca1c2a/ca1c2a.png) | ✅ | ✅ |  |
 | [SWISS](https://www.swiss.com) 🇨🇭 | CH | LX | SWR | Star Alliance | ![#cf0a2c](https://place-hold.it/10x10/cf0a2c/cf0a2c.png) | ✅ | ✅ |  |
