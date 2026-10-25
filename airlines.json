@@ -2499,6 +2499,25 @@
         "slug": "united-airlines"
     },
     {
+        "name": "VASCO",
+        "iata": "0V",
+        "icao": "VFC",
+        "country": "VN",
+        "website": "https://www.vasco.com.vn",
+        "branding": {
+            "primary_color": "#0099cc",
+            "colors": {
+                "icon": [
+                    "#0099cc"
+                ],
+                "logo": [
+                    "#0099cc"
+                ]
+            }
+        },
+        "slug": "vasco"
+    },
+    {
         "name": "VietJet Air",
         "iata": "VJ",
         "icao": "VJC",
