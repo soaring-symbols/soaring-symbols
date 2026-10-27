@@ -33,11 +33,19 @@ pnpm add soaring-symbols
 bun add soaring-symbols
 ```
 
+```swift
+// Swift Package Manager
+dependencies: [
+    .package(url: "https://github.com/anomaddev/soaring-symbols.git", branch: "main"),
+]
+```
+
 ## Ecosystem
 
 | Tool / Integration | Author |
 | :-- | :-- |
 | [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 /> | [anhthang]|
+| [Swift Package](https://github.com/anomaddev/soaring-symbols) <img src="https://cdn.simpleicons.org/swift/000/F05138" alt="Swift" align=left width=24 height=24 /> | [anomaddev]|
 | [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 /> | [anhthang]|
 
 ## Usage
@@ -117,6 +125,32 @@ const content = getAssetContent('VN')
 
 For a full list of functions and the data structures they return, please see the [API Reference](./API.md).
 
+## Swift Package
+
+The same catalog is available to iOS, macOS, tvOS, and watchOS apps. Public types are prefixed with `Soaring` so they do not collide with an `Airline` type from another module.
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/anomaddev/soaring-symbols.git", branch: "main"),
+]
+```
+
+```swift
+import SoaringSymbols
+
+SoaringAirline.Logo("VN", size: 64)
+
+SoaringAirline.Icon("BA", monochrome: true)
+    .foregroundStyle(.primary)
+
+let airline = SoaringAirline.find("VN")
+airline?.name
+airline?.pngData(for: .logo)
+airline?.uiImage() // iOS, tvOS, and watchOS. macOS uses nsImage().
+```
+
+`SoaringAirline.find` accepts an IATA code, ICAO code, name, or slug. `SoaringAirline.Icon` uses the logo when an airline has no icon. Monochrome images are template images, so they take a tint. Color images keep the airline's colors. Logos are 512×512 PNGs with transparency.
+
 ## Contributing
 
 Contributions are welcome!
@@ -128,3 +162,4 @@ Whether through adding new logos, improving existing ones, or suggesting feature
 This repository is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
 
 [anhthang]: https://github.com/anhthang
+[anomaddev]: https://github.com/anomaddev

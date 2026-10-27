@@ -14,6 +14,7 @@ Soaring Symbols is an npm package (`soaring-symbols`) that ships a curated colle
 - `svg-validator.js` — browser-safe validator exported as `soaring-symbols/svg-validator`; it imports `scripts/lint/validators.js`, which the build inlines.
 - `scripts/` — tooling: `build.js`, `generate.js`, `lint-svg.js` (+ rules in `scripts/lint/`), `test.js`, `validate-assets.js`, `release.js`.
 - `AIRLINES.md` — **generated** by `scripts/generate.js`; never edit by hand.
+- `Package.swift` and `swift/` — Swift package for Apple apps. The public type is `SoaringAirline` (not `Airline`). `Catalog.swift`, `swift/png-manifest.json`, and `swift/Sources/SoaringSymbols/Resources/` are **generated** by `scripts/generate-swift.js`.
 - `dist/` — build output (git-ignored), the only code that is published.
 
 ## Commands
@@ -25,7 +26,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 | `npm run optimize -- <files>`     | Optimize SVGs in place with the project's SVGO config (`svgo.config.mjs`).                         |
 | `npm run lint:svg`                | Lint all SVGs (dry run, reports only).                                                             |
 | `node scripts/lint-svg.js --fix`  | Lint and rewrite fixable SVG issues in place.                                                      |
-| `npm run generate`                | Re-sort `airlines.json`, recompute `slug` and `branding.colors`, regenerate `AIRLINES.md`.         |
+| `npm run generate`                | Re-sort `airlines.json`, recompute `slug` and `branding.colors`, regenerate `AIRLINES.md` and the Swift package. |
 | `npm run build`                   | `lint:svg` + `generate` (via `prebuild`), then build `dist/` (ESM, CJS, validator bundle, assets). |
 | `npm test`                        | Build, then smoke-test `dist/index.cjs`.                                                           |
 | `npm run lint` / `npm run format` | ESLint / Prettier.                                                                                 |
@@ -35,13 +36,13 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 
 1. Put the SVGs in `assets/<slug>/` following `CONTRIBUTING.md`: optimized with `npm run optimize` (never SVGO's defaults, which drop `role="img"`), `role="img"`, `xmlns`, `<title>Airline Name</title>` as the first child, `viewBox="0 0 64 64"` for logos and `0 0 24 24` for icons and tails, hex colors only, no `transform`, no scripts.
 2. Add the base entry to `airlines.json` (`name`, `iata`, `icao`, `country`, `website`, `branding.primary_color`, plus optional fields from `CONTRIBUTING.md`).
-3. Run `node scripts/lint-svg.js --fix`, then `npm run generate`, and commit the SVGs together with the regenerated `airlines.json` and `AIRLINES.md`.
+3. Run `node scripts/lint-svg.js --fix`, then `npm run generate`, and commit the SVGs together with the regenerated `airlines.json`, `AIRLINES.md`, and Swift package (`swift/` plus `Package.swift` when it changed). Rendering changed SVGs to PNG needs `rsvg-convert` (`librsvg`).
 4. Run `npm test`.
 
 ## Gotchas
 
 - `lint-svg.js` always exits 0, even when it finds issues — read its output instead of trusting the exit code. Some rules (e.g. one `<path>` per single-color SVG) only warn and are never changed by `--fix`. Files that intentionally break the rules are listed in `EXCLUDE_FILES` at the top of the script.
-- `generate.js` rewrites `airlines.json` from scratch (4-space JSON) — run it rather than hand-editing `slug` or `branding.colors`. `npm run build` / `npm test` also run it, so a build can leave the working tree dirty.
+- `generate.js` rewrites `airlines.json` from scratch (4-space JSON) and refreshes the Swift package — run it rather than hand-editing `slug`, `branding.colors`, `Catalog.swift`, or the PNG resources. `npm run build` / `npm test` also run it, so a build can leave the working tree dirty. PNG renders are skipped when `swift/png-manifest.json` already matches the SVG bytes.
 - The CJS build is produced by regex replacements in `scripts/build.js` (`transformToCJS`). Changing the imports or exports of `index.js` usually means updating those regexes too; check `dist/index.cjs` after building.
 - `svg-validator.js` must stay free of Node-only imports, and every helper it uses from `scripts/lint/validators.js` must be a top-level `export function` so the build can inline it.
 

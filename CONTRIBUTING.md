@@ -101,9 +101,10 @@ This behavior is detected automatically by the `generate.js` script when it insp
 2. Add the new airline's base information to the `airlines.json` file, ensuring the list remains sorted alphabetically.
 3. **You must run the `generate.js` script** (`npm run generate` or `node generate.js`). This script is essential as it will:
     - Analyze your new SVG files.
-    - **Automatically generate the `branding.assets` metadata.**
+    - **Automatically generate the `branding.colors` metadata.**
     - Update the `AIRLINES.md` documentation file.
-4. Submit a pull request that includes the new SVG files and the updated `airlines.json` and `AIRLINES.md` files. Please provide a clear description of your changes.
+    - Refresh the Swift package (`Catalog.swift` and the PNG/SVG resources). Install `rsvg-convert` first when SVG bytes changed (`apt install librsvg2-bin` or `brew install librsvg`).
+4. Submit a pull request that includes the new SVG files and the updated `airlines.json`, `AIRLINES.md`, and Swift package files. Please provide a clear description of your changes.
 
 ### Example JSON Data (After Script is Run)
 
@@ -121,7 +122,7 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "branding": {
         "primary_color": "#d99e09",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
-        "assets": {
+        "colors": {
             "icon": {
                 "has_mono_file": false,
                 "color_model": "single",

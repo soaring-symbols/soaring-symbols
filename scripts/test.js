@@ -1,7 +1,10 @@
 import { createRequire } from 'module'
-import { readFileSync } from 'fs'
+import { readFileSync, readdirSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
+import { fileURLToPath } from 'url'
+import { join } from 'path'
 const require = createRequire(import.meta.url)
+const repoRoot = fileURLToPath(new URL('..', import.meta.url))
 
 // Use require for airlines.json import issues
 const {
@@ -92,7 +95,85 @@ async function run() {
         )
     }
 
+    assertSwiftPackage()
+
     console.log('All tests passed')
+}
+
+function assertSwiftPackage() {
+    const catalog = readFileSync(
+        join(repoRoot, 'swift/Sources/SoaringSymbols/Generated/Catalog.swift'),
+        'utf8',
+    )
+    const airlines = require(join(repoRoot, 'airlines.json'))
+    assert(
+        catalog.includes('public extension SoaringAirline'),
+        'Swift catalog should extend SoaringAirline',
+    )
+    assert(
+        !catalog.includes('public extension Airline {'),
+        'Swift catalog should not export a bare Airline type',
+    )
+    assert(
+        catalog.includes('static let vietnamAirlines'),
+        'Swift catalog should include Vietnam Airlines',
+    )
+
+    for (const airline of airlines) {
+        assert(
+            catalog.includes(`iata: "${airline.iata}"`),
+            `catalog missing ${airline.iata}`,
+        )
+    }
+
+    const manifest = JSON.parse(
+        readFileSync(join(repoRoot, 'swift/png-manifest.json'), 'utf8'),
+    )
+    assert.equal(manifest.pixelSize, 512)
+
+    const pngRoot = join(repoRoot, 'swift/Sources/SoaringSymbols/Resources/png')
+    const kinds = ['icon', 'logo', 'tail']
+    for (const airline of airlines) {
+        for (const kind of kinds) {
+            for (const mono of [false, true]) {
+                const base = mono ? `${kind}-mono` : kind
+                const svgPath = join(
+                    repoRoot,
+                    'assets',
+                    airline.slug,
+                    `${base}.svg`,
+                )
+                if (!existsSync(svgPath)) continue
+
+                const pngPath = join(pngRoot, airline.slug, `${base}.png`)
+                const png = readFileSync(pngPath)
+                assert.equal(png[0], 0x89, pngPath)
+                assert.equal(png.readUInt32BE(16), manifest.pixelSize, pngPath)
+                assert.equal(png.readUInt32BE(20), manifest.pixelSize, pngPath)
+                assert.ok(
+                    [2, 3, 4, 6].includes(png[25]),
+                    `${pngPath} color type ${png[25]}`,
+                )
+                if (airline.slug === 'vietnam-airlines' && base === 'logo') {
+                    assert.equal(png[25], 6, pngPath)
+                }
+                assert.equal(
+                    manifest.files[`${airline.slug}/${base}.png`]?.length,
+                    64,
+                    pngPath,
+                )
+            }
+        }
+    }
+
+    const orphan = []
+    for (const slug of readdirSync(pngRoot)) {
+        for (const file of readdirSync(join(pngRoot, slug))) {
+            const key = `${slug}/${file}`
+            if (!manifest.files[key]) orphan.push(key)
+        }
+    }
+    assert.deepEqual(orphan, [])
 }
 
 run().catch((err) => {

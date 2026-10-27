@@ -65,6 +65,7 @@
     "build": "npm run clean && node scripts/build.js",
     "prepublishOnly": "npm run build",
     "test": "npm run build && node scripts/test.js",
+    "test:swift": "swift test",
     "lint:svg": "node scripts/lint-svg.js",
     "generate": "node scripts/generate.js",
     "lint": "eslint .",

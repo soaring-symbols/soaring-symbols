@@ -137,7 +137,26 @@ Each asset entry in `AssetPaths` contains these fields:
 | `color_model` | `"single" \| "multi"` | `"single"` if the SVG uses one color; `"multi"` if it contains multiple colors. |
 | `colors`      | `string[]`            | Array of hex colors extracted from the SVG.                                     |
 
-**Notes:**
+## Swift Package
+
+Import `SoaringSymbols`. The catalog type is `SoaringAirline`. Asset metadata, branding, and mark views are nested on that type (`SoaringAirline.Logo`, `SoaringAirline.AssetKind`, and so on) so a bare `Airline` name is not added to the app.
+
+```swift
+import SoaringSymbols
+
+let airline = SoaringAirline.find("VN") // IATA, ICAO, name, or slug
+airline?.pngData(for: .logo)
+airline?.svg(for: .logo, monochrome: true)
+airline?.uiImage(for: .icon) // iOS, tvOS, and watchOS. macOS uses nsImage().
+
+SoaringAirline.Logo(airline ?? SoaringAirline.vietnamAirlines, size: 64)
+SoaringAirline.Icon("VN")
+SoaringAirline.Tail("BA")
+```
+
+`pngData(for:monochrome:)` returns nil when that file does not exist. `SoaringAirline.Icon` falls back to the logo. A monochrome PNG is rendered from the `-mono.svg` with black fills so SwiftUI can tint it. Color PNGs are 512×512 with an alpha channel.
+
+## Notes
 
 - `color_model` is determined from the color version of the SVG.
 - If `color_model` is `"single"`, the SVG can be treated as monochrome even without a `-mono.svg` variant (e.g., use `fill: currentColor`).

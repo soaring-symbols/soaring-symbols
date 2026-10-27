@@ -2,6 +2,7 @@ import { writeFileSync } from 'fs'
 import sortBy from 'lodash.sortby'
 import { toSlug, getAirlineAssets } from '../utils/index.js'
 import { createRequire } from 'module'
+import { generateSwiftPackage } from './generate-swift.js'
 
 const require = createRequire(import.meta.url)
 const airlines = require('../airlines.json')
@@ -116,5 +117,7 @@ sorted.forEach((airline) => {
 
 writeFileSync('airlines.json', JSON.stringify(sorted, null, 4))
 writeFileSync('AIRLINES.md', md)
+
+generateSwiftPackage()
 
 console.log('✅ Successfully generated airlines.json and AIRLINES.md')
