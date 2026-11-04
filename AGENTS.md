@@ -49,8 +49,8 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 
 - Code style: Prettier (4 spaces, single quotes, no semicolons, trailing commas, width 80) and ESLint (`eslint.config.mjs`, including a blank line before `return`). Lint-staged runs both on commit.
 - ESM everywhere (`"type": "module"`).
-- Commits follow Conventional Commits and are checked by commitlint, e.g. `feat: add Vietravel Airlines`, `fix(build): ...`, `chore(release): v0.1.0-alpha.12`.
+- Commits follow Conventional Commits and are checked by commitlint, e.g. `feat: add Vietravel Airlines`, `fix(build): ...`, `chore(release): v0.2.1`.
 
 ## Releasing
 
-Run `npm run release -- <bump>` from a clean, up-to-date `main` (`<bump>` is `prerelease` by default, or `patch`/`minor`/`major`/`pre*`/an exact version; `--dry-run` previews). The script in `scripts/release.js` tests the package, bumps the version in `package.json`, publishes to npm, and commits the bump as `chore(release): v<version>` without pushing. It creates no git tag or GitHub release. Prereleases are published under their preid dist-tag (e.g. `alpha`), and `latest` also follows them until a stable version exists. Never run it unless the maintainer asks for a release.
+Versions are plain 0.x, without prerelease labels: `patch` for compatible changes (new airlines and assets, SVG fixes, additions to the API or data) and `minor` for breaking changes to the API or the `airlines.json` shape. Run `npm run release -- [bump]` from a clean, up-to-date `main`; `bump` is `patch` by default, or `minor`/`major`/an exact version like `0.2.0`, and `--dry-run` previews. From a prerelease version (the last was `0.1.0-alpha.14`) the script requires an exact version, since npm would turn `patch` or `minor` into `0.1.0`. The script in `scripts/release.js` tests the package, bumps the version in `package.json`, publishes to npm under `latest`, and commits the bump as `chore(release): v<version>` without pushing. It creates no git tag or GitHub release. Never run it unless the maintainer asks for a release.

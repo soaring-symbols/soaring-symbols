@@ -1,8 +1,12 @@
 // Release to npm: test, bump the version in package.json, publish, then commit the bump.
 // No git tag or GitHub release is created.
 //
-// Usage: npm run release -- [bump] [--preid <id>] [--tag <dist-tag>] [--dry-run]
-//   bump: prerelease (default), patch, minor, major, prepatch, preminor, premajor or an exact version
+// Usage: npm run release -- [bump] [--dry-run]
+//   bump: patch (default), minor, major or an exact version such as 0.2.0.
+//
+// While on 0.x, patch is for anything that keeps compatibility (new airlines
+// and assets, fixes, additions) and minor for breaking API or data changes.
+// Every release goes to the `latest` dist-tag; prereleases are not used.
 import { spawnSync } from 'child_process'
 import { readFileSync } from 'fs'
 import { parseArgs } from 'util'
@@ -14,13 +18,11 @@ const RELEASE_FILES = ['package.json', 'package-lock.json']
 const { values, positionals } = parseArgs({
     allowPositionals: true,
     options: {
-        preid: { type: 'string' },
-        tag: { type: 'string' },
         'dry-run': { type: 'boolean', default: false },
     },
 })
 
-const bump = positionals[0] || 'prerelease'
+const bump = positionals[0] || 'patch'
 const dryRun = values['dry-run']
 
 const fail = (message) => {
@@ -54,8 +56,6 @@ const read = (cmd, args) => {
 const readVersion = () =>
     JSON.parse(readFileSync('package.json', 'utf8')).version
 
-const prereleaseId = (version) => version.split('-')[1]?.split('.')[0]
-
 const restoreReleaseFiles = () =>
     run('git', ['checkout', '--', ...RELEASE_FILES])
 
@@ -67,6 +67,24 @@ const ensureCleanTree = (hint) => {
 }
 
 // --- Preflight ---
+if (
+    !['patch', 'minor', 'major'].includes(bump) &&
+    !/^\d+\.\d+\.\d+$/.test(bump)
+) {
+    fail(
+        `Unknown bump "${bump}". Use patch, minor, major or an exact version like 0.2.0.`,
+    )
+}
+
+const currentVersion = readVersion()
+// From a prerelease, npm resolves patch and minor to its base version
+// (0.1.0-alpha.14 -> 0.1.0), which may not be what was meant
+if (currentVersion.includes('-') && !/^\d/.test(bump)) {
+    fail(
+        `${currentVersion} is a prerelease; pass the version to release, e.g. "npm run release -- 0.2.0".`,
+    )
+}
+
 step('Checking repository state')
 
 const branch = read('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
@@ -92,32 +110,11 @@ ensureCleanTree(
 )
 
 // --- Version bump ---
-const currentVersion = readVersion()
-const preid = values.preid || prereleaseId(currentVersion) || 'alpha'
-
 step(`Bumping version from ${currentVersion} (${bump})`)
-run('npm', ['version', bump, '--preid', preid, '--no-git-tag-version'])
+run('npm', ['version', bump, '--no-git-tag-version'])
 
 const version = readVersion()
-const isPrerelease = version.includes('-')
-const distTag = values.tag || (isPrerelease ? prereleaseId(version) : 'latest')
-
-// While there is no stable release, keep `latest` on the newest prerelease
-// so a plain `npm install soaring-symbols` gets it.
-let moveLatest = false
-if (isPrerelease && distTag !== 'latest') {
-    const result = spawnSync(
-        'npm',
-        ['view', 'soaring-symbols', 'dist-tags.latest'],
-        { encoding: 'utf8' },
-    )
-    const latest = result.status === 0 ? result.stdout.trim() : ''
-    moveLatest = !latest || latest.includes('-')
-}
-
-console.log(`
-  version:   ${version}
-  dist-tag:  ${distTag}${moveLatest ? ' (+ latest)' : ''}`)
+console.log(`\n  version:   ${version}\n  dist-tag:  latest`)
 
 if (dryRun) {
     step('Dry run: showing the package contents')
@@ -128,14 +125,10 @@ if (dryRun) {
 }
 
 // --- Publish (prepublishOnly rebuilds dist/) ---
-step(`Publishing ${version} to npm under "${distTag}"`)
-if (!run('npm', ['publish', '--tag', distTag], { allowFail: true })) {
+step(`Publishing ${version} to npm`)
+if (!run('npm', ['publish', '--tag', 'latest'], { allowFail: true })) {
     restoreReleaseFiles()
     fail('npm publish failed; the version bump was reverted.')
-}
-
-if (moveLatest) {
-    run('npm', ['dist-tag', 'add', `soaring-symbols@${version}`, 'latest'])
 }
 
 // --- Commit the bump (not pushed) ---
