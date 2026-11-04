@@ -54,3 +54,11 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 ## Releasing
 
 Versions are plain 0.x, without prerelease labels: `patch` for compatible changes (new airlines and assets, SVG fixes, additions to the API or data) and `minor` for breaking changes to the API or the `airlines.json` shape. Run `npm run release -- [bump]` from a clean, up-to-date `main`; `bump` is `patch` by default, or `minor`/`major`/an exact version like `0.2.0`, and `--dry-run` previews. From a prerelease version (the last was `0.1.0-alpha.14`) the script requires an exact version, since npm would turn `patch` or `minor` into `0.1.0`. The script in `scripts/release.js` tests the package, bumps the version in `package.json`, publishes to npm under `latest`, and commits the bump as `chore(release): v<version>` without pushing. It creates no git tag or GitHub release. Never run it unless the maintainer asks for a release.
+
+### Keeping releases compatible
+
+The Raycast extension ([soaring-symbols/raycast](https://github.com/soaring-symbols/raycast)) reads `airlines.json` and the SVGs from the published package through jsDelivr, pinned to one release line (e.g. `soaring-symbols@0.2`). Every patch release reaches it automatically; a minor release does not until the extension is updated. So:
+
+- Prefer additive changes, released as a patch: add a new field or file and keep the old one, so existing consumers keep working. Remove or rename something only in a later minor release, and say so in the release notes.
+- Treat anything that can break a reader of the previous release as breaking and release it as a minor: removing or renaming a field in `airlines.json`, changing a field's meaning or type, moving or renaming files under `assets/`, or changing the exported functions.
+- Before a minor release, prepare the extension update for the new line (its `AGENTS.md` lists the steps) so it can be published right after the release.
