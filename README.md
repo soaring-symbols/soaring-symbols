@@ -13,7 +13,7 @@ The inclusion of monochrome versions will depend on the airline's brand guidelin
 
 ## Website
 
-Browse the collection, open a page for any airline to download its marks, and check new SVGs against the contribution guidelines at <https://soaring-symbols.anhthang.workers.dev>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
+Browse the collection, open a page for any airline to download its marks, and check new SVGs against the contribution guidelines at <https://soaringsymbols.org>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
 
 ## Roadmap
 
