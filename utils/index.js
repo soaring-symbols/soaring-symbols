@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
 
@@ -9,59 +9,78 @@ const toSlug = (name) => {
     })
 }
 
+// Hex colors an SVG paints with: fill, stroke and gradient stops, as
+// attributes or inside style, so gradient marks are not mistaken for
+// single-color ones
+const PAINT_COLOR =
+    /(?:fill|stroke|stop-color)\s*[:=]\s*["']?(#[0-9a-f]{3}(?:[0-9a-f]{3})?)\b/gi
+
 const extractColorsFromSvg = (filePath) => {
     const content = readFileSync(filePath, 'utf8')
-    const colorRegex = /fill="(#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3})"/gi
-    const matches = [...content.matchAll(colorRegex)]
-    const colors = [...new Set(matches.map((match) => match[1]))]
 
-    return colors.length > 0 ? colors : null
+    return [
+        ...new Set(
+            [...content.matchAll(PAINT_COLOR)].map(([, color]) =>
+                color.toLowerCase(),
+            ),
+        ),
+    ]
 }
 
-const determineColorModel = (colors) => {
-    if (!colors) return null
-
-    return colors.length > 1 ? 'multi' : 'single'
-}
+// The monochrome version of a single-color SVG: its one color becomes
+// currentColor, the way every hand-made -mono.svg is drawn
+const toMonoSvg = (svg) =>
+    svg.replace(PAINT_COLOR, (match, color) =>
+        match.replace(color, 'currentColor'),
+    )
 
 const assetTypes = ['icon', 'logo', 'tail']
 
-// assetsDir defaults to the cwd-relative path used by the repo scripts; the
-// library passes an absolute path. No Node-only code runs at import time, so
-// toSlug stays importable from browser bundles.
+// Write <type>-mono.svg next to every single-color <type>.svg, so each such
+// asset ships a monochrome file. Multi-color assets keep their hand-made
+// -mono.svg. Returns the paths it wrote.
+const writeDerivedMonos = (slug, assetsDir = 'assets') => {
+    const written = []
+    assetTypes.forEach((assetType) => {
+        const colorPath = join(assetsDir, slug, `${assetType}.svg`)
+        if (!existsSync(colorPath)) return
+        if (extractColorsFromSvg(colorPath).length !== 1) return
+
+        const monoPath = join(assetsDir, slug, `${assetType}-mono.svg`)
+        const mono = toMonoSvg(readFileSync(colorPath, 'utf8'))
+        if (existsSync(monoPath) && readFileSync(monoPath, 'utf8') === mono) {
+            return
+        }
+        writeFileSync(monoPath, mono)
+        written.push(monoPath)
+    })
+
+    return written
+}
+
+// Describe which files exist for each asset type of an airline:
+// { logo: { color: true, mono: false, colors: ['#d99e09'] }, ... }
+// `colors` comes from the color file and is empty when there is none.
+// Repo tooling only: the published library reads this from airlines.json.
 const getAirlineAssets = (slug, assetsDir = 'assets') => {
     const airlineDir = join(assetsDir, slug)
 
     const assets = {}
     assetTypes.forEach((assetType) => {
-        const colorAssetPath = join(airlineDir, `${assetType}.svg`)
-        const monoAssetPath = join(airlineDir, `${assetType}-mono.svg`)
-        const colorAssetExists = existsSync(colorAssetPath)
-        const monoAssetExists = existsSync(monoAssetPath)
+        const colorPath = join(airlineDir, `${assetType}.svg`)
+        const color = existsSync(colorPath)
+        const mono = existsSync(join(airlineDir, `${assetType}-mono.svg`))
 
-        if (colorAssetExists) {
-            const colors = extractColorsFromSvg(colorAssetPath)
-            const color_model = determineColorModel(colors)
-            assets[assetType] = {
-                has_mono_file: monoAssetExists,
-            }
-            if (color_model) {
-                assets[assetType].color_model = color_model
-                assets[assetType].colors = colors
-            }
-        } else if (monoAssetExists) {
-            assets[assetType] = {
-                has_mono_file: true,
-            }
+        if (!color && !mono) return
+
+        assets[assetType] = {
+            color,
+            mono,
+            colors: color ? extractColorsFromSvg(colorPath) : [],
         }
     })
 
     return assets
 }
 
-export { toSlug, getAirlineAssets }
-
-export default {
-    toSlug,
-    getAirlineAssets,
-}
+export { assetTypes, toSlug, getAirlineAssets, writeDerivedMonos }

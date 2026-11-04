@@ -17,7 +17,9 @@ This project uses a "color-first" approach, where the default asset is the full-
 
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name must be a slugified, lowercase version of the airline's name (e.g., `assets/vietnam-airways/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
-- **Monochrome Assets (Optional)**: A monochrome version is only required for multi-color assets. It should be named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`).
+- **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
+    - **Single-color assets:** don't draw one. `npm run generate` writes it from the color file (its one color becomes `currentColor`) and overwrites it on every run, so commit it but never edit it.
+    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, replace its generated `-mono.svg` by hand or delete it.
 
 **Correct Structure Example:**
 
@@ -25,9 +27,9 @@ This project uses a "color-first" approach, where the default asset is the full-
 assets/
 └── vietnam-airways/
     ├── icon.svg         # Color version (default)
-    ├── icon-mono.svg    # Mono version (optional)
+    ├── icon-mono.svg    # Mono version (generated: icon.svg is single-color)
     ├── logo.svg         # Color version (default)
-    └── logo-mono.svg    # Mono version (optional)
+    └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
 ```
 
 ### 2. SVG Specifications
@@ -62,7 +64,7 @@ assets/
 
 ### 3. JSON Data Updates
 
-When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. The `generate.js` script will then analyze your SVG files and automatically generate the detailed `branding.assets` object.
+When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. The `generate.js` script will then analyze your SVG files and automatically generate the `assets` object.
 
 #### Information to Add Manually
 
@@ -81,19 +83,15 @@ When adding a new airline, you only need to add an entry to the `airlines.json` 
 
 #### Generated Asset Metadata
 
-After you run the script, the `branding.assets` object will be populated with the following data for each available asset:
+After you run the script, each airline gets an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
 
-| Field Name      | Description                                                              |
-| :-------------- | :----------------------------------------------------------------------- |
-| `has_mono_file` | `true` if a corresponding `-mono.svg` variant exists.                    |
-| `color_model`   | `"single"` or `"multi"`, based on the number of colors found in the SVG. |
-| `colors`        | An array of the hexadecimal color codes found in the SVG file.           |
+| Field Name | Description                                                                                          |
+| :--------- | :--------------------------------------------------------------------------------------------------- |
+| `color`    | `true` if the full-color `<type>.svg` exists.                                                        |
+| `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.         |
+| `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Additional behavior:
-
-- If `has_mono_file` is `false` but `color_model` is `"single"`, this means the color SVG uses a single solid color — the colored SVG can be treated as a monochrome asset (it can be filled or used anywhere a mono version is expected).
-
-This behavior is detected automatically by the `generate.js` script when it inspects the airline's assets.
+Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.
 
 ### 4. Pull Requests
 
@@ -101,13 +99,13 @@ This behavior is detected automatically by the `generate.js` script when it insp
 2. Add the new airline's base information to the `airlines.json` file, ensuring the list remains sorted alphabetically.
 3. **You must run the `generate.js` script** (`npm run generate` or `node generate.js`). This script is essential as it will:
     - Analyze your new SVG files.
-    - **Automatically generate the `branding.assets` metadata.**
+    - **Automatically generate the `assets` metadata.**
     - Update the `AIRLINES.md` documentation file.
 4. Submit a pull request that includes the new SVG files and the updated `airlines.json` and `AIRLINES.md` files. Please provide a clear description of your changes.
 
 ### Example JSON Data (After Script is Run)
 
-This is what a complete entry for an airline looks like after the `generate.js` script has run and populated the `assets` object.
+This is what a complete entry for an airline looks like after the `generate.js` script has run and populated the `slug` and `assets` fields.
 
 ```json
 {
@@ -120,23 +118,19 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "alliance": "SkyTeam",
     "branding": {
         "primary_color": "#d99e09",
-        "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
-        "assets": {
-            "icon": {
-                "has_mono_file": false,
-                "color_model": "single",
-                "colors": [
-                    "#d99e09"
-                ]
-            },
-            "logo": {
-                "has_mono_file": true,
-                "color_model": "multi",
-                "colors": [
-                    "#d99e09",
-                    "#005e80"
-                ]
-            }
+        "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
+    },
+    "slug": "vietnam-airlines",
+    "assets": {
+        "icon": {
+            "color": true,
+            "mono": true,
+            "colors": ["#d99e09"]
+        },
+        "logo": {
+            "color": true,
+            "mono": true,
+            "colors": ["#d99e09", "#005e80"]
         }
     }
 }

@@ -1,6 +1,11 @@
 import { writeFileSync } from 'fs'
 import sortBy from 'lodash.sortby'
-import { toSlug, getAirlineAssets } from '../utils/index.js'
+import {
+    assetTypes,
+    toSlug,
+    getAirlineAssets,
+    writeDerivedMonos,
+} from '../utils/index.js'
 import { createRequire } from 'module'
 
 const require = createRequire(import.meta.url)
@@ -31,10 +36,11 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 `
 
-const assetTypes = ['icon', 'logo', 'tail']
+const derivedMonos = []
 
 sorted.forEach((airline) => {
     const slug = toSlug(airline.name)
+    derivedMonos.push(...writeDerivedMonos(slug))
     const assets = getAirlineAssets(slug)
 
     const includedStates = []
@@ -52,7 +58,7 @@ sorted.forEach((airline) => {
     } = airline
 
     airline.slug = slug
-    airline.branding.colors = {}
+    airline.assets = assets
 
     let airlineName = website ? `[${name}](${website})` : name
 
@@ -72,13 +78,8 @@ sorted.forEach((airline) => {
             return
         }
 
-        airline.branding.colors[type] = assetInfo.colors
-
-        const isComplete =
-            (assetInfo.has_mono_file &&
-                Array.isArray(assetInfo.colors) &&
-                assetInfo.colors.length) ||
-            assetInfo.color_model === 'single'
+        // Complete: both the color file and its monochrome version
+        const isComplete = assetInfo.color && assetInfo.mono
 
         if (isComplete) {
             includedStates.push('✅')
@@ -117,4 +118,9 @@ sorted.forEach((airline) => {
 writeFileSync('airlines.json', JSON.stringify(sorted, null, 4))
 writeFileSync('AIRLINES.md', md)
 
+if (derivedMonos.length) {
+    console.log(
+        `✅ Wrote ${derivedMonos.length} mono file(s) for single-color assets`,
+    )
+}
 console.log('✅ Successfully generated airlines.json and AIRLINES.md')

@@ -1,102 +1,225 @@
-import { createRequire } from 'module'
-import { readFileSync } from 'fs'
-import { tmpdir } from 'os'
-const require = createRequire(import.meta.url)
+// Tests for the built package in dist/. Run with `npm test` (builds first).
+import { describe, it, before } from 'node:test'
+import assert from 'node:assert/strict'
+import { createRequire } from 'node:module'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { fileURLToPath } from 'node:url'
+import { JSDOM } from 'jsdom'
+import { getAirlineAssets } from '../utils/index.js'
 
-// Use require for airlines.json import issues
-const {
-    listAirlines,
-    getAirline,
-    getAssets,
-    getAssetContent,
-} = require('../dist/index.cjs')
-const assert = require('assert')
-const { JSDOM } = require('jsdom')
+const require = createRequire(import.meta.url)
 
 // Run from outside the repo, like a consumer would, so cwd-relative paths fail
 process.chdir(tmpdir())
 
-async function run() {
-    // Basic sanity checks
-    const airlines = listAirlines()
-    assert(Array.isArray(airlines), 'listAirlines should return an array')
-    assert(airlines.length > 0, 'airlines should not be empty')
+const cjs = require('../dist/index.cjs')
+const esm = await import('../dist/index.js')
 
-    // Asset paths must resolve regardless of the cwd
-    const vna = getAssets('VN')
-    assert(vna?.logo?.color, 'getAssets should find Vietnam Airlines logo')
-    assert(
-        getAssetContent('VN')?.logo?.color?.includes('<svg'),
-        'getAssetContent should read Vietnam Airlines logo',
-    )
+for (const [format, api] of [
+    ['ESM', esm],
+    ['CJS', cjs],
+]) {
+    const { listAirlines, getAirline, getAssetPath } = api
 
-    // Pick the first airline and verify lookups
-    const sample = airlines[0]
-    assert(
-        sample && (sample.name || sample.slug),
-        'sample airline has a name or slug',
-    )
+    describe(`${format} build`, () => {
+        it('exports exactly the public API', () => {
+            const names = Object.keys(api)
+                .filter((key) => key !== 'default' && key !== 'module.exports')
+                .sort()
+            assert.deepEqual(names, [
+                'getAirline',
+                'getAssetPath',
+                'listAirlines',
+            ])
+        })
 
-    const bySlug = getAirline(sample.slug)
-    assert(
-        bySlug && bySlug.name === sample.name,
-        'getAirline should find by slug',
-    )
+        describe('listAirlines', () => {
+            let airlines
+            before(() => (airlines = listAirlines()))
 
-    const byName = getAirline(sample.name)
-    assert(
-        byName && byName.name === sample.name,
-        'getAirline should find by name',
-    )
+            it('returns every airline, sorted by name', () => {
+                assert.ok(airlines.length > 0)
+                const names = airlines.map((a) => a.name.toLowerCase())
+                assert.deepEqual(names, [...names].sort())
+            })
 
-    // getAssets may return null (if no assets) or an object
-    const assets = getAssets(sample.slug)
-    assert(
-        assets === null || typeof assets === 'object',
-        'getAssets returns null or an object',
-    )
+            it('returns a fresh array each call', () => {
+                airlines.pop()
+                assert.equal(listAirlines().length, airlines.length + 1)
+            })
 
-    // Test getAssetContent if assets are available
-    if (assets) {
-        const content = getAssetContent(sample.slug)
-        assert(
-            content !== null,
-            'getAssetContent should return content when assets exist',
+            it('returns frozen airline objects', () => {
+                const vna = airlines.find((a) => a.iata === 'VN')
+                assert.ok(Object.isFrozen(vna))
+                assert.ok(Object.isFrozen(vna.assets.logo.colors))
+                assert.throws(() => {
+                    vna.name = 'changed'
+                }, TypeError)
+            })
+
+            it('gives each airline a slug and assets, and no branding.colors', () => {
+                for (const a of airlines) {
+                    assert.match(a.slug, /^[a-z0-9-]+$/, a.name)
+                    assert.equal(typeof a.assets, 'object', a.name)
+                    assert.equal(a.branding?.colors, undefined, a.name)
+                }
+            })
+        })
+
+        describe('getAirline', () => {
+            it('ignores case and surrounding whitespace', () => {
+                for (const query of ['vn', 'hvn', '  VIETNAM AIRLINES ']) {
+                    assert.equal(getAirline(query)?.slug, 'vietnam-airlines')
+                }
+            })
+
+            it('finds every airline by each of its keys', () => {
+                for (const a of listAirlines()) {
+                    for (const key of [a.iata, a.icao, a.slug, a.name]) {
+                        assert.equal(getAirline(key), a, `${a.name} by ${key}`)
+                    }
+                }
+            })
+
+            it('returns undefined for unknown or empty queries', () => {
+                for (const query of ['ZZZZ', '', '   ', undefined, null, 42]) {
+                    assert.equal(getAirline(query), undefined, String(query))
+                }
+            })
+        })
+
+        describe('getAssetPath', () => {
+            it('returns the package path of a color asset', () => {
+                assert.equal(
+                    getAssetPath('VN', 'logo'),
+                    'soaring-symbols/assets/vietnam-airlines/logo.svg',
+                )
+            })
+
+            it('returns the mono variant when asked', () => {
+                assert.equal(
+                    getAssetPath('VN', 'logo', { mono: true }),
+                    'soaring-symbols/assets/vietnam-airlines/logo-mono.svg',
+                )
+            })
+
+            it('accepts an airline object', () => {
+                assert.equal(
+                    getAssetPath(getAirline('VN'), 'icon'),
+                    getAssetPath('VN', 'icon'),
+                )
+            })
+
+            it('returns undefined when the file does not exist', () => {
+                // Aer Lingus' logo is multi-color without a hand-made mono file
+                assert.equal(
+                    getAssetPath('EI', 'logo', { mono: true }),
+                    undefined,
+                )
+                // Qantas ships only a mono icon
+                assert.equal(getAssetPath('QF', 'icon'), undefined)
+                assert.ok(getAssetPath('QF', 'icon', { mono: true }))
+            })
+
+            it('returns undefined for an unknown airline', () => {
+                assert.equal(getAssetPath('ZZZZ', 'logo'), undefined)
+            })
+
+            it('throws on an unknown asset type', () => {
+                assert.throws(() => getAssetPath('VN', 'banner'), TypeError)
+            })
+
+            it('returns a resolvable SVG for every listed asset', () => {
+                for (const a of listAirlines()) {
+                    for (const [type, info] of Object.entries(a.assets)) {
+                        for (const mono of [false, true]) {
+                            const path = getAssetPath(a, type, { mono })
+                            const listed = mono ? info.mono : info.color
+                            assert.equal(
+                                Boolean(path),
+                                listed,
+                                `${a.slug} ${type}`,
+                            )
+                            if (!path) continue
+                            const svg = readFileSync(
+                                require.resolve(path),
+                                'utf8',
+                            )
+                            assert.match(svg, /^<svg[\s>]/, path)
+                        }
+                    }
+                }
+            })
+        })
+    })
+}
+
+describe('airlines.json assets metadata', () => {
+    const assetsDir = new URL('../dist/assets/', import.meta.url)
+
+    it('matches the files in dist/assets', () => {
+        for (const a of cjs.listAirlines()) {
+            assert.deepEqual(
+                a.assets,
+                getAirlineAssets(a.slug, fileURLToPath(assetsDir)),
+                a.slug,
+            )
+        }
+    })
+
+    it('ships a mono file for every single-color asset', () => {
+        for (const a of cjs.listAirlines()) {
+            for (const [type, info] of Object.entries(a.assets)) {
+                if (info.colors.length === 1) {
+                    assert.ok(info.mono, `${a.slug} ${type}-mono.svg`)
+                }
+            }
+        }
+    })
+
+    it('has an airline for every asset directory', () => {
+        const slugs = new Set(cjs.listAirlines().map((a) => a.slug))
+        const dirs = readdirSync(assetsDir, { withFileTypes: true })
+        assert.ok(
+            dirs.every((d) => d.isDirectory()),
+            'only directories',
         )
+        for (const { name: dir } of dirs) {
+            assert.ok(slugs.has(dir), `assets/${dir} has no airline`)
+        }
+    })
+})
 
-        // Verify that SVG content is returned for at least one variant
-        const hasContent = Object.values(content).some(
-            (variant) =>
-                variant.color?.includes('<svg') ||
-                variant.monochrome?.includes('<svg'),
-        )
-        assert(hasContent, 'at least one variant should have SVG content')
-    }
+describe('package exports', () => {
+    it('ships declarations for both import and require', () => {
+        for (const entry of [
+            'soaring-symbols',
+            'soaring-symbols/svg-validator',
+        ]) {
+            const base = require.resolve(entry).replace(/\.c?js$/, '')
+            assert.ok(existsSync(`${base}.d.ts`), `${entry} .d.ts`)
+            assert.ok(existsSync(`${base}.d.cts`), `${entry} .d.cts`)
+        }
+    })
+})
 
-    // The bundled validator must be self-contained in both module formats
-    const {
-        runSvgValidations: validateCJS,
-    } = require('../dist/svg-validator.cjs')
-    const { runSvgValidations: validateESM } =
-        await import('../dist/svg-validator.js')
+describe('svg-validator', () => {
     const svg = new JSDOM(
         readFileSync(
-            require.resolve('../dist/assets/vietnam-airlines/logo.svg'),
+            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
         ),
         { contentType: 'image/svg+xml' },
     ).window.document.querySelector('svg')
-    for (const validate of [validateCJS, validateESM]) {
-        assert(
-            validate(svg, 'logo').some((check) => check.pass),
-            'runSvgValidations should validate a logo',
-        )
-    }
 
-    console.log('All tests passed')
-}
-
-run().catch((err) => {
-    console.error('Test failed:')
-    console.error(err && err.stack ? err.stack : err)
-    process.exit(1)
+    it('is self-contained in both module formats', async () => {
+        const {
+            runSvgValidations: validateCJS,
+        } = require('../dist/svg-validator.cjs')
+        const { runSvgValidations: validateESM } =
+            await import('../dist/svg-validator.js')
+        for (const validate of [validateCJS, validateESM]) {
+            assert.ok(validate(svg, 'logo').some((check) => check.pass))
+        }
+    })
 })

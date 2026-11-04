@@ -1,67 +1,63 @@
-// index.d.ts
+export type AssetType = 'icon' | 'logo' | 'tail'
+
+/** Which files exist for one asset type of an airline. */
+export interface AssetInfo {
+    /** `<type>.svg` (full color) exists. */
+    readonly color: boolean
+    /** `<type>-mono.svg` exists; always true for single-color assets. */
+    readonly mono: boolean
+    /**
+     * Hex colors the color file paints with (fills, strokes and gradient
+     * stops), lowercase; empty when there is no color file.
+     */
+    readonly colors: readonly string[]
+}
+
 export interface AirlineBranding {
-    primary_color?: string
-    tagline?: string
-    guidelines?: string
-    colors: {
-        icon?: string[]
-        logo?: string[]
-        tail?: string[]
-    }
+    readonly primary_color?: string
+    readonly tagline?: string
+    readonly guidelines?: string
+}
+
+/** An airline listed under a parent airline; it has no assets of its own. */
+export interface Subsidiary {
+    readonly name: string
+    readonly iata: string
+    readonly icao: string
+    /** ISO 3166-1 alpha-2 code (e.g. "VN"). */
+    readonly country: string
+    readonly flag_carrier?: boolean
 }
 
 export interface Airline {
-    name: string
-    iata: string // 2-letter IATA code (e.g., "VN")
-    icao: string // 3-letter ICAO code (e.g., "HVN")
-    country: string // ISO 3166-1 alpha-2 code (e.g., "VN")
-    flag_carrier?: boolean // true if national flag carrier
-    website?: string // Official website URL
-    alliance?: string // e.g., "oneworld" | "SkyTeam" | "Star Alliance"
-    slug: string
+    readonly name: string
+    /** 2-character IATA code (e.g. "VN"). */
+    readonly iata: string
+    /** 3-letter ICAO code (e.g. "HVN"). */
+    readonly icao: string
+    /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
+    readonly country: string
+    readonly slug: string
+    readonly website?: string
+    readonly flag_carrier?: boolean
+    /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
+    readonly alliance?: string
+    readonly defunct?: boolean
+    readonly vectorized?: boolean
+    readonly branding?: AirlineBranding
+    readonly assets: Readonly<Partial<Record<AssetType, AssetInfo>>>
+    readonly subsidiaries?: readonly Subsidiary[]
 }
 
-export interface AirlineMeta extends Airline {
-    branding?: AirlineBranding
-    subsidiaries?: Airline[]
+export interface AssetPathOptions {
+    /** Return the `-mono.svg` variant. */
+    mono?: boolean
 }
 
-export type AssetPaths = {
-    color: string
-    monochrome: string | null
-    color_model?: 'single' | 'multi'
-    colors?: string[]
-}
-
-export type ResolvedAssets = {
-    icon?: AssetPaths
-    logo?: AssetPaths
-    tail?: AssetPaths
-}
-
-export type AssetContent = {
-    color: string | null // SVG content string
-    monochrome: string | null // SVG content string
-    color_model?: 'single' | 'multi'
-    colors?: string[]
-}
-
-export type ResolvedAssetContent = {
-    icon?: AssetContent
-    logo?: AssetContent
-    tail?: AssetContent
-}
-
-export function listAirlines(): AirlineMeta[]
-export function getAirline(key: string): AirlineMeta | null
-export function getAssets(key: string): ResolvedAssets | null
-export function getAssetContent(key: string): ResolvedAssetContent | null
-
-declare const _default: {
-    listAirlines: typeof listAirlines
-    getAirline: typeof getAirline
-    getAssets: typeof getAssets
-    getAssetContent: typeof getAssetContent
-}
-
-export default _default
+export function listAirlines(): Airline[]
+export function getAirline(query: string): Airline | undefined
+export function getAssetPath(
+    airline: Airline | string,
+    type: AssetType,
+    options?: AssetPathOptions,
+): string | undefined
