@@ -12,7 +12,7 @@ Soaring Symbols is an npm package (`soaring-symbols`) that ships a curated colle
 - `index.js` — ESM library entry (`listAirlines`, `getAirline`, `getAssetPath`). It only reads `airlines.json` (no Node built-ins), so it stays browser-safe. Types in `index.d.ts` — keep them in sync, and keep `API.md` (including its migration guide) in step with any API change.
 - `utils/index.js` — repo tooling only (not published): `toSlug` and `getAirlineAssets` (detects color/mono files and colors from the SVGs on disk).
 - `svg-validator.js` — browser-safe validator exported as `soaring-symbols/svg-validator`; it imports `scripts/lint/validators.js`, which the build inlines.
-- `scripts/` — tooling: `build.js`, `generate.js`, `lint-svg.js` (+ rules in `scripts/lint/`), `test.js`, `validate-assets.js`, `release.js`.
+- `scripts/` — tooling: `build.js`, `generate.js`, `lint-svg.js` (+ rules in `scripts/lint/`), `test.js`, `release.js`.
 - `AIRLINES.md` — **generated** by `scripts/generate.js`; never edit by hand.
 - `dist/` — build output (git-ignored), the only code that is published.
 

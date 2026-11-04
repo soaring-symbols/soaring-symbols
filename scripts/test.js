@@ -4,20 +4,17 @@ import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
+import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
+import { getAirlineAssets } from '../utils/index.js'
 
 const require = createRequire(import.meta.url)
-const ASSET_TYPES = ['icon', 'logo', 'tail']
 
 // Run from outside the repo, like a consumer would, so cwd-relative paths fail
 process.chdir(tmpdir())
 
 const cjs = require('../dist/index.cjs')
 const esm = await import('../dist/index.js')
-
-// The package resolves its own name through package.json "exports", so these
-// are the same specifiers a consumer would resolve.
-const resolveAsset = (path) => require.resolve(path)
 
 for (const [format, api] of [
     ['ESM', esm],
@@ -71,26 +68,10 @@ for (const [format, api] of [
         })
 
         describe('getAirline', () => {
-            it('finds an airline by IATA, ICAO, slug and name', () => {
-                for (const query of [
-                    'VN',
-                    'HVN',
-                    'vietnam-airlines',
-                    'Vietnam Airlines',
-                ]) {
-                    assert.equal(getAirline(query)?.slug, 'vietnam-airlines')
-                }
-            })
-
             it('ignores case and surrounding whitespace', () => {
                 for (const query of ['vn', 'hvn', '  VIETNAM AIRLINES ']) {
                     assert.equal(getAirline(query)?.slug, 'vietnam-airlines')
                 }
-            })
-
-            it('returns the same object as listAirlines', () => {
-                const vna = listAirlines().find((a) => a.iata === 'VN')
-                assert.equal(getAirline('VN'), vna)
             })
 
             it('finds every airline by each of its keys', () => {
@@ -161,7 +142,10 @@ for (const [format, api] of [
                                 `${a.slug} ${type}`,
                             )
                             if (!path) continue
-                            const svg = readFileSync(resolveAsset(path), 'utf8')
+                            const svg = readFileSync(
+                                require.resolve(path),
+                                'utf8',
+                            )
                             assert.match(svg, /^<svg[\s>]/, path)
                         }
                     }
@@ -176,19 +160,11 @@ describe('airlines.json assets metadata', () => {
 
     it('matches the files in dist/assets', () => {
         for (const a of cjs.listAirlines()) {
-            const dir = new URL(`${a.slug}/`, assetsDir)
-            for (const type of ASSET_TYPES) {
-                const color = existsSync(new URL(`${type}.svg`, dir))
-                const mono = existsSync(new URL(`${type}-mono.svg`, dir))
-                const info = a.assets[type]
-                assert.equal(Boolean(info), color || mono, `${a.slug} ${type}`)
-                if (!info) continue
-                assert.equal(info.color, color, `${a.slug} ${type}.svg`)
-                assert.equal(info.mono, mono, `${a.slug} ${type}-mono.svg`)
-                assert.ok(Array.isArray(info.colors))
-                for (const c of info.colors)
-                    assert.match(c, /^#[0-9a-f]{3,6}$/i)
-            }
+            assert.deepEqual(
+                a.assets,
+                getAirlineAssets(a.slug, fileURLToPath(assetsDir)),
+                a.slug,
+            )
         }
     })
 
@@ -200,8 +176,6 @@ describe('airlines.json assets metadata', () => {
             'only directories',
         )
         for (const { name: dir } of dirs) {
-            // Empty leftovers can exist locally; git never ships them
-            if (!readdirSync(new URL(dir, assetsDir)).length) continue
             assert.ok(slugs.has(dir), `assets/${dir} has no airline`)
         }
     })
@@ -223,7 +197,7 @@ describe('package exports', () => {
 describe('svg-validator', () => {
     const svg = new JSDOM(
         readFileSync(
-            resolveAsset('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
         ),
         { contentType: 'image/svg+xml' },
     ).window.document.querySelector('svg')

@@ -1,5 +1,6 @@
 import airlines from './airlines.json' with { type: 'json' }
 
+// Same list as utils/index.js, which can't be imported here: it uses fs
 const ASSET_TYPES = ['icon', 'logo', 'tail']
 
 const byIata = new Map()

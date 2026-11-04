@@ -6,12 +6,16 @@ const distDir = './dist'
 
 // Helper to recursively copy a directory
 async function copyDir(src, dest) {
+    // Skip OS junk such as .DS_Store so it never reaches the package
+    const entries = (await fs.readdir(src, { withFileTypes: true })).filter(
+        (entry) => !entry.name.startsWith('.'),
+    )
+    // Empty folders (e.g. left behind locally; git can't track them) are not
+    // copied either
+    if (!entries.length) return
     await fs.mkdir(dest, { recursive: true })
-    const entries = await fs.readdir(src, { withFileTypes: true })
 
     for (const entry of entries) {
-        // Skip OS junk such as .DS_Store so it never reaches the package
-        if (entry.name.startsWith('.')) continue
         const srcPath = path.join(src, entry.name)
         const destPath = path.join(dest, entry.name)
 
@@ -59,24 +63,14 @@ async function buildESM() {
 }
 
 // Transform the ESM code to CJS format. index.js only imports airlines.json
-// and has a single named export list, so two replacements are enough; fail
-// loudly if either stops matching.
+// and has a single named export list; fail loudly if anything else is left.
 function transformToCJS(content) {
-    const replacements = [
-        [
+    const out = content
+        .replace(
             /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/,
             "const airlines = require('./airlines.json')",
-        ],
-        [/^export\s*{([^}]+)}/m, 'module.exports = {$1}'],
-    ]
-
-    let out = content
-    for (const [pattern, replacement] of replacements) {
-        if (!pattern.test(out)) {
-            throw new Error(`transformToCJS: ${pattern} did not match index.js`)
-        }
-        out = out.replace(pattern, replacement)
-    }
+        )
+        .replace(/^export\s*{([^}]+)}/m, 'module.exports = {$1}')
     if (/^\s*(import|export)\s/m.test(out)) {
         throw new Error(
             'transformToCJS: index.js has an unhandled import/export',

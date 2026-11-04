@@ -51,8 +51,6 @@ sorted.forEach((airline) => {
 
     airline.slug = slug
     airline.assets = assets
-    // Superseded by assets.<type>.colors
-    delete airline.branding.colors
 
     let airlineName = website ? `[${name}](${website})` : name
 
