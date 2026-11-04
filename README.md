@@ -1,6 +1,6 @@
 # Soaring Symbols
 
-This project aims to create a meticulously curated collection of airline logos and icons entirely in SVG format, serving as a valuable resource for travelers, aviation enthusiasts, and designers.
+This project aims to create a meticulously curated collection of airline logos, icons and tail designs entirely in SVG format, serving as a valuable resource for travelers, aviation enthusiasts, and designers.
 
 > [!IMPORTANT]
 > "Soaring Symbols" provides airline logos/icons in SVG for informational and reference purposes only. We do not claim ownership of any trademarks or copyrighted materials. The logos remain the intellectual property of their respective airlines.
@@ -11,11 +11,22 @@ The initial phase will focus on building a core collection of high-quality SVG l
 
 The inclusion of monochrome versions will depend on the airline's brand guidelines and the feasibility of converting their original logos to a simple, one-color format.
 
-## TODO / Roadmap
+## Website
 
-- [ ] Nuxt Homepage
-  - [ ] Launch a Nuxt-powered homepage showcasing the catalog, search, and usage examples.
-  - [ ] Include live previews, install instructions, and API docs (pulling from `API.md`).
+Browse the collection, download any mark, and check new SVGs against the contribution guidelines at <https://soaring-symbols.anhthang.workers.dev>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
+
+## Roadmap
+
+- [x] npm package
+- [x] Website with a browsable catalog and an SVG validator
+- [x] Raycast extension
+- [x] jsDelivr CDN
+- [ ] Iconify icon set, for Iconify, Nuxt Icon, UnoCSS, Tailwind and Astro
+- [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
+- [ ] Swift Package, with an asset catalog and a SwiftUI view
+- [ ] JSON API on the website, such as `/api/airlines/VN`
+
+Website-specific plans (airline detail pages, prerendering, SEO) are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 ## Installation
 
@@ -39,6 +50,15 @@ bun add soaring-symbols
 | :-- | :-- |
 | [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 /> | [anhthang]|
 | [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 /> | [anhthang]|
+| [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
+
+### CDN
+
+Link any mark straight from the npm package through jsDelivr, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`, see [AIRLINES.md](./AIRLINES.md)); swap `logo` for `icon` or `tail` to get the other marks.
+
+```text
+https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg
+```
 
 ## Usage
 
