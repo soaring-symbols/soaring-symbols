@@ -7,9 +7,9 @@ export interface AssetInfo {
     /** `<type>-mono.svg` exists. */
     readonly mono: boolean
     /**
-     * Hex fill colors found in the color file; empty when there is no color
-     * file or its colors are only in gradients. A single color means the
-     * color file can also be used as a monochrome mark.
+     * Hex colors the color file paints with (fills, strokes and gradient
+     * stops), lowercase; empty when there is no color file. A single color
+     * means the color file can also be used as a monochrome mark.
      */
     readonly colors: readonly string[]
 }

@@ -428,7 +428,10 @@
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#fed9a0"
+                    "#fed9a0",
+                    "#ecc890",
+                    "#bf9a66",
+                    "#9e7947"
                 ]
             },
             "logo": {
@@ -436,7 +439,10 @@
                 "mono": true,
                 "colors": [
                     "#da0e29",
-                    "#fed9a0"
+                    "#fed9a0",
+                    "#ecc890",
+                    "#bf9a66",
+                    "#9e7947"
                 ]
             }
         }
@@ -815,8 +821,19 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#d81e05",
                     "#fff",
+                    "#fcfcfc",
+                    "#f2f2f2",
+                    "#e1e2e2",
+                    "#c9cacc",
+                    "#c6c7c8",
+                    "#fbfbfb",
+                    "#eeefef",
+                    "#dadadb",
+                    "#bdbdbe",
+                    "#98999a",
+                    "#87888a",
+                    "#d81e05",
                     "#fefefe",
                     "#fdfdfd",
                     "#fbfbfc",
@@ -827,7 +844,6 @@
                     "#f5f5f6",
                     "#f4f4f5",
                     "#f3f3f3",
-                    "#f2f2f2",
                     "#f0f1f1",
                     "#eff0f0",
                     "#eeeeef",
@@ -1097,7 +1113,14 @@
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#ce210f"
+                    "#ce210f",
+                    "#e9eaf6",
+                    "#c7cbe8",
+                    "#96a0d1",
+                    "#7183c0",
+                    "#5972b6",
+                    "#506cb3",
+                    "#2e5c99"
                 ]
             },
             "logo": {
@@ -1105,7 +1128,13 @@
                 "mono": true,
                 "colors": [
                     "#2e5c99",
-                    "#ce210f"
+                    "#ce210f",
+                    "#e9eaf6",
+                    "#c7cbe8",
+                    "#96a0d1",
+                    "#7183c0",
+                    "#5972b6",
+                    "#506cb3"
                 ]
             }
         }
@@ -1225,8 +1254,31 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#a12132",
                     "#fff",
+                    "#f2d4da",
+                    "#efcbd1",
+                    "#db8d98",
+                    "#cf6675",
+                    "#ca5767",
+                    "#cc5d6c",
+                    "#d16c7b",
+                    "#d98793",
+                    "#e5abb4",
+                    "#cb5b6b",
+                    "#d06877",
+                    "#d77e8b",
+                    "#e09ca7",
+                    "#edc3ca",
+                    "#f4dbe0",
+                    "#faf0f2",
+                    "#cd606f",
+                    "#d57886",
+                    "#e1a0aa",
+                    "#eec8cf",
+                    "#d7808d",
+                    "#d06978",
+                    "#cb5c6b",
+                    "#a12132",
                     "#1d294c",
                     "#ca5766"
                 ]
@@ -1915,6 +1967,7 @@
                 "color": true,
                 "mono": false,
                 "colors": [
+                    "#d2068a",
                     "#413691",
                     "#ef3138"
                 ]
@@ -1923,6 +1976,7 @@
                 "color": true,
                 "mono": false,
                 "colors": [
+                    "#d2068a",
                     "#413691",
                     "#ef3138"
                 ]
@@ -1974,12 +2028,23 @@
             "icon": {
                 "color": true,
                 "mono": true,
-                "colors": []
+                "colors": [
+                    "#a61c22",
+                    "#dc1c2e",
+                    "#ed7417",
+                    "#facd08"
+                ]
             },
             "logo": {
                 "color": true,
                 "mono": true,
-                "colors": []
+                "colors": [
+                    "#a61c22",
+                    "#da1c2d",
+                    "#dc1c2e",
+                    "#ed7417",
+                    "#facd08"
+                ]
             }
         }
     },
@@ -2821,6 +2886,7 @@
                 "mono": false,
                 "colors": [
                     "#f7f7f7",
+                    "#999896",
                     "#00875d",
                     "#c20831"
                 ]
@@ -3002,6 +3068,14 @@
                 "color": true,
                 "mono": false,
                 "colors": [
+                    "#3656cc",
+                    "#304cb2",
+                    "#283b80",
+                    "#e61c23",
+                    "#c3161c",
+                    "#fdbc11",
+                    "#fcb415",
+                    "#f89e1c",
                     "#cccccc"
                 ]
             },
@@ -3009,7 +3083,14 @@
                 "color": true,
                 "mono": false,
                 "colors": [
+                    "#3656cc",
                     "#304cb2",
+                    "#283b80",
+                    "#e61c23",
+                    "#c3161c",
+                    "#fdbc11",
+                    "#fcb415",
+                    "#f89e1c",
                     "#cccccc"
                 ]
             }

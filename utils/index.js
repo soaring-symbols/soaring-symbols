@@ -9,12 +9,22 @@ const toSlug = (name) => {
     })
 }
 
+// Hex colors an SVG paints with: fill, stroke and gradient stops, as
+// attributes or inside style, so gradient marks are not mistaken for
+// single-color ones
+const PAINT_COLOR =
+    /(?:fill|stroke|stop-color)\s*[:=]\s*["']?(#[0-9a-f]{3}(?:[0-9a-f]{3})?)\b/gi
+
 const extractColorsFromSvg = (filePath) => {
     const content = readFileSync(filePath, 'utf8')
-    const colorRegex = /fill="(#[0-9A-Fa-f]{6}|#[0-9A-Fa-f]{3})"/gi
-    const matches = [...content.matchAll(colorRegex)]
 
-    return [...new Set(matches.map((match) => match[1]))]
+    return [
+        ...new Set(
+            [...content.matchAll(PAINT_COLOR)].map(([, color]) =>
+                color.toLowerCase(),
+            ),
+        ),
+    ]
 }
 
 const assetTypes = ['icon', 'logo', 'tail']

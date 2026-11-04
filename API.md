@@ -133,7 +133,7 @@ Describes which files exist for one asset type.
 | :------- | :--------- | :----------------------------------------------------------------------------------------------------------- |
 | `color`  | `boolean`  | `<type>.svg`, the full-color version, exists.                                                                |
 | `mono`   | `boolean`  | `<type>-mono.svg`, the monochrome version, exists.                                                           |
-| `colors` | `string[]` | Hex fill colors found in the color file. Empty when there is no color file or the colors are only in gradients. |
+| `colors` | `string[]` | Lowercase hex colors the color file paints with: fills, strokes and gradient stops. Empty when there is no color file. |
 
 A color file with exactly one color can be used as a monochrome mark too (e.g. with `fill: currentColor`), even when `mono` is `false`:
 

@@ -87,7 +87,7 @@ After you run the script, each airline gets an `assets` object with one entry pe
 | :--------- | :--------------------------------------------------------------------------------------------------- |
 | `color`    | `true` if the full-color `<type>.svg` exists.                                                        |
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists.                                                |
-| `colors`   | The hexadecimal fill colors found in the color SVG (empty when there is none or it only uses gradients). |
+| `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
 Additional behavior:
 
