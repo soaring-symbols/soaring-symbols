@@ -13,20 +13,21 @@ The inclusion of monochrome versions will depend on the airline's brand guidelin
 
 ## Website
 
-Browse the collection, download any mark, and check new SVGs against the contribution guidelines at <https://soaring-symbols.anhthang.workers.dev>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
+Browse the collection, open a page for any airline to download its marks, and check new SVGs against the contribution guidelines at <https://soaring-symbols.anhthang.workers.dev>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
 
 ## Roadmap
 
 - [x] npm package
-- [x] Website with a browsable catalog and an SVG validator
+- [x] Website with a browsable catalog, a page per airline and an SVG validator
 - [x] Raycast extension
 - [x] jsDelivr CDN
 - [ ] Iconify icon set, for Iconify, Nuxt Icon, UnoCSS, Tailwind and Astro
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
 - [ ] Swift Package, with an asset catalog and a SwiftUI view
 - [ ] JSON API on the website, such as `/api/airlines/VN`
+- [ ] A `branding.primary_color` for every airline (Iberia and Qantas have none yet)
 
-Website-specific plans (airline detail pages, prerendering, SEO) are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+Plans for the website itself are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 ## Installation
 
