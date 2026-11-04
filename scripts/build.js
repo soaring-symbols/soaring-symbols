@@ -10,6 +10,8 @@ async function copyDir(src, dest) {
     const entries = await fs.readdir(src, { withFileTypes: true })
 
     for (const entry of entries) {
+        // Skip OS junk such as .DS_Store so it never reaches the package
+        if (entry.name.startsWith('.')) continue
         const srcPath = path.join(src, entry.name)
         const destPath = path.join(dest, entry.name)
 
@@ -28,14 +30,15 @@ async function copyFiles() {
     // Copy required files and directories
     const filesToCopy = [
         { src: './airlines.json', dest: 'airlines.json' },
+        // The declarations have no default export, so the same file serves
+        // both the import (.d.ts) and require (.d.cts) conditions
         { src: './index.d.ts', dest: 'index.d.ts' },
+        { src: './index.d.ts', dest: 'index.d.cts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.ts' },
+        { src: './svg-validator.d.ts', dest: 'svg-validator.d.cts' },
     ]
 
-    const dirsToCopy = [
-        { src: './assets', dest: 'assets' },
-        { src: './utils', dest: 'utils' },
-    ]
+    const dirsToCopy = [{ src: './assets', dest: 'assets' }]
 
     // Copy individual files
     for (const file of filesToCopy) {
@@ -55,40 +58,32 @@ async function buildESM() {
     await fs.writeFile(path.join(distDir, 'index.js'), content)
 }
 
-// Transform the ESM code to CJS format
+// Transform the ESM code to CJS format. index.js only imports airlines.json
+// and has a single named export list, so two replacements are enough; fail
+// loudly if either stops matching.
 function transformToCJS(content) {
-    return (
-        content
-            // Replace imports with requires
-            .replace(
-                /import\s*{\s*readFileSync\s*}\s*from\s*['"]fs['"]/,
-                "const { readFileSync } = require('fs')",
-            )
-            .replace(
-                /import\s*{\s*join\s*}\s*from\s*['"]path['"]/,
-                "const { join } = require('path')",
-            )
-            .replace(
-                /import\s*{\s*toSlug,\s*getAirlineAssets\s*}\s*from\s*['"](\.\/utils\/index\.js)['"]/,
-                "const { toSlug, getAirlineAssets } = require('./utils')",
-            )
-            .replace(
-                /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+(?:assert|with)\s*{\s*type:\s*['"]json['"]\s*}/,
-                "const airlines = require('./airlines.json')",
-            )
-            // Remove fileURLToPath import and __dirname setup since CJS has __dirname built-in
-            .replace(
-                /import\s*{\s*fileURLToPath\s*}\s*from\s*['"]url['"];?\s*/,
-                '',
-            )
-            .replace(
-                /const\s+__dirname\s*=\s*fileURLToPath\s*\(\s*new\s+URL\s*\(\s*['"]\.\.?\s*['"]\s*,\s*import\.meta\.url\s*\)\s*\)\s*;?/,
-                '',
-            )
-            // Replace export statements
-            .replace(/export\s*{\s*([^}]+)\s*}/, 'module.exports = { $1 }')
-            .replace(/export\s+default\s*{[^}]+}/, '')
-    )
+    const replacements = [
+        [
+            /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/,
+            "const airlines = require('./airlines.json')",
+        ],
+        [/^export\s*{([^}]+)}/m, 'module.exports = {$1}'],
+    ]
+
+    let out = content
+    for (const [pattern, replacement] of replacements) {
+        if (!pattern.test(out)) {
+            throw new Error(`transformToCJS: ${pattern} did not match index.js`)
+        }
+        out = out.replace(pattern, replacement)
+    }
+    if (/^\s*(import|export)\s/m.test(out)) {
+        throw new Error(
+            'transformToCJS: index.js has an unhandled import/export',
+        )
+    }
+
+    return out
 }
 
 // CJS version

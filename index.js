@@ -1,152 +1,72 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { fileURLToPath } from 'url'
-import { toSlug, getAirlineAssets } from './utils/index.js'
 import airlines from './airlines.json' with { type: 'json' }
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
-
-// assets/<slug>/<variant>.svg or <variant>-mono.svg
-const ASSETS_BASE = 'assets'
+const ASSET_TYPES = ['icon', 'logo', 'tail']
 
 const byIata = new Map()
 const byIcao = new Map()
-const byName = new Map()
 const bySlug = new Map()
+const byName = new Map()
 
-for (const a of airlines) {
-    // If airlines.json doesn’t have slug, compute it now
-    const slug = a.slug ? a.slug : toSlug(a.name)
-    a.slug = slug
-
-    if (a.iata) byIata.set(String(a.iata).toUpperCase(), a)
-    if (a.icao) byIcao.set(String(a.icao).toUpperCase(), a)
-    if (a.name) byName.set(String(a.name).toLowerCase(), a)
-    bySlug.set(slug, a)
-}
-
-// Build path for a variant, respecting has_mono_file
-function buildVariantPaths(slug, variant, assetsMeta) {
-    const { color_model, colors, has_mono_file } = assetsMeta || {}
-
-    const baseDir = `${ASSETS_BASE}/${slug}`
-    const color = `${baseDir}/${variant}.svg`
-    const monochrome = has_mono_file ? `${baseDir}/${variant}-mono.svg` : null
-
-    return { color, monochrome, color_model, colors }
-}
-
-function resolveAssets(a) {
-    const assetsMeta = getAirlineAssets(a.slug, join(__dirname, ASSETS_BASE))
-    const out = {}
-
-    for (const variant of ['icon', 'logo', 'tail']) {
-        const vm = assetsMeta[variant]
-        if (!vm) continue
-        out[variant] = buildVariantPaths(a.slug, variant, vm)
+const deepFreeze = (value) => {
+    if (value && typeof value === 'object') {
+        Object.values(value).forEach(deepFreeze)
+        Object.freeze(value)
     }
 
-    return out
+    return value
+}
+
+for (const airline of airlines) {
+    deepFreeze(airline)
+    if (airline.iata) byIata.set(airline.iata.toUpperCase(), airline)
+    if (airline.icao) byIcao.set(airline.icao.toUpperCase(), airline)
+    bySlug.set(airline.slug, airline)
+    byName.set(airline.name.toLowerCase(), airline)
 }
 
 /**
- * List all airlines (with computed slug).
+ * All airlines, sorted by name. The array is a fresh copy; the airline
+ * objects are frozen.
  */
 function listAirlines() {
-    return airlines
+    return airlines.slice()
 }
 
 /**
- * Get airline by IATA, ICAO, slug, or name.
+ * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
+ * tried in that order.
  */
-function getAirline(key) {
-    if (!key) return null
-    const s = String(key)
-    const iata = s.toUpperCase()
-    const icao = s.toUpperCase()
-    const name = s.toLowerCase()
-    const slug = toSlug(s)
+function getAirline(query) {
+    if (typeof query !== 'string' || !query.trim()) return undefined
+    const q = query.trim()
+    const upper = q.toUpperCase()
+    const lower = q.toLowerCase()
 
     return (
-        byIata.get(iata) ||
-        byIcao.get(icao) ||
-        bySlug.get(slug) ||
-        byName.get(name) ||
-        null
+        byIata.get(upper) ||
+        byIcao.get(upper) ||
+        bySlug.get(lower) ||
+        byName.get(lower)
     )
 }
 
 /**
- * Get resolved asset paths for an airline key.
- * {
- *   icon?: { color: 'assets/<slug>/icon.svg', monochrome: 'assets/<slug>/icon-mono.svg' | null },
- *   logo?: { ... },
- *   tail?: { ... }
- * }
+ * Package path of one asset file, e.g.
+ * 'soaring-symbols/assets/vietnam-airlines/logo.svg'.
+ * Returns undefined when the airline or that file does not exist.
  */
-function getAssets(key) {
-    const airline = getAirline(key)
-    if (!airline) return null
-
-    return resolveAssets(airline)
-}
-
-/**
- * Get airline asset content (SVG strings) by key (IATA, ICAO, name, or slug).
- * Returns null if airline not found or no assets available.
- */
-function getAssetContent(key) {
-    const airline = getAirline(key)
-    if (!airline) return null
-
-    const paths = getAssets(key)
-    if (!paths) return null
-
-    const result = {}
-
-    for (const [variant, data] of Object.entries(paths)) {
-        const {
-            color: colorPath,
-            monochrome: monoPath,
-            color_model,
-            colors,
-        } = data
-        let color = null
-        let monochrome = null
-
-        try {
-            if (colorPath) {
-                const fullPath = join(__dirname, colorPath)
-                color = readFileSync(fullPath, 'utf8')
-            }
-            if (monoPath) {
-                const fullPath = join(__dirname, monoPath)
-                monochrome = readFileSync(fullPath, 'utf8')
-            }
-            if (color || monochrome) {
-                result[variant] = {
-                    color,
-                    monochrome,
-                    color_model,
-                    colors,
-                }
-            }
-        } catch (err) {
-            console.warn(
-                `Warning: Could not read SVG file for ${airline.name} ${variant}:`,
-                err.message,
-            )
-        }
+function getAssetPath(airline, type, options = {}) {
+    const entry = typeof airline === 'string' ? getAirline(airline) : airline
+    if (!ASSET_TYPES.includes(type)) {
+        throw new TypeError(
+            `Unknown asset type "${type}", expected one of: ${ASSET_TYPES.join(', ')}`,
+        )
     }
+    const asset = entry?.assets?.[type]
+    const mono = Boolean(options.mono)
+    if (!asset || !(mono ? asset.mono : asset.color)) return undefined
 
-    return Object.keys(result).length > 0 ? result : null
+    return `soaring-symbols/assets/${entry.slug}/${type}${mono ? '-mono' : ''}.svg`
 }
 
-export { listAirlines, getAirline, getAssets, getAssetContent }
-
-export default {
-    listAirlines,
-    getAirline,
-    getAssets,
-    getAssetContent,
-}
+export { listAirlines, getAirline, getAssetPath }

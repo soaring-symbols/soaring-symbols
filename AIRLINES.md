@@ -74,7 +74,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Hainan Airlines](https://www.hainanairlines.com) | CN | HU | CHH |  | ![#d71920](https://place-hold.it/10x10/d71920/d71920.png) | ✅ | ✅ |  |
 | [Hawaiian Airlines](https://www.hawaiianairlines.com) | US | HA | HAL | oneworld | ![#4e2582](https://place-hold.it/10x10/4e2582/4e2582.png) | ☑️ | ☑️ |  |
 | [HK Express](https://www.hkexpress.com) | HK | UO | HKE |  | ![#702b91](https://place-hold.it/10x10/702b91/702b91.png) | ✅ | ✅ |  |
-| [Iberia](https://www.iberia.com) 🇪🇸 | ES | IB | IBE | oneworld |  | ☑️ | ☑️ |  |
+| [Iberia](https://www.iberia.com) 🇪🇸 | ES | IB | IBE | oneworld |  | ✅ | ✅ |  |
 | [Icelandair](https://www.icelandair.com) 🇮🇸 | IS | FI | ICE |  | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ | ✅ |
 | [IndiGo](https://www.goindigo.in) | IN | 6E | IGO |  | ![#001b94](https://place-hold.it/10x10/001b94/001b94.png) | ✅ | ✅ |  |
 | [ITA Airways](https://www.ita-airways.com) 🇮🇹 | IT | AZ | ITY | Star Alliance | ![#006643](https://place-hold.it/10x10/006643/006643.png) |  | ☑️ |  |

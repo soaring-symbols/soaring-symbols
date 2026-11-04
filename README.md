@@ -64,13 +64,13 @@ https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg
 ## Usage
 
 ```js
-import { listAirlines, getAirline, getAssets, getAssetContent } from 'soaring-symbols'
+import { listAirlines, getAirline, getAssetPath } from 'soaring-symbols'
 
-// Get a list of all airlines
+// Every airline, sorted by name
 const all = listAirlines()
 
-// Get a specific airline's data
-const vna = getAirline('VN') 
+// One airline, by IATA code, ICAO code, slug or name
+const vna = getAirline('VN')
 
 /* output example
 {
@@ -86,57 +86,29 @@ const vna = getAirline('VN')
         "tagline": "Reach Further",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
     },
-    "slug": "vietnam-airlines"
-}
-*/
-
-// Get asset paths for an airline
-const assets = getAssets('VN')
-
-/* output example
-{
-    "icon": {
-        "color": "assets/vietnam-airlines/icon.svg",
-        "monochrome": null,
-        "color_model": "single",
-        "colors": [
-            "#d99e09"
-        ]
-    },
-    "logo": {
-        "color": "assets/vietnam-airlines/logo.svg",
-        "monochrome": "assets/vietnam-airlines/logo-mono.svg",
-        "color_model": "multi",
-        "colors": [
-            "#d99e09",
-            "#005e80"
-        ]
+    "slug": "vietnam-airlines",
+    "assets": {
+        "icon": { "color": true, "mono": false, "colors": ["#d99e09"] },
+        "logo": { "color": true, "mono": true, "colors": ["#d99e09", "#005e80"] }
     }
 }
 */
 
-// Get SVG content for an airline
-const content = getAssetContent('VN')
+// Package path of an SVG, or undefined if the airline has no such file
+getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
+getAssetPath('VN', 'logo', { mono: true }) // '.../logo-mono.svg'
 
-/* output example - SVG content is truncated for brevity
-{
-    "icon": {
-        "color": "<svg>...</svg>",
-        "monochrome": null,
-        "color_model": "single",
-        "colors": ["#d99e09"]
-    },
-    "logo": {
-        "color": "<svg>...</svg>",
-        "monochrome": "<svg>...</svg>",
-        "color_model": "multi",
-        "colors": ["#d99e09", "#005e80"]
-    }
-}
-*/
+// Read the markup in Node
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+
+const svg = readFileSync(
+    fileURLToPath(import.meta.resolve(getAssetPath('VN', 'logo'))),
+    'utf8',
+)
 ```
 
-For a full list of functions and the data structures they return, please see the [API Reference](./API.md).
+For a full list of functions and the data structures they return, please see the [API Reference](./API.md). Upgrading from `0.1.0-alpha.14` or earlier, which had `getAssets()` and `getAssetContent()`? The reference has a [migration guide](./API.md#migrating-from-the-old-api).
 
 ## Contributing
 
