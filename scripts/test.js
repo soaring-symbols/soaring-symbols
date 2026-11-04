@@ -112,9 +112,9 @@ for (const [format, api] of [
             })
 
             it('returns undefined when the file does not exist', () => {
-                // Vietnam Airlines' icon is single-color, so it has no -mono file
+                // Aer Lingus' logo is multi-color without a hand-made mono file
                 assert.equal(
-                    getAssetPath('VN', 'icon', { mono: true }),
+                    getAssetPath('EI', 'logo', { mono: true }),
                     undefined,
                 )
                 // Qantas ships only a mono icon
@@ -165,6 +165,16 @@ describe('airlines.json assets metadata', () => {
                 getAirlineAssets(a.slug, fileURLToPath(assetsDir)),
                 a.slug,
             )
+        }
+    })
+
+    it('ships a mono file for every single-color asset', () => {
+        for (const a of cjs.listAirlines()) {
+            for (const [type, info] of Object.entries(a.assets)) {
+                if (info.colors.length === 1) {
+                    assert.ok(info.mono, `${a.slug} ${type}-mono.svg`)
+                }
+            }
         }
     })
 

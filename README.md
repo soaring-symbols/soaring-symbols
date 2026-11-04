@@ -88,7 +88,7 @@ const vna = getAirline('VN')
     },
     "slug": "vietnam-airlines",
     "assets": {
-        "icon": { "color": true, "mono": false, "colors": ["#d99e09"] },
+        "icon": { "color": true, "mono": true, "colors": ["#d99e09"] },
         "logo": { "color": true, "mono": true, "colors": ["#d99e09", "#005e80"] }
     }
 }

@@ -17,7 +17,9 @@ This project uses a "color-first" approach, where the default asset is the full-
 
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name must be a slugified, lowercase version of the airline's name (e.g., `assets/vietnam-airways/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
-- **Monochrome Assets (Optional)**: A monochrome version is only required for multi-color assets. It should be named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`).
+- **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
+    - **Single-color assets:** don't draw one. `npm run generate` writes it from the color file (its one color becomes `currentColor`) and overwrites it on every run, so commit it but never edit it.
+    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, replace its generated `-mono.svg` by hand or delete it.
 
 **Correct Structure Example:**
 
@@ -25,9 +27,9 @@ This project uses a "color-first" approach, where the default asset is the full-
 assets/
 └── vietnam-airways/
     ├── icon.svg         # Color version (default)
-    ├── icon-mono.svg    # Mono version (optional)
+    ├── icon-mono.svg    # Mono version (generated: icon.svg is single-color)
     ├── logo.svg         # Color version (default)
-    └── logo-mono.svg    # Mono version (optional)
+    └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
 ```
 
 ### 2. SVG Specifications
@@ -86,12 +88,8 @@ After you run the script, each airline gets an `assets` object with one entry pe
 | Field Name | Description                                                                                          |
 | :--------- | :--------------------------------------------------------------------------------------------------- |
 | `color`    | `true` if the full-color `<type>.svg` exists.                                                        |
-| `mono`     | `true` if a corresponding `-mono.svg` variant exists.                                                |
+| `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.         |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
-
-Additional behavior:
-
-- If `mono` is `false` but `colors` has a single entry, the color SVG uses a single solid color — it can be treated as a monochrome asset (it can be filled or used anywhere a mono version is expected).
 
 Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.
 
@@ -126,7 +124,7 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "assets": {
         "icon": {
             "color": true,
-            "mono": false,
+            "mono": true,
             "colors": ["#d99e09"]
         },
         "logo": {

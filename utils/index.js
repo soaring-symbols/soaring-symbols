@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
 
@@ -27,7 +27,36 @@ const extractColorsFromSvg = (filePath) => {
     ]
 }
 
+// The monochrome version of a single-color SVG: its one color becomes
+// currentColor, the way every hand-made -mono.svg is drawn
+const toMonoSvg = (svg) =>
+    svg.replace(PAINT_COLOR, (match, color) =>
+        match.replace(color, 'currentColor'),
+    )
+
 const assetTypes = ['icon', 'logo', 'tail']
+
+// Write <type>-mono.svg next to every single-color <type>.svg, so each such
+// asset ships a monochrome file. Multi-color assets keep their hand-made
+// -mono.svg. Returns the paths it wrote.
+const writeDerivedMonos = (slug, assetsDir = 'assets') => {
+    const written = []
+    assetTypes.forEach((assetType) => {
+        const colorPath = join(assetsDir, slug, `${assetType}.svg`)
+        if (!existsSync(colorPath)) return
+        if (extractColorsFromSvg(colorPath).length !== 1) return
+
+        const monoPath = join(assetsDir, slug, `${assetType}-mono.svg`)
+        const mono = toMonoSvg(readFileSync(colorPath, 'utf8'))
+        if (existsSync(monoPath) && readFileSync(monoPath, 'utf8') === mono) {
+            return
+        }
+        writeFileSync(monoPath, mono)
+        written.push(monoPath)
+    })
+
+    return written
+}
 
 // Describe which files exist for each asset type of an airline:
 // { logo: { color: true, mono: false, colors: ['#d99e09'] }, ... }
@@ -54,4 +83,4 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     return assets
 }
 
-export { assetTypes, toSlug, getAirlineAssets }
+export { assetTypes, toSlug, getAirlineAssets, writeDerivedMonos }

@@ -4,12 +4,11 @@ export type AssetType = 'icon' | 'logo' | 'tail'
 export interface AssetInfo {
     /** `<type>.svg` (full color) exists. */
     readonly color: boolean
-    /** `<type>-mono.svg` exists. */
+    /** `<type>-mono.svg` exists; always true for single-color assets. */
     readonly mono: boolean
     /**
      * Hex colors the color file paints with (fills, strokes and gradient
-     * stops), lowercase; empty when there is no color file. A single color
-     * means the color file can also be used as a monochrome mark.
+     * stops), lowercase; empty when there is no color file.
      */
     readonly colors: readonly string[]
 }

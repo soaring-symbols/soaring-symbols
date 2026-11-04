@@ -78,14 +78,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0080be"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0080be"
                 ]
@@ -108,14 +108,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#020c41"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#020c41"
                 ]
@@ -166,14 +166,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e2231a"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e2231a"
                 ]
@@ -193,14 +193,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff0041"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ed1b48"
                 ]
@@ -221,7 +221,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#a48c5d"
                 ]
@@ -251,14 +251,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#cc1f2f"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#cc2234"
                 ]
@@ -280,7 +280,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f01428"
                 ]
@@ -310,7 +310,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ed1c24"
                 ]
@@ -338,7 +338,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#009eb3"
                 ]
@@ -367,14 +367,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#006fde"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#006fde"
                 ]
@@ -396,7 +396,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f00"
                 ]
@@ -462,14 +462,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#be2239"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#be2239"
                 ]
@@ -491,14 +491,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#000000"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#000000"
                 ]
@@ -519,14 +519,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0e203f"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0e203f"
                 ]
@@ -546,7 +546,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00b3f0"
                 ]
@@ -601,7 +601,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff0000"
                 ]
@@ -622,7 +622,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#152649"
                 ]
@@ -643,7 +643,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff6300"
                 ]
@@ -673,7 +673,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#01426a"
                 ]
@@ -752,7 +752,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e60013"
                 ]
@@ -812,7 +812,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#d81e05"
                 ]
@@ -905,14 +905,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff0000"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff0000"
                 ]
@@ -1154,7 +1154,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e5002b"
                 ]
@@ -1184,14 +1184,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#005d63"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#005d63"
                 ]
@@ -1370,14 +1370,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#000"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#000"
                 ]
@@ -1399,14 +1399,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0032a0"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0032a0"
                 ]
@@ -1466,7 +1466,7 @@
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f60"
                 ]
@@ -1488,14 +1488,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00265d"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00265d"
                 ]
@@ -1517,14 +1517,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#d71921"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#d71921"
                 ]
@@ -1578,7 +1578,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#bd8b13"
                 ]
@@ -1671,7 +1671,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e1251b"
                 ]
@@ -1693,14 +1693,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#473729"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#2c1e16"
                 ]
@@ -1722,14 +1722,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0c0243"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0c0243"
                 ]
@@ -1781,7 +1781,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#5a3f99"
                 ]
@@ -1822,14 +1822,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00b7ac"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00b7ac"
                 ]
@@ -1849,14 +1849,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#026845"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#026845"
                 ]
@@ -1937,14 +1937,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e60012"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e60012"
                 ]
@@ -2062,21 +2062,21 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0c0243"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0c0243"
                 ]
             },
             "tail": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0c0243"
                 ]
@@ -2096,14 +2096,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#001b94"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#001b94"
                 ]
@@ -2148,7 +2148,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e50012"
                 ]
@@ -2176,14 +2176,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e2231a"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e2231a"
                 ]
@@ -2204,7 +2204,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#003876"
                 ]
@@ -2232,7 +2232,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ff5111"
                 ]
@@ -2262,14 +2262,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ed1c24"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ed1c24"
                 ]
@@ -2291,14 +2291,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#009fd9"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#009fd9"
                 ]
@@ -2319,14 +2319,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#051766"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#051766"
                 ]
@@ -2347,14 +2347,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#1c285b"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#1c285b"
                 ]
@@ -2435,14 +2435,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#fb0102"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#fb0102"
                 ]
@@ -2464,14 +2464,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#252668"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#252668"
                 ]
@@ -2493,14 +2493,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#05164d"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#05164d"
                 ]
@@ -2522,14 +2522,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#174887"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#174887"
                 ]
@@ -2550,7 +2550,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#fdb515"
                 ]
@@ -2587,7 +2587,7 @@
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e6222e"
                 ]
@@ -2668,7 +2668,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#cd1025"
                 ]
@@ -2696,7 +2696,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#9b308c"
                 ]
@@ -2716,14 +2716,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#dc2c2b"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e31f26"
                 ]
@@ -2840,14 +2840,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#240852"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#240852"
                 ]
@@ -2869,14 +2869,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#c20831"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#c20831"
                 ]
@@ -2927,7 +2927,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f1c931"
                 ]
@@ -2957,14 +2957,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#0a6937"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#006631"
                 ]
@@ -2994,7 +2994,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#000099"
                 ]
@@ -3038,7 +3038,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f99f1c"
                 ]
@@ -3110,7 +3110,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#231f20"
                 ]
@@ -3160,7 +3160,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#f1c217"
                 ]
@@ -3190,14 +3190,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#cf0a2c"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#cf0a2c"
                 ]
@@ -3276,21 +3276,21 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#003366"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#003366"
                 ]
             },
             "tail": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#003366"
                 ]
@@ -3344,14 +3344,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00d66c"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#00d66c"
                 ]
@@ -3405,14 +3405,14 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#1414d2"
                 ]
             },
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#1414d2"
                 ]
@@ -3433,7 +3433,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e12127"
                 ]
@@ -3457,7 +3457,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#d99e09"
                 ]
@@ -3548,7 +3548,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#e31e23"
                 ]
@@ -3577,7 +3577,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#73c900"
                 ]
@@ -3646,7 +3646,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#ed164a"
                 ]
@@ -3740,7 +3740,7 @@
         "assets": {
             "logo": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#c6007e"
                 ]
@@ -3761,7 +3761,7 @@
         "assets": {
             "icon": {
                 "color": true,
-                "mono": false,
+                "mono": true,
                 "colors": [
                     "#008cd5"
                 ]

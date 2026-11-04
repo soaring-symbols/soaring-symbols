@@ -103,70 +103,70 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
     },
     "slug": "vietnam-airlines",
     "assets": {
-        "icon": { "color": true, "mono": false, "colors": ["#d99e09"] },
-        "logo": { "color": true, "mono": true, "colors": ["#d99e09", "#005e80"] }
+        "icon": { "color": true, "mono": true, "colors": ["#d99e09"] },
+        "logo": {
+            "color": true,
+            "mono": true,
+            "colors": ["#d99e09", "#005e80"]
+        }
     }
 }
 ```
 
-| Field          | Type                    | Description                                                                         |
-| :------------- | :---------------------- | :---------------------------------------------------------------------------------- |
-| `name`         | `string`                | Full airline name.                                                                  |
-| `iata`         | `string`                | 2-character IATA code.                                                              |
-| `icao`         | `string`                | 3-letter ICAO code.                                                                 |
-| `country`      | `string`                | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.       |
-| `slug`         | `string`                | URL-friendly name, also the asset folder name.                                      |
-| `website`      | `string?`               | Official website.                                                                   |
-| `flag_carrier` | `boolean?`              | `true` for a national flag carrier.                                                 |
-| `alliance`     | `string?`               | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                     |
-| `defunct`      | `boolean?`              | `true` if the airline has ceased operations.                                        |
-| `vectorized`   | `boolean?`              | `true` if the SVG was vectorized by hand.                                           |
-| `branding`     | `object?`               | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional. |
-| `assets`       | `object`                | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key. |
-| `subsidiaries` | `Subsidiary[]?`         | Airlines sharing this airline's marks: `name`, `iata`, `icao`, `country`, `flag_carrier?`. They are not returned by `getAirline()`. |
+| Field          | Type            | Description                                                                                                                         |
+| :------------- | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
+| `name`         | `string`        | Full airline name.                                                                                                                  |
+| `iata`         | `string`        | 2-character IATA code.                                                                                                              |
+| `icao`         | `string`        | 3-letter ICAO code.                                                                                                                 |
+| `country`      | `string`        | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                       |
+| `slug`         | `string`        | URL-friendly name, also the asset folder name.                                                                                      |
+| `website`      | `string?`       | Official website.                                                                                                                   |
+| `flag_carrier` | `boolean?`      | `true` for a national flag carrier.                                                                                                 |
+| `alliance`     | `string?`       | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                     |
+| `defunct`      | `boolean?`      | `true` if the airline has ceased operations.                                                                                        |
+| `vectorized`   | `boolean?`      | `true` if the SVG was vectorized by hand.                                                                                           |
+| `branding`     | `object?`       | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                          |
+| `assets`       | `object`        | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                               |
+| `subsidiaries` | `Subsidiary[]?` | Airlines sharing this airline's marks: `name`, `iata`, `icao`, `country`, `flag_carrier?`. They are not returned by `getAirline()`. |
 
 ### AssetInfo
 
 Describes which files exist for one asset type.
 
-| Field    | Type       | Description                                                                                                  |
-| :------- | :--------- | :----------------------------------------------------------------------------------------------------------- |
-| `color`  | `boolean`  | `<type>.svg`, the full-color version, exists.                                                                |
-| `mono`   | `boolean`  | `<type>-mono.svg`, the monochrome version, exists.                                                           |
+| Field    | Type       | Description                                                                                                            |
+| :------- | :--------- | :--------------------------------------------------------------------------------------------------------------------- |
+| `color`  | `boolean`  | `<type>.svg`, the full-color version, exists.                                                                          |
+| `mono`   | `boolean`  | `<type>-mono.svg`, the monochrome version (drawn in `currentColor`), exists. Always `true` for single-color assets.    |
 | `colors` | `string[]` | Lowercase hex colors the color file paints with: fills, strokes and gradient stops. Empty when there is no color file. |
 
-A color file with exactly one color can be used as a monochrome mark too (e.g. with `fill: currentColor`), even when `mono` is `false`:
-
-```js
-const { assets } = getAirline('VN')
-const canTint = assets.icon.mono || assets.icon.colors.length === 1
-```
+Every single-color asset ships a `-mono.svg`, generated from its color file. Multi-color assets have one only when it was drawn by hand, so check `mono` (or whether `getAssetPath(..., { mono: true })` returns a path) before offering a monochrome version.
 
 The asset folder follows this structure:
 
 ```plaintext
 assets/<slug>/
 ├── icon.svg
+├── icon-mono.svg   # generated when icon.svg is single-color
 ├── logo.svg
-└── logo-mono.svg   # optional
+└── logo-mono.svg   # hand-made for a multi-color logo, optional
 ```
 
 ## Migrating from the old API
 
 Versions up to `0.1.0-alpha.14` exported `getAssets()`, `getAssetContent()`, a default export and a `soaring-symbols/utils` subpath. They are gone; the asset information now ships precomputed in each airline's `assets` field, so the library no longer touches the file system.
 
-| Old                                          | New                                                                      |
-| :------------------------------------------- | :----------------------------------------------------------------------- |
-| `getAirline(key)` returns `null` when missing | Returns `undefined`.                                                    |
-| `airline.branding.colors.logo`               | `airline.assets.logo.colors`                                             |
-| `getAssets(key)`                             | `getAirline(key).assets` for metadata, `getAssetPath()` for file paths. |
-| `getAssets(key).logo.color`                  | `getAssetPath(key, 'logo')`                                              |
-| `getAssets(key).logo.monochrome`             | `getAssetPath(key, 'logo', { mono: true })`                              |
-| `getAssets(key).logo.colors`                 | `getAirline(key).assets.logo.colors`                                     |
-| `getAssets(key).logo.color_model`            | `assets.logo.colors.length > 1 ? 'multi' : 'single'`                     |
-| `getAssetContent(key).logo.color`            | Read the file yourself, see [Using the path](#using-the-path).           |
-| `import soaringSymbols from 'soaring-symbols'` | `import { listAirlines, getAirline, getAssetPath } from 'soaring-symbols'` |
-| `import { toSlug } from 'soaring-symbols/utils'` | Use `airline.slug`; look an airline up by name with `getAirline(name)`. |
+| Old                                              | New                                                                        |
+| :----------------------------------------------- | :------------------------------------------------------------------------- |
+| `getAirline(key)` returns `null` when missing    | Returns `undefined`.                                                       |
+| `airline.branding.colors.logo`                   | `airline.assets.logo.colors`                                               |
+| `getAssets(key)`                                 | `getAirline(key).assets` for metadata, `getAssetPath()` for file paths.    |
+| `getAssets(key).logo.color`                      | `getAssetPath(key, 'logo')`                                                |
+| `getAssets(key).logo.monochrome`                 | `getAssetPath(key, 'logo', { mono: true })`                                |
+| `getAssets(key).logo.colors`                     | `getAirline(key).assets.logo.colors`                                       |
+| `getAssets(key).logo.color_model`                | `assets.logo.colors.length > 1 ? 'multi' : 'single'`                       |
+| `getAssetContent(key).logo.color`                | Read the file yourself, see [Using the path](#using-the-path).             |
+| `import soaringSymbols from 'soaring-symbols'`   | `import { listAirlines, getAirline, getAssetPath } from 'soaring-symbols'` |
+| `import { toSlug } from 'soaring-symbols/utils'` | Use `airline.slug`; look an airline up by name with `getAirline(name)`.    |
 
 Two behaviors changed along the way:
 
