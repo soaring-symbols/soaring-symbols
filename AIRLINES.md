@@ -14,7 +14,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Air Astana](https://airastana.com) 🇰🇿 | KZ | KC | KZR |  | ![#a48c5d](https://place-hold.it/10x10/a48c5d/a48c5d.png) | ✅ | ✅ |  |
 | [Air Berlin](https://www.airberlin.com) | DE | AB | BER | oneworld | ![#cc2234](https://place-hold.it/10x10/cc2234/cc2234.png) | ✅ | ✅ |  |
 | [Air Canada](https://www.aircanada.com) 🇨🇦 | CA | AC | ACA | Star Alliance | ![#f01428](https://place-hold.it/10x10/f01428/f01428.png) | ✅ | ✅ |  |
-| [Air China](https://www.airchina.com) 🇨🇳 | CN | CA | CCA | Star Alliance | ![#ED1C24](https://place-hold.it/10x10/ED1C24/ED1C24.png) | ✅ | ✅ |  |
+| [Air China](https://www.airchina.com) 🇨🇳 | CN | CA | CCA | Star Alliance | ![#ed1c24](https://place-hold.it/10x10/ed1c24/ed1c24.png) | ✅ | ✅ |  |
 | [Air Dolomiti](https://www.airdolomiti.eu) | IT | EN | DLA |  | ![#009eb3](https://place-hold.it/10x10/009eb3/009eb3.png) | ✅ | ✅ |  |
 | [Air Europa](https://www.aireuropa.com) | ES | UX | AEA | SkyTeam | ![#006fde](https://place-hold.it/10x10/006fde/006fde.png) | ✅ | ✅ |  |
 | [Air France](https://airfrance.com) 🇫🇷 | FR | AF | AFR | SkyTeam | ![#051039](https://place-hold.it/10x10/051039/051039.png) | ✅ | ✅ |  |
@@ -50,10 +50,10 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Cebu Pacific](https://www.cebupacificair.com) | PH | 5J | CEB |  | ![#0096d6](https://place-hold.it/10x10/0096d6/0096d6.png) | ✅ | ✅ |  |
 | [China Airlines](https://www.china-airlines.com) 🇹🇼 | TW | CI | CAL | SkyTeam | ![#2b3088](https://place-hold.it/10x10/2b3088/2b3088.png) | ☑️ | ☑️ |  |
 | [China Eastern Airlines](https://www.ceair.com) | CN | MU | CES | SkyTeam | ![#1a4fa3](https://place-hold.it/10x10/1a4fa3/1a4fa3.png) | ☑️ | ☑️ |  |
-| [China Southern Airlines](https://www.csair.com) | CN | CZ | CSN |  | ![#0093D0](https://place-hold.it/10x10/0093D0/0093D0.png) | ☑️ | ✅ | ☑️ |
+| [China Southern Airlines](https://www.csair.com) | CN | CZ | CSN |  | ![#0093d0](https://place-hold.it/10x10/0093d0/0093d0.png) | ☑️ | ✅ | ☑️ |
 | [Condor](https://www.condor.com) | DE | DE | CFG |  | ![#000000](https://place-hold.it/10x10/000000/000000.png) | ✅ | ✅ |  |
 | [Copa Airlines](https://www.copaair.com) 🇵🇦 | PA | CM | CMP | Star Alliance | ![#0032a0](https://place-hold.it/10x10/0032a0/0032a0.png) | ✅ | ✅ |  |
-| [Delta Air Lines](https://www.delta.com) | US | DL | DAL | SkyTeam | ![#E31837](https://place-hold.it/10x10/E31837/E31837.png) | ✅ | ✅ |  |
+| [Delta Air Lines](https://www.delta.com) | US | DL | DAL | SkyTeam | ![#e31837](https://place-hold.it/10x10/e31837/e31837.png) | ✅ | ✅ |  |
 | [easyJet](https://www.easyjet.com) | GB | U2 | EZY |  | ![#ff6600](https://place-hold.it/10x10/ff6600/ff6600.png) | ☑️ | ✅ |  |
 | [EgyptAir](https://www.egyptair.com) 🇪🇬 | EG | MS | MSR | Star Alliance | ![#002855](https://place-hold.it/10x10/002855/002855.png) | ✅ | ✅ |  |
 | [Emirates](https://www.emirates.com) 🇦🇪 | AE | EK | UAE |  | ![#d71921](https://place-hold.it/10x10/d71921/d71921.png) | ✅ | ✅ |  |
@@ -124,7 +124,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [T'way Air](https://www.twayair.com) | KR | TW | TWB |  | ![#d22c25](https://place-hold.it/10x10/d22c25/d22c25.png) |  | ✅ |  |
 | [TAP Air Portugal](https://www.tapairportugal.com) 🇵🇹 | PT | TP | TAP | Star Alliance | ![#bfd730](https://place-hold.it/10x10/bfd730/bfd730.png) | ☑️ | ☑️ |  |
 | [TAROM](https://www.tarom.ro) 🇷🇴 | RO | RO | ROT | SkyTeam | ![#003366](https://place-hold.it/10x10/003366/003366.png) | ✅ | ✅ | ✅ |
-| [Thai Airways](https://www.thaiairways.com) 🇹🇭 | TH | TG | THA | Star Alliance | ![#306](https://place-hold.it/10x10/306/306.png) | ☑️ | ✅ |  |
+| [Thai Airways](https://www.thaiairways.com) 🇹🇭 | TH | TG | THA | Star Alliance | ![#330066](https://place-hold.it/10x10/330066/330066.png) | ☑️ | ✅ |  |
 | [Transavia](https://www.transavia.com) | NL | HV | TRA |  | ![#00d66c](https://place-hold.it/10x10/00d66c/00d66c.png) | ✅ | ✅ |  |
 | [Turkish Airlines](https://www.turkishairlines.com) 🇹🇷 | TR | TK | THY | Star Alliance | ![#c90019](https://place-hold.it/10x10/c90019/c90019.png) | ✅ | ✅ |  |
 | [United Airlines](https://www.united.com) | US | UA | UAL | Star Alliance | ![#1414d2](https://place-hold.it/10x10/1414d2/1414d2.png) | ✅ | ✅ |  |

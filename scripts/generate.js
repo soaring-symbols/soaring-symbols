@@ -3,6 +3,7 @@ import sortBy from 'lodash.sortby'
 import {
     assetTypes,
     toSlug,
+    toFullHex,
     getAirlineAssets,
     writeDerivedMonos,
 } from '../utils/index.js'
@@ -53,12 +54,15 @@ sorted.forEach((airline) => {
         country,
         alliance,
         flag_carrier,
-        branding: { primary_color },
+        branding: { primary_color: rawPrimaryColor },
         subsidiaries,
     } = airline
 
     airline.slug = slug
     airline.assets = assets
+    // Hand-written colors get the six-digit lowercase form the SVGs use
+    const primary_color = rawPrimaryColor && toFullHex(rawPrimaryColor)
+    if (primary_color) airline.branding.primary_color = primary_color
 
     let airlineName = website ? `[${name}](${website})` : name
 

@@ -36,25 +36,27 @@ assets/
 
 - **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo) using the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi) and avoids path merging that can shift shapes:
 
-  ```bash
-  npm run optimize -- assets/vietnam-airways/*.svg
-  ```
+    ```bash
+    npm run optimize -- assets/vietnam-airways/*.svg
+    ```
 
-  Online tools such as [SVGOMG](https://svgomg.net) use SVGO's defaults, which remove `role="img"` and can leave editor metadata behind, so prefer the command above.
+    Online tools such as [SVGOMG](https://svgomg.net) use SVGO's defaults, which remove `role="img"` and can leave editor metadata behind, so prefer the command above.
 
-- **Single-Color Assets**: A single-color SVG (including every `-mono` file) should draw everything in one `<path>`. Combine the shapes in your editor (e.g. Inkscape's *Path → Combine*) and check that overlapping shapes don't leave holes; `npm run lint:svg` warns about single-color files with more than one shape.
+- **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
+
+- **Single-Color Assets**: A single-color SVG (including every `-mono` file) should draw everything in one `<path>`. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes; `npm run lint:svg` warns about single-color files with more than one shape.
 
 - **ViewBox Dimensions**:
 
-  - **Logos** should use a `viewBox` of `0 0 64 64`.
-  - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
+    - **Logos** should use a `viewBox` of `0 0 64 64`.
+    - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 
-  - `role="img"`
-  - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
-  - `xmlns="http://www.w3.org/2000/svg"`
-  - A `<title>Airline Name</title>` element providing a text description.
+    - `role="img"`
+    - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
+    - `xmlns="http://www.w3.org/2000/svg"`
+    - A `<title>Airline Name</title>` element providing a text description.
 
 > [\!WARNING]
 > **Note on SVG Integrity:**
@@ -68,27 +70,27 @@ When adding a new airline, you only need to add an entry to the `airlines.json` 
 
 #### Information to Add Manually
 
-| Field Name     | Required | Description                                                                            |
-| :------------- | :------: | :------------------------------------------------------------------------------------- |
-| `name`         |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.** |
-| `iata`         |   Yes    | The airline's two-character IATA code.                                                 |
-| `icao`         |   Yes    | The airline's three-character ICAO code.                                               |
-| `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).   |
-| `website`      |   Yes    | The official website of the airline.                                                   |
-| `flag_carrier` |    No    | `true` or `false`.                                                                     |
-| `alliance`     |    No    | e.g., "oneworld", "SkyTeam", "Star Alliance".                                          |
-| `defunct`      |    No    | `true` if the airline has ceased operations.                                           |
-| `vectorized`   |    No    | `true` if you manually vectorized the SVG.                                             |
-| `branding`     |   Yes    | An object containing brand-specific details like `primary_color`.                      |
+| Field Name     | Required | Description                                                                                   |
+| :------------- | :------: | :-------------------------------------------------------------------------------------------- |
+| `name`         |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**        |
+| `iata`         |   Yes    | The airline's two-character IATA code.                                                        |
+| `icao`         |   Yes    | The airline's three-character ICAO code.                                                      |
+| `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
+| `website`      |   Yes    | The official website of the airline.                                                          |
+| `flag_carrier` |    No    | `true` or `false`.                                                                            |
+| `alliance`     |    No    | e.g., "oneworld", "SkyTeam", "Star Alliance".                                                 |
+| `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
+| `vectorized`   |    No    | `true` if you manually vectorized the SVG.                                                    |
+| `branding`     |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |
 
 #### Generated Asset Metadata
 
 After you run the script, each airline gets an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
 
-| Field Name | Description                                                                                          |
-| :--------- | :--------------------------------------------------------------------------------------------------- |
-| `color`    | `true` if the full-color `<type>.svg` exists.                                                        |
-| `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.         |
+| Field Name | Description                                                                                                     |
+| :--------- | :-------------------------------------------------------------------------------------------------------------- |
+| `color`    | `true` if the full-color `<type>.svg` exists.                                                                   |
+| `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
 Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.

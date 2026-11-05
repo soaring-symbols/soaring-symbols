@@ -1,16 +1,29 @@
 const HEX_REGEX = /^#(?:[0-9A-F]{3}){1,2}$/i
 const SVG_ATTR_ORDER = ['role', 'viewBox', 'xmlns', 'fill']
 
-// RULE: Hex color values must be lowercase
+const PAINT_ATTRS = ['fill', 'stroke', 'stop-color']
+
+// The six-digit lowercase form of a hex color: #F60 -> #ff6600
+const toFullHex = (hex) =>
+    (hex.length === 4
+        ? '#' + [...hex.slice(1)].map((c) => c + c).join('')
+        : hex
+    ).toLowerCase()
+
+// RULE: Hex colors must be six-digit lowercase, so the colors read from the
+//       SVGs into airlines.json share one form
 export function ruleHexColors({ document, issues }) {
-    document.querySelectorAll('[fill]').forEach((el) => {
-        const fill = el.getAttribute('fill')
-        if (fill.match(HEX_REGEX) && fill !== fill.toLowerCase()) {
+    PAINT_ATTRS.forEach((attr) => {
+        document.querySelectorAll(`[${attr}]`).forEach((el) => {
+            const value = el.getAttribute(attr)
+            if (!value.match(HEX_REGEX)) return
+            const full = toFullHex(value)
+            if (value === full) return
             issues.push(
-                `Style: Uppercase hex found "${fill}", should be "${fill.toLowerCase()}".`,
+                `Style: Hex color "${value}" should be written "${full}".`,
             )
-            el.setAttribute('fill', fill.toLowerCase())
-        }
+            el.setAttribute(attr, full)
+        })
     })
 }
 

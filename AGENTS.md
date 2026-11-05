@@ -33,7 +33,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 
 ## Adding or updating an airline
 
-1. Put the SVGs in `assets/<slug>/` following `CONTRIBUTING.md`: optimized with `npm run optimize` (never SVGO's defaults, which drop `role="img"`), `role="img"`, `xmlns`, `<title>Airline Name</title>` as the first child, `viewBox="0 0 64 64"` for logos and `0 0 24 24` for icons and tails, hex colors only, no `transform`, no scripts.
+1. Put the SVGs in `assets/<slug>/` following `CONTRIBUTING.md`: optimized with `npm run optimize` (never SVGO's defaults, which drop `role="img"`), `role="img"`, `xmlns`, `<title>Airline Name</title>` as the first child, `viewBox="0 0 64 64"` for logos and `0 0 24 24` for icons and tails, six-digit lowercase hex colors only, no `transform`, no scripts.
 2. Add the base entry to `airlines.json` (`name`, `iata`, `icao`, `country`, `website`, `branding.primary_color`, plus optional fields from `CONTRIBUTING.md`).
 3. Run `node scripts/lint-svg.js --fix`, then `npm run generate`, and commit the SVGs (including any `-mono.svg` it generated) together with the regenerated `airlines.json` and `AIRLINES.md`.
 4. Run `npm test`.

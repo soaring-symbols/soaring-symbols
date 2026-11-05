@@ -178,6 +178,19 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
+    it('writes every color as six-digit lowercase hex', () => {
+        const FULL_HEX = /^#[0-9a-f]{6}$/
+        for (const a of cjs.listAirlines()) {
+            const colors = [
+                a.branding?.primary_color,
+                ...Object.values(a.assets).flatMap((info) => info.colors),
+            ].filter(Boolean)
+            for (const color of colors) {
+                assert.match(color, FULL_HEX, `${a.slug} ${color}`)
+            }
+        }
+    })
+
     it('has an airline for every asset directory', () => {
         const slugs = new Set(cjs.listAirlines().map((a) => a.slug))
         const dirs = readdirSync(assetsDir, { withFileTypes: true })

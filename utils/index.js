@@ -15,13 +15,21 @@ const toSlug = (name) => {
 const PAINT_COLOR =
     /(?:fill|stroke|stop-color)\s*[:=]\s*["']?(#[0-9a-f]{3}(?:[0-9a-f]{3})?)\b/gi
 
+// The six-digit lowercase form of a hex color, so #fff and #ffffff count
+// as one color: #F60 -> #ff6600
+const toFullHex = (hex) =>
+    (hex.length === 4
+        ? '#' + [...hex.slice(1)].map((c) => c + c).join('')
+        : hex
+    ).toLowerCase()
+
 const extractColorsFromSvg = (filePath) => {
     const content = readFileSync(filePath, 'utf8')
 
     return [
         ...new Set(
             [...content.matchAll(PAINT_COLOR)].map(([, color]) =>
-                color.toLowerCase(),
+                toFullHex(color),
             ),
         ),
     ]
@@ -83,4 +91,4 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     return assets
 }
 
-export { assetTypes, toSlug, getAirlineAssets, writeDerivedMonos }
+export { assetTypes, toSlug, toFullHex, getAirlineAssets, writeDerivedMonos }

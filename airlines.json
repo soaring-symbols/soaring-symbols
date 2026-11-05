@@ -304,7 +304,7 @@
         "website": "https://www.airchina.com",
         "alliance": "Star Alliance",
         "branding": {
-            "primary_color": "#ED1C24"
+            "primary_color": "#ed1c24"
         },
         "slug": "air-china",
         "assets": {
@@ -320,7 +320,7 @@
                 "mono": true,
                 "colors": [
                     "#e60012",
-                    "#000"
+                    "#000000"
                 ]
             }
         }
@@ -398,14 +398,14 @@
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#f00"
+                    "#ff0000"
                 ]
             },
             "logo": {
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#f00",
+                    "#ff0000",
                     "#051039"
                 ]
             }
@@ -821,7 +821,7 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#fff",
+                    "#ffffff",
                     "#fcfcfc",
                     "#f2f2f2",
                     "#e1e2e2",
@@ -1246,7 +1246,7 @@
                 "mono": false,
                 "colors": [
                     "#be1d2d",
-                    "#fff",
+                    "#ffffff",
                     "#ee566c"
                 ]
             },
@@ -1254,7 +1254,7 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#fff",
+                    "#ffffff",
                     "#f2d4da",
                     "#efcbd1",
                     "#db8d98",
@@ -1323,7 +1323,7 @@
         "flag_carrier": false,
         "website": "https://www.csair.com",
         "branding": {
-            "primary_color": "#0093D0"
+            "primary_color": "#0093d0"
         },
         "slug": "china-southern-airlines",
         "assets": {
@@ -1332,7 +1332,7 @@
                 "mono": false,
                 "colors": [
                     "#0093d0",
-                    "#fff",
+                    "#ffffff",
                     "#ed1b2f"
                 ]
             },
@@ -1341,7 +1341,7 @@
                 "mono": true,
                 "colors": [
                     "#0093d0",
-                    "#fff",
+                    "#ffffff",
                     "#ed1b2f",
                     "#002052"
                 ]
@@ -1351,7 +1351,7 @@
                 "mono": false,
                 "colors": [
                     "#0093d0",
-                    "#fff",
+                    "#ffffff",
                     "#ed1b2f"
                 ]
             }
@@ -1372,14 +1372,14 @@
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#000"
+                    "#000000"
                 ]
             },
             "logo": {
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#000"
+                    "#000000"
                 ]
             }
         }
@@ -1422,7 +1422,7 @@
         "website": "https://www.delta.com",
         "alliance": "SkyTeam",
         "branding": {
-            "primary_color": "#E31837"
+            "primary_color": "#e31837"
         },
         "slug": "delta-air-lines",
         "assets": {
@@ -1461,14 +1461,14 @@
                 "mono": false,
                 "colors": [
                     "#ff6601",
-                    "#fff"
+                    "#ffffff"
                 ]
             },
             "logo": {
                 "color": true,
                 "mono": true,
                 "colors": [
-                    "#f60"
+                    "#ff6600"
                 ]
             }
         }
@@ -1643,7 +1643,7 @@
                 "mono": true,
                 "colors": [
                     "#00a64f",
-                    "#fff",
+                    "#ffffff",
                     "#f0451c"
                 ]
             },
@@ -1651,7 +1651,7 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#fff",
+                    "#ffffff",
                     "#00a64f",
                     "#f0451c"
                 ]
@@ -2582,7 +2582,7 @@
                 "mono": false,
                 "colors": [
                     "#e5212d",
-                    "#fff"
+                    "#ffffff"
                 ]
             },
             "logo": {
@@ -2787,7 +2787,7 @@
                 "mono": true,
                 "colors": [
                     "#e40000",
-                    "#fff",
+                    "#ffffff",
                     "#323232"
                 ]
             }
@@ -3306,7 +3306,7 @@
         "website": "https://www.thaiairways.com",
         "alliance": "Star Alliance",
         "branding": {
-            "primary_color": "#306",
+            "primary_color": "#330066",
             "tagline": "Grace to Growth"
         },
         "slug": "thai-airways",
@@ -3315,9 +3315,9 @@
                 "color": true,
                 "mono": false,
                 "colors": [
-                    "#fc0",
-                    "#306",
-                    "#c09"
+                    "#ffcc00",
+                    "#330066",
+                    "#cc0099"
                 ]
             },
             "logo": {
@@ -3677,7 +3677,7 @@
                 "mono": false,
                 "colors": [
                     "#504f4e",
-                    "#fc0"
+                    "#ffcc00"
                 ]
             }
         }
@@ -3699,7 +3699,7 @@
                 "colors": [
                     "#00aaa6",
                     "#003c71",
-                    "#fff"
+                    "#ffffff"
                 ]
             },
             "logo": {
