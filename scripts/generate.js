@@ -40,6 +40,13 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 const derivedMonos = []
 
 sorted.forEach((airline) => {
+    // Hand-written colors get the six-digit lowercase form the SVGs use
+    if (airline.branding?.primary_color) {
+        airline.branding.primary_color = toFullHex(
+            airline.branding.primary_color,
+        )
+    }
+
     const slug = toSlug(airline.name)
     derivedMonos.push(...writeDerivedMonos(slug))
     const assets = getAirlineAssets(slug)
@@ -54,15 +61,12 @@ sorted.forEach((airline) => {
         country,
         alliance,
         flag_carrier,
-        branding: { primary_color: rawPrimaryColor },
+        branding: { primary_color },
         subsidiaries,
     } = airline
 
     airline.slug = slug
     airline.assets = assets
-    // Hand-written colors get the six-digit lowercase form the SVGs use
-    const primary_color = rawPrimaryColor && toFullHex(rawPrimaryColor)
-    if (primary_color) airline.branding.primary_color = primary_color
 
     let airlineName = website ? `[${name}](${website})` : name
 

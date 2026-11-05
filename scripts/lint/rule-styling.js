@@ -1,14 +1,9 @@
+import { toFullHex } from '../../utils/index.js'
+
 const HEX_REGEX = /^#(?:[0-9A-F]{3}){1,2}$/i
 const SVG_ATTR_ORDER = ['role', 'viewBox', 'xmlns', 'fill']
 
 const PAINT_ATTRS = ['fill', 'stroke', 'stop-color']
-
-// The six-digit lowercase form of a hex color: #F60 -> #ff6600
-const toFullHex = (hex) =>
-    (hex.length === 4
-        ? '#' + [...hex.slice(1)].map((c) => c + c).join('')
-        : hex
-    ).toLowerCase()
 
 // RULE: Hex colors must be six-digit lowercase, so the colors read from the
 //       SVGs into airlines.json share one form
