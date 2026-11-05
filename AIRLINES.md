@@ -79,6 +79,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [IndiGo](https://www.goindigo.in) | IN | 6E | IGO |  | ![#001b94](https://place-hold.it/10x10/001b94/001b94.png) | ✅ | ✅ |  |
 | [ITA Airways](https://www.ita-airways.com) 🇮🇹 | IT | AZ | ITY | Star Alliance | ![#006643](https://place-hold.it/10x10/006643/006643.png) |  | ☑️ |  |
 | [Japan Airlines](https://www.jal.co.jp) 🇯🇵 | JP | JL | JAL | oneworld | ![#e50012](https://place-hold.it/10x10/e50012/e50012.png) | ✅ | ✅ |  |
+| [Jeju Air](https://www.jejuair.net) | KR | 7C | JJA |  | ![#ff5000](https://place-hold.it/10x10/ff5000/ff5000.png) | ✅ | ✅ |  |
 | [Jet2.com](https://www.jet2.com) | GB | LS | EXS |  | ![#d71920](https://place-hold.it/10x10/d71920/d71920.png) | ✅ | ✅ |  |
 | [JetBlue Airways](https://www.jetblue.com) | US | B6 | JBU |  | ![#003876](https://place-hold.it/10x10/003876/003876.png) |  | ✅ |  |
 | [Jetstar](https://www.jetstar.com) | AU | JQ | JST |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
