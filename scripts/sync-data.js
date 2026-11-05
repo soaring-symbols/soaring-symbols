@@ -27,6 +27,7 @@ import {
 // page, another topic)
 const PAGE_TITLES = {
     Azul: 'Azul Brazilian Airlines',
+    Binter: 'Binter Canarias',
     Condor: 'Condor (airline)',
     Emirates: 'Emirates (airline)',
     Firefly: 'Firefly (airline)',

@@ -1356,6 +1356,32 @@
         }
     },
     {
+        "name": "Binter",
+        "iata": "NT",
+        "icao": "IBB",
+        "callsign": "BINTER",
+        "country": "ES",
+        "website": "https://www.bintercanarias.com",
+        "hubs": [
+            "LPA",
+            "TFN"
+        ],
+        "founded": 1988,
+        "branding": {
+            "primary_color": "#5bac29"
+        },
+        "slug": "binter",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#5bac29"
+                ]
+            }
+        }
+    },
+    {
         "name": "British Airways",
         "iata": "BA",
         "icao": "BAW",
