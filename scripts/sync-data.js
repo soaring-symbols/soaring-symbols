@@ -35,6 +35,7 @@ const PAGE_TITLES = {
     Flybe: 'Flybe (1979–2020)',
     GOL: 'Gol Linhas Aéreas',
     Iberia: 'Iberia (airline)',
+    Level: 'Level (airline)',
     Viva: 'Viva (airline)',
 }
 

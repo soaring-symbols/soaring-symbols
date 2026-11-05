@@ -92,6 +92,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [LATAM Airlines Ecuador](https://www.latamairlines.com) | EC | XL | LNE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
 | [LATAM Airlines Paraguay](https://www.latam.com/es_py) | PY | PZ | LAP |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
 | [LATAM Airlines Perú](https://www.latam.com) | PE | LP | LPE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [Level](https://www.flylevel.com) | ES | LL | LVL |  | ![#3fa74d](https://place-hold.it/10x10/3fa74d/3fa74d.png) | ☑️ | ☑️ |  |
 | [Lion Air](https://www.lionair.co.id) | ID | JT | LNI |  | ![#ed1b2f](https://place-hold.it/10x10/ed1b2f/ed1b2f.png) | ✅ | ✅ |  |
 | [LOT Polish Airlines](https://www.lot.com) 🇵🇱 | PL | LO | LOT | Star Alliance | ![#252668](https://place-hold.it/10x10/252668/252668.png) | ✅ | ✅ |  |
 | [Lufthansa](https://www.lufthansa.com) 🇩🇪 | DE | LH | DLH | Star Alliance | ![#05164d](https://place-hold.it/10x10/05164d/05164d.png) | ✅ | ✅ |  |

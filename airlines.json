@@ -3119,6 +3119,41 @@
         }
     },
     {
+        "name": "Level",
+        "iata": "LL",
+        "icao": "LVL",
+        "callsign": "DALI",
+        "country": "ES",
+        "website": "https://www.flylevel.com",
+        "hubs": [
+            "BCN"
+        ],
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#3fa74d"
+        },
+        "slug": "level",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": false,
+                "colors": [
+                    "#00aadb",
+                    "#3fa74d"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": false,
+                "colors": [
+                    "#00aadb",
+                    "#3fa74d",
+                    "#1d1d1b"
+                ]
+            }
+        }
+    },
+    {
         "name": "Lion Air",
         "iata": "JT",
         "icao": "LNI",
