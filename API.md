@@ -161,11 +161,11 @@ assets/<slug>/
 └── logo-mono.svg   # hand-made for a multi-color logo, optional
 ```
 
-## Migrating from 0.2
+## Subsidiaries in 0.2.2
 
-`0.3.0` drops the `subsidiaries` field. Each airline that used to be listed there is now an entry of its own, with its own codes, country, website and callsign, returned by `listAirlines()` and `getAirline()`. Its `parent` field holds the slug of the airline that owns it.
+`0.2.2` drops the `subsidiaries` field, in a patch release since nothing known reads it. Each airline that used to be listed there is now an entry of its own, with its own codes, country, website and callsign, returned by `listAirlines()` and `getAirline()`. Its `parent` field holds the slug of the airline that owns it.
 
-| 0.2                                      | 0.3                                                                |
+| Up to 0.2.1                              | From 0.2.2                                                         |
 | :--------------------------------------- | :----------------------------------------------------------------- |
 | `getAirline('AK').subsidiaries`          | `listAirlines().filter((a) => a.parent === 'airasia')`             |
 | `getAirline('FD')` returns `undefined`   | Returns Thai AirAsia; `getAssetPath('FD', 'logo')` gives its logo. |
