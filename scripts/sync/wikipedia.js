@@ -40,26 +40,16 @@ const closingIndex = (text, start) => {
 // Split on `separator` only outside nested templates and links
 const splitTopLevel = (text, separator) => {
     const parts = []
-    let depth = 0
-    let current = ''
+    let start = 0
     for (let i = 0; i < text.length; i++) {
-        const pair = text.slice(i, i + 2)
-        if (pair === '{{' || pair === '[[') {
-            depth++
-            current += pair
-            i++
-        } else if (pair === '}}' || pair === ']]') {
-            depth--
-            current += pair
-            i++
-        } else if (text[i] === separator && depth === 0) {
-            parts.push(current)
-            current = ''
-        } else {
-            current += text[i]
+        if (text.startsWith('{{', i) || text.startsWith('[[', i)) {
+            i = closingIndex(text, i) - 1
+        } else if (text[i] === separator) {
+            parts.push(text.slice(start, i))
+            start = i + 1
         }
     }
-    parts.push(current)
+    parts.push(text.slice(start))
 
     return parts
 }
@@ -96,8 +86,8 @@ export function infoboxParams(infobox) {
 
 // Plain text of a wikitext value: list templates keep their items (one per
 // line), other templates, references and markup are removed
-export function stripMarkup(value = '') {
-    let text = stripComments(value)
+function stripMarkup(value = '') {
+    const text = stripComments(value)
     let out = ''
     for (let i = 0; i < text.length; i++) {
         if (text.startsWith('{{', i)) {
@@ -118,9 +108,8 @@ export function stripMarkup(value = '') {
             out += text[i]
         }
     }
-    text = out
 
-    return text
+    return out
         .replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, '$1')
         .replace(/<br\s*\/?>/gi, '\n')
         .replace(/<[^>]+>/g, '')
@@ -197,56 +186,47 @@ const resolver = (query) => {
     }
 }
 
-// Wikitext of each page, keyed by the requested title (redirects followed);
-// '' for missing pages
-export async function fetchPages(titles, batchSize = 20) {
-    const pages = {}
+// One value per requested page title, read with `pick` from a batched
+// query (redirects followed); `pick` gets undefined for missing pages
+async function queryPages(titles, params, pick, batchSize) {
+    const result = {}
     for (let i = 0; i < titles.length; i += batchSize) {
         const batch = titles.slice(i, i + batchSize)
         const { query } = await api('en.wikipedia.org', {
             action: 'query',
-            prop: 'revisions',
-            rvprop: 'content',
-            rvslots: 'main',
             redirects: '1',
             titles: batch.join('|'),
+            ...params,
         })
         const resolve = resolver(query)
         const byTitle = Object.fromEntries(
-            query.pages.map((page) => [
-                page.title,
-                page.revisions?.[0]?.slots?.main?.content ?? '',
-            ]),
+            query.pages.map((page) => [page.title, page]),
         )
-        for (const title of batch) pages[title] = byTitle[resolve(title)] ?? ''
+        for (const title of batch) result[title] = pick(byTitle[resolve(title)])
     }
 
-    return pages
+    return result
 }
+
+// Wikitext of each page, keyed by the requested title; '' for missing pages
+export const fetchPages = (titles) =>
+    queryPages(
+        titles,
+        { prop: 'revisions', rvprop: 'content', rvslots: 'main' },
+        (page) => page?.revisions?.[0]?.slots?.main?.content ?? '',
+        20,
+    )
 
 // IATA airport code (Wikidata P238) of each airport page title, or
 // undefined when it can't be found
 export async function fetchAirportCodes(titles) {
     const unique = [...new Set(titles)]
-    const itemByTitle = {}
-    for (let i = 0; i < unique.length; i += 50) {
-        const batch = unique.slice(i, i + 50)
-        const { query } = await api('en.wikipedia.org', {
-            action: 'query',
-            prop: 'pageprops',
-            ppprop: 'wikibase_item',
-            redirects: '1',
-            titles: batch.join('|'),
-        })
-        const resolve = resolver(query)
-        const byTitle = Object.fromEntries(
-            query.pages.map((page) => [
-                page.title,
-                page.pageprops?.wikibase_item,
-            ]),
-        )
-        for (const title of batch) itemByTitle[title] = byTitle[resolve(title)]
-    }
+    const itemByTitle = await queryPages(
+        unique,
+        { prop: 'pageprops', ppprop: 'wikibase_item' },
+        (page) => page?.pageprops?.wikibase_item,
+        50,
+    )
 
     const items = [...new Set(Object.values(itemByTitle).filter(Boolean))]
     const codeByItem = {}

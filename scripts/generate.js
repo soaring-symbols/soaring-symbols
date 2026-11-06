@@ -1,15 +1,17 @@
 import { writeFileSync } from 'fs'
 import sortBy from 'lodash.sortby'
 import {
-    airlineFields,
-    subsidiaryFields,
     assetTypes,
     toSlug,
     toFullHex,
     getAirlineAssets,
     writeDerivedMonos,
-    validateAirlines,
 } from '../utils/index.js'
+import {
+    airlineFields,
+    subsidiaryFields,
+    validateAirlines,
+} from '../utils/schema.js'
 import { createRequire } from 'module'
 
 const require = createRequire(import.meta.url)

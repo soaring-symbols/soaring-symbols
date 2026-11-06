@@ -1,7 +1,6 @@
 import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
-import Ajv2020 from 'ajv/dist/2020.js'
 
 const toSlug = (name) => {
     return slugify(name, {
@@ -92,77 +91,4 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     return assets
 }
 
-const schema = JSON.parse(
-    readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
-)
-const validateSchema = new Ajv2020({ allErrors: true }).compile(schema)
-
-// Field order for airlines.json entries, taken from the schema so the two
-// can't drift apart: generate.js writes every entry's keys in this order
-const airlineFields = Object.keys(schema.$defs.airline.properties)
-const subsidiaryFields = Object.keys(schema.$defs.subsidiary.properties)
-
-const formatSchemaError = (airlines, error) => {
-    const [, index, ...rest] = error.instancePath.split('/')
-    const name = airlines[index]?.name ?? `#${index}`
-    const where = rest.length ? `/${rest.join('/')}` : ''
-    const detail =
-        error.keyword === 'additionalProperties'
-            ? `has unknown field "${error.params.additionalProperty}"`
-            : error.keyword === 'enum'
-              ? `must be one of: ${error.params.allowedValues.join(', ')}`
-              : error.message
-
-    return index === undefined
-        ? `airlines.json ${detail}`
-        : `${name}: ${where || '(entry)'} ${detail}`
-}
-
-// IATA and ICAO codes must be unique among airlines still flying,
-// subsidiaries included. A defunct airline may share its code with the
-// airline the code was reassigned to; getAirline() then finds the active one.
-const findDuplicateCodes = (airlines) => {
-    const active = airlines.flatMap((a) =>
-        a.defunct ? [] : [a, ...(a.subsidiaries ?? [])],
-    )
-
-    return ['iata', 'icao'].flatMap((field) => {
-        // Map.groupBy needs Node 21; the repo supports Node 20
-        const owners = new Map()
-        for (const a of active) {
-            owners.set(a[field], [...(owners.get(a[field]) ?? []), a])
-        }
-
-        return [...owners]
-            .filter(([, list]) => list.length > 1)
-            .map(
-                ([code, list]) =>
-                    `${field.toUpperCase()} ${code} is used by more than one active airline: ${list.map((a) => a.name).join(', ')}`,
-            )
-    })
-}
-
-// Check an airlines.json array against airlines.schema.json and the rules a
-// schema can't express. Returns one readable message per problem, e.g.
-// 'Vietnam Airlines: /branding/primary_color must match pattern ...';
-// an empty array means the data is valid.
-const validateAirlines = (airlines) => {
-    if (!validateSchema(airlines)) {
-        return validateSchema.errors.map((error) =>
-            formatSchemaError(airlines, error),
-        )
-    }
-
-    return findDuplicateCodes(airlines)
-}
-
-export {
-    airlineFields,
-    subsidiaryFields,
-    assetTypes,
-    toSlug,
-    toFullHex,
-    getAirlineAssets,
-    writeDerivedMonos,
-    validateAirlines,
-}
+export { assetTypes, toSlug, toFullHex, getAirlineAssets, writeDerivedMonos }

@@ -18,14 +18,14 @@ Browse the collection, open a page for any airline to download its marks, and ch
 ## Roadmap
 
 - [x] npm package
-- [x] Website with a browsable catalog, a page per airline and an SVG validator
-- [x] Raycast extension
+- [x] A `branding.primary_color` for every airline
 - [x] jsDelivr CDN
+- [x] Website with a browsable catalog, a page per airline and an SVG validator
+- [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
+- [x] Raycast extension
 - [ ] Iconify icon set, for Iconify, Nuxt Icon, UnoCSS, Tailwind and Astro
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
 - [ ] Swift Package, with an asset catalog and a SwiftUI view
-- [ ] JSON API on the website, such as `/api/airlines/VN`
-- [ ] A `branding.primary_color` for every airline (Iberia and Qantas have none yet)
 
 Plans for the website itself are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
@@ -50,8 +50,8 @@ bun add soaring-symbols
 | Tool / Integration | Author |
 | :-- | :-- |
 | [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 /> | [anhthang]|
-| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 /> | [anhthang]|
 | [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
+| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 /> | [anhthang]|
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). See the [ecosystem section on the website](https://soaringsymbols.org/#ecosystem) for how to use each one.
 
@@ -79,10 +79,13 @@ const vna = getAirline('VN')
     "name": "Vietnam Airlines",
     "iata": "VN",
     "icao": "HVN",
+    "callsign": "VIET NAM AIRLINES",
     "country": "VN",
     "flag_carrier": true,
     "website": "https://www.vietnamairlines.com",
     "alliance": "SkyTeam",
+    "hubs": ["HAN", "SGN"],
+    "founded": 1956,
     "branding": {
         "primary_color": "#d99e09",
         "tagline": "Reach Further",

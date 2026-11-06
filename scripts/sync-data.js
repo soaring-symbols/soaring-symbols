@@ -11,7 +11,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { validateAirlines } from '../utils/index.js'
+import { isValidField, validateAirlines } from '../utils/schema.js'
 import {
     extractInfobox,
     fetchAirportCodes,
@@ -47,16 +47,6 @@ const summaryPath = args.includes('--summary')
     ? args[args.indexOf('--summary') + 1]
     : undefined
 
-const schema = JSON.parse(
-    readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
-)
-const props = schema.$defs.airline.properties
-const PATTERNS = {
-    iata: new RegExp(schema.$defs.iata.pattern),
-    icao: new RegExp(schema.$defs.icao.pattern),
-    callsign: new RegExp(props.callsign.pattern),
-}
-
 const airlinesPath = new URL('../airlines.json', import.meta.url)
 const airlines = JSON.parse(readFileSync(airlinesPath, 'utf8'))
 const titleOf = (airline) => PAGE_TITLES[airline.name] ?? airline.name
@@ -64,27 +54,24 @@ const titleOf = (airline) => PAGE_TITLES[airline.name] ?? airline.name
 const sameList = (a = [], b = []) =>
     a.length === b.length && [...a].sort().join() === [...b].sort().join()
 
-// Candidate values Wikipedia gives for a code or callsign field
-const candidates = (raw, field) =>
-    listItems(raw)
-        .map((item) => item.toUpperCase())
-        .filter((item) => PATTERNS[field].test(item))
-
 console.log(`Fetching ${airlines.length} Wikipedia pages...`)
 const pages = await fetchPages(airlines.map(titleOf))
 const paramsByName = Object.fromEntries(
-    airlines.map((a) => [
-        a.name,
-        infoboxParams(extractInfobox(pages[titleOf(a)])),
-    ]),
+    airlines.map((a) => {
+        const params = infoboxParams(extractInfobox(pages[titleOf(a)]))
+        // Some infoboxes use the singular name
+        params.hubs ??= params.hub
+
+        return [a.name, params]
+    }),
 )
 const hubTitles = Object.values(paramsByName).flatMap((p) =>
-    linkTargets(p.hubs ?? p.hub),
+    linkTargets(p.hubs),
 )
 console.log(`Resolving ${new Set(hubTitles).size} hub airports...`)
 const airportCodes = await fetchAirportCodes(hubTitles)
 
-const changes = [] // { airline, field, from, to }
+const proposals = [] // { airline, changes: [{ field, from, to }] }
 const notes = [] // { airline, message }: needs a human
 
 for (const airline of airlines) {
@@ -97,19 +84,20 @@ for (const airline of airlines) {
         continue
     }
     const ignored = IGNORE[airline.name] ?? {}
+    const changes = []
     const propose = (field, to) => {
         if (JSON.stringify(ignored[field]) === JSON.stringify(to)) return
-        changes.push({ airline, field, from: airline[field], to })
+        changes.push({ field, from: airline[field], to })
     }
 
     for (const field of ['iata', 'icao', 'callsign']) {
-        const raw = params[field]
-        if (!raw) continue
-        const values = candidates(raw, field)
+        const items = listItems(params[field])
+        if (!items.length) continue
+        const values = items
+            .map((item) => item.toUpperCase())
+            .filter((item) => isValidField(field, item))
         if (!values.length) {
-            if (listItems(raw).length) {
-                note(`could not read ${field} from "${listItems(raw)[0]}"`)
-            }
+            note(`could not read ${field} from "${items[0]}"`)
             continue
         }
         // An airline may list several (e.g. a second ICAO code); ours stays
@@ -117,46 +105,45 @@ for (const airline of airlines) {
         if (!values.includes(airline[field])) propose(field, values[0])
     }
 
-    const targets = linkTargets(params.hubs ?? params.hub)
-    const hubs = [...new Set(targets.map((title) => airportCodes[title]))]
-    if (hubs.includes(undefined)) {
-        const unknown = targets.filter((title) => !airportCodes[title])
+    const targets = linkTargets(params.hubs)
+    const unknown = targets.filter((title) => !airportCodes[title])
+    if (unknown.length) {
         note(`no IATA code found for hub page(s): ${unknown.join(', ')}`)
-    } else if (!sameList(hubs, airline.hubs)) {
-        propose('hubs', hubs.length ? hubs : undefined)
+    } else {
+        const hubs = [...new Set(targets.map((title) => airportCodes[title]))]
+        if (!sameList(hubs, airline.hubs)) {
+            propose('hubs', hubs.length ? hubs : undefined)
+        }
     }
 
     const ceased = firstYear(params.ceased)
-    if (ceased && !airline.defunct) {
-        propose('defunct', true)
-        propose('ceased', ceased)
-    } else if (ceased && airline.ceased !== ceased) {
-        propose('ceased', ceased)
-    } else if (!ceased && airline.defunct && !airline.ceased) {
+    if (ceased) {
+        if (!airline.defunct) propose('defunct', true)
+        if (airline.ceased !== ceased) propose('ceased', ceased)
+    } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
     }
+
+    if (changes.length) proposals.push({ airline, changes })
 }
 
 // Accept an airline's changes only if the data stays valid with them (a code
 // moving to an airline that still holds it elsewhere needs a decision)
-const apply = (list, entry) => {
-    const copy = structuredClone(list)
-    const target = copy.find((a) => a.name === entry.airline.name)
-    for (const { field, to } of entry.changes) {
-        if (to === undefined) delete target[field]
-        else target[field] = to
-    }
+const apply = (list, { airline, changes }) =>
+    list.map((a) => {
+        if (a.name !== airline.name) return a
+        const patched = { ...a }
+        for (const { field, to } of changes) {
+            if (to === undefined) delete patched[field]
+            else patched[field] = to
+        }
 
-    return copy
-}
+        return patched
+    })
 let result = airlines
 const accepted = []
 const held = []
-for (const name of new Set(changes.map((c) => c.airline.name))) {
-    const entry = {
-        airline: changes.find((c) => c.airline.name === name).airline,
-        changes: changes.filter((c) => c.airline.name === name),
-    }
+for (const entry of proposals) {
     const candidate = apply(result, entry)
     const problems = validateAirlines(candidate)
     if (problems.length) {

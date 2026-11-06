@@ -6,7 +6,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
-import { getAirlineAssets, validateAirlines } from '../utils/index.js'
+import { getAirlineAssets } from '../utils/index.js'
+import { validateAirlines } from '../utils/schema.js'
 import {
     extractInfobox,
     firstYear,
