@@ -1,6 +1,7 @@
 import { readFileSync, existsSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
+import Ajv2020 from 'ajv/dist/2020.js'
 
 const toSlug = (name) => {
     return slugify(name, {
@@ -91,4 +92,40 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     return assets
 }
 
-export { assetTypes, toSlug, toFullHex, getAirlineAssets, writeDerivedMonos }
+const schema = JSON.parse(
+    readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
+)
+const validateSchema = new Ajv2020({ allErrors: true }).compile(schema)
+
+// Check an airlines.json array against airlines.schema.json. Returns one
+// readable message per problem, e.g.
+// 'Vietnam Airlines: /branding/primary_color must match pattern ...';
+// an empty array means the data is valid.
+const validateAirlines = (airlines) => {
+    if (validateSchema(airlines)) return []
+
+    return validateSchema.errors.map((error) => {
+        const [, index, ...rest] = error.instancePath.split('/')
+        const name = airlines[index]?.name ?? `#${index}`
+        const where = rest.length ? `/${rest.join('/')}` : ''
+        const detail =
+            error.keyword === 'additionalProperties'
+                ? `has unknown field "${error.params.additionalProperty}"`
+                : error.keyword === 'enum'
+                  ? `must be one of: ${error.params.allowedValues.join(', ')}`
+                  : error.message
+
+        return index === undefined
+            ? `airlines.json ${detail}`
+            : `${name}: ${where || '(entry)'} ${detail}`
+    })
+}
+
+export {
+    assetTypes,
+    toSlug,
+    toFullHex,
+    getAirlineAssets,
+    writeDerivedMonos,
+    validateAirlines,
+}

@@ -68,6 +68,8 @@ assets/
 
 When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. The `generate.js` script will then analyze your SVG files and automatically generate the `assets` object.
 
+Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` checks the whole file against it and stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
+
 #### Information to Add Manually
 
 | Field Name     | Required | Description                                                                                   |
@@ -78,7 +80,7 @@ When adding a new airline, you only need to add an entry to the `airlines.json` 
 | `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
 | `website`      |   Yes    | The official website of the airline.                                                          |
 | `flag_carrier` |    No    | `true` or `false`.                                                                            |
-| `alliance`     |    No    | e.g., "oneworld", "SkyTeam", "Star Alliance".                                                 |
+| `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
 | `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
 | `vectorized`   |    No    | `true` if you manually vectorized the SVG.                                                    |
 | `branding`     |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |

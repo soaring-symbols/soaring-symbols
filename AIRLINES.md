@@ -74,7 +74,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Hainan Airlines](https://www.hainanairlines.com) | CN | HU | CHH |  | ![#d71920](https://place-hold.it/10x10/d71920/d71920.png) | ✅ | ✅ |  |
 | [Hawaiian Airlines](https://www.hawaiianairlines.com) | US | HA | HAL | oneworld | ![#4e2582](https://place-hold.it/10x10/4e2582/4e2582.png) | ☑️ | ☑️ |  |
 | [HK Express](https://www.hkexpress.com) | HK | UO | HKE |  | ![#702b91](https://place-hold.it/10x10/702b91/702b91.png) | ✅ | ✅ |  |
-| [Iberia](https://www.iberia.com) 🇪🇸 | ES | IB | IBE | oneworld |  | ✅ | ✅ |  |
+| [Iberia](https://www.iberia.com) 🇪🇸 | ES | IB | IBE | oneworld | ![#dc1c2e](https://place-hold.it/10x10/dc1c2e/dc1c2e.png) | ✅ | ✅ |  |
 | [Icelandair](https://www.icelandair.com) 🇮🇸 | IS | FI | ICE |  | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ | ✅ |
 | [IndiGo](https://www.goindigo.in) | IN | 6E | IGO |  | ![#001b94](https://place-hold.it/10x10/001b94/001b94.png) | ✅ | ✅ |  |
 | [ITA Airways](https://www.ita-airways.com) 🇮🇹 | IT | AZ | ITY | Star Alliance | ![#006643](https://place-hold.it/10x10/006643/006643.png) |  | ☑️ |  |
@@ -105,7 +105,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Peach Aviation](https://www.flypeach.com) | JP | MM | APJ |  | ![#9b308c](https://place-hold.it/10x10/9b308c/9b308c.png) |  | ✅ |  |
 | [Pegasus Airlines](https://www.flypgs.com) | TR | PC | PGT |  | ![#fdb913](https://place-hold.it/10x10/fdb913/fdb913.png) | ✅ | ✅ |  |
 | [Philippine Airlines](https://www.philippineairlines.com) 🇵🇭 | PH | PR | PAL |  | ![#001f60](https://place-hold.it/10x10/001f60/001f60.png) | ✅ | ✅ |  |
-| [Qantas](https://www.qantas.com) 🇦🇺 | AU | QF | QFA | oneworld |  | ☑️ | ✅ |  |
+| [Qantas](https://www.qantas.com) 🇦🇺 | AU | QF | QFA | oneworld | ![#e40000](https://place-hold.it/10x10/e40000/e40000.png) | ☑️ | ✅ |  |
 | [Qatar Airways](https://www.qatarairways.com) 🇶🇦 | QA | QR | QTR | oneworld | ![#662046](https://place-hold.it/10x10/662046/662046.png) | ✅ | ✅ |  |
 | [Riyadh Air](https://www.riyadhair.com) 🇸🇦 | SA | RX | RXI |  | ![#240852](https://place-hold.it/10x10/240852/240852.png) | ✅ | ✅ |  |
 | [Royal Air Maroc](https://www.royalairmaroc.com) 🇲🇦 | MA | AT | RAM | SkyTeam | ![#c20831](https://place-hold.it/10x10/c20831/c20831.png) | ✅ | ✅ | ☑️ |

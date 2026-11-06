@@ -6,6 +6,7 @@ import {
     toFullHex,
     getAirlineAssets,
     writeDerivedMonos,
+    validateAirlines,
 } from '../utils/index.js'
 import { createRequire } from 'module'
 
@@ -122,6 +123,14 @@ sorted.forEach((airline) => {
         })
     }
 })
+
+// Check the finished data, slug and assets included, before writing anything
+const problems = validateAirlines(sorted)
+if (problems.length) {
+    console.error('❌ airlines.json does not match airlines.schema.json:')
+    problems.forEach((problem) => console.error(`  - ${problem}`))
+    process.exit(1)
+}
 
 writeFileSync('airlines.json', JSON.stringify(sorted, null, 4))
 writeFileSync('AIRLINES.md', md)

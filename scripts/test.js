@@ -6,7 +6,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
-import { getAirlineAssets } from '../utils/index.js'
+import { getAirlineAssets, validateAirlines } from '../utils/index.js'
 
 const require = createRequire(import.meta.url)
 
@@ -154,6 +154,15 @@ for (const [format, api] of [
         })
     })
 }
+
+describe('airlines.json schema', () => {
+    it('matches airlines.schema.json', () => {
+        const shipped = JSON.parse(
+            readFileSync(new URL('../dist/airlines.json', import.meta.url)),
+        )
+        assert.deepEqual(validateAirlines(shipped), [])
+    })
+})
 
 describe('airlines.json assets metadata', () => {
     const assetsDir = new URL('../dist/assets/', import.meta.url)

@@ -2021,7 +2021,7 @@
         "website": "https://www.iberia.com",
         "alliance": "oneworld",
         "branding": {
-            "primary_color": ""
+            "primary_color": "#dc1c2e"
         },
         "slug": "iberia",
         "assets": {
@@ -2773,7 +2773,7 @@
         "website": "https://www.qantas.com",
         "alliance": "oneworld",
         "branding": {
-            "primary_color": ""
+            "primary_color": "#e40000"
         },
         "slug": "qantas",
         "assets": {
