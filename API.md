@@ -99,6 +99,8 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
     "flag_carrier": true,
     "website": "https://www.vietnamairlines.com",
     "alliance": "SkyTeam",
+    "hubs": ["HAN", "SGN"],
+    "founded": 1956,
     "branding": {
         "primary_color": "#d99e09",
         "tagline": "Reach Further",
@@ -127,7 +129,10 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `website`      | `string?`       | Official website.                                                                                                                   |
 | `flag_carrier` | `boolean?`      | `true` for a national flag carrier.                                                                                                 |
 | `alliance`     | `string?`       | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                     |
+| `hubs`         | `string[]?`     | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.        |
+| `founded`      | `number?`       | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                               |
 | `defunct`      | `boolean?`      | `true` if the airline has ceased operations.                                                                                        |
+| `ceased`       | `number?`       | Year a defunct airline ceased operations.                                                                                           |
 | `vectorized`   | `boolean?`      | `true` if the SVG was vectorized by hand.                                                                                           |
 | `branding`     | `object?`       | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                          |
 | `assets`       | `object`        | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                               |

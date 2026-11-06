@@ -44,7 +44,13 @@ export interface Airline {
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
     readonly alliance?: string
+    /** IATA codes of its hub airports (e.g. ["HAN", "SGN"]). */
+    readonly hubs?: readonly string[]
+    /** Year founded, counting from the predecessor its history starts with. */
+    readonly founded?: number
     readonly defunct?: boolean
+    /** Year a defunct airline ceased operations. */
+    readonly ceased?: number
     readonly vectorized?: boolean
     readonly branding?: AirlineBranding
     readonly assets: Readonly<Partial<Record<AssetType, AssetInfo>>>

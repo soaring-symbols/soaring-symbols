@@ -8,6 +8,11 @@
         "flag_carrier": true,
         "website": "https://en.aegeanair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ATH",
+            "SKG"
+        ],
+        "founded": 1995,
         "branding": {
             "primary_color": "#002677"
         },
@@ -39,6 +44,10 @@
         "country": "IE",
         "flag_carrier": true,
         "website": "https://www.aerlingus.com",
+        "hubs": [
+            "DUB"
+        ],
+        "founded": 1936,
         "branding": {
             "primary_color": "#006472",
             "tagline": "You're Very Welcome"
@@ -73,6 +82,11 @@
         "flag_carrier": true,
         "website": "https://www.aerolineas.com.ar",
         "alliance": "SkyTeam",
+        "hubs": [
+            "AEP",
+            "EZE"
+        ],
+        "founded": 1949,
         "branding": {
             "primary_color": "#0080be",
             "tagline": "Soaring in the sky"
@@ -104,6 +118,10 @@
         "flag_carrier": true,
         "website": "https://www.aeromexico.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "MEX"
+        ],
+        "founded": 1934,
         "branding": {
             "primary_color": "#020c41",
             "tagline": "Being close, getting far"
@@ -134,6 +152,12 @@
         "country": "AL",
         "flag_carrier": true,
         "website": "https://www.airalbania.com.al",
+        "hubs": [
+            "TIA"
+        ],
+        "founded": 2018,
+        "defunct": true,
+        "ceased": 2025,
         "branding": {
             "primary_color": "#ce1f2e"
         },
@@ -165,6 +189,10 @@
         "country": "DZ",
         "flag_carrier": true,
         "website": "https://airalgerie.dz",
+        "hubs": [
+            "ALG"
+        ],
+        "founded": 1947,
         "branding": {
             "primary_color": "#e2231a"
         },
@@ -193,6 +221,7 @@
         "callsign": "ARABIA",
         "country": "AE",
         "website": "https://www.airarabia.com",
+        "founded": 2003,
         "branding": {
             "primary_color": "#ed1b48"
         },
@@ -222,6 +251,11 @@
         "country": "KZ",
         "flag_carrier": true,
         "website": "https://airastana.com",
+        "hubs": [
+            "ALA",
+            "TSE"
+        ],
+        "founded": 2001,
         "branding": {
             "primary_color": "#a48c5d"
         },
@@ -252,7 +286,12 @@
         "country": "DE",
         "website": "https://www.airberlin.com",
         "alliance": "oneworld",
+        "hubs": [
+            "TXL"
+        ],
+        "founded": 1978,
         "defunct": true,
+        "ceased": 2017,
         "branding": {
             "primary_color": "#cc2234"
         },
@@ -283,6 +322,12 @@
         "flag_carrier": true,
         "website": "https://www.aircanada.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "YUL",
+            "YYZ",
+            "YVR"
+        ],
+        "founded": 1937,
         "branding": {
             "primary_color": "#f01428"
         },
@@ -314,6 +359,13 @@
         "flag_carrier": true,
         "website": "https://www.airchina.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "PEK",
+            "PKX",
+            "CTU",
+            "TFU"
+        ],
+        "founded": 1988,
         "branding": {
             "primary_color": "#ed1c24"
         },
@@ -343,6 +395,7 @@
         "callsign": "DOLOMITI",
         "country": "IT",
         "website": "https://www.airdolomiti.eu",
+        "founded": 1989,
         "branding": {
             "primary_color": "#009eb3"
         },
@@ -373,6 +426,10 @@
         "country": "ES",
         "website": "https://www.aireuropa.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "MAD"
+        ],
+        "founded": 1986,
         "branding": {
             "primary_color": "#006fde"
         },
@@ -403,6 +460,10 @@
         "flag_carrier": true,
         "website": "https://airfrance.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CDG"
+        ],
+        "founded": 1933,
         "branding": {
             "primary_color": "#051039"
         },
@@ -434,6 +495,10 @@
         "flag_carrier": true,
         "website": "https://www.airindia.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "DEL"
+        ],
+        "founded": 1932,
         "branding": {
             "primary_color": "#da0e29"
         },
@@ -471,6 +536,10 @@
         "flag_carrier": true,
         "website": "https://www.airmauritius.com",
         "alliance": "Vanilla Alliance",
+        "hubs": [
+            "MRU"
+        ],
+        "founded": 1967,
         "branding": {
             "primary_color": "#be2239"
         },
@@ -501,6 +570,12 @@
         "flag_carrier": true,
         "website": "https://www.airnewzealand.co.nz",
         "alliance": "Star Alliance",
+        "hubs": [
+            "AKL",
+            "CHC",
+            "WLG"
+        ],
+        "founded": 1940,
         "branding": {
             "primary_color": "#000000"
         },
@@ -530,6 +605,10 @@
         "country": "RS",
         "flag_carrier": true,
         "website": "https://www.airserbia.com",
+        "hubs": [
+            "BEG"
+        ],
+        "founded": 1927,
         "branding": {
             "primary_color": "#0e203f"
         },
@@ -558,6 +637,11 @@
         "callsign": "AIR TRANSAT",
         "country": "CA",
         "website": "https://airtransat.com",
+        "hubs": [
+            "YUL",
+            "YYZ"
+        ],
+        "founded": 1986,
         "branding": {
             "primary_color": "#172b54"
         },
@@ -587,6 +671,7 @@
         "callsign": "RED CAP",
         "country": "MY",
         "website": "https://www.airasia.com",
+        "founded": 1993,
         "branding": {
             "primary_color": "#ff0000",
             "tagline": "Now Everyone Can Fly"
@@ -636,6 +721,10 @@
         "country": "LV",
         "flag_carrier": true,
         "website": "https://www.airbaltic.com",
+        "hubs": [
+            "RIX"
+        ],
+        "founded": 1995,
         "branding": {
             "primary_color": "#152649"
         },
@@ -657,6 +746,7 @@
         "callsign": "AKASA AIR",
         "country": "IN",
         "website": "https://www.akasaair.com",
+        "founded": 2021,
         "branding": {
             "primary_color": "#ff6300",
             "tagline": "It’s Your Sky"
@@ -688,6 +778,15 @@
         "country": "US",
         "website": "https://www.alaskaair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "ANC",
+            "LAX",
+            "PDX",
+            "SAN",
+            "SFO",
+            "SEA"
+        ],
+        "founded": 1932,
         "branding": {
             "primary_color": "#01426a",
             "tagline": "Fly smart. Land happy"
@@ -711,6 +810,11 @@
         "country": "JP",
         "website": "https://www.ana.co.jp",
         "alliance": "Star Alliance",
+        "hubs": [
+            "HND",
+            "NRT"
+        ],
+        "founded": 1952,
         "branding": {
             "primary_color": "#00146e"
         },
@@ -734,6 +838,19 @@
         "country": "US",
         "website": "https://www.aa.com",
         "alliance": "oneworld",
+        "hubs": [
+            "CLT",
+            "ORD",
+            "DFW",
+            "LAX",
+            "MIA",
+            "JFK",
+            "LGA",
+            "PHL",
+            "PHX",
+            "DCA"
+        ],
+        "founded": 1930,
         "branding": {
             "primary_color": "#0078d2"
         },
@@ -770,6 +887,11 @@
         "country": "KR",
         "website": "https://flyasiana.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "GMP",
+            "ICN"
+        ],
+        "founded": 1988,
         "branding": {
             "primary_color": "#4a4f54",
             "guidelines": "https://flyasiana.com/C/VN/EN/contents/ci"
@@ -801,6 +923,10 @@
         "country": "FO",
         "flag_carrier": true,
         "website": "https://www.atlanticairways.com",
+        "hubs": [
+            "FAE"
+        ],
+        "founded": 1987,
         "branding": {
             "primary_color": "#004c93"
         },
@@ -833,6 +959,10 @@
         "flag_carrier": true,
         "website": "https://www.austrian.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "VIE"
+        ],
+        "founded": 1923,
         "branding": {
             "primary_color": "#d81824"
         },
@@ -905,6 +1035,10 @@
         "flag_carrier": true,
         "website": "https://www.avianca.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "BOG"
+        ],
+        "founded": 1919,
         "branding": {
             "primary_color": "#ff0000"
         },
@@ -956,6 +1090,10 @@
         "country": "AZ",
         "flag_carrier": true,
         "website": "https://azal.az",
+        "hubs": [
+            "GYD"
+        ],
+        "founded": 1992,
         "branding": {
             "primary_color": "#082e6a"
         },
@@ -990,6 +1128,12 @@
         "callsign": "AZUL",
         "country": "BR",
         "website": "https://www.voeazul.com.br",
+        "hubs": [
+            "CNF",
+            "VCP",
+            "REC"
+        ],
+        "founded": 2008,
         "branding": {
             "primary_color": "#005baa"
         },
@@ -1069,6 +1213,7 @@
         "callsign": "BAMBOO",
         "country": "VN",
         "website": "https://www.bambooairways.com",
+        "founded": 2017,
         "branding": {
             "primary_color": "#64ae53",
             "tagline": "More than just a flight",
@@ -1103,6 +1248,11 @@
         "callsign": "BANGKOK AIR",
         "country": "TH",
         "website": "https://www.bangkokair.com",
+        "hubs": [
+            "BKK",
+            "USM"
+        ],
+        "founded": 1968,
         "branding": {
             "primary_color": "#000f8f",
             "tagline": "Asia’s Boutique Airline"
@@ -1138,6 +1288,11 @@
         "flag_carrier": true,
         "website": "https://www.britishairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "LGW",
+            "LHR"
+        ],
+        "founded": 1974,
         "branding": {
             "primary_color": "#2e5c99"
         },
@@ -1182,6 +1337,10 @@
         "flag_carrier": true,
         "website": "https://www.brusselsairlines.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "BRU"
+        ],
+        "founded": 2006,
         "branding": {
             "primary_color": "#051446"
         },
@@ -1213,6 +1372,10 @@
         "flag_carrier": true,
         "website": "https://www.cathaypacific.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HKG"
+        ],
+        "founded": 1946,
         "branding": {
             "primary_color": "#005d63"
         },
@@ -1241,6 +1404,7 @@
         "callsign": "CEBU",
         "country": "PH",
         "website": "https://www.cebupacificair.com",
+        "founded": 1988,
         "branding": {
             "primary_color": "#0096d6"
         },
@@ -1274,6 +1438,10 @@
         "flag_carrier": true,
         "website": "https://www.china-airlines.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 1959,
         "branding": {
             "primary_color": "#2b3088"
         },
@@ -1331,6 +1499,13 @@
         "country": "CN",
         "website": "https://www.ceair.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "KMG",
+            "SHA",
+            "PVG",
+            "XIY"
+        ],
+        "founded": 1988,
         "branding": {
             "primary_color": "#1a4fa3"
         },
@@ -1362,6 +1537,12 @@
         "country": "CN",
         "flag_carrier": false,
         "website": "https://www.csair.com",
+        "hubs": [
+            "PKX",
+            "CAN",
+            "SZX"
+        ],
+        "founded": 1988,
         "branding": {
             "primary_color": "#0093d0"
         },
@@ -1404,6 +1585,7 @@
         "callsign": "CONDOR",
         "country": "DE",
         "website": "https://www.condor.com",
+        "founded": 1955,
         "branding": {
             "primary_color": "#000000"
         },
@@ -1434,6 +1616,10 @@
         "flag_carrier": true,
         "website": "https://www.copaair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "PTY"
+        ],
+        "founded": 1944,
         "branding": {
             "primary_color": "#0032a0"
         },
@@ -1464,6 +1650,18 @@
         "flag_carrier": false,
         "website": "https://www.delta.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "ATL",
+            "BOS",
+            "DTW",
+            "LAX",
+            "MSP",
+            "JFK",
+            "LGA",
+            "SLC",
+            "SEA"
+        ],
+        "founded": 1925,
         "branding": {
             "primary_color": "#e31837"
         },
@@ -1495,6 +1693,7 @@
         "callsign": "EASY",
         "country": "GB",
         "website": "https://www.easyjet.com",
+        "founded": 1995,
         "branding": {
             "primary_color": "#ff6600"
         },
@@ -1526,6 +1725,10 @@
         "flag_carrier": true,
         "website": "https://www.egyptair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "CAI"
+        ],
+        "founded": 1932,
         "branding": {
             "primary_color": "#002855"
         },
@@ -1555,6 +1758,10 @@
         "country": "AE",
         "flag_carrier": true,
         "website": "https://www.emirates.com",
+        "hubs": [
+            "DXB"
+        ],
+        "founded": 1985,
         "branding": {
             "primary_color": "#d71921",
             "tagline": "Fly Better"
@@ -1586,6 +1793,10 @@
         "flag_carrier": true,
         "website": "https://www.ethiopianairlines.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ADD"
+        ],
+        "founded": 1945,
         "branding": {
             "primary_color": "#b71d20"
         },
@@ -1619,6 +1830,10 @@
         "country": "AE",
         "flag_carrier": true,
         "website": "https://www.etihad.com",
+        "hubs": [
+            "AUH"
+        ],
+        "founded": 2003,
         "branding": {
             "primary_color": "#bd8b13"
         },
@@ -1640,6 +1855,7 @@
         "callsign": "EUROWINGS",
         "country": "DE",
         "website": "https://www.eurowings.com",
+        "founded": 1993,
         "branding": {
             "primary_color": "#7c2045"
         },
@@ -1675,6 +1891,10 @@
         "flag_carrier": false,
         "website": "https://www.evaair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 1989,
         "branding": {
             "primary_color": "#00a64f"
         },
@@ -1715,6 +1935,9 @@
         "callsign": "MAYOTTE AIR",
         "country": "FR",
         "website": "https://ewa-air.com",
+        "hubs": [
+            "DZA"
+        ],
         "branding": {
             "primary_color": "#e1251b"
         },
@@ -1738,6 +1961,10 @@
         "flag_carrier": true,
         "website": "https://www.fijiairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "NAN"
+        ],
+        "founded": 1947,
         "branding": {
             "primary_color": "#473729"
         },
@@ -1768,6 +1995,10 @@
         "flag_carrier": true,
         "website": "https://www.finnair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HEL"
+        ],
+        "founded": 1923,
         "branding": {
             "primary_color": "#0c0243"
         },
@@ -1796,6 +2027,11 @@
         "callsign": "FIREFLY",
         "country": "MY",
         "website": "https://www.fireflyz.com.my",
+        "hubs": [
+            "SZB",
+            "PEN"
+        ],
+        "founded": 2007,
         "branding": {
             "primary_color": "#ef5713"
         },
@@ -1849,6 +2085,10 @@
         "callsign": "SKYDUBAI",
         "country": "AE",
         "website": "https://www.flydubai.com",
+        "hubs": [
+            "DXB"
+        ],
+        "founded": 2008,
         "branding": {
             "primary_color": "#ff8200"
         },
@@ -1871,6 +2111,7 @@
         "callsign": "FLYNAS",
         "country": "SA",
         "website": "https://www.flynas.com",
+        "founded": 2007,
         "branding": {
             "primary_color": "#00b7ac"
         },
@@ -1899,6 +2140,7 @@
         "callsign": "FRONTIER FLIGHT",
         "country": "US",
         "website": "https://www.flyfrontier.com",
+        "founded": 1994,
         "branding": {
             "primary_color": "#008c44"
         },
@@ -1929,6 +2171,10 @@
         "flag_carrier": true,
         "website": "https://www.garuda-indonesia.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CGK"
+        ],
+        "founded": 1949,
         "branding": {
             "primary_color": "#002560"
         },
@@ -1960,6 +2206,13 @@
         "callsign": "GOL",
         "country": "BR",
         "website": "https://www.voegol.com.br",
+        "hubs": [
+            "BSB",
+            "GIG",
+            "CGH",
+            "GRU"
+        ],
+        "founded": 2000,
         "branding": {
             "primary_color": "#f58220"
         },
@@ -1990,6 +2243,14 @@
         "callsign": "HAINAN",
         "country": "CN",
         "website": "https://www.hainanairlines.com",
+        "hubs": [
+            "PEK",
+            "CKG",
+            "HAK",
+            "SZX",
+            "XIY"
+        ],
+        "founded": 1989,
         "branding": {
             "primary_color": "#d71920"
         },
@@ -2019,6 +2280,11 @@
         "country": "US",
         "website": "https://www.hawaiianairlines.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HNL",
+            "OGG"
+        ],
+        "founded": 1929,
         "branding": {
             "primary_color": "#4e2582"
         },
@@ -2051,6 +2317,10 @@
         "callsign": "HONGKONG SHUTTLE",
         "country": "HK",
         "website": "https://www.hkexpress.com",
+        "hubs": [
+            "HKG"
+        ],
+        "founded": 2004,
         "branding": {
             "primary_color": "#702b91"
         },
@@ -2083,6 +2353,10 @@
         "flag_carrier": true,
         "website": "https://www.iberia.com",
         "alliance": "oneworld",
+        "hubs": [
+            "MAD"
+        ],
+        "founded": 1927,
         "branding": {
             "primary_color": "#dc1c2e"
         },
@@ -2119,6 +2393,11 @@
         "country": "IS",
         "flag_carrier": true,
         "website": "https://www.icelandair.com",
+        "hubs": [
+            "KEF",
+            "RKV"
+        ],
+        "founded": 1937,
         "branding": {
             "primary_color": "#0c0243"
         },
@@ -2154,6 +2433,10 @@
         "callsign": "IFLY",
         "country": "IN",
         "website": "https://www.goindigo.in",
+        "hubs": [
+            "DEL"
+        ],
+        "founded": 2005,
         "branding": {
             "primary_color": "#001b94"
         },
@@ -2184,6 +2467,10 @@
         "flag_carrier": true,
         "website": "https://www.ita-airways.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "FCO"
+        ],
+        "founded": 2020,
         "branding": {
             "primary_color": "#006643"
         },
@@ -2208,6 +2495,11 @@
         "flag_carrier": true,
         "website": "https://www.jal.co.jp",
         "alliance": "oneworld",
+        "hubs": [
+            "HND",
+            "NRT"
+        ],
+        "founded": 1951,
         "branding": {
             "primary_color": "#e50012"
         },
@@ -2266,6 +2558,7 @@
         "country": "US",
         "flag_carrier": false,
         "website": "https://www.jetblue.com",
+        "founded": 1998,
         "branding": {
             "primary_color": "#003876"
         },
@@ -2287,6 +2580,7 @@
         "callsign": "JETSTAR",
         "country": "AU",
         "website": "https://www.jetstar.com",
+        "founded": 2003,
         "branding": {
             "primary_color": "#ff5111"
         },
@@ -2326,6 +2620,10 @@
         "flag_carrier": true,
         "website": "https://www.kenya-airways.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "NBO"
+        ],
+        "founded": 1977,
         "branding": {
             "primary_color": "#ed1c24"
         },
@@ -2356,6 +2654,10 @@
         "flag_carrier": true,
         "website": "https://www.klm.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "AMS"
+        ],
+        "founded": 1919,
         "branding": {
             "primary_color": "#009fd9"
         },
@@ -2385,6 +2687,11 @@
         "country": "KR",
         "flag_carrier": true,
         "website": "https://www.koreanair.com",
+        "hubs": [
+            "GMP",
+            "ICN"
+        ],
+        "founded": 1962,
         "branding": {
             "primary_color": "#051766"
         },
@@ -2414,6 +2721,10 @@
         "country": "KW",
         "flag_carrier": true,
         "website": "https://www.kuwaitairways.com",
+        "hubs": [
+            "KWI"
+        ],
+        "founded": 1953,
         "branding": {
             "primary_color": "#1c285b"
         },
@@ -2442,6 +2753,7 @@
         "callsign": "LAN CHILE",
         "country": "CL",
         "website": "https://www.latamairlines.com",
+        "founded": 2012,
         "branding": {
             "primary_color": "#1b0088"
         },
@@ -2504,6 +2816,12 @@
         "callsign": "LION INTER",
         "country": "ID",
         "website": "https://www.lionair.co.id",
+        "hubs": [
+            "CGK",
+            "UPG",
+            "SUB"
+        ],
+        "founded": 1999,
         "branding": {
             "primary_color": "#ed1b2f"
         },
@@ -2534,6 +2852,10 @@
         "flag_carrier": true,
         "website": "https://www.lot.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "WAW"
+        ],
+        "founded": 1928,
         "branding": {
             "primary_color": "#252668"
         },
@@ -2564,6 +2886,11 @@
         "flag_carrier": true,
         "website": "https://www.lufthansa.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "FRA",
+            "MUC"
+        ],
+        "founded": 1953,
         "branding": {
             "primary_color": "#05164d"
         },
@@ -2594,6 +2921,10 @@
         "flag_carrier": true,
         "website": "https://www.malaysiaairlines.com",
         "alliance": "oneworld",
+        "hubs": [
+            "KUL"
+        ],
+        "founded": 1947,
         "branding": {
             "primary_color": "#174887"
         },
@@ -2623,6 +2954,10 @@
         "country": "MM",
         "flag_carrier": true,
         "website": "https://www.flymna.com",
+        "hubs": [
+            "RGN"
+        ],
+        "founded": 1948,
         "branding": {
             "primary_color": "#fdb515"
         },
@@ -2653,6 +2988,7 @@
         "callsign": "NORDIC",
         "country": "NO",
         "website": "https://www.norwegian.com",
+        "founded": 1993,
         "branding": {
             "primary_color": "#d81939"
         },
@@ -2684,6 +3020,10 @@
         "flag_carrier": true,
         "website": "https://www.omanair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "MCT"
+        ],
+        "founded": 1949,
         "branding": {
             "primary_color": "#b39759"
         },
@@ -2715,6 +3055,7 @@
         "country": "VN",
         "flag_carrier": false,
         "website": "https://www.pacificairlines.com",
+        "founded": 1990,
         "branding": {
             "primary_color": "#324471"
         },
@@ -2745,6 +3086,10 @@
         "callsign": "GUARANI",
         "country": "PY",
         "website": "https://www.paranair.com",
+        "hubs": [
+            "ASU"
+        ],
+        "founded": 2015,
         "branding": {
             "primary_color": "#0037a2"
         },
@@ -2774,6 +3119,7 @@
         "callsign": "AIR PEACH",
         "country": "JP",
         "website": "https://www.flypeach.com",
+        "founded": 2011,
         "branding": {
             "primary_color": "#9b308c"
         },
@@ -2795,6 +3141,7 @@
         "callsign": "SUNTURK",
         "country": "TR",
         "website": "https://www.flypgs.com",
+        "founded": 1991,
         "branding": {
             "primary_color": "#fdb913"
         },
@@ -2824,6 +3171,10 @@
         "country": "PH",
         "flag_carrier": true,
         "website": "https://www.philippineairlines.com",
+        "hubs": [
+            "MNL"
+        ],
+        "founded": 1941,
         "branding": {
             "primary_color": "#001f60",
             "tagline": "The Heart of the Filipino"
@@ -2860,6 +3211,13 @@
         "flag_carrier": true,
         "website": "https://www.qantas.com",
         "alliance": "oneworld",
+        "hubs": [
+            "BNE",
+            "MEL",
+            "PER",
+            "SYD"
+        ],
+        "founded": 1920,
         "branding": {
             "primary_color": "#e40000"
         },
@@ -2890,6 +3248,10 @@
         "flag_carrier": true,
         "website": "https://www.qatarairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "DOH"
+        ],
+        "founded": 1993,
         "branding": {
             "primary_color": "#662046",
             "guidelines": "https://www.qatarairways.com/content/dam/tradepartners/pdf-files/Brand-Elements_Section-1.pdf"
@@ -2923,6 +3285,11 @@
         "country": "SA",
         "flag_carrier": true,
         "website": "https://www.riyadhair.com",
+        "hubs": [
+            "RUH",
+            "ELQ"
+        ],
+        "founded": 2023,
         "branding": {
             "primary_color": "#240852"
         },
@@ -2953,6 +3320,11 @@
         "flag_carrier": true,
         "website": "https://www.royalairmaroc.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CMN",
+            "TNG"
+        ],
+        "founded": 1953,
         "branding": {
             "primary_color": "#c20831"
         },
@@ -2991,6 +3363,10 @@
         "callsign": "BRUNEI",
         "country": "BN",
         "website": "https://www.flyroyalbrunei.com",
+        "hubs": [
+            "BWN"
+        ],
+        "founded": 1974,
         "branding": {
             "primary_color": "#ffe600"
         },
@@ -3013,6 +3389,7 @@
         "callsign": "RYANAIR",
         "country": "IE",
         "website": "https://www.ryanair.com",
+        "founded": 1984,
         "branding": {
             "primary_color": "#073590"
         },
@@ -3044,6 +3421,10 @@
         "flag_carrier": true,
         "website": "https://www.saudia.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "JED"
+        ],
+        "founded": 1945,
         "branding": {
             "primary_color": "#0a6937"
         },
@@ -3074,6 +3455,12 @@
         "flag_carrier": true,
         "website": "https://www.flysas.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "CPH",
+            "OSL",
+            "ARN"
+        ],
+        "founded": 1946,
         "branding": {
             "primary_color": "#000099"
         },
@@ -3104,6 +3491,10 @@
         "country": "SG",
         "website": "https://www.flyscoot.com",
         "alliance": "Value Alliance",
+        "hubs": [
+            "SIN"
+        ],
+        "founded": 2011,
         "branding": {
             "primary_color": "#ffe900"
         },
@@ -3128,6 +3519,10 @@
         "flag_carrier": true,
         "website": "https://www.singaporeair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "SIN"
+        ],
+        "founded": 1947,
         "branding": {
             "primary_color": "#232f67"
         },
@@ -3157,6 +3552,7 @@
         "callsign": "SOUTHWEST",
         "country": "US",
         "website": "https://www.southwest.com",
+        "founded": 1967,
         "branding": {
             "primary_color": "#304cb2"
         },
@@ -3201,7 +3597,9 @@
         "callsign": "SPIRIT WINGS",
         "country": "US",
         "website": "https://www.spirit.com",
+        "founded": 1964,
         "defunct": true,
+        "ceased": 2026,
         "branding": {
             "primary_color": "#ffec00"
         },
@@ -3223,6 +3621,10 @@
         "callsign": "STARWALKER",
         "country": "TW",
         "website": "https://www.starlux-airlines.com",
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 2018,
         "branding": {
             "primary_color": "#996a4e"
         },
@@ -3254,6 +3656,12 @@
         "callsign": "SUN LUX",
         "country": "VN",
         "website": "https://www.sunphuquocairways.com",
+        "hubs": [
+            "PQC",
+            "SGN",
+            "HAN"
+        ],
+        "founded": 2025,
         "branding": {
             "primary_color": "#ca1c2a"
         },
@@ -3285,6 +3693,10 @@
         "flag_carrier": true,
         "website": "https://www.swiss.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ZRH"
+        ],
+        "founded": 2002,
         "branding": {
             "primary_color": "#cf0a2c"
         },
@@ -3313,6 +3725,12 @@
         "callsign": "SONOROUS",
         "country": "KR",
         "website": "https://www.twayair.com",
+        "hubs": [
+            "TAE",
+            "GMP",
+            "ICN"
+        ],
+        "founded": 2005,
         "branding": {
             "primary_color": "#d22c25"
         },
@@ -3337,6 +3755,10 @@
         "flag_carrier": true,
         "website": "https://www.tapairportugal.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "LIS"
+        ],
+        "founded": 1945,
         "branding": {
             "primary_color": "#bfd730"
         },
@@ -3374,6 +3796,10 @@
         "flag_carrier": true,
         "website": "https://www.tarom.ro",
         "alliance": "SkyTeam",
+        "hubs": [
+            "OTP"
+        ],
+        "founded": 1920,
         "branding": {
             "primary_color": "#003366"
         },
@@ -3411,6 +3837,10 @@
         "flag_carrier": true,
         "website": "https://www.thaiairways.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "BKK"
+        ],
+        "founded": 1960,
         "branding": {
             "primary_color": "#330066",
             "tagline": "Grace to Growth"
@@ -3474,6 +3904,10 @@
         "flag_carrier": true,
         "website": "https://www.turkishairlines.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "IST"
+        ],
+        "founded": 1933,
         "branding": {
             "primary_color": "#c90019",
             "guidelines": "https://www.turkishairlines.com/en-int/press-room/logo-archive"
@@ -3507,6 +3941,17 @@
         "country": "US",
         "website": "https://www.united.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ORD",
+            "DEN",
+            "GUM",
+            "IAH",
+            "LAX",
+            "EWR",
+            "SFO",
+            "IAD"
+        ],
+        "founded": 1931,
         "branding": {
             "primary_color": "#1414d2"
         },
@@ -3535,6 +3980,7 @@
         "callsign": "VIETJET",
         "country": "VN",
         "website": "https://www.vietjetair.com",
+        "founded": 2007,
         "branding": {
             "primary_color": "#e12127",
             "tagline": "Enjoy Flying!"
@@ -3559,6 +4005,11 @@
         "flag_carrier": true,
         "website": "https://www.vietnamairlines.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "HAN",
+            "SGN"
+        ],
+        "founded": 1956,
         "branding": {
             "primary_color": "#d99e09",
             "tagline": "Reach Further",
@@ -3590,6 +4041,7 @@
         "callsign": "VIETRAVEL AIR",
         "country": "VN",
         "website": "https://www.vietravelairlines.com",
+        "founded": 2019,
         "vectorized": true,
         "branding": {
             "primary_color": "#0066b3",
@@ -3624,6 +4076,11 @@
         "country": "GB",
         "website": "https://www.virginatlantic.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "LHR",
+            "MAN"
+        ],
+        "founded": 1984,
         "branding": {
             "primary_color": "#da0530"
         },
@@ -3655,6 +4112,12 @@
         "callsign": "VELOCITY",
         "country": "AU",
         "website": "https://www.virginaustralia.com",
+        "hubs": [
+            "BNE",
+            "MEL",
+            "SYD"
+        ],
+        "founded": 2000,
         "branding": {
             "primary_color": "#e31e23"
         },
@@ -3714,6 +4177,7 @@
         "callsign": "VOLARIS",
         "country": "MX",
         "website": "https://www.volaris.com",
+        "founded": 2005,
         "branding": {
             "primary_color": "#5b2d82"
         },
@@ -3756,6 +4220,7 @@
         "callsign": "VOLOTEA",
         "country": "ES",
         "website": "https://www.volotea.com",
+        "founded": 2011,
         "branding": {
             "primary_color": "#ed164a"
         },
@@ -3785,6 +4250,7 @@
         "callsign": "VUELING",
         "country": "ES",
         "website": "https://www.vueling.com",
+        "founded": 2004,
         "branding": {
             "primary_color": "#ffcc00"
         },
@@ -3807,6 +4273,12 @@
         "callsign": "WESTJET",
         "country": "CA",
         "website": "https://www.westjet.com",
+        "hubs": [
+            "YYC",
+            "YYZ",
+            "YVR"
+        ],
+        "founded": 1994,
         "branding": {
             "primary_color": "#00aaa6"
         },
@@ -3839,6 +4311,7 @@
         "callsign": "WIZZ AIR",
         "country": "HU",
         "website": "https://www.wizzair.com",
+        "founded": 2003,
         "branding": {
             "primary_color": "#c6007e"
         },
@@ -3875,6 +4348,11 @@
         "country": "CN",
         "website": "https://www.xiamenair.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "FOC",
+            "XMN"
+        ],
+        "founded": 1984,
         "branding": {
             "primary_color": "#008cd5"
         },

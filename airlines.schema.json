@@ -25,6 +25,11 @@
             "type": "string",
             "pattern": "^https://[^\\s]+$"
         },
+        "year": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+        },
         "hexColor": {
             "description": "Six-digit lowercase hex color, e.g. \"#d99e09\".",
             "type": "string",
@@ -48,6 +53,12 @@
                 "slug",
                 "assets"
             ],
+            "dependentSchemas": {
+                "ceased": {
+                    "required": ["defunct"],
+                    "properties": { "defunct": { "const": true } }
+                }
+            },
             "properties": {
                 "name": {
                     "$ref": "#/$defs/name",
@@ -75,9 +86,24 @@
                         "Vanilla Alliance"
                     ]
                 },
+                "hubs": {
+                    "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"]. Operating bases of low-cost carriers are not hubs.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "type": "string", "pattern": "^[A-Z]{3}$" }
+                },
+                "founded": {
+                    "description": "Year the airline (or the predecessor it counts its history from) was founded.",
+                    "$ref": "#/$defs/year"
+                },
                 "defunct": {
                     "description": "The airline has ceased operations.",
                     "type": "boolean"
+                },
+                "ceased": {
+                    "description": "Year a defunct airline ceased operations.",
+                    "$ref": "#/$defs/year"
                 },
                 "vectorized": {
                     "description": "The SVGs were vectorized by hand.",

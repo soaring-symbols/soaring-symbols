@@ -84,7 +84,10 @@ IATA and ICAO codes must be unique among active airlines and their subsidiaries.
 | `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
 | `flag_carrier` |    No    | `true` or `false`.                                                                            |
 | `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
+| `hubs`         |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.        |
+| `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
 | `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
+| `ceased`       |    No    | Year a defunct airline ceased operations; requires `defunct`.                                 |
 | `vectorized`   |    No    | `true` if you manually vectorized the SVG.                                                    |
 | `branding`     |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |
 
@@ -124,6 +127,8 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "flag_carrier": true,
     "website": "https://www.vietnamairlines.com",
     "alliance": "SkyTeam",
+    "hubs": ["HAN", "SGN"],
+    "founded": 1956,
     "branding": {
         "primary_color": "#d99e09",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
