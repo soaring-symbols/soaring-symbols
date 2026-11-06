@@ -2061,9 +2061,16 @@
         "name": "Flybe",
         "iata": "BE",
         "icao": "BEE",
+        "callsign": "JERSEY",
         "country": "GB",
         "website": "https://www.flybe.com",
+        "hubs": [
+            "BHX",
+            "MAN",
+            "EXT"
+        ],
         "defunct": true,
+        "ceased": 2020,
         "branding": {
             "primary_color": "#5a3f99"
         },
