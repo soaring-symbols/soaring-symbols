@@ -77,6 +77,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,ts}\"",
     "release": "node scripts/release.js",
+    "sync:data": "node scripts/sync-data.js",
     "optimize": "svgo --config svgo.config.mjs"
   },
   "lint-staged": {

@@ -7,6 +7,13 @@ import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { getAirlineAssets, validateAirlines } from '../utils/index.js'
+import {
+    extractInfobox,
+    firstYear,
+    infoboxParams,
+    linkTargets,
+    listItems,
+} from './sync/wikipedia.js'
 
 const require = createRequire(import.meta.url)
 
@@ -233,6 +240,60 @@ describe('package exports', () => {
             assert.ok(existsSync(`${base}.d.ts`), `${entry} .d.ts`)
             assert.ok(existsSync(`${base}.d.cts`), `${entry} .d.cts`)
         }
+    })
+})
+
+describe('wikipedia infobox parsing (sync-data)', () => {
+    const page = `Intro {{Short description|Airline}}
+{{Infobox airline
+| airline = Example Air
+| IATA = EX
+| ICAO = EXA; EXB<ref>{{cite web |url=https://x.test |title=Codes}}</ref>
+| callsign = EXAMPLE{{efn|Its regional arm uses EXPRESS.}}
+| hubs = {{ubl|class=nowrap
+| [[Noi Bai International Airport|Hanoi]]
+| [[Tan Son Nhat International Airport]]}}
+| ceased = {{end date|2020|03|05}}<!-- administration -->
+}}
+'''Example Air''' is an airline.`
+
+    const params = infoboxParams(extractInfobox(page))
+
+    it('reads top-level infobox parameters', () => {
+        assert.deepEqual(Object.keys(params), [
+            'airline',
+            'iata',
+            'icao',
+            'callsign',
+            'hubs',
+            'ceased',
+        ])
+    })
+
+    it('drops references, footnotes and comments from values', () => {
+        assert.deepEqual(listItems(params.icao), ['EXA', 'EXB'])
+        assert.deepEqual(listItems(params.callsign), ['EXAMPLE'])
+    })
+
+    it('keeps the items of list templates', () => {
+        assert.deepEqual(listItems(params.hubs), [
+            'Hanoi',
+            'Tan Son Nhat International Airport',
+        ])
+        assert.deepEqual(linkTargets(params.hubs), [
+            'Noi Bai International Airport',
+            'Tan Son Nhat International Airport',
+        ])
+    })
+
+    it('reads the year out of a date template', () => {
+        assert.equal(firstYear(params.ceased), 2020)
+        assert.equal(firstYear(''), undefined)
+    })
+
+    it('returns nothing for a page without an airline infobox', () => {
+        assert.equal(extractInfobox('No infobox here'), '')
+        assert.deepEqual(infoboxParams(''), {})
     })
 })
 
