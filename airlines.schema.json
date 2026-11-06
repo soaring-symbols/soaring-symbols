@@ -35,6 +35,10 @@
             "type": "string",
             "pattern": "^#[0-9a-f]{6}$"
         },
+        "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
         "name": {
             "type": "string",
             "minLength": 1,
@@ -86,6 +90,14 @@
                         "Vanilla Alliance"
                     ]
                 },
+                "parent": {
+                    "description": "Slug of the airline in this catalog that owns this one, e.g. \"airasia\" for Thai AirAsia.",
+                    "$ref": "#/$defs/slug"
+                },
+                "marks": {
+                    "description": "Slug of the airline whose SVGs this one uses, when it has none of its own: often the parent, or a sibling that shares a different logo. The build copies those files to this airline's slug.",
+                    "$ref": "#/$defs/slug"
+                },
                 "hubs": {
                     "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"]. Operating bases of low-cost carriers are not hubs.",
                     "type": "array",
@@ -110,15 +122,9 @@
                     "type": "boolean"
                 },
                 "branding": { "$ref": "#/$defs/branding" },
-                "subsidiaries": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": { "$ref": "#/$defs/subsidiary" }
-                },
                 "slug": {
                     "description": "Generated from `name` by `npm run generate`.",
-                    "type": "string",
-                    "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                    "$ref": "#/$defs/slug"
                 },
                 "assets": { "$ref": "#/$defs/assets" }
             }
@@ -134,19 +140,6 @@
                     "$ref": "#/$defs/url",
                     "description": "Link to the airline's brand guidelines."
                 }
-            }
-        },
-        "subsidiary": {
-            "description": "An airline listed under a parent airline; it has no assets of its own.",
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["name", "iata", "icao", "country"],
-            "properties": {
-                "name": { "$ref": "#/$defs/name" },
-                "iata": { "$ref": "#/$defs/iata" },
-                "icao": { "$ref": "#/$defs/icao" },
-                "country": { "$ref": "#/$defs/country" },
-                "flag_carrier": { "type": "boolean" }
             }
         },
         "assets": {

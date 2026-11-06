@@ -118,25 +118,26 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 }
 ```
 
-| Field          | Type            | Description                                                                                                                         |
-| :------------- | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| `name`         | `string`        | Full airline name.                                                                                                                  |
-| `iata`         | `string`        | 2-character IATA code.                                                                                                              |
-| `icao`         | `string`        | 3-letter ICAO code.                                                                                                                 |
-| `callsign`     | `string?`       | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                |
-| `country`      | `string`        | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                       |
-| `slug`         | `string`        | URL-friendly name, also the asset folder name.                                                                                      |
-| `website`      | `string?`       | Official website.                                                                                                                   |
-| `flag_carrier` | `boolean?`      | `true` for a national flag carrier.                                                                                                 |
-| `alliance`     | `string?`       | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                     |
-| `hubs`         | `string[]?`     | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.        |
-| `founded`      | `number?`       | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                               |
-| `defunct`      | `boolean?`      | `true` if the airline has ceased operations.                                                                                        |
-| `ceased`       | `number?`       | Year a defunct airline ceased operations.                                                                                           |
-| `vectorized`   | `boolean?`      | `true` if the SVG was vectorized by hand.                                                                                           |
-| `branding`     | `object?`       | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                          |
-| `assets`       | `object`        | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                               |
-| `subsidiaries` | `Subsidiary[]?` | Airlines sharing this airline's marks: `name`, `iata`, `icao`, `country`, `flag_carrier?`. They are not returned by `getAirline()`. |
+| Field          | Type        | Description                                                                                                                          |
+| :------------- | :---------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+| `name`         | `string`    | Full airline name.                                                                                                                   |
+| `iata`         | `string`    | 2-character IATA code.                                                                                                               |
+| `icao`         | `string`    | 3-letter ICAO code.                                                                                                                  |
+| `callsign`     | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                 |
+| `country`      | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                        |
+| `slug`         | `string`    | URL-friendly name, also the asset folder name.                                                                                       |
+| `website`      | `string?`   | Official website.                                                                                                                    |
+| `flag_carrier` | `boolean?`  | `true` for a national flag carrier.                                                                                                  |
+| `alliance`     | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                      |
+| `parent`       | `string?`   | Slug of the airline that owns this one, e.g. `"airasia"` for Thai AirAsia.                                                           |
+| `marks`        | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes. |
+| `hubs`         | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.         |
+| `founded`      | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                |
+| `defunct`      | `boolean?`  | `true` if the airline has ceased operations.                                                                                         |
+| `ceased`       | `number?`   | Year a defunct airline ceased operations.                                                                                            |
+| `vectorized`   | `boolean?`  | `true` if the SVG was vectorized by hand.                                                                                            |
+| `branding`     | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                           |
+| `assets`       | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                |
 
 ### AssetInfo
 
@@ -159,6 +160,16 @@ assets/<slug>/
 ├── logo.svg
 └── logo-mono.svg   # hand-made for a multi-color logo, optional
 ```
+
+## Migrating from 0.2
+
+`0.3.0` drops the `subsidiaries` field. Each airline that used to be listed there is now an entry of its own, with its own codes, country, website and callsign, returned by `listAirlines()` and `getAirline()`. Its `parent` field holds the slug of the airline that owns it.
+
+| 0.2                                      | 0.3                                                                |
+| :--------------------------------------- | :----------------------------------------------------------------- |
+| `getAirline('AK').subsidiaries`          | `listAirlines().filter((a) => a.parent === 'airasia')`             |
+| `getAirline('FD')` returns `undefined`   | Returns Thai AirAsia; `getAssetPath('FD', 'logo')` gives its logo. |
+| A subsidiary used its parent's SVG files | It has files under its own slug: `assets/thai-airasia/logo.svg`.   |
 
 ## Migrating from the old API
 

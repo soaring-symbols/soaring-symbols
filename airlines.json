@@ -676,33 +676,31 @@
             "primary_color": "#ff0000",
             "tagline": "Now Everyone Can Fly"
         },
-        "subsidiaries": [
-            {
-                "name": "AirAsia Cambodia",
-                "iata": "KT",
-                "icao": "KTC",
-                "country": "KH"
-            },
-            {
-                "name": "Thai AirAsia",
-                "iata": "FD",
-                "icao": "AIQ",
-                "country": "TH"
-            },
-            {
-                "name": "Indonesia AirAsia",
-                "iata": "QZ",
-                "icao": "AWQ",
-                "country": "ID"
-            },
-            {
-                "name": "Philippines AirAsia",
-                "iata": "Z2",
-                "icao": "APG",
-                "country": "PH"
-            }
-        ],
         "slug": "airasia",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
+        "name": "AirAsia Cambodia",
+        "iata": "KT",
+        "icao": "KTC",
+        "callsign": "RED NAGA",
+        "country": "KH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2022,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "airasia-cambodia",
         "assets": {
             "logo": {
                 "color": true,
@@ -1042,29 +1040,107 @@
         "branding": {
             "primary_color": "#ff0000"
         },
-        "subsidiaries": [
-            {
-                "name": "Avianca Costa Rica",
-                "iata": "LR",
-                "icao": "LRC",
-                "country": "CR",
-                "flag_carrier": true
-            },
-            {
-                "name": "Avianca Ecuador",
-                "iata": "2K",
-                "icao": "GLG",
-                "country": "EC"
-            },
-            {
-                "name": "Avianca El Salvador",
-                "iata": "TA",
-                "icao": "TAI",
-                "country": "SV",
-                "flag_carrier": true
-            }
-        ],
         "slug": "avianca",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Avianca Costa Rica",
+        "iata": "LR",
+        "icao": "LRC",
+        "callsign": "LACSA",
+        "country": "CR",
+        "flag_carrier": true,
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "hubs": [
+            "SJO"
+        ],
+        "founded": 1945,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "avianca-costa-rica",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Avianca Ecuador",
+        "iata": "2K",
+        "icao": "GLG",
+        "callsign": "GALAPAGOS",
+        "country": "EC",
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "hubs": [
+            "UIO"
+        ],
+        "founded": 1985,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "avianca-ecuador",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Avianca El Salvador",
+        "iata": "TA",
+        "icao": "TAI",
+        "country": "SV",
+        "flag_carrier": true,
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "founded": 1931,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "avianca-el-salvador",
         "assets": {
             "icon": {
                 "color": true,
@@ -2466,6 +2542,30 @@
         }
     },
     {
+        "name": "Indonesia AirAsia",
+        "iata": "QZ",
+        "icao": "AWQ",
+        "callsign": "WAGON AIR",
+        "country": "ID",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 1999,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "indonesia-airasia",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
         "name": "ITA Airways",
         "iata": "AZ",
         "icao": "ITY",
@@ -2591,15 +2691,39 @@
         "branding": {
             "primary_color": "#ff5111"
         },
-        "subsidiaries": [
-            {
-                "name": "Jetstar Japan",
-                "iata": "GK",
-                "icao": "JJP",
-                "country": "JP"
-            }
-        ],
         "slug": "jetstar",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff5111"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#000000",
+                    "#ff5111"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Jetstar Japan",
+        "iata": "GK",
+        "icao": "JJP",
+        "callsign": "ORANGE LINER",
+        "country": "JP",
+        "website": "https://www.jetstar.com/jp/en/home",
+        "parent": "jetstar",
+        "marks": "jetstar",
+        "founded": 2011,
+        "branding": {
+            "primary_color": "#ff5111"
+        },
+        "slug": "jetstar-japan",
         "assets": {
             "icon": {
                 "color": true,
@@ -2764,39 +2888,190 @@
         "branding": {
             "primary_color": "#1b0088"
         },
-        "subsidiaries": [
-            {
-                "name": "LATAM Airlines Brasil",
-                "iata": "JJ",
-                "icao": "TAM",
-                "country": "BR"
-            },
-            {
-                "name": "LATAM Airlines Colombia",
-                "iata": "4C",
-                "icao": "ARE",
-                "country": "CO"
-            },
-            {
-                "name": "LATAM Airlines Ecuador",
-                "iata": "XL",
-                "icao": "LNE",
-                "country": "EC"
-            },
-            {
-                "name": "LATAM Airlines Perú",
-                "iata": "LP",
-                "icao": "LPE",
-                "country": "PE"
-            },
-            {
-                "name": "LATAM Airlines Paraguay",
-                "iata": "PZ",
-                "icao": "LAP",
-                "country": "PY"
-            }
-        ],
         "slug": "latam-airlines",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ed1650",
+                    "#1b0088"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#1b0088",
+                    "#ed1650"
+                ]
+            }
+        }
+    },
+    {
+        "name": "LATAM Airlines Brasil",
+        "iata": "JJ",
+        "icao": "TAM",
+        "callsign": "TAM",
+        "country": "BR",
+        "website": "https://www.latam.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "BSB",
+            "FOR",
+            "CGH",
+            "GRU"
+        ],
+        "founded": 1961,
+        "branding": {
+            "primary_color": "#1b0088"
+        },
+        "slug": "latam-airlines-brasil",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ed1650",
+                    "#1b0088"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#1b0088",
+                    "#ed1650"
+                ]
+            }
+        }
+    },
+    {
+        "name": "LATAM Airlines Colombia",
+        "iata": "4C",
+        "icao": "ARE",
+        "callsign": "LAN COLOMBIA",
+        "country": "CO",
+        "website": "https://www.latam.com/es_co",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "BOG"
+        ],
+        "founded": 1980,
+        "branding": {
+            "primary_color": "#1b0088"
+        },
+        "slug": "latam-airlines-colombia",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ed1650",
+                    "#1b0088"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#1b0088",
+                    "#ed1650"
+                ]
+            }
+        }
+    },
+    {
+        "name": "LATAM Airlines Ecuador",
+        "iata": "XL",
+        "icao": "LNE",
+        "callsign": "AEROLANE",
+        "country": "EC",
+        "website": "https://www.latamairlines.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "GYE",
+            "UIO"
+        ],
+        "founded": 2002,
+        "branding": {
+            "primary_color": "#1b0088"
+        },
+        "slug": "latam-airlines-ecuador",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ed1650",
+                    "#1b0088"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#1b0088",
+                    "#ed1650"
+                ]
+            }
+        }
+    },
+    {
+        "name": "LATAM Airlines Paraguay",
+        "iata": "PZ",
+        "icao": "LAP",
+        "callsign": "PARAGUAYA",
+        "country": "PY",
+        "website": "https://www.latam.com/es_py",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "ASU"
+        ],
+        "founded": 1962,
+        "branding": {
+            "primary_color": "#1b0088"
+        },
+        "slug": "latam-airlines-paraguay",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ed1650",
+                    "#1b0088"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#1b0088",
+                    "#ed1650"
+                ]
+            }
+        }
+    },
+    {
+        "name": "LATAM Airlines Perú",
+        "iata": "LP",
+        "icao": "LPE",
+        "country": "PE",
+        "website": "https://www.latam.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "LIM"
+        ],
+        "founded": 1998,
+        "branding": {
+            "primary_color": "#1b0088"
+        },
+        "slug": "latam-airlines-peru",
         "assets": {
             "icon": {
                 "color": true,
@@ -3210,6 +3485,30 @@
         }
     },
     {
+        "name": "Philippines AirAsia",
+        "iata": "Z2",
+        "icao": "APG",
+        "callsign": "COOL RED",
+        "country": "PH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2010,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "philippines-airasia",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
+                ]
+            }
+        }
+    },
+    {
         "name": "Qantas",
         "iata": "QF",
         "icao": "QFA",
@@ -3420,6 +3719,30 @@
         }
     },
     {
+        "name": "SAS Connect",
+        "iata": "SL",
+        "icao": "SZS",
+        "callsign": "SPINNAKER",
+        "country": "IE",
+        "website": "https://www.flysas.com",
+        "parent": "scandinavian-airlines",
+        "marks": "scandinavian-airlines",
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#000099"
+        },
+        "slug": "sas-connect",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#000099"
+                ]
+            }
+        }
+    },
+    {
         "name": "Saudia",
         "iata": "SV",
         "icao": "SVA",
@@ -3471,14 +3794,6 @@
         "branding": {
             "primary_color": "#000099"
         },
-        "subsidiaries": [
-            {
-                "name": "SAS Connect",
-                "iata": "SL",
-                "icao": "SZS",
-                "country": "IE"
-            }
-        ],
         "slug": "scandinavian-airlines",
         "assets": {
             "logo": {
@@ -3831,6 +4146,30 @@
                 "mono": true,
                 "colors": [
                     "#003366"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Thai AirAsia",
+        "iata": "FD",
+        "icao": "AIQ",
+        "callsign": "THAI ASIA",
+        "country": "TH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2003,
+        "branding": {
+            "primary_color": "#ff0000"
+        },
+        "slug": "thai-airasia",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#ff0000"
                 ]
             }
         }
@@ -4322,21 +4661,57 @@
         "branding": {
             "primary_color": "#c6007e"
         },
-        "subsidiaries": [
-            {
-                "name": "Wizz Air Abu Dhabi",
-                "iata": "5W",
-                "icao": "WAZ",
-                "country": "AE"
-            },
-            {
-                "name": "Wizz Air UK",
-                "iata": "W9",
-                "icao": "WUK",
-                "country": "GB"
-            }
-        ],
         "slug": "wizz-air",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#c6007e"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Wizz Air Abu Dhabi",
+        "iata": "5W",
+        "icao": "WAZ",
+        "callsign": "WIZZ SKY",
+        "country": "AE",
+        "website": "https://www.wizzair.com",
+        "parent": "wizz-air",
+        "marks": "wizz-air",
+        "founded": 2019,
+        "defunct": true,
+        "ceased": 2025,
+        "branding": {
+            "primary_color": "#c6007e"
+        },
+        "slug": "wizz-air-abu-dhabi",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#c6007e"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Wizz Air UK",
+        "iata": "W9",
+        "icao": "WUK",
+        "callsign": "WIZZ GO",
+        "country": "GB",
+        "website": "https://www.wizzair.com",
+        "parent": "wizz-air",
+        "marks": "wizz-air",
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#c6007e"
+        },
+        "slug": "wizz-air-uk",
         "assets": {
             "logo": {
                 "color": true,

@@ -60,6 +60,32 @@ async function copyFiles() {
     for (const dir of dirsToCopy) {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
+
+    await copySharedMarks(JSON.parse(airlines))
+}
+
+const escapeXml = (text) =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Airlines with `marks` use another airline's SVGs. Copy those files to their
+// own slug in dist (never in the repo), titled with their own name, so every
+// airline's files live at assets/<slug>/ like any other.
+async function copySharedMarks(airlines) {
+    for (const airline of airlines.filter((a) => a.marks)) {
+        const src = path.join(distDir, 'assets', airline.marks)
+        const dest = path.join(distDir, 'assets', airline.slug)
+        await fs.mkdir(dest, { recursive: true })
+        for (const file of await fs.readdir(src)) {
+            const svg = await fs.readFile(path.join(src, file), 'utf-8')
+            await fs.writeFile(
+                path.join(dest, file),
+                svg.replace(
+                    /<title>[^<]*<\/title>/,
+                    `<title>${escapeXml(airline.name)}</title>`,
+                ),
+            )
+        }
+    }
 }
 
 // ESM version (as-is, just copy to dist)

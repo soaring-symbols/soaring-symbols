@@ -24,10 +24,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Air Serbia](https://www.airserbia.com) 🇷🇸 | RS | JU | ASL |  | ![#0e203f](https://place-hold.it/10x10/0e203f/0e203f.png) | ✅ | ✅ |  |
 | [Air Transat](https://airtransat.com) | CA | TS | TSC |  | ![#172b54](https://place-hold.it/10x10/172b54/172b54.png) | ✅ | ✅ |  |
 | [AirAsia](https://www.airasia.com) | MY | AK | AXM |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
-| AirAsia Cambodia | KH | KT | KTC |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
-| Thai AirAsia | TH | FD | AIQ |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
-| Indonesia AirAsia | ID | QZ | AWQ |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
-| Philippines AirAsia | PH | Z2 | APG |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
+| [AirAsia Cambodia](https://www.airasia.com) | KH | KT | KTC |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
 | [airBaltic](https://www.airbaltic.com) 🇱🇻 | LV | BT | BTI |  | ![#152649](https://place-hold.it/10x10/152649/152649.png) |  | ✅ |  |
 | [Akasa Air](https://www.akasaair.com) | IN | QP | AKJ |  | ![#ff6300](https://place-hold.it/10x10/ff6300/ff6300.png) | ✅ | ✅ |  |
 | [Alaska Airlines](https://www.alaskaair.com) | US | AS | ASA | oneworld | ![#01426a](https://place-hold.it/10x10/01426a/01426a.png) |  | ✅ |  |
@@ -37,9 +34,9 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Atlantic Airways](https://www.atlanticairways.com) 🇫🇴 | FO | RC | FLI |  | ![#004c93](https://place-hold.it/10x10/004c93/004c93.png) | ✅ | ✅ |  |
 | [Austrian Airlines](https://www.austrian.com) 🇦🇹 | AT | OS | AUA | Star Alliance | ![#d81824](https://place-hold.it/10x10/d81824/d81824.png) | ✅ | ☑️ |  |
 | [avianca](https://www.avianca.com) 🇨🇴 | CO | AV | AVA | Star Alliance | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
-| Avianca Costa Rica 🇨🇷 | CR | LR | LRC |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
-| Avianca Ecuador | EC | 2K | GLG |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
-| Avianca El Salvador 🇸🇻 | SV | TA | TAI |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
+| [Avianca Costa Rica](https://www.avianca.com) 🇨🇷 | CR | LR | LRC |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
+| [Avianca Ecuador](https://www.avianca.com) | EC | 2K | GLG |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
+| [Avianca El Salvador](https://www.avianca.com) 🇸🇻 | SV | TA | TAI |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) | ✅ | ✅ |  |
 | [Azerbaijan Airlines](https://azal.az) 🇦🇿 | AZ | J2 | AHY |  | ![#082e6a](https://place-hold.it/10x10/082e6a/082e6a.png) | ✅ | ✅ |  |
 | [Azul](https://www.voeazul.com.br) | BR | AD | AZU |  | ![#005baa](https://place-hold.it/10x10/005baa/005baa.png) | ☑️ | ☑️ |  |
 | [Bamboo Airways](https://www.bambooairways.com) | VN | QH | BAV |  | ![#64ae53](https://place-hold.it/10x10/64ae53/64ae53.png) | ☑️ | ☑️ |  |
@@ -77,22 +74,23 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Iberia](https://www.iberia.com) 🇪🇸 | ES | IB | IBE | oneworld | ![#dc1c2e](https://place-hold.it/10x10/dc1c2e/dc1c2e.png) | ✅ | ✅ |  |
 | [Icelandair](https://www.icelandair.com) 🇮🇸 | IS | FI | ICE |  | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ | ✅ |
 | [IndiGo](https://www.goindigo.in) | IN | 6E | IGO |  | ![#001b94](https://place-hold.it/10x10/001b94/001b94.png) | ✅ | ✅ |  |
+| [Indonesia AirAsia](https://www.airasia.com) | ID | QZ | AWQ |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
 | [ITA Airways](https://www.ita-airways.com) 🇮🇹 | IT | AZ | ITY | Star Alliance | ![#006643](https://place-hold.it/10x10/006643/006643.png) |  | ☑️ |  |
 | [Japan Airlines](https://www.jal.co.jp) 🇯🇵 | JP | JL | JAL | oneworld | ![#e50012](https://place-hold.it/10x10/e50012/e50012.png) | ✅ | ✅ |  |
 | [Jet2.com](https://www.jet2.com) | GB | LS | EXS |  | ![#d71920](https://place-hold.it/10x10/d71920/d71920.png) | ✅ | ✅ |  |
 | [JetBlue Airways](https://www.jetblue.com) | US | B6 | JBU |  | ![#003876](https://place-hold.it/10x10/003876/003876.png) |  | ✅ |  |
 | [Jetstar](https://www.jetstar.com) | AU | JQ | JST |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
-| Jetstar Japan | JP | GK | JJP |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
+| [Jetstar Japan](https://www.jetstar.com/jp/en/home) | JP | GK | JJP |  | ![#ff5111](https://place-hold.it/10x10/ff5111/ff5111.png) | ✅ | ✅ |  |
 | [Kenya Airways](https://www.kenya-airways.com) 🇰🇪 | KE | KQ | KQA | SkyTeam | ![#ed1c24](https://place-hold.it/10x10/ed1c24/ed1c24.png) | ✅ | ✅ |  |
 | [KLM](https://www.klm.com) 🇳🇱 | NL | KL | KLM | SkyTeam | ![#009fd9](https://place-hold.it/10x10/009fd9/009fd9.png) | ✅ | ✅ |  |
 | [Korean Air](https://www.koreanair.com) 🇰🇷 | KR | KE | KAL |  | ![#051766](https://place-hold.it/10x10/051766/051766.png) | ✅ | ✅ |  |
 | [Kuwait Airways](https://www.kuwaitairways.com) 🇰🇼 | KW | KU | KAC |  | ![#1c285b](https://place-hold.it/10x10/1c285b/1c285b.png) | ✅ | ✅ |  |
 | [LATAM Airlines](https://www.latamairlines.com) | CL | LA | LAN |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
-| LATAM Airlines Brasil | BR | JJ | TAM |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
-| LATAM Airlines Colombia | CO | 4C | ARE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
-| LATAM Airlines Ecuador | EC | XL | LNE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
-| LATAM Airlines Perú | PE | LP | LPE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
-| LATAM Airlines Paraguay | PY | PZ | LAP |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [LATAM Airlines Brasil](https://www.latam.com) | BR | JJ | TAM |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [LATAM Airlines Colombia](https://www.latam.com/es_co) | CO | 4C | ARE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [LATAM Airlines Ecuador](https://www.latamairlines.com) | EC | XL | LNE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [LATAM Airlines Paraguay](https://www.latam.com/es_py) | PY | PZ | LAP |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
+| [LATAM Airlines Perú](https://www.latam.com) | PE | LP | LPE |  | ![#1b0088](https://place-hold.it/10x10/1b0088/1b0088.png) | ✅ | ✅ |  |
 | [Lion Air](https://www.lionair.co.id) | ID | JT | LNI |  | ![#ed1b2f](https://place-hold.it/10x10/ed1b2f/ed1b2f.png) | ✅ | ✅ |  |
 | [LOT Polish Airlines](https://www.lot.com) 🇵🇱 | PL | LO | LOT | Star Alliance | ![#252668](https://place-hold.it/10x10/252668/252668.png) | ✅ | ✅ |  |
 | [Lufthansa](https://www.lufthansa.com) 🇩🇪 | DE | LH | DLH | Star Alliance | ![#05164d](https://place-hold.it/10x10/05164d/05164d.png) | ✅ | ✅ |  |
@@ -105,15 +103,16 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Peach Aviation](https://www.flypeach.com) | JP | MM | APJ |  | ![#9b308c](https://place-hold.it/10x10/9b308c/9b308c.png) |  | ✅ |  |
 | [Pegasus Airlines](https://www.flypgs.com) | TR | PC | PGT |  | ![#fdb913](https://place-hold.it/10x10/fdb913/fdb913.png) | ✅ | ✅ |  |
 | [Philippine Airlines](https://www.philippineairlines.com) 🇵🇭 | PH | PR | PAL |  | ![#001f60](https://place-hold.it/10x10/001f60/001f60.png) | ✅ | ✅ |  |
+| [Philippines AirAsia](https://www.airasia.com) | PH | Z2 | APG |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
 | [Qantas](https://www.qantas.com) 🇦🇺 | AU | QF | QFA | oneworld | ![#e40000](https://place-hold.it/10x10/e40000/e40000.png) | ☑️ | ✅ |  |
 | [Qatar Airways](https://www.qatarairways.com) 🇶🇦 | QA | QR | QTR | oneworld | ![#662046](https://place-hold.it/10x10/662046/662046.png) | ✅ | ✅ |  |
 | [Riyadh Air](https://www.riyadhair.com) 🇸🇦 | SA | RX | RXI |  | ![#240852](https://place-hold.it/10x10/240852/240852.png) | ✅ | ✅ |  |
 | [Royal Air Maroc](https://www.royalairmaroc.com) 🇲🇦 | MA | AT | RAM | SkyTeam | ![#c20831](https://place-hold.it/10x10/c20831/c20831.png) | ✅ | ✅ | ☑️ |
 | [Royal Brunei Airlines](https://www.flyroyalbrunei.com) | BN | BI | RBA |  | ![#ffe600](https://place-hold.it/10x10/ffe600/ffe600.png) |  | ☑️ |  |
 | [Ryanair](https://www.ryanair.com) | IE | FR | RYR |  | ![#073590](https://place-hold.it/10x10/073590/073590.png) | ✅ | ✅ |  |
+| [SAS Connect](https://www.flysas.com) | IE | SL | SZS |  | ![#000099](https://place-hold.it/10x10/000099/000099.png) |  | ✅ |  |
 | [Saudia](https://www.saudia.com) 🇸🇦 | SA | SV | SVA | SkyTeam | ![#0a6937](https://place-hold.it/10x10/0a6937/0a6937.png) | ✅ | ✅ |  |
 | [Scandinavian Airlines](https://www.flysas.com) 🇩🇰 🇳🇴 🇸🇪 | DK,NO,SE | SK | SAS | Star Alliance | ![#000099](https://place-hold.it/10x10/000099/000099.png) |  | ✅ |  |
-| SAS Connect | IE | SL | SZS |  | ![#000099](https://place-hold.it/10x10/000099/000099.png) |  | ✅ |  |
 | [Scoot](https://www.flyscoot.com) | SG | TR | TGW | Value Alliance | ![#ffe900](https://place-hold.it/10x10/ffe900/ffe900.png) |  | ☑️ |  |
 | [Singapore Airlines](https://www.singaporeair.com) 🇸🇬 | SG | SQ | SIA | Star Alliance | ![#232f67](https://place-hold.it/10x10/232f67/232f67.png) | ✅ | ✅ |  |
 | [Southwest Airlines](https://www.southwest.com) | US | WN | SWA |  | ![#304cb2](https://place-hold.it/10x10/304cb2/304cb2.png) | ☑️ | ☑️ |  |
@@ -124,6 +123,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [T'way Air](https://www.twayair.com) | KR | TW | TWB |  | ![#d22c25](https://place-hold.it/10x10/d22c25/d22c25.png) |  | ✅ |  |
 | [TAP Air Portugal](https://www.tapairportugal.com) 🇵🇹 | PT | TP | TAP | Star Alliance | ![#bfd730](https://place-hold.it/10x10/bfd730/bfd730.png) | ☑️ | ☑️ |  |
 | [TAROM](https://www.tarom.ro) 🇷🇴 | RO | RO | ROT | SkyTeam | ![#003366](https://place-hold.it/10x10/003366/003366.png) | ✅ | ✅ | ✅ |
+| [Thai AirAsia](https://www.airasia.com) | TH | FD | AIQ |  | ![#ff0000](https://place-hold.it/10x10/ff0000/ff0000.png) |  | ✅ |  |
 | [Thai Airways](https://www.thaiairways.com) 🇹🇭 | TH | TG | THA | Star Alliance | ![#330066](https://place-hold.it/10x10/330066/330066.png) | ☑️ | ✅ |  |
 | [Transavia](https://www.transavia.com) | NL | HV | TRA |  | ![#00d66c](https://place-hold.it/10x10/00d66c/00d66c.png) | ✅ | ✅ |  |
 | [Turkish Airlines](https://www.turkishairlines.com) 🇹🇷 | TR | TK | THY | Star Alliance | ![#c90019](https://place-hold.it/10x10/c90019/c90019.png) | ✅ | ✅ |  |
@@ -139,6 +139,6 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [Vueling](https://www.vueling.com) | ES | VY | VLG |  | ![#ffcc00](https://place-hold.it/10x10/ffcc00/ffcc00.png) |  | ☑️ |  |
 | [WestJet](https://www.westjet.com) | CA | WS | WJA |  | ![#00aaa6](https://place-hold.it/10x10/00aaa6/00aaa6.png) | ✅ | ✅ |  |
 | [Wizz Air](https://www.wizzair.com) | HU | W6 | WZZ |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
-| Wizz Air Abu Dhabi | AE | 5W | WAZ |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
-| Wizz Air UK | GB | W9 | WUK |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
+| [Wizz Air Abu Dhabi](https://www.wizzair.com) | AE | 5W | WAZ |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
+| [Wizz Air UK](https://www.wizzair.com) | GB | W9 | WUK |  | ![#c6007e](https://place-hold.it/10x10/c6007e/c6007e.png) |  | ✅ |  |
 | [XiamenAir](https://www.xiamenair.com) | CN | MF | CXA | SkyTeam | ![#008cd5](https://place-hold.it/10x10/008cd5/008cd5.png) | ✅ | ✅ |  |
