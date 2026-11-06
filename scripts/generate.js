@@ -1,17 +1,13 @@
-import { writeFileSync } from 'fs'
+import { existsSync, writeFileSync } from 'fs'
 import sortBy from 'lodash.sortby'
 import {
     assetTypes,
     toSlug,
     toFullHex,
     getAirlineAssets,
-    writeDerivedMonos,
+    removeDerivedMonos,
 } from '../utils/index.js'
-import {
-    airlineFields,
-    subsidiaryFields,
-    validateAirlines,
-} from '../utils/schema.js'
+import { airlineFields, validateAirlines } from '../utils/schema.js'
 import { createRequire } from 'module'
 
 const require = createRequire(import.meta.url)
@@ -53,7 +49,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 `
 
-const derivedMonos = []
+const removedMonos = []
 
 sorted.forEach((airline) => {
     // Hand-written colors get the six-digit lowercase form the SVGs use
@@ -64,8 +60,16 @@ sorted.forEach((airline) => {
     }
 
     const slug = toSlug(airline.name)
-    derivedMonos.push(...writeDerivedMonos(slug))
-    const assets = getAirlineAssets(slug)
+    // An airline with `marks` has no SVGs of its own: it reports the files of
+    // the airline it names, and the build copies them to its slug
+    if (airline.marks && existsSync(`assets/${slug}`)) {
+        console.error(
+            `❌ ${airline.name} has both marks "${airline.marks}" and its own assets/${slug}; keep one`,
+        )
+        process.exit(1)
+    }
+    if (!airline.marks) removedMonos.push(...removeDerivedMonos(slug))
+    const assets = getAirlineAssets(airline.marks ?? slug)
 
     const includedStates = []
 
@@ -78,7 +82,6 @@ sorted.forEach((airline) => {
         alliance,
         flag_carrier,
         branding: { primary_color },
-        subsidiaries,
     } = airline
 
     airline.slug = slug
@@ -122,33 +125,9 @@ sorted.forEach((airline) => {
     md += `| ${airlineName} | ${country || ''} | ${iata || ''} | ${
         icao || ''
     } | ${alliance || ''} | ${colorSquare} | ${includedStates.join(' | ')} |\n`
-
-    if (Array.isArray(subsidiaries)) {
-        subsidiaries.forEach((sub) => {
-            let subsidiaryAirlineName = sub.name
-            if (sub.flag_carrier) {
-                subsidiaryAirlineName += ` ${getFlagEmoji(sub.country)}`
-            }
-
-            md += `| ${subsidiaryAirlineName} | ${sub.country || ''} | ${
-                sub.iata || ''
-            } | ${sub.icao || ''} | ${
-                sub.alliance || ''
-            } | ${colorSquare} | ${includedStates.join(' | ')} |\n`
-        })
-    }
 })
 
-const ordered = sorted.map((airline) => {
-    const entry = orderKeys(airline, airlineFields)
-    if (Array.isArray(entry.subsidiaries)) {
-        entry.subsidiaries = entry.subsidiaries.map((sub) =>
-            orderKeys(sub, subsidiaryFields),
-        )
-    }
-
-    return entry
-})
+const ordered = sorted.map((airline) => orderKeys(airline, airlineFields))
 
 // Check the finished data, generated fields included, before writing anything
 const problems = validateAirlines(ordered)
@@ -161,9 +140,9 @@ if (problems.length) {
 writeFileSync('airlines.json', JSON.stringify(ordered, null, 4))
 writeFileSync('AIRLINES.md', md)
 
-if (derivedMonos.length) {
+if (removedMonos.length) {
     console.log(
-        `✅ Wrote ${derivedMonos.length} mono file(s) for single-color assets`,
+        `✅ Removed ${removedMonos.length} -mono.svg file(s) the build derives from single-color assets`,
     )
 }
 console.log('✅ Successfully generated airlines.json and AIRLINES.md')

@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import { writeDerivedMonos } from '../utils/index.js'
 
 const inputFile = './index.js'
 const distDir = './dist'
@@ -59,6 +60,38 @@ async function copyFiles() {
     // Copy directories
     for (const dir of dirsToCopy) {
         await copyDir(dir.src, path.join(distDir, dir.dest))
+    }
+
+    const catalog = JSON.parse(airlines)
+    // Single-color assets get their -mono.svg here, not in the repo
+    for (const airline of catalog.filter((a) => !a.marks)) {
+        writeDerivedMonos(airline.slug, path.join(distDir, 'assets'))
+    }
+    // After the monos, so airlines sharing marks get those too
+    await copySharedMarks(catalog)
+}
+
+const escapeXml = (text) =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Airlines with `marks` use another airline's SVGs. Copy those files to their
+// own slug in dist (never in the repo), titled with their own name, so every
+// airline's files live at assets/<slug>/ like any other.
+async function copySharedMarks(airlines) {
+    for (const airline of airlines.filter((a) => a.marks)) {
+        const src = path.join(distDir, 'assets', airline.marks)
+        const dest = path.join(distDir, 'assets', airline.slug)
+        await fs.mkdir(dest, { recursive: true })
+        for (const file of await fs.readdir(src)) {
+            const svg = await fs.readFile(path.join(src, file), 'utf-8')
+            await fs.writeFile(
+                path.join(dest, file),
+                svg.replace(
+                    /<title>[^<]*<\/title>/,
+                    `<title>${escapeXml(airline.name)}</title>`,
+                ),
+            )
+        }
     }
 }
 

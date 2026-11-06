@@ -117,9 +117,11 @@ function stripMarkup(value = '') {
         .replace(/&nbsp;/g, ' ')
 }
 
-// The separate items of a value: lines, bullets and ;/,-separated parts
+// The separate items of a value: lines, bullets and ;/,-separated parts,
+// without parenthetical notes such as "(formerly J5)"
 export function listItems(value) {
     return stripMarkup(value)
+        .replace(/\([^)]*\)/g, '')
         .split(/[\n;,]+/)
         .map((item) =>
             item

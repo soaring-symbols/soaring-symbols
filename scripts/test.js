@@ -76,6 +76,14 @@ for (const [format, api] of [
         })
 
         describe('getAirline', () => {
+            it('finds a subsidiary as an airline of its own', () => {
+                assert.equal(getAirline('FD')?.name, 'Thai AirAsia')
+                assert.equal(
+                    getAssetPath('FD', 'logo'),
+                    'soaring-symbols/assets/thai-airasia/logo.svg',
+                )
+            })
+
             it('ignores case and surrounding whitespace', () => {
                 for (const query of ['vn', 'hvn', '  VIETNAM AIRLINES ']) {
                     assert.equal(getAirline(query)?.slug, 'vietnam-airlines')
@@ -218,6 +226,26 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
+    it('publishes shared marks under the borrowing airline, with its title', () => {
+        const borrowers = cjs.listAirlines().filter((a) => a.marks)
+        assert.ok(borrowers.length > 0)
+        for (const a of borrowers) {
+            const owner = cjs.getAirline(a.marks)
+            assert.deepEqual(a.assets, owner.assets, a.slug)
+            for (const type of Object.keys(a.assets)) {
+                const svg = readFileSync(
+                    new URL(`${a.slug}/${type}.svg`, assetsDir),
+                    'utf8',
+                ).replace(/&amp;/g, '&')
+                assert.match(
+                    svg,
+                    new RegExp(`<title>${a.name}</title>`),
+                    a.slug,
+                )
+            }
+        }
+    })
+
     it('has an airline for every asset directory', () => {
         const slugs = new Set(cjs.listAirlines().map((a) => a.slug))
         const dirs = readdirSync(assetsDir, { withFileTypes: true })
@@ -248,7 +276,7 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     const page = `Intro {{Short description|Airline}}
 {{Infobox airline
 | airline = Example Air
-| IATA = EX
+| IATA = EX (formerly EY)
 | ICAO = EXA; EXB<ref>{{cite web |url=https://x.test |title=Codes}}</ref>
 | callsign = EXAMPLE{{efn|Its regional arm uses EXPRESS.}}
 | hubs = {{ubl|class=nowrap
@@ -272,6 +300,7 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     })
 
     it('drops references, footnotes and comments from values', () => {
+        assert.deepEqual(listItems(params.iata), ['EX'])
         assert.deepEqual(listItems(params.icao), ['EXA', 'EXB'])
         assert.deepEqual(listItems(params.callsign), ['EXAMPLE'])
     })

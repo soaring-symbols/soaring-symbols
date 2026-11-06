@@ -19,16 +19,6 @@ export interface AirlineBranding {
     readonly guidelines?: string
 }
 
-/** An airline listed under a parent airline; it has no assets of its own. */
-export interface Subsidiary {
-    readonly name: string
-    readonly iata: string
-    readonly icao: string
-    /** ISO 3166-1 alpha-2 code (e.g. "VN"). */
-    readonly country: string
-    readonly flag_carrier?: boolean
-}
-
 export interface Airline {
     readonly name: string
     /** 2-character IATA code (e.g. "VN"). */
@@ -44,6 +34,13 @@ export interface Airline {
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
     readonly alliance?: string
+    /** Slug of the airline that owns this one (e.g. "airasia"). */
+    readonly parent?: string
+    /**
+     * Slug of the airline whose marks this one uses (e.g. "airasia"). Its
+     * files are still published under this airline's own slug.
+     */
+    readonly marks?: string
     /** IATA codes of its hub airports (e.g. ["HAN", "SGN"]). */
     readonly hubs?: readonly string[]
     /** Year founded, counting from the predecessor its history starts with. */
@@ -54,7 +51,6 @@ export interface Airline {
     readonly vectorized?: boolean
     readonly branding?: AirlineBranding
     readonly assets: Readonly<Partial<Record<AssetType, AssetInfo>>>
-    readonly subsidiaries?: readonly Subsidiary[]
 }
 
 export interface AssetPathOptions {

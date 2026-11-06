@@ -18,16 +18,16 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name must be a slugified, lowercase version of the airline's name (e.g., `assets/vietnam-airways/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
-    - **Single-color assets:** don't draw one. `npm run generate` writes it from the color file (its one color becomes `currentColor`) and overwrites it on every run, so commit it but never edit it.
-    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, replace its generated `-mono.svg` by hand or delete it.
+    - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
+    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
 
 **Correct Structure Example:**
 
 ```plaintext
 assets/
 └── vietnam-airways/
-    ├── icon.svg         # Color version (default)
-    ├── icon-mono.svg    # Mono version (generated: icon.svg is single-color)
+    ├── icon.svg         # Color version (default); single-color, so the
+    │                    #   build adds icon-mono.svg to the package
     ├── logo.svg         # Color version (default)
     └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
 ```
@@ -70,7 +70,7 @@ When adding a new airline, you only need to add an entry to the `airlines.json` 
 
 Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` checks the whole file against it and stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
 
-IATA and ICAO codes must be unique among active airlines and their subsidiaries. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code.
+IATA and ICAO codes must be unique among active airlines. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code.
 
 #### Information to Add Manually
 
@@ -84,6 +84,8 @@ IATA and ICAO codes must be unique among active airlines and their subsidiaries.
 | `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
 | `flag_carrier` |    No    | `true` or `false`.                                                                            |
 | `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
+| `parent`       |    No    | Slug of the airline that owns this one, e.g. "airasia".                                       |
+| `marks`        |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).        |
 | `hubs`         |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.        |
 | `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
 | `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
@@ -112,6 +114,14 @@ After you run the script, each airline gets an `assets` object with one entry pe
     - **Automatically generate the `assets` metadata.**
     - Update the `AIRLINES.md` documentation file.
 4. Submit a pull request that includes the new SVG files and the updated `airlines.json` and `AIRLINES.md` files. Please provide a clear description of your changes.
+
+#### Subsidiaries and shared logos
+
+A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline that owns it. It needs SVGs only when its logo differs:
+
+- **Same logo as another airline:** add no `assets/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's own slug in the published package, so the repository keeps one copy.
+- **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
+- **A logo shared by sister airlines but not the parent:** put the SVGs in one of them, and point the others' `marks` at it. `marks` must name an airline with SVGs of its own.
 
 ### Example JSON Data (After Script is Run)
 

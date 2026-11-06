@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, writeFileSync } from 'fs'
+import { readFileSync, existsSync, writeFileSync, rmSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
 
@@ -44,31 +44,45 @@ const toMonoSvg = (svg) =>
 
 const assetTypes = ['icon', 'logo', 'tail']
 
+// The <type>.svg / <type>-mono.svg pairs of an airline whose color file is
+// single-color: their mono file is derived from it, never drawn by hand
+const derivedMonoPairs = (slug, assetsDir) =>
+    assetTypes
+        .map((assetType) => ({
+            colorPath: join(assetsDir, slug, `${assetType}.svg`),
+            monoPath: join(assetsDir, slug, `${assetType}-mono.svg`),
+        }))
+        .filter(
+            ({ colorPath }) =>
+                existsSync(colorPath) &&
+                extractColorsFromSvg(colorPath).length === 1,
+        )
+
 // Write <type>-mono.svg next to every single-color <type>.svg, so each such
 // asset ships a monochrome file. Multi-color assets keep their hand-made
-// -mono.svg. Returns the paths it wrote.
-const writeDerivedMonos = (slug, assetsDir = 'assets') => {
-    const written = []
-    assetTypes.forEach((assetType) => {
-        const colorPath = join(assetsDir, slug, `${assetType}.svg`)
-        if (!existsSync(colorPath)) return
-        if (extractColorsFromSvg(colorPath).length !== 1) return
-
-        const monoPath = join(assetsDir, slug, `${assetType}-mono.svg`)
-        const mono = toMonoSvg(readFileSync(colorPath, 'utf8'))
-        if (existsSync(monoPath) && readFileSync(monoPath, 'utf8') === mono) {
-            return
-        }
-        writeFileSync(monoPath, mono)
-        written.push(monoPath)
-    })
-
-    return written
+// -mono.svg. The build runs it on dist/assets; the repo keeps no copies.
+const writeDerivedMonos = (slug, assetsDir) => {
+    for (const { colorPath, monoPath } of derivedMonoPairs(slug, assetsDir)) {
+        writeFileSync(monoPath, toMonoSvg(readFileSync(colorPath, 'utf8')))
+    }
 }
 
-// Describe which files exist for each asset type of an airline:
+// Delete -mono.svg files the build derives anyway, so a hand-made one for a
+// single-color asset can't drift from its color file. Returns what it removed.
+const removeDerivedMonos = (slug, assetsDir = 'assets') =>
+    derivedMonoPairs(slug, assetsDir)
+        .map(({ monoPath }) => monoPath)
+        .filter((monoPath) => {
+            if (!existsSync(monoPath)) return false
+            rmSync(monoPath)
+
+            return true
+        })
+
+// Describe which files an airline publishes for each asset type:
 // { logo: { color: true, mono: false, colors: ['#d99e09'] }, ... }
-// `colors` comes from the color file and is empty when there is none.
+// `colors` comes from the color file and is empty when there is none. A
+// single-color asset always has `mono`, since the build derives that file.
 // Repo tooling only: the published library reads this from airlines.json.
 const getAirlineAssets = (slug, assetsDir = 'assets') => {
     const airlineDir = join(assetsDir, slug)
@@ -77,18 +91,24 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     assetTypes.forEach((assetType) => {
         const colorPath = join(airlineDir, `${assetType}.svg`)
         const color = existsSync(colorPath)
-        const mono = existsSync(join(airlineDir, `${assetType}-mono.svg`))
+        const colors = color ? extractColorsFromSvg(colorPath) : []
+        const mono =
+            colors.length === 1 ||
+            existsSync(join(airlineDir, `${assetType}-mono.svg`))
 
         if (!color && !mono) return
 
-        assets[assetType] = {
-            color,
-            mono,
-            colors: color ? extractColorsFromSvg(colorPath) : [],
-        }
+        assets[assetType] = { color, mono, colors }
     })
 
     return assets
 }
 
-export { assetTypes, toSlug, toFullHex, getAirlineAssets, writeDerivedMonos }
+export {
+    assetTypes,
+    toSlug,
+    toFullHex,
+    getAirlineAssets,
+    writeDerivedMonos,
+    removeDerivedMonos,
+}
