@@ -5,7 +5,7 @@ import {
     toSlug,
     toFullHex,
     getAirlineAssets,
-    writeDerivedMonos,
+    removeDerivedMonos,
 } from '../utils/index.js'
 import { airlineFields, validateAirlines } from '../utils/schema.js'
 import { createRequire } from 'module'
@@ -49,7 +49,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 `
 
-const derivedMonos = []
+const removedMonos = []
 
 sorted.forEach((airline) => {
     // Hand-written colors get the six-digit lowercase form the SVGs use
@@ -68,7 +68,7 @@ sorted.forEach((airline) => {
         )
         process.exit(1)
     }
-    if (!airline.marks) derivedMonos.push(...writeDerivedMonos(slug))
+    if (!airline.marks) removedMonos.push(...removeDerivedMonos(slug))
     const assets = getAirlineAssets(airline.marks ?? slug)
 
     const includedStates = []
@@ -140,9 +140,9 @@ if (problems.length) {
 writeFileSync('airlines.json', JSON.stringify(ordered, null, 4))
 writeFileSync('AIRLINES.md', md)
 
-if (derivedMonos.length) {
+if (removedMonos.length) {
     console.log(
-        `✅ Wrote ${derivedMonos.length} mono file(s) for single-color assets`,
+        `✅ Removed ${removedMonos.length} -mono.svg file(s) the build derives from single-color assets`,
     )
 }
 console.log('✅ Successfully generated airlines.json and AIRLINES.md')

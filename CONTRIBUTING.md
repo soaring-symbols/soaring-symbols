@@ -18,16 +18,16 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name must be a slugified, lowercase version of the airline's name (e.g., `assets/vietnam-airways/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
-    - **Single-color assets:** don't draw one. `npm run generate` writes it from the color file (its one color becomes `currentColor`) and overwrites it on every run, so commit it but never edit it.
-    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, replace its generated `-mono.svg` by hand or delete it.
+    - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
+    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
 
 **Correct Structure Example:**
 
 ```plaintext
 assets/
 └── vietnam-airways/
-    ├── icon.svg         # Color version (default)
-    ├── icon-mono.svg    # Mono version (generated: icon.svg is single-color)
+    ├── icon.svg         # Color version (default); single-color, so the
+    │                    #   build adds icon-mono.svg to the package
     ├── logo.svg         # Color version (default)
     └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
 ```

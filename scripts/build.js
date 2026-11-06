@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import { writeDerivedMonos } from '../utils/index.js'
 
 const inputFile = './index.js'
 const distDir = './dist'
@@ -61,7 +62,13 @@ async function copyFiles() {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
-    await copySharedMarks(JSON.parse(airlines))
+    const catalog = JSON.parse(airlines)
+    // Single-color assets get their -mono.svg here, not in the repo
+    for (const airline of catalog.filter((a) => !a.marks)) {
+        writeDerivedMonos(airline.slug, path.join(distDir, 'assets'))
+    }
+    // After the monos, so airlines sharing marks get those too
+    await copySharedMarks(catalog)
 }
 
 const escapeXml = (text) =>
