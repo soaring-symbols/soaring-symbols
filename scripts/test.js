@@ -76,8 +76,18 @@ for (const [format, api] of [
 
             it('finds every airline by each of its keys', () => {
                 for (const a of listAirlines()) {
-                    for (const key of [a.iata, a.icao, a.slug, a.name]) {
+                    for (const key of [a.slug, a.name]) {
                         assert.equal(getAirline(key), a, `${a.name} by ${key}`)
+                    }
+                    // A defunct airline's code may have been reassigned, and
+                    // then finds the active airline that holds it now
+                    for (const field of ['iata', 'icao']) {
+                        const found = getAirline(a[field])
+                        const label = `${a.name} by ${a[field]}`
+                        if (found === a) continue
+                        assert.ok(a.defunct, label)
+                        assert.equal(found[field], a[field], label)
+                        assert.ok(!found.defunct, label)
                     }
                 }
             })

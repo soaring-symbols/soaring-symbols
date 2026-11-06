@@ -70,6 +70,8 @@ When adding a new airline, you only need to add an entry to the `airlines.json` 
 
 Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` checks the whole file against it and stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
 
+IATA and ICAO codes must be unique among active airlines and their subsidiaries. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code.
+
 #### Information to Add Manually
 
 | Field Name     | Required | Description                                                                                   |

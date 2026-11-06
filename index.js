@@ -17,10 +17,22 @@ const deepFreeze = (value) => {
     return value
 }
 
+// Codes of airlines that ceased operations get reassigned, so a code can
+// belong to one active airline and any number of defunct ones. The active
+// airline wins; among defunct ones, the first by name does.
+const setCode = (map, code, airline) => {
+    if (!code) return
+    const key = code.toUpperCase()
+    const current = map.get(key)
+    if (!current || (current.defunct && !airline.defunct)) {
+        map.set(key, airline)
+    }
+}
+
 for (const airline of airlines) {
     deepFreeze(airline)
-    if (airline.iata) byIata.set(airline.iata.toUpperCase(), airline)
-    if (airline.icao) byIcao.set(airline.icao.toUpperCase(), airline)
+    setCode(byIata, airline.iata, airline)
+    setCode(byIcao, airline.icao, airline)
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
 }
@@ -35,7 +47,8 @@ function listAirlines() {
 
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
- * tried in that order.
+ * tried in that order. A code shared with a defunct airline finds the
+ * active one.
  */
 function getAirline(query) {
     if (typeof query !== 'string' || !query.trim()) return undefined

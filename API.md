@@ -27,6 +27,8 @@ const skyTeam = all.filter((airline) => airline.alliance === 'SkyTeam')
 
 Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name.
 
+Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name.
+
 - **Argument:** `query` (string)
 - **Returns:** `Airline`, or `undefined` if nothing matches.
 

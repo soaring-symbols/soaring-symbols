@@ -55,6 +55,11 @@ export interface AssetPathOptions {
 }
 
 export function listAirlines(): Airline[]
+/**
+ * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
+ * tried in that order. A code shared with a defunct airline finds the
+ * active one.
+ */
 export function getAirline(query: string): Airline | undefined
 export function getAssetPath(
     airline: Airline | string,
