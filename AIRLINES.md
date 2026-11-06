@@ -63,7 +63,7 @@ This file provides an overview of the airlines included in the Soaring Symbols p
 | [EVA Air](https://www.evaair.com) | TW | BR | EVA | Star Alliance | ![#00a64f](https://place-hold.it/10x10/00a64f/00a64f.png) | ☑️ | ✅ | ☑️ |
 | [Ewa Air](https://ewa-air.com) | FR | ZD | EWR |  | ![#e1251b](https://place-hold.it/10x10/e1251b/e1251b.png) |  | ✅ |  |
 | [Fiji Airways](https://www.fijiairways.com) 🇫🇯 | FJ | FJ | FJI | oneworld | ![#473729](https://place-hold.it/10x10/473729/473729.png) | ✅ | ✅ |  |
-| [Finnair](http://www.finnair.com) 🇫🇮 | FI | AY | FIN | oneworld | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ |  |
+| [Finnair](https://www.finnair.com) 🇫🇮 | FI | AY | FIN | oneworld | ![#0c0243](https://place-hold.it/10x10/0c0243/0c0243.png) | ✅ | ✅ |  |
 | [Firefly](https://www.fireflyz.com.my) | MY | FY | FFM |  | ![#ef5713](https://place-hold.it/10x10/ef5713/ef5713.png) | ✅ | ✅ |  |
 | [Flybe](https://www.flybe.com) | GB | BE | BEE |  | ![#5a3f99](https://place-hold.it/10x10/5a3f99/5a3f99.png) |  | ✅ |  |
 | [flydubai](https://www.flydubai.com) | AE | FZ | FDB |  | ![#ff8200](https://place-hold.it/10x10/ff8200/ff8200.png) |  | ☑️ |  |

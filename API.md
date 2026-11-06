@@ -94,6 +94,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
     "name": "Vietnam Airlines",
     "iata": "VN",
     "icao": "HVN",
+    "callsign": "VIET NAM AIRLINES",
     "country": "VN",
     "flag_carrier": true,
     "website": "https://www.vietnamairlines.com",
@@ -120,6 +121,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `name`         | `string`        | Full airline name.                                                                                                                  |
 | `iata`         | `string`        | 2-character IATA code.                                                                                                              |
 | `icao`         | `string`        | 3-letter ICAO code.                                                                                                                 |
+| `callsign`     | `string?`       | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                |
 | `country`      | `string`        | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                       |
 | `slug`         | `string`        | URL-friendly name, also the asset folder name.                                                                                      |
 | `website`      | `string?`       | Official website.                                                                                                                   |

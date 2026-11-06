@@ -81,6 +81,7 @@ IATA and ICAO codes must be unique among active airlines and their subsidiaries.
 | `icao`         |   Yes    | The airline's three-character ICAO code.                                                      |
 | `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
 | `website`      |   Yes    | The official website of the airline.                                                          |
+| `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
 | `flag_carrier` |    No    | `true` or `false`.                                                                            |
 | `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
 | `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
@@ -97,7 +98,7 @@ After you run the script, each airline gets an `assets` object with one entry pe
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.
+`generate.js` also writes `slug` (from `name`) and puts every entry's fields in the schema's order. Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.
 
 ### 4. Pull Requests
 
@@ -118,6 +119,7 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "name": "Vietnam Airlines",
     "iata": "VN",
     "icao": "HVN",
+    "callsign": "VIET NAM AIRLINES",
     "country": "VN",
     "flag_carrier": true,
     "website": "https://www.vietnamairlines.com",

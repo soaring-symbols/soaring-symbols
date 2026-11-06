@@ -97,6 +97,11 @@ const schema = JSON.parse(
 )
 const validateSchema = new Ajv2020({ allErrors: true }).compile(schema)
 
+// Field order for airlines.json entries, taken from the schema so the two
+// can't drift apart: generate.js writes every entry's keys in this order
+const airlineFields = Object.keys(schema.$defs.airline.properties)
+const subsidiaryFields = Object.keys(schema.$defs.subsidiary.properties)
+
 const formatSchemaError = (airlines, error) => {
     const [, index, ...rest] = error.instancePath.split('/')
     const name = airlines[index]?.name ?? `#${index}`
@@ -152,6 +157,8 @@ const validateAirlines = (airlines) => {
 }
 
 export {
+    airlineFields,
+    subsidiaryFields,
     assetTypes,
     toSlug,
     toFullHex,

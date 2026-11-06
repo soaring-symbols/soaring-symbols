@@ -23,7 +23,7 @@
         },
         "url": {
             "type": "string",
-            "pattern": "^https?://[^\\s]+$"
+            "pattern": "^https://[^\\s]+$"
         },
         "hexColor": {
             "description": "Six-digit lowercase hex color, e.g. \"#d99e09\".",
@@ -55,6 +55,11 @@
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
+                "callsign": {
+                    "description": "ICAO radiotelephony callsign, uppercase, e.g. \"VIET NAM AIRLINES\".",
+                    "type": "string",
+                    "pattern": "^[A-Z0-9]+([ '.-][A-Z0-9]+)*$"
+                },
                 "country": { "$ref": "#/$defs/country" },
                 "flag_carrier": { "type": "boolean" },
                 "website": {

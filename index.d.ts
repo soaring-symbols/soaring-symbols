@@ -35,6 +35,8 @@ export interface Airline {
     readonly iata: string
     /** 3-letter ICAO code (e.g. "HVN"). */
     readonly icao: string
+    /** ICAO radiotelephony callsign, uppercase (e.g. "VIET NAM AIRLINES"). */
+    readonly callsign?: string
     /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
     readonly country: string
     readonly slug: string

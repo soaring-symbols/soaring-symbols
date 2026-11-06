@@ -32,8 +32,15 @@ async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
     // Copy required files and directories
+    // The catalog ships minified: the repo copy is indented for review, but
+    // consumers (bundlers, jsDelivr) only parse it
+    const airlines = await fs.readFile('./airlines.json', 'utf-8')
+    await fs.writeFile(
+        path.join(distDir, 'airlines.json'),
+        JSON.stringify(JSON.parse(airlines)),
+    )
+
     const filesToCopy = [
-        { src: './airlines.json', dest: 'airlines.json' },
         // The declarations have no default export, so the same file serves
         // both the import (.d.ts) and require (.d.cts) conditions
         { src: './index.d.ts', dest: 'index.d.ts' },

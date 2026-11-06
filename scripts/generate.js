@@ -1,6 +1,8 @@
 import { writeFileSync } from 'fs'
 import sortBy from 'lodash.sortby'
 import {
+    airlineFields,
+    subsidiaryFields,
     assetTypes,
     toSlug,
     toFullHex,
@@ -14,6 +16,17 @@ const require = createRequire(import.meta.url)
 const airlines = require('../airlines.json')
 
 const sorted = sortBy(airlines, (a) => a.name.toLowerCase())
+
+// A copy of the object with its keys in the given order; unknown keys go
+// last so the schema check can report them
+const orderKeys = (object, fields) =>
+    Object.fromEntries(
+        Object.entries(object).sort(
+            ([a], [b]) =>
+                (fields.indexOf(a) + 1 || Infinity) -
+                (fields.indexOf(b) + 1 || Infinity),
+        ),
+    )
 
 const getFlagEmoji = (isoCode) => {
     if (!isoCode) return '🏴'
@@ -124,15 +137,26 @@ sorted.forEach((airline) => {
     }
 })
 
-// Check the finished data, slug and assets included, before writing anything
-const problems = validateAirlines(sorted)
+const ordered = sorted.map((airline) => {
+    const entry = orderKeys(airline, airlineFields)
+    if (Array.isArray(entry.subsidiaries)) {
+        entry.subsidiaries = entry.subsidiaries.map((sub) =>
+            orderKeys(sub, subsidiaryFields),
+        )
+    }
+
+    return entry
+})
+
+// Check the finished data, generated fields included, before writing anything
+const problems = validateAirlines(ordered)
 if (problems.length) {
     console.error('❌ airlines.json does not match airlines.schema.json:')
     problems.forEach((problem) => console.error(`  - ${problem}`))
     process.exit(1)
 }
 
-writeFileSync('airlines.json', JSON.stringify(sorted, null, 4))
+writeFileSync('airlines.json', JSON.stringify(ordered, null, 4))
 writeFileSync('AIRLINES.md', md)
 
 if (derivedMonos.length) {
