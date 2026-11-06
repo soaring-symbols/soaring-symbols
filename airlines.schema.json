@@ -71,9 +71,9 @@
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
                 "callsign": {
-                    "description": "ICAO radiotelephony callsign, uppercase, e.g. \"VIET NAM AIRLINES\".",
+                    "description": "ICAO radiotelephony callsign in uppercase, accented letters included, e.g. \"VIET NAM AIRLINES\" or \"LAN PERÚ\".",
                     "type": "string",
-                    "pattern": "^[A-Z0-9]+([ '.-][A-Z0-9]+)*$"
+                    "pattern": "^[\\p{Lu}0-9]+([ '.-][\\p{Lu}0-9]+)*$"
                 },
                 "country": { "$ref": "#/$defs/country" },
                 "flag_carrier": { "type": "boolean" },

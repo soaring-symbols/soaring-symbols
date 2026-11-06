@@ -3060,6 +3060,7 @@
         "name": "LATAM Airlines Perú",
         "iata": "LP",
         "icao": "LPE",
+        "callsign": "LAN PERÚ",
         "country": "PE",
         "website": "https://www.latam.com",
         "parent": "latam-airlines",
