@@ -23,9 +23,12 @@ Browse the collection, open a page for any airline to download its marks, and ch
 - [x] Website with a browsable catalog, a page per airline and an SVG validator
 - [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
 - [x] Raycast extension
-- [ ] Iconify icon set, for Iconify, Nuxt Icon, UnoCSS, Tailwind and Astro
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
 - [ ] Swift Package, with an asset catalog and a SwiftUI view
+
+### Not planned
+
+- Iconify icon set: Iconify declined to add the collection, as airline logos are too niche for its users ([iconify/icon-sets#223](https://github.com/iconify/icon-sets/issues/223)). A self-published Iconify JSON would miss what makes Iconify useful (its API, search and auto-installed `@iconify-json` packages), so the SVGs from npm or jsDelivr remain the way to use the marks.
 
 Plans for the website itself are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
@@ -47,11 +50,11 @@ bun add soaring-symbols
 
 ## Ecosystem
 
-| Tool / Integration | Author |
-| :-- | :-- |
-| [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 /> | [anhthang]|
+| Tool / Integration                                                                                                                                                              | Author                               |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------- |
+| [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 />                   | [anhthang]                           |
 | [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
-| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 /> | [anhthang]|
+| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />  | [anhthang]                           |
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). See the [ecosystem section on the website](https://soaringsymbols.org/#ecosystem) for how to use each one.
 
