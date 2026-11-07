@@ -63,8 +63,8 @@ Versions are plain 0.x, without prerelease labels: `patch` for compatible change
 
 ### Keeping releases compatible
 
-The Raycast extension ([soaring-symbols/raycast](https://github.com/soaring-symbols/raycast)) reads `airlines.json` and the SVGs from the published package through jsDelivr, pinned to one release line (e.g. `soaring-symbols@0.2`). Every patch release reaches it automatically; a minor release does not until the extension is updated. So:
+The Raycast extension ([soaring-symbols/raycast](https://github.com/soaring-symbols/raycast)) and the Figma plugin ([soaring-symbols/figma](https://github.com/soaring-symbols/figma)) read `airlines.json` and the SVGs from the published package through jsDelivr, each pinned to one release line (e.g. `soaring-symbols@0.2`). Every patch release reaches them automatically; a minor release does not until they are updated. So:
 
 - Prefer additive changes, released as a patch: add a new field or file and keep the old one, so existing consumers keep working. Remove or rename something only in a later minor release, and say so in the release notes.
 - Treat anything that can break a reader of the previous release as breaking and release it as a minor: removing or renaming a field in `airlines.json`, changing a field's meaning or type, moving or renaming files under `assets/`, or changing the exported functions.
-- Before a minor release, prepare the extension update for the new line (its `AGENTS.md` lists the steps) so it can be published right after the release.
+- Before a minor release, prepare the extension and plugin updates for the new line (each one's `AGENTS.md` lists the steps) so they can be published right after the release.
