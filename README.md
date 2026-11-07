@@ -25,7 +25,7 @@ This is the one roadmap for the collection and every integration around it, incl
 - [x] Website with a browsable catalog, a page per airline and an SVG validator
 - [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
 - [x] Raycast extension
-- [ ] Image endpoint on the website, to load a mark by IATA or ICAO code, with monochrome marks in a chosen color and PNG for apps that can't render SVG
+- [x] Image endpoint on the website, to load a mark by IATA or ICAO code, with monochrome marks in a chosen color and PNG for apps that can't render SVG, such as [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png)
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
 
 ### Not planned
