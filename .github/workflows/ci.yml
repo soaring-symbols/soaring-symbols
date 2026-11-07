@@ -39,8 +39,8 @@ jobs:
       - name: Prettier
         run: npm run format:check
 
-      # Only the SVGs this PR adds or changes: older ones were optimized with
-      # other tools and still differ by a few bytes
+      # Only the SVGs this PR adds or changes, optimized with SVGO or SVGOMG;
+      # some older ones are still over the limit (#54)
       - name: Check changed SVGs are optimized
         if: github.event_name == 'pull_request'
         run: node scripts/check-optimized.js --base HEAD^1

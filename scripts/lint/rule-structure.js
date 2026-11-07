@@ -45,11 +45,13 @@ export function ruleViewBox({ svgElement, isIcon, issues }) {
     }
 }
 
-// RULE: role, viewBox, and xmlns must be present on the root <svg>
+// RULE: role, viewBox, and xmlns must be present on the root <svg>.
+//       A missing role="img" (SVGOMG drops it) is added back.
 export function ruleRequiredAttrs({ svgElement, issues }) {
     for (const attr of ['role', 'viewBox', 'xmlns']) {
         if (!svgElement.hasAttribute(attr)) {
             issues.push(`Structure: Missing required attribute \`${attr}\`.`)
+            if (attr === 'role') svgElement.setAttribute('role', 'img')
         }
     }
 }
