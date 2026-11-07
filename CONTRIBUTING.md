@@ -121,6 +121,8 @@ After you run the script, each airline gets an `assets` object with one entry pe
     - Update the `AIRLINES.md` documentation file.
 4. Submit a pull request that includes the new SVG files and the updated `airlines.json` and `AIRLINES.md` files. Please provide a clear description of your changes.
 
+Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on generated files, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
+
 #### Subsidiaries and shared logos
 
 A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline that owns it. It needs SVGs only when its logo differs:

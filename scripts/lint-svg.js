@@ -22,6 +22,8 @@ import {
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
 const DRY_RUN = !process.argv.includes('--fix')
+// Exit with 1 when any file has an issue (warnings never fail), for CI
+const CHECK = process.argv.includes('--check')
 
 const EXCLUDE_FILES = [
     'assets/british-airways/icon.svg',
@@ -78,6 +80,7 @@ const lintSvgFile = (filePath) => {
     if (!svgElement) {
         return {
             issues: ['Invalid SVG: Missing <svg> element.'],
+            errorCount: 1,
             fixedContent: null,
         }
     }
@@ -118,6 +121,7 @@ const lintSvgFile = (filePath) => {
 
     return {
         issues: [...ctx.issues, ...ctx.warnings],
+        errorCount: ctx.issues.length,
         fixedContent: hasStructuralFixes ? fixedContent : null,
     }
 }
@@ -135,6 +139,7 @@ const main = () => {
     let filesChecked = 0
     let filesWithIssues = 0
     let filesFixed = 0
+    let filesWithErrors = 0
 
     const airlineDirs = readdirSync(ASSETS_DIR, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
@@ -159,6 +164,8 @@ const main = () => {
                 }
 
                 const result = lintSvgFile(fullPath)
+
+                if (result.errorCount > 0) filesWithErrors++
 
                 if (result.issues.length > 0) {
                     filesWithIssues++
@@ -193,6 +200,13 @@ const main = () => {
         if (!DRY_RUN) console.log(`Fixed ${filesFixed} file(s).`)
     } else {
         console.log('✅ All files are compliant.')
+    }
+
+    if (CHECK && DRY_RUN && filesWithErrors > 0) {
+        console.log(
+            `\n❌ ${filesWithErrors} file(s) need fixing. Run \`node scripts/lint-svg.js --fix\` and commit the result.`,
+        )
+        process.exitCode = 1
     }
 }
 
