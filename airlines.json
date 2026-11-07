@@ -1274,6 +1274,22 @@
         }
     },
     {
+        "name": "Juneyao Air",
+        "iata": "HO",
+        "icao": "DKH",
+        "callsign": "AIR JUNEYAO",
+        "country": "CN",
+        "website": "https://www.juneyaoair.com",
+        "hubs": [
+            "SHA",
+            "PVG"
+        ],
+        "founded": 2005,
+        "branding": {
+            "primary_color": "#7c0044"
+        }
+    },
+    {
         "name": "Kenya Airways",
         "iata": "KQ",
         "icao": "KQA",
