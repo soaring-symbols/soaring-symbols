@@ -9,6 +9,7 @@ import { JSDOM } from 'jsdom'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
+import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import {
     extractInfobox,
     firstYear,
@@ -423,6 +424,37 @@ describe('svg-validator', () => {
             'Format/Attribute order/error',
             'Style/Hex colors/error',
         ])
+    })
+
+    // Every lint rule has a browser check and every browser check (geometry
+    // aside, which the CLI doesn't check yet) a rule, at the same level
+    it('has a browser check for every lint rule', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const source = readFileSync(
+            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            'utf8',
+        )
+        const checks = runSvgValidations(parse(source), 'logo', null, {
+            fileName: 'logo.svg',
+            source,
+        })
+        const levels = new Map(checks.map((c) => [c.label, c.level]))
+        const claimed = new Set()
+
+        for (const rule of [...DOM_RULES, ...STRING_RULES]) {
+            const entry = BROWSER_CHECKS.get(rule)
+            assert.ok(entry, `${rule.name} has no entry in BROWSER_CHECKS`)
+            for (const label of entry.labels) {
+                assert.ok(levels.has(label), `no browser check "${label}"`)
+                const level = entry.warning ? 'warning' : 'error'
+                assert.equal(levels.get(label), level, `level of "${label}"`)
+                claimed.add(label)
+            }
+        }
+        const unclaimed = checks
+            .filter((c) => c.group !== 'Geometry' && !claimed.has(c.label))
+            .map((c) => c.label)
+        assert.deepEqual(unclaimed, [], 'browser checks with no lint rule')
     })
 
     it('expects currentColor in a -mono.svg', async () => {

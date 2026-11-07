@@ -3,28 +3,7 @@ import { basename, dirname, join } from 'path'
 import { JSDOM } from 'jsdom'
 import { toSlug } from '../utils/index.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
-
-import {
-    ruleTitle,
-    ruleViewBox,
-    ruleRequiredAttrs,
-    ruleNoTransforms,
-    ruleSinglePath,
-    ruleNoNestedGroups,
-} from './lint/rule-structure.js'
-import { ruleNoScripts } from './lint/rule-security.js'
-import {
-    ruleNoDimensions,
-    ruleNoEditorData,
-    ruleNumberFormat,
-    ruleNoProlog,
-} from './lint/rule-format.js'
-import {
-    ruleHexColors,
-    ruleFillPlacement,
-    rulePathAttrOrder,
-    ruleSvgAttrOrder,
-} from './lint/rule-styling.js'
+import { DOM_RULES, STRING_RULES } from './lint/rules.js'
 
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
@@ -33,27 +12,6 @@ const DRY_RUN = !process.argv.includes('--fix')
 const CHECK = process.argv.includes('--check')
 
 // ---------------------
-
-// DOM rules run against the parsed SVG element (may mutate DOM to fix issues).
-// Each rule: (ctx) => void, pushing strings to ctx.issues
-const DOM_RULES = [
-    ruleTitle,
-    ruleViewBox,
-    ruleRequiredAttrs,
-    ruleNoScripts,
-    ruleNoTransforms,
-    ruleSinglePath,
-    ruleNoNestedGroups,
-    ruleHexColors,
-    ruleFillPlacement,
-    ruleNoDimensions,
-    ruleNoEditorData,
-    ruleNumberFormat,
-]
-
-// String rules run against the serialized SVG string (regex-based fixes).
-// Each rule: (svgString, ctx) => { content, changed, message? }
-const STRING_RULES = [ruleNoProlog, rulePathAttrOrder, ruleSvgAttrOrder]
 
 // Airline names from the catalog, keyed by asset folder (slug)
 const catalogNames = new Map(
