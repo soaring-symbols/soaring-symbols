@@ -182,11 +182,29 @@ for (const [format, api] of [
 }
 
 describe('airlines.json schema', () => {
-    it('matches airlines.schema.json', () => {
+    it('ships a catalog that matches airlines.schema.json', () => {
         const shipped = JSON.parse(
             readFileSync(new URL('../dist/airlines.json', import.meta.url)),
         )
-        assert.deepEqual(validateAirlines(shipped), [])
+        assert.deepEqual(validateAirlines(shipped, { published: true }), [])
+    })
+
+    it('keeps slug and assets out of the repo copy', () => {
+        const source = JSON.parse(
+            readFileSync(new URL('../airlines.json', import.meta.url)),
+        )
+        assert.deepEqual(validateAirlines(source), [])
+        for (const a of source) {
+            assert.equal(a.slug, undefined, a.name)
+            assert.equal(a.assets, undefined, a.name)
+        }
+    })
+
+    it('requires slug and assets in the published catalog', () => {
+        const source = JSON.parse(
+            readFileSync(new URL('../airlines.json', import.meta.url)),
+        )
+        assert.notDeepEqual(validateAirlines(source, { published: true }), [])
     })
 })
 

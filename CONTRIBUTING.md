@@ -72,9 +72,9 @@ assets/
 
 ### 3. JSON Data Updates
 
-When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. The `generate.js` script will then analyze your SVG files and automatically generate the `assets` object.
+When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. Everything else the package publishes about the airline (its `slug` and the `assets` found in its SVGs) is added by the build, so the repository's `airlines.json` never holds it.
 
-Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` checks the whole file against it and stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
+Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` sorts the file, puts every entry's fields in the schema's order, and checks the whole file against the schema. It stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
 
 IATA and ICAO codes must be unique among active airlines. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code.
 
@@ -101,7 +101,7 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 
 #### Generated Asset Metadata
 
-After you run the script, each airline gets an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
+In the published package (`dist/airlines.json`), each airline also has a `slug` (from `name`) and an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
 
 | Field Name | Description                                                                                                     |
 | :--------- | :-------------------------------------------------------------------------------------------------------------- |
@@ -109,19 +109,16 @@ After you run the script, each airline gets an `assets` object with one entry pe
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-`generate.js` also writes `slug` (from `name`) and puts every entry's fields in the schema's order. Never edit `assets` or `slug` by hand; `generate.js` rewrites them on every run.
+Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them.
 
 ### 4. Pull Requests
 
 1. Prepare your SVG files according to the naming and specification guidelines, optimize them with `npm run optimize`, and check them with `npm run lint:svg`.
 2. Add the new airline's base information to the `airlines.json` file, ensuring the list remains sorted alphabetically.
-3. **You must run the `generate.js` script** (`npm run generate` or `node generate.js`). This script is essential as it will:
-    - Analyze your new SVG files.
-    - **Automatically generate the `assets` metadata.**
-    - Update the `AIRLINES.md` documentation file.
-4. Submit a pull request that includes the new SVG files and the updated `airlines.json` and `AIRLINES.md` files. Please provide a clear description of your changes.
+3. Run `node scripts/lint-svg.js --fix` and `npm run generate`, which sorts `airlines.json`, checks it against the schema and removes `-mono.svg` files the build makes itself.
+4. Submit a pull request with the new SVG files and your `airlines.json` entry. Please provide a clear description of your changes.
 
-Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on generated files, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
+Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
 
 #### Subsidiaries and shared logos
 
@@ -131,9 +128,9 @@ A subsidiary is an airline entry of its own, with its own codes, country and web
 - **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
 - **A logo shared by sister airlines but not the parent:** put the SVGs in one of them, and point the others' `marks` at it. `marks` must name an airline with SVGs of its own.
 
-### Example JSON Data (After Script is Run)
+### Example JSON Data
 
-This is what a complete entry for an airline looks like after the `generate.js` script has run and populated the `slug` and `assets` fields.
+This is what a complete entry looks like in `airlines.json`:
 
 ```json
 {
@@ -150,7 +147,16 @@ This is what a complete entry for an airline looks like after the `generate.js` 
     "branding": {
         "primary_color": "#d99e09",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
-    },
+    }
+}
+```
+
+The published copy in `dist/airlines.json` adds the generated fields:
+
+```json
+{
+    "name": "Vietnam Airlines",
+    ...
     "slug": "vietnam-airlines",
     "assets": {
         "icon": {

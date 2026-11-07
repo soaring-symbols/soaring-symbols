@@ -102,7 +102,7 @@ if (!dryRun) {
     console.log(`Logged in to npm as ${user}`)
 }
 
-// --- Test (also lints SVGs and regenerates airlines.json / AIRLINES.md) ---
+// --- Test (also lints SVGs and tidies airlines.json) ---
 step('Running tests')
 run('npm', ['test'])
 ensureCleanTree(

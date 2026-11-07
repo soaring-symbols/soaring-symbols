@@ -44,8 +44,8 @@ jobs:
       - name: Build and test
         run: npm test
 
-      # generate rewrites airlines.json and AIRLINES.md and deletes derived
-      # -mono.svg files, so any change here means the PR missed a step
+      # lint-svg --fix rewrites SVGs, and generate re-sorts airlines.json and
+      # deletes derived -mono.svg files, so any change means the PR missed a step
       - name: Check generated files are committed
         run: |
           if [ -n "$(git status --porcelain)" ]; then

@@ -15,25 +15,6 @@
         "founded": 1995,
         "branding": {
             "primary_color": "#002677"
-        },
-        "slug": "aegean-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#93a5cf",
-                    "#002677"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#93a5cf",
-                    "#002677"
-                ]
-            }
         }
     },
     {
@@ -51,26 +32,6 @@
         "branding": {
             "primary_color": "#006472",
             "tagline": "You're Very Welcome"
-        },
-        "slug": "aer-lingus",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#82c341",
-                    "#3cb14a"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#82c341",
-                    "#3cb14a",
-                    "#006472"
-                ]
-            }
         }
     },
     {
@@ -90,23 +51,6 @@
         "branding": {
             "primary_color": "#0080be",
             "tagline": "Soaring in the sky"
-        },
-        "slug": "aerolineas-argentinas",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0080be"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0080be"
-                ]
-            }
         }
     },
     {
@@ -125,23 +69,6 @@
         "branding": {
             "primary_color": "#020c41",
             "tagline": "Being close, getting far"
-        },
-        "slug": "aeromexico",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#020c41"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#020c41"
-                ]
-            }
         }
     },
     {
@@ -160,25 +87,6 @@
         "ceased": 2025,
         "branding": {
             "primary_color": "#ce1f2e"
-        },
-        "slug": "air-albania",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#231f20",
-                    "#ce1f2e"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#231f20",
-                    "#ce1f2e"
-                ]
-            }
         }
     },
     {
@@ -195,23 +103,6 @@
         "founded": 1947,
         "branding": {
             "primary_color": "#e2231a"
-        },
-        "slug": "air-algerie",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e2231a"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e2231a"
-                ]
-            }
         }
     },
     {
@@ -224,23 +115,6 @@
         "founded": 2003,
         "branding": {
             "primary_color": "#ed1b48"
-        },
-        "slug": "air-arabia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0041"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1b48"
-                ]
-            }
         }
     },
     {
@@ -258,24 +132,6 @@
         "founded": 2001,
         "branding": {
             "primary_color": "#a48c5d"
-        },
-        "slug": "air-astana",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#a48c5d"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#9b804d",
-                    "#253168"
-                ]
-            }
         }
     },
     {
@@ -294,23 +150,6 @@
         "ceased": 2017,
         "branding": {
             "primary_color": "#cc2234"
-        },
-        "slug": "air-berlin",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cc1f2f"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cc2234"
-                ]
-            }
         }
     },
     {
@@ -330,24 +169,6 @@
         "founded": 1937,
         "branding": {
             "primary_color": "#f01428"
-        },
-        "slug": "air-canada",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f01428"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f01428",
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -368,24 +189,6 @@
         "founded": 1988,
         "branding": {
             "primary_color": "#ed1c24"
-        },
-        "slug": "air-china",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1c24"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e60012",
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -398,24 +201,6 @@
         "founded": 1989,
         "branding": {
             "primary_color": "#009eb3"
-        },
-        "slug": "air-dolomiti",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#009eb3"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#009eb3",
-                    "#062647"
-                ]
-            }
         }
     },
     {
@@ -432,23 +217,6 @@
         "founded": 1986,
         "branding": {
             "primary_color": "#006fde"
-        },
-        "slug": "air-europa",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#006fde"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#006fde"
-                ]
-            }
         }
     },
     {
@@ -466,24 +234,6 @@
         "founded": 1933,
         "branding": {
             "primary_color": "#051039"
-        },
-        "slug": "air-france",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000",
-                    "#051039"
-                ]
-            }
         }
     },
     {
@@ -501,30 +251,6 @@
         "founded": 1932,
         "branding": {
             "primary_color": "#da0e29"
-        },
-        "slug": "air-india",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#fed9a0",
-                    "#ecc890",
-                    "#bf9a66",
-                    "#9e7947"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#da0e29",
-                    "#fed9a0",
-                    "#ecc890",
-                    "#bf9a66",
-                    "#9e7947"
-                ]
-            }
         }
     },
     {
@@ -542,23 +268,6 @@
         "founded": 1967,
         "branding": {
             "primary_color": "#be2239"
-        },
-        "slug": "air-mauritius",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#be2239"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#be2239"
-                ]
-            }
         }
     },
     {
@@ -578,23 +287,6 @@
         "founded": 1940,
         "branding": {
             "primary_color": "#000000"
-        },
-        "slug": "air-new-zealand",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -611,23 +303,6 @@
         "founded": 1927,
         "branding": {
             "primary_color": "#0e203f"
-        },
-        "slug": "air-serbia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0e203f"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0e203f"
-                ]
-            }
         }
     },
     {
@@ -644,24 +319,6 @@
         "founded": 1986,
         "branding": {
             "primary_color": "#172b54"
-        },
-        "slug": "air-transat",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00b3f0"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#172b54",
-                    "#00b3f0"
-                ]
-            }
         }
     },
     {
@@ -675,16 +332,6 @@
         "branding": {
             "primary_color": "#ff0000",
             "tagline": "Now Everyone Can Fly"
-        },
-        "slug": "airasia",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -699,16 +346,6 @@
         "founded": 2022,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "airasia-cambodia",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -725,16 +362,6 @@
         "founded": 1995,
         "branding": {
             "primary_color": "#152649"
-        },
-        "slug": "airbaltic",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#152649"
-                ]
-            }
         }
     },
     {
@@ -748,24 +375,6 @@
         "branding": {
             "primary_color": "#ff6300",
             "tagline": "It’s Your Sky"
-        },
-        "slug": "akasa-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff6300"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#5c0fd9",
-                    "#ff6300"
-                ]
-            }
         }
     },
     {
@@ -788,16 +397,6 @@
         "branding": {
             "primary_color": "#01426a",
             "tagline": "Fly smart. Land happy"
-        },
-        "slug": "alaska-airlines",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#01426a"
-                ]
-            }
         }
     },
     {
@@ -815,17 +414,6 @@
         "founded": 1952,
         "branding": {
             "primary_color": "#00146e"
-        },
-        "slug": "all-nippon-airways",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#00146e",
-                    "#00aff0"
-                ]
-            }
         }
     },
     {
@@ -851,30 +439,6 @@
         "founded": 1930,
         "branding": {
             "primary_color": "#0078d2"
-        },
-        "slug": "american-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#19aade",
-                    "#e02527",
-                    "#71251d",
-                    "#e8ebee"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#eb2023",
-                    "#6c221f",
-                    "#e7ebee",
-                    "#05aee9",
-                    "#334357"
-                ]
-            }
         }
     },
     {
@@ -893,24 +457,6 @@
         "branding": {
             "primary_color": "#4a4f54",
             "guidelines": "https://flyasiana.com/C/VN/EN/contents/ci"
-        },
-        "slug": "asiana-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e60013"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e60013",
-                    "#4a4f54"
-                ]
-            }
         }
     },
     {
@@ -927,25 +473,6 @@
         "founded": 1987,
         "branding": {
             "primary_color": "#004c93"
-        },
-        "slug": "atlantic-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#004c93",
-                    "#db001b"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#db001b",
-                    "#004c93"
-                ]
-            }
         }
     },
     {
@@ -963,65 +490,6 @@
         "founded": 1923,
         "branding": {
             "primary_color": "#d81824"
-        },
-        "slug": "austrian-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d81e05"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffffff",
-                    "#fcfcfc",
-                    "#f2f2f2",
-                    "#e1e2e2",
-                    "#c9cacc",
-                    "#c6c7c8",
-                    "#fbfbfb",
-                    "#eeefef",
-                    "#dadadb",
-                    "#bdbdbe",
-                    "#98999a",
-                    "#87888a",
-                    "#d81e05",
-                    "#fefefe",
-                    "#fdfdfd",
-                    "#fbfbfc",
-                    "#fafafa",
-                    "#f9f9f9",
-                    "#f8f8f8",
-                    "#f6f7f7",
-                    "#f5f5f6",
-                    "#f4f4f5",
-                    "#f3f3f3",
-                    "#f0f1f1",
-                    "#eff0f0",
-                    "#eeeeef",
-                    "#ededee",
-                    "#ececec",
-                    "#eaebeb",
-                    "#e9eaea",
-                    "#e8e8e9",
-                    "#e7e7e8",
-                    "#e5e6e7",
-                    "#e4e5e6",
-                    "#e3e4e4",
-                    "#e2e2e3",
-                    "#e1e1e2",
-                    "#dfe0e1",
-                    "#dedfe0",
-                    "#dddedf",
-                    "#dcdddd",
-                    "#dadbdc",
-                    "#d9dadb"
-                ]
-            }
         }
     },
     {
@@ -1039,23 +507,6 @@
         "founded": 1919,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "avianca",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -1074,23 +525,6 @@
         "founded": 1945,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "avianca-costa-rica",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -1108,23 +542,6 @@
         "founded": 1985,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "avianca-ecuador",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -1139,23 +556,6 @@
         "founded": 1931,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "avianca-el-salvador",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -1172,29 +572,6 @@
         "founded": 1992,
         "branding": {
             "primary_color": "#082e6a"
-        },
-        "slug": "azerbaijan-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#082e6a",
-                    "#0098da",
-                    "#51c2e1",
-                    "#9fd7e0"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#082e6a",
-                    "#0098da",
-                    "#51c2e1",
-                    "#9fd7e0"
-                ]
-            }
         }
     },
     {
@@ -1212,74 +589,6 @@
         "founded": 2008,
         "branding": {
             "primary_color": "#005baa"
-        },
-        "slug": "azul",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#5061aa",
-                    "#8b328a",
-                    "#5d80c0",
-                    "#e94e29",
-                    "#d5262a",
-                    "#f6a022",
-                    "#6a95cd",
-                    "#306fb6",
-                    "#73c8dd",
-                    "#92c143",
-                    "#169bd6",
-                    "#199aa6",
-                    "#a5bfdf",
-                    "#3fb7af",
-                    "#ae2258",
-                    "#79c199",
-                    "#e5df1f",
-                    "#33bacf",
-                    "#6ca9db",
-                    "#de5097",
-                    "#604596",
-                    "#fad803",
-                    "#0bb8e7",
-                    "#41ad4c",
-                    "#e7b720",
-                    "#b9cf37"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#041e42",
-                    "#5162aa",
-                    "#8c338a",
-                    "#5d81c1",
-                    "#e75027",
-                    "#d5292a",
-                    "#f6a124",
-                    "#6a95cd",
-                    "#3370b6",
-                    "#74c7dc",
-                    "#92c144",
-                    "#199bd6",
-                    "#1f9aa7",
-                    "#a5bfdf",
-                    "#3fb6af",
-                    "#af2458",
-                    "#7ac19a",
-                    "#e5df22",
-                    "#34bbd0",
-                    "#6ba8db",
-                    "#df5297",
-                    "#604696",
-                    "#f9d805",
-                    "#16b9e7",
-                    "#42ad4b",
-                    "#e6b722",
-                    "#b9cf36"
-                ]
-            }
         }
     },
     {
@@ -1294,27 +603,6 @@
             "primary_color": "#64ae53",
             "tagline": "More than just a flight",
             "guidelines": "https://www.bambooairways.com/documents/d/global/bamboo-airway-guideline-new"
-        },
-        "slug": "bamboo-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#00558e",
-                    "#4ebcec",
-                    "#64ae53"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#00558e",
-                    "#4ebcec",
-                    "#64ae53"
-                ]
-            }
         }
     },
     {
@@ -1332,27 +620,6 @@
         "branding": {
             "primary_color": "#000f8f",
             "tagline": "Asia’s Boutique Airline"
-        },
-        "slug": "bangkok-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e1001e",
-                    "#74613c",
-                    "#000f8f"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000f8f",
-                    "#e1001e",
-                    "#74613c"
-                ]
-            }
         }
     },
     {
@@ -1369,16 +636,6 @@
         "founded": 1988,
         "branding": {
             "primary_color": "#5bac29"
-        },
-        "slug": "binter",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#5bac29"
-                ]
-            }
         }
     },
     {
@@ -1397,37 +654,6 @@
         "founded": 1974,
         "branding": {
             "primary_color": "#2e5c99"
-        },
-        "slug": "british-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ce210f",
-                    "#e9eaf6",
-                    "#c7cbe8",
-                    "#96a0d1",
-                    "#7183c0",
-                    "#5972b6",
-                    "#506cb3",
-                    "#2e5c99"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#2e5c99",
-                    "#ce210f",
-                    "#e9eaf6",
-                    "#c7cbe8",
-                    "#96a0d1",
-                    "#7183c0",
-                    "#5972b6",
-                    "#506cb3"
-                ]
-            }
         }
     },
     {
@@ -1445,24 +671,6 @@
         "founded": 2006,
         "branding": {
             "primary_color": "#051446"
-        },
-        "slug": "brussels-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e5002b"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e5002b",
-                    "#051446"
-                ]
-            }
         }
     },
     {
@@ -1480,23 +688,6 @@
         "founded": 1946,
         "branding": {
             "primary_color": "#005d63"
-        },
-        "slug": "cathay-pacific",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#005d63"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#005d63"
-                ]
-            }
         }
     },
     {
@@ -1509,26 +700,6 @@
         "founded": 1988,
         "branding": {
             "primary_color": "#0096d6"
-        },
-        "slug": "cebu-pacific",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#06a7e0",
-                    "#039482"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#06a7e0",
-                    "#039482",
-                    "#2574bb"
-                ]
-            }
         }
     },
     {
@@ -1546,51 +717,6 @@
         "founded": 1959,
         "branding": {
             "primary_color": "#2b3088"
-        },
-        "slug": "china-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#be1d2d",
-                    "#ffffff",
-                    "#ee566c"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffffff",
-                    "#f2d4da",
-                    "#efcbd1",
-                    "#db8d98",
-                    "#cf6675",
-                    "#ca5767",
-                    "#cc5d6c",
-                    "#d16c7b",
-                    "#d98793",
-                    "#e5abb4",
-                    "#cb5b6b",
-                    "#d06877",
-                    "#d77e8b",
-                    "#e09ca7",
-                    "#edc3ca",
-                    "#f4dbe0",
-                    "#faf0f2",
-                    "#cd606f",
-                    "#d57886",
-                    "#e1a0aa",
-                    "#eec8cf",
-                    "#d7808d",
-                    "#d06978",
-                    "#cb5c6b",
-                    "#a12132",
-                    "#1d294c",
-                    "#ca5766"
-                ]
-            }
         }
     },
     {
@@ -1610,25 +736,6 @@
         "founded": 1988,
         "branding": {
             "primary_color": "#1a4fa3"
-        },
-        "slug": "china-eastern-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#1b1d80",
-                    "#df0011"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#1b1d80",
-                    "#df0011"
-                ]
-            }
         }
     },
     {
@@ -1647,37 +754,6 @@
         "founded": 1988,
         "branding": {
             "primary_color": "#0093d0"
-        },
-        "slug": "china-southern-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#0093d0",
-                    "#ffffff",
-                    "#ed1b2f"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0093d0",
-                    "#ffffff",
-                    "#ed1b2f",
-                    "#002052"
-                ]
-            },
-            "tail": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#0093d0",
-                    "#ffffff",
-                    "#ed1b2f"
-                ]
-            }
         }
     },
     {
@@ -1690,23 +766,6 @@
         "founded": 1955,
         "branding": {
             "primary_color": "#000000"
-        },
-        "slug": "condor",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -1724,23 +783,6 @@
         "founded": 1944,
         "branding": {
             "primary_color": "#0032a0"
-        },
-        "slug": "copa-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0032a0"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0032a0"
-                ]
-            }
         }
     },
     {
@@ -1766,26 +808,6 @@
         "founded": 1925,
         "branding": {
             "primary_color": "#e31837"
-        },
-        "slug": "delta-air-lines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#98002e",
-                    "#e31837"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#98002e",
-                    "#e31837",
-                    "#003d79"
-                ]
-            }
         }
     },
     {
@@ -1798,24 +820,6 @@
         "founded": 1995,
         "branding": {
             "primary_color": "#ff6600"
-        },
-        "slug": "easyjet",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ff6601",
-                    "#ffffff"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff6600"
-                ]
-            }
         }
     },
     {
@@ -1833,23 +837,6 @@
         "founded": 1932,
         "branding": {
             "primary_color": "#002855"
-        },
-        "slug": "egyptair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00265d"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00265d"
-                ]
-            }
         }
     },
     {
@@ -1867,23 +854,6 @@
         "branding": {
             "primary_color": "#d71921",
             "tagline": "Fly Better"
-        },
-        "slug": "emirates",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d71921"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d71921"
-                ]
-            }
         }
     },
     {
@@ -1901,27 +871,6 @@
         "founded": 1945,
         "branding": {
             "primary_color": "#b71d20"
-        },
-        "slug": "ethiopian-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#b71d20",
-                    "#ffbe0b",
-                    "#557c39"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#b71d20",
-                    "#ffbe0b",
-                    "#557c39"
-                ]
-            }
         }
     },
     {
@@ -1938,16 +887,6 @@
         "founded": 2003,
         "branding": {
             "primary_color": "#bd8b13"
-        },
-        "slug": "etihad-airways",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#bd8b13"
-                ]
-            }
         }
     },
     {
@@ -1960,28 +899,6 @@
         "founded": 1993,
         "branding": {
             "primary_color": "#7c2045"
-        },
-        "slug": "eurowings",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#7cc5d3",
-                    "#7c2045"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#7c2045",
-                    "#7cc5d3",
-                    "#2090b6",
-                    "#c1beb9",
-                    "#a22455"
-                ]
-            }
         }
     },
     {
@@ -1999,35 +916,6 @@
         "founded": 1989,
         "branding": {
             "primary_color": "#00a64f"
-        },
-        "slug": "eva-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#d06537",
-                    "#409e54"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00a64f",
-                    "#ffffff",
-                    "#f0451c"
-                ]
-            },
-            "tail": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffffff",
-                    "#00a64f",
-                    "#f0451c"
-                ]
-            }
         }
     },
     {
@@ -2042,16 +930,6 @@
         ],
         "branding": {
             "primary_color": "#e1251b"
-        },
-        "slug": "ewa-air",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e1251b"
-                ]
-            }
         }
     },
     {
@@ -2069,23 +947,6 @@
         "founded": 1947,
         "branding": {
             "primary_color": "#473729"
-        },
-        "slug": "fiji-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#473729"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#2c1e16"
-                ]
-            }
         }
     },
     {
@@ -2103,23 +964,6 @@
         "founded": 1923,
         "branding": {
             "primary_color": "#0c0243"
-        },
-        "slug": "finnair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0c0243"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0c0243"
-                ]
-            }
         }
     },
     {
@@ -2136,27 +980,6 @@
         "founded": 2007,
         "branding": {
             "primary_color": "#ef5713"
-        },
-        "slug": "firefly",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ef5713",
-                    "#fc9200",
-                    "#ffc200"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ef5713",
-                    "#fc9200",
-                    "#ffc200"
-                ]
-            }
         }
     },
     {
@@ -2175,16 +998,6 @@
         "ceased": 2020,
         "branding": {
             "primary_color": "#5a3f99"
-        },
-        "slug": "flybe",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#5a3f99"
-                ]
-            }
         }
     },
     {
@@ -2200,17 +1013,6 @@
         "founded": 2008,
         "branding": {
             "primary_color": "#ff8200"
-        },
-        "slug": "flydubai",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ff8200",
-                    "#006496"
-                ]
-            }
         }
     },
     {
@@ -2223,23 +1025,6 @@
         "founded": 2007,
         "branding": {
             "primary_color": "#00b7ac"
-        },
-        "slug": "flynas",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00b7ac"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00b7ac"
-                ]
-            }
         }
     },
     {
@@ -2252,23 +1037,6 @@
         "founded": 1994,
         "branding": {
             "primary_color": "#008c44"
-        },
-        "slug": "frontier-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#026845"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#026845"
-                ]
-            }
         }
     },
     {
@@ -2286,26 +1054,6 @@
         "founded": 1949,
         "branding": {
             "primary_color": "#002560"
-        },
-        "slug": "garuda-indonesia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#008b99",
-                    "#002560"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#008b99",
-                    "#002560",
-                    "#4c4847"
-                ]
-            }
         }
     },
     {
@@ -2324,25 +1072,6 @@
         "founded": 2000,
         "branding": {
             "primary_color": "#f58220"
-        },
-        "slug": "gol",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#c1bfbc",
-                    "#ee7203"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#37322d",
-                    "#ff7020"
-                ]
-            }
         }
     },
     {
@@ -2362,23 +1091,6 @@
         "founded": 1989,
         "branding": {
             "primary_color": "#d71920"
-        },
-        "slug": "hainan-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e60012"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e60012"
-                ]
-            }
         }
     },
     {
@@ -2396,27 +1108,6 @@
         "founded": 1929,
         "branding": {
             "primary_color": "#4e2582"
-        },
-        "slug": "hawaiian-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#d2068a",
-                    "#413691",
-                    "#ef3138"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#d2068a",
-                    "#413691",
-                    "#ef3138"
-                ]
-            }
         }
     },
     {
@@ -2432,25 +1123,6 @@
         "founded": 2004,
         "branding": {
             "primary_color": "#702b91"
-        },
-        "slug": "hk-express",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#702b91",
-                    "#21b9da"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#702b91",
-                    "#21b9da"
-                ]
-            }
         }
     },
     {
@@ -2468,30 +1140,6 @@
         "founded": 1927,
         "branding": {
             "primary_color": "#dc1c2e"
-        },
-        "slug": "iberia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#a61c22",
-                    "#dc1c2e",
-                    "#ed7417",
-                    "#facd08"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#a61c22",
-                    "#da1c2d",
-                    "#dc1c2e",
-                    "#ed7417",
-                    "#facd08"
-                ]
-            }
         }
     },
     {
@@ -2509,30 +1157,6 @@
         "founded": 1937,
         "branding": {
             "primary_color": "#0c0243"
-        },
-        "slug": "icelandair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0c0243"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0c0243"
-                ]
-            },
-            "tail": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0c0243"
-                ]
-            }
         }
     },
     {
@@ -2548,23 +1172,6 @@
         "founded": 2005,
         "branding": {
             "primary_color": "#001b94"
-        },
-        "slug": "indigo",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#001b94"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#001b94"
-                ]
-            }
         }
     },
     {
@@ -2579,16 +1186,6 @@
         "founded": 1999,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "indonesia-airasia",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -2606,17 +1203,6 @@
         "founded": 2020,
         "branding": {
             "primary_color": "#006643"
-        },
-        "slug": "ita-airways",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#006e44",
-                    "#c2251b"
-                ]
-            }
         }
     },
     {
@@ -2635,24 +1221,6 @@
         "founded": 1951,
         "branding": {
             "primary_color": "#e50012"
-        },
-        "slug": "japan-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e50012"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e50012",
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -2664,23 +1232,6 @@
         "website": "https://www.jet2.com",
         "branding": {
             "primary_color": "#d71920"
-        },
-        "slug": "jet2com",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e2231a"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e2231a"
-                ]
-            }
         }
     },
     {
@@ -2694,16 +1245,6 @@
         "founded": 1998,
         "branding": {
             "primary_color": "#003876"
-        },
-        "slug": "jetblue-airways",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#003876"
-                ]
-            }
         }
     },
     {
@@ -2716,24 +1257,6 @@
         "founded": 2003,
         "branding": {
             "primary_color": "#ff5111"
-        },
-        "slug": "jetstar",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff5111"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000",
-                    "#ff5111"
-                ]
-            }
         }
     },
     {
@@ -2748,24 +1271,6 @@
         "founded": 2011,
         "branding": {
             "primary_color": "#ff5111"
-        },
-        "slug": "jetstar-japan",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff5111"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000000",
-                    "#ff5111"
-                ]
-            }
         }
     },
     {
@@ -2783,23 +1288,6 @@
         "founded": 1977,
         "branding": {
             "primary_color": "#ed1c24"
-        },
-        "slug": "kenya-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1c24"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1c24"
-                ]
-            }
         }
     },
     {
@@ -2817,23 +1305,6 @@
         "founded": 1919,
         "branding": {
             "primary_color": "#009fd9"
-        },
-        "slug": "klm",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#009fd9"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#009fd9"
-                ]
-            }
         }
     },
     {
@@ -2851,23 +1322,6 @@
         "founded": 1962,
         "branding": {
             "primary_color": "#051766"
-        },
-        "slug": "korean-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#051766"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#051766"
-                ]
-            }
         }
     },
     {
@@ -2884,23 +1338,6 @@
         "founded": 1953,
         "branding": {
             "primary_color": "#1c285b"
-        },
-        "slug": "kuwait-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1c285b"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1c285b"
-                ]
-            }
         }
     },
     {
@@ -2913,25 +1350,6 @@
         "founded": 2012,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -2952,25 +1370,6 @@
         "founded": 1961,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines-brasil",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -2988,25 +1387,6 @@
         "founded": 1980,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines-colombia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -3025,25 +1405,6 @@
         "founded": 2002,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines-ecuador",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -3061,25 +1422,6 @@
         "founded": 1962,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines-paraguay",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -3097,25 +1439,6 @@
         "founded": 1998,
         "branding": {
             "primary_color": "#1b0088"
-        },
-        "slug": "latam-airlines-peru",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed1650",
-                    "#1b0088"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
         }
     },
     {
@@ -3131,26 +1454,6 @@
         "founded": 2017,
         "branding": {
             "primary_color": "#3fa74d"
-        },
-        "slug": "level",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#00aadb",
-                    "#3fa74d"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#00aadb",
-                    "#3fa74d",
-                    "#1d1d1b"
-                ]
-            }
         }
     },
     {
@@ -3168,23 +1471,6 @@
         "founded": 1999,
         "branding": {
             "primary_color": "#ed1b2f"
-        },
-        "slug": "lion-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#fb0102"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#fb0102"
-                ]
-            }
         }
     },
     {
@@ -3202,23 +1488,6 @@
         "founded": 1928,
         "branding": {
             "primary_color": "#252668"
-        },
-        "slug": "lot-polish-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#252668"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#252668"
-                ]
-            }
         }
     },
     {
@@ -3237,23 +1506,6 @@
         "founded": 1953,
         "branding": {
             "primary_color": "#05164d"
-        },
-        "slug": "lufthansa",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#05164d"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#05164d"
-                ]
-            }
         }
     },
     {
@@ -3271,23 +1523,6 @@
         "founded": 1947,
         "branding": {
             "primary_color": "#174887"
-        },
-        "slug": "malaysia-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#174887"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#174887"
-                ]
-            }
         }
     },
     {
@@ -3304,25 +1539,6 @@
         "founded": 1948,
         "branding": {
             "primary_color": "#fdb515"
-        },
-        "slug": "myanmar-national-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#fdb515"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#582900",
-                    "#a59c87",
-                    "#fdb515"
-                ]
-            }
         }
     },
     {
@@ -3335,24 +1551,6 @@
         "founded": 1993,
         "branding": {
             "primary_color": "#d81939"
-        },
-        "slug": "norwegian-air-shuttle",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#e5212d",
-                    "#ffffff"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e6222e"
-                ]
-            }
         }
     },
     {
@@ -3370,25 +1568,6 @@
         "founded": 1949,
         "branding": {
             "primary_color": "#b39759"
-        },
-        "slug": "oman-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#b39759",
-                    "#a6a8ab"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#b39759",
-                    "#a6a8ab"
-                ]
-            }
         }
     },
     {
@@ -3402,25 +1581,6 @@
         "founded": 1990,
         "branding": {
             "primary_color": "#324471"
-        },
-        "slug": "pacific-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f79633",
-                    "#324471"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f79633",
-                    "#324471"
-                ]
-            }
         }
     },
     {
@@ -3436,24 +1596,6 @@
         "founded": 2015,
         "branding": {
             "primary_color": "#0037a2"
-        },
-        "slug": "paranair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cd1025"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0037a2",
-                    "#cd1025"
-                ]
-            }
         }
     },
     {
@@ -3466,16 +1608,6 @@
         "founded": 2011,
         "branding": {
             "primary_color": "#9b308c"
-        },
-        "slug": "peach-aviation",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#9b308c"
-                ]
-            }
         }
     },
     {
@@ -3488,23 +1620,6 @@
         "founded": 1991,
         "branding": {
             "primary_color": "#fdb913"
-        },
-        "slug": "pegasus-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#dc2c2b"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e31f26"
-                ]
-            }
         }
     },
     {
@@ -3522,28 +1637,6 @@
         "branding": {
             "primary_color": "#001f60",
             "tagline": "The Heart of the Filipino"
-        },
-        "slug": "philippine-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#001f60",
-                    "#ffcc05",
-                    "#ee2a29"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#001f60",
-                    "#ffcc05",
-                    "#ee2a29",
-                    "#1e2d5f"
-                ]
-            }
         }
     },
     {
@@ -3558,16 +1651,6 @@
         "founded": 2010,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "philippines-airasia",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -3588,23 +1671,6 @@
         "founded": 1920,
         "branding": {
             "primary_color": "#e40000"
-        },
-        "slug": "qantas",
-        "assets": {
-            "icon": {
-                "color": false,
-                "mono": true,
-                "colors": []
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e40000",
-                    "#ffffff",
-                    "#323232"
-                ]
-            }
         }
     },
     {
@@ -3623,26 +1689,6 @@
         "branding": {
             "primary_color": "#662046",
             "guidelines": "https://www.qatarairways.com/content/dam/tradepartners/pdf-files/Brand-Elements_Section-1.pdf"
-        },
-        "slug": "qatar-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#818a8f",
-                    "#662046"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#818a8f",
-                    "#5e6a71",
-                    "#662046"
-                ]
-            }
         }
     },
     {
@@ -3660,23 +1706,6 @@
         "founded": 2023,
         "branding": {
             "primary_color": "#240852"
-        },
-        "slug": "riyadh-air",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#240852"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#240852"
-                ]
-            }
         }
     },
     {
@@ -3695,33 +1724,6 @@
         "founded": 1953,
         "branding": {
             "primary_color": "#c20831"
-        },
-        "slug": "royal-air-maroc",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#c20831"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#c20831"
-                ]
-            },
-            "tail": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#f7f7f7",
-                    "#999896",
-                    "#00875d",
-                    "#c20831"
-                ]
-            }
         }
     },
     {
@@ -3737,17 +1739,6 @@
         "founded": 1974,
         "branding": {
             "primary_color": "#ffe600"
-        },
-        "slug": "royal-brunei-airlines",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffe600",
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -3760,24 +1751,6 @@
         "founded": 1984,
         "branding": {
             "primary_color": "#073590"
-        },
-        "slug": "ryanair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f1c931"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#073590",
-                    "#f1c931"
-                ]
-            }
         }
     },
     {
@@ -3792,16 +1765,6 @@
         "founded": 2017,
         "branding": {
             "primary_color": "#000099"
-        },
-        "slug": "sas-connect",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000099"
-                ]
-            }
         }
     },
     {
@@ -3819,23 +1782,6 @@
         "founded": 1945,
         "branding": {
             "primary_color": "#0a6937"
-        },
-        "slug": "saudia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0a6937"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#006631"
-                ]
-            }
         }
     },
     {
@@ -3855,16 +1801,6 @@
         "founded": 1946,
         "branding": {
             "primary_color": "#000099"
-        },
-        "slug": "scandinavian-airlines",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#000099"
-                ]
-            }
         }
     },
     {
@@ -3881,17 +1817,6 @@
         "founded": 2011,
         "branding": {
             "primary_color": "#ffe900"
-        },
-        "slug": "scoot",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffe900",
-                    "#000000"
-                ]
-            }
         }
     },
     {
@@ -3909,24 +1834,6 @@
         "founded": 1947,
         "branding": {
             "primary_color": "#232f67"
-        },
-        "slug": "singapore-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f99f1c"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f99f1c",
-                    "#232f67"
-                ]
-            }
         }
     },
     {
@@ -3939,39 +1846,6 @@
         "founded": 1967,
         "branding": {
             "primary_color": "#304cb2"
-        },
-        "slug": "southwest-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#3656cc",
-                    "#304cb2",
-                    "#283b80",
-                    "#e61c23",
-                    "#c3161c",
-                    "#fdbc11",
-                    "#fcb415",
-                    "#f89e1c",
-                    "#cccccc"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#3656cc",
-                    "#304cb2",
-                    "#283b80",
-                    "#e61c23",
-                    "#c3161c",
-                    "#fdbc11",
-                    "#fcb415",
-                    "#f89e1c",
-                    "#cccccc"
-                ]
-            }
         }
     },
     {
@@ -3986,16 +1860,6 @@
         "ceased": 2026,
         "branding": {
             "primary_color": "#ffec00"
-        },
-        "slug": "spirit-airlines",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#231f20"
-                ]
-            }
         }
     },
     {
@@ -4011,26 +1875,6 @@
         "founded": 2018,
         "branding": {
             "primary_color": "#996a4e"
-        },
-        "slug": "starlux-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#996a4e",
-                    "#84754e"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#3f464a",
-                    "#84754e",
-                    "#996a4e"
-                ]
-            }
         }
     },
     {
@@ -4048,24 +1892,6 @@
         "founded": 2025,
         "branding": {
             "primary_color": "#ca1c2a"
-        },
-        "slug": "sun-phuquoc-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f1c217"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ca1c2a",
-                    "#f1c217"
-                ]
-            }
         }
     },
     {
@@ -4083,23 +1909,6 @@
         "founded": 2002,
         "branding": {
             "primary_color": "#cf0a2c"
-        },
-        "slug": "swiss",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cf0a2c"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cf0a2c"
-                ]
-            }
         }
     },
     {
@@ -4117,17 +1926,6 @@
         "founded": 2005,
         "branding": {
             "primary_color": "#d22c25"
-        },
-        "slug": "tway-air",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d22c25",
-                    "#82ab42"
-                ]
-            }
         }
     },
     {
@@ -4145,30 +1943,6 @@
         "founded": 1945,
         "branding": {
             "primary_color": "#bfd730"
-        },
-        "slug": "tap-air-portugal",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ed1c24",
-                    "#b82025",
-                    "#bfd730",
-                    "#72bf44"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ed1c24",
-                    "#b82025",
-                    "#bfd730",
-                    "#72bf44",
-                    "#1d1d1b"
-                ]
-            }
         }
     },
     {
@@ -4186,30 +1960,6 @@
         "founded": 1920,
         "branding": {
             "primary_color": "#003366"
-        },
-        "slug": "tarom",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#003366"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#003366"
-                ]
-            },
-            "tail": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#003366"
-                ]
-            }
         }
     },
     {
@@ -4224,16 +1974,6 @@
         "founded": 2003,
         "branding": {
             "primary_color": "#ff0000"
-        },
-        "slug": "thai-airasia",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ff0000"
-                ]
-            }
         }
     },
     {
@@ -4252,27 +1992,6 @@
         "branding": {
             "primary_color": "#330066",
             "tagline": "Grace to Growth"
-        },
-        "slug": "thai-airways",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#ffcc00",
-                    "#330066",
-                    "#cc0099"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#f5c300",
-                    "#370e62",
-                    "#b6007d"
-                ]
-            }
         }
     },
     {
@@ -4284,23 +2003,6 @@
         "website": "https://www.transavia.com",
         "branding": {
             "primary_color": "#00d66c"
-        },
-        "slug": "transavia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00d66c"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00d66c"
-                ]
-            }
         }
     },
     {
@@ -4319,26 +2021,6 @@
         "branding": {
             "primary_color": "#c90019",
             "guidelines": "https://www.turkishairlines.com/en-int/press-room/logo-archive"
-        },
-        "slug": "turkish-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ffffff",
-                    "#c90019"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ffffff",
-                    "#c90019",
-                    "#1a171b"
-                ]
-            }
         }
     },
     {
@@ -4362,23 +2044,6 @@
         "founded": 1931,
         "branding": {
             "primary_color": "#1414d2"
-        },
-        "slug": "united-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1414d2"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#1414d2"
-                ]
-            }
         }
     },
     {
@@ -4392,16 +2057,6 @@
         "branding": {
             "primary_color": "#e12127",
             "tagline": "Enjoy Flying!"
-        },
-        "slug": "vietjet-air",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e12127"
-                ]
-            }
         }
     },
     {
@@ -4422,24 +2077,6 @@
             "primary_color": "#d99e09",
             "tagline": "Reach Further",
             "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
-        },
-        "slug": "vietnam-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d99e09"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#d99e09",
-                    "#005e80"
-                ]
-            }
         }
     },
     {
@@ -4454,26 +2091,6 @@
         "branding": {
             "primary_color": "#0066b3",
             "tagline": "Open Your World"
-        },
-        "slug": "vietravel-airlines",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ffc80b",
-                    "#ffe800"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#0066b3",
-                    "#ffc80b",
-                    "#ffe800"
-                ]
-            }
         }
     },
     {
@@ -4491,26 +2108,6 @@
         "founded": 1984,
         "branding": {
             "primary_color": "#da0530"
-        },
-        "slug": "virgin-atlantic",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#da0530",
-                    "#ffffff"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#da0530",
-                    "#ffffff",
-                    "#5b056a"
-                ]
-            }
         }
     },
     {
@@ -4528,25 +2125,6 @@
         "founded": 2000,
         "branding": {
             "primary_color": "#e31e23"
-        },
-        "slug": "virgin-australia",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e31e23"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#e10a0a",
-                    "#ffffff",
-                    "#414042"
-                ]
-            }
         }
     },
     {
@@ -4558,24 +2136,6 @@
         "website": "https://www.vivaaerobus.com",
         "branding": {
             "primary_color": "#00ae44"
-        },
-        "slug": "viva",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#73c900"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00ae44",
-                    "#73c900"
-                ]
-            }
         }
     },
     {
@@ -4588,37 +2148,6 @@
         "founded": 2005,
         "branding": {
             "primary_color": "#5b2d82"
-        },
-        "slug": "volaris",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#eeefef",
-                    "#b5d5f0",
-                    "#6cadde",
-                    "#d6a6cc",
-                    "#dae7a2",
-                    "#231f20",
-                    "#91268f",
-                    "#8dc63f"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#231f20",
-                    "#eeefef",
-                    "#b5d5f0",
-                    "#6cadde",
-                    "#d6a6cc",
-                    "#dae7a2",
-                    "#91268f",
-                    "#8dc63f"
-                ]
-            }
         }
     },
     {
@@ -4631,24 +2160,6 @@
         "founded": 2011,
         "branding": {
             "primary_color": "#ed164a"
-        },
-        "slug": "volotea",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#ed164a"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#432129",
-                    "#ed164a"
-                ]
-            }
         }
     },
     {
@@ -4661,17 +2172,6 @@
         "founded": 2004,
         "branding": {
             "primary_color": "#ffcc00"
-        },
-        "slug": "vueling",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": false,
-                "colors": [
-                    "#504f4e",
-                    "#ffcc00"
-                ]
-            }
         }
     },
     {
@@ -4689,27 +2189,6 @@
         "founded": 1994,
         "branding": {
             "primary_color": "#00aaa6"
-        },
-        "slug": "westjet",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#00aaa6",
-                    "#003c71",
-                    "#ffffff"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#003c71",
-                    "#00aaa6",
-                    "#ffffff"
-                ]
-            }
         }
     },
     {
@@ -4726,16 +2205,6 @@
         "founded": 1961,
         "branding": {
             "primary_color": "#cd2026"
-        },
-        "slug": "winair",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#cd2026"
-                ]
-            }
         }
     },
     {
@@ -4748,16 +2217,6 @@
         "founded": 2003,
         "branding": {
             "primary_color": "#c6007e"
-        },
-        "slug": "wizz-air",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#c6007e"
-                ]
-            }
         }
     },
     {
@@ -4774,16 +2233,6 @@
         "ceased": 2025,
         "branding": {
             "primary_color": "#c6007e"
-        },
-        "slug": "wizz-air-abu-dhabi",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#c6007e"
-                ]
-            }
         }
     },
     {
@@ -4798,16 +2247,6 @@
         "founded": 2017,
         "branding": {
             "primary_color": "#c6007e"
-        },
-        "slug": "wizz-air-uk",
-        "assets": {
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#c6007e"
-                ]
-            }
         }
     },
     {
@@ -4825,24 +2264,6 @@
         "founded": 1984,
         "branding": {
             "primary_color": "#008cd5"
-        },
-        "slug": "xiamenair",
-        "assets": {
-            "icon": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#008cd5"
-                ]
-            },
-            "logo": {
-                "color": true,
-                "mono": true,
-                "colors": [
-                    "#008cd5",
-                    "#004384"
-                ]
-            }
         }
     }
 ]

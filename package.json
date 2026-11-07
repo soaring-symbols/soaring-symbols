@@ -59,7 +59,6 @@
   ],
   "files": [
     "dist/",
-    "AIRLINES.md",
     "API.md",
     "LICENSE",
     "README.md"

@@ -3,15 +3,20 @@
 // the SVG tooling doesn't load Ajv.
 import { readFileSync } from 'fs'
 import Ajv2020 from 'ajv/dist/2020.js'
+import { toSlug } from './index.js'
 
 const schema = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
 )
 const ajv = new Ajv2020({ allErrors: true })
-const validateSchema = ajv.compile(schema)
+// The repo's airlines.json, and the copy the build publishes with `slug` and
+// `assets` added to every entry
+const validateSource = ajv.compile(schema)
+const validatePublished = ajv.getSchema(`${schema.$id}#/$defs/published`)
 
 // Field order for airlines.json entries, taken from the schema so the two
-// can't drift apart: generate.js writes every entry's keys in this order
+// can't drift apart: generate.js and the build write every entry's keys in
+// this order
 const airlineFields = Object.keys(schema.$defs.airline.properties)
 
 // Whether `value` is valid for one field of an airline entry, by the same
@@ -61,7 +66,7 @@ const findDuplicateCodes = (airlines) => {
 // `parent` and `marks` must name another airline in the catalog, and `marks`
 // must point at one with SVGs of its own (no chains)
 const findBrokenReferences = (airlines) => {
-    const bySlug = new Map(airlines.map((a) => [a.slug, a]))
+    const bySlug = new Map(airlines.map((a) => [toSlug(a.name), a]))
 
     return airlines.flatMap((a) =>
         ['parent', 'marks'].flatMap((field) => {
@@ -83,12 +88,15 @@ const findBrokenReferences = (airlines) => {
 }
 
 // Check an airlines.json array against airlines.schema.json and the rules a
-// schema can't express. Returns one readable message per problem, e.g.
+// schema can't express: the repo's copy by default, or with `published` the
+// built one, whose entries must also have `slug` and `assets`. Returns one
+// readable message per problem, e.g.
 // 'Vietnam Airlines: /branding/primary_color must match pattern ...';
 // an empty array means the data is valid.
-const validateAirlines = (airlines) => {
-    if (!validateSchema(airlines)) {
-        return validateSchema.errors.map((error) =>
+const validateAirlines = (airlines, { published = false } = {}) => {
+    const validate = published ? validatePublished : validateSource
+    if (!validate(airlines)) {
+        return validate.errors.map((error) =>
             formatSchemaError(airlines, error),
         )
     }

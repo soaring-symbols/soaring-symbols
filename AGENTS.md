@@ -6,18 +6,18 @@ Instructions for AI coding agents working in this repository. Human-facing docs 
 
 Soaring Symbols is an npm package (`soaring-symbols`) that ships a curated collection of airline logos, icons and tail designs as SVG, plus a small JS API to look them up.
 
-- `airlines.json` — the airline catalog (source of truth for metadata). Sorted alphabetically by `name`.
-- `airlines.schema.json` — JSON Schema (draft 2020-12) for `airlines.json`. `generate.js` refuses to write data that fails it, and `scripts/test.js` checks the built copy. Adding or changing a field means updating the schema, `index.d.ts`, `CONTRIBUTING.md` and `API.md` together.
-- `assets/<slug>/` — SVGs per airline. `<slug>` is `slugify(name, { lower: true, strict: true })` (see `utils/index.js`). An airline with `marks` has no folder: `build.js` copies the named airline's SVGs to `dist/assets/<slug>/` with its own `<title>`, and `generate.js` reports their `assets`.
+- `airlines.json` — the airline catalog (source of truth for metadata), holding only hand-written fields. Sorted alphabetically by `name`. The build adds `slug` and `assets` to every entry of the published `dist/airlines.json` (`utils/catalog.js`), so the repo copy never has them.
+- `airlines.schema.json` — JSON Schema (draft 2020-12) for `airlines.json`. The root schema describes the repo copy; `$defs/published` the built one, which also requires `slug` and `assets`. `generate.js` and `build.js` refuse data that fails it, and `scripts/test.js` checks both copies. Adding or changing a field means updating the schema, `index.d.ts`, `CONTRIBUTING.md` and `API.md` together.
+- `assets/<slug>/` — SVGs per airline. `<slug>` is `slugify(name, { lower: true, strict: true })` (see `utils/index.js`). An airline with `marks` has no folder: `build.js` copies the named airline's SVGs to `dist/assets/<slug>/` with its own `<title>`, and the published catalog reports their `assets`.
     - `icon.svg`, `logo.svg`, `tail.svg` are the color versions; `*-mono.svg` are the monochrome variants: for single-color assets the build derives them into `dist/assets` (the repo has none, and `npm run generate` deletes any committed copy); for multi-color ones they are optional and hand-made.
 - `index.js` — ESM library entry (`listAirlines`, `getAirline`, `getAssetPath`). It only reads `airlines.json` (no Node built-ins), so it stays browser-safe. Types in `index.d.ts` — keep them in sync, and keep `API.md` (including its migration guide) in step with any API change.
 - `utils/index.js` — repo tooling only (not published): `toSlug`, `getAirlineAssets` (detects color/mono files and colors from the SVGs on disk, counting the mono a single-color asset gets at build), `writeDerivedMonos` (used by the build) and `removeDerivedMonos` (used by `generate`).
-- `utils/schema.js` — repo tooling only: compiles `airlines.schema.json` with Ajv and exports `validateAirlines` (schema plus unique codes among active airlines), `isValidField` and the field order `generate.js` writes. Kept apart so the SVG tooling doesn't load Ajv.
+- `utils/catalog.js` — repo tooling only: `normalizeCatalog` (the repo shape `generate.js` writes) and `publishCatalog` (adds `slug` and `assets` for `build.js`).
+- `utils/schema.js` — repo tooling only: compiles `airlines.schema.json` with Ajv and exports `validateAirlines` (schema plus unique codes among active airlines; `{ published: true }` for the built copy), `isValidField` and the field order entries are written in. Kept apart so the SVG tooling doesn't load Ajv.
 - `svg-validator.js` — browser-safe validator exported as `soaring-symbols/svg-validator`; it imports `scripts/lint/validators.js`, which the build inlines.
 - `scripts/` — tooling: `build.js`, `generate.js`, `lint-svg.js` (+ rules in `scripts/lint/`), `sync-data.js` (+ Wikipedia helpers in `scripts/sync/`), `test.js`, `release.js`.
-- `.github/workflows/ci.yml` — on every pull request and push to `main`: ESLint, Prettier, `lint-svg.js --check`, `npm test`, then fails if the tree is dirty (an SVG fix, `airlines.json`/`AIRLINES.md` or a deleted derived mono left uncommitted).
+- `.github/workflows/ci.yml` — on every pull request and push to `main`: ESLint, Prettier, `lint-svg.js --check`, `npm test`, then fails if the tree is dirty (an SVG fix, a re-sorted `airlines.json` or a deleted derived mono left uncommitted).
 - `.github/workflows/sync-data.yml` — runs `sync-data.js --write` on the 1st of each month (or by hand) and opens a pull request `chore/sync-airline-data` with the changes for review.
-- `AIRLINES.md` — **generated** by `scripts/generate.js`; never edit by hand.
 - `dist/` — build output (git-ignored), the only code that is published.
 
 ## Commands
@@ -31,7 +31,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 | `node scripts/lint-svg.js --fix`   | Lint and rewrite fixable SVG issues in place.                                                                                                                                                            |
 | `node scripts/lint-svg.js --check` | Lint without writing; exit 1 if any file has an issue `--fix` would handle or a hard error (warnings never fail). Used by CI.                                                                            |
 | `npm run format:check`             | Prettier check (no writes), used by CI.                                                                                                                                                                  |
-| `npm run generate`                 | Delete committed `-mono.svg` of single-color assets, re-sort `airlines.json`, recompute `slug` and `assets`, validate it against the schema, regenerate `AIRLINES.md`.                                   |
+| `npm run generate`                 | Delete committed `-mono.svg` of single-color assets, re-sort `airlines.json` and drop any `slug`/`assets`, validate the catalog as it would be published.                                                |
 | `npm run build`                    | `lint:svg` + `generate` (via `prebuild`), then build `dist/` (ESM, CJS, validator bundle, assets plus derived `-mono.svg` and shared marks).                                                             |
 | `npm test`                         | Build, then run `scripts/test.js` (`node:test`) against the ESM and CJS builds in `dist/`.                                                                                                               |
 | `npm run lint` / `npm run format`  | ESLint / Prettier.                                                                                                                                                                                       |
@@ -42,13 +42,13 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 
 1. Put the SVGs in `assets/<slug>/` following `CONTRIBUTING.md`: optimized with `npm run optimize` (never SVGO's defaults, which drop `role="img"`), `role="img"`, `xmlns`, `<title>Airline Name</title>` as the first child, `viewBox="0 0 64 64"` for logos and `0 0 24 24` for icons and tails, six-digit lowercase hex colors only, no `transform`, no scripts.
 2. Add the base entry to `airlines.json` (`name`, `iata`, `icao`, `country`, `website`, `branding.primary_color`, plus optional fields from `CONTRIBUTING.md`).
-3. Run `node scripts/lint-svg.js --fix`, then `npm run generate`, and commit the SVGs together with the regenerated `airlines.json` and `AIRLINES.md`.
+3. Run `node scripts/lint-svg.js --fix`, then `npm run generate`, and commit the SVGs together with `airlines.json`.
 4. Run `npm test`, then check `git status` is clean: CI fails a pull request whose tooling output is not committed.
 
 ## Gotchas
 
 - `lint-svg.js` exits 0 even when it finds issues unless you pass `--check` — read its output, or use `--check` when the exit code matters. Some rules (e.g. one `<path>` per single-color SVG) only warn and are never changed by `--fix`. Files that intentionally break the rules are listed in `EXCLUDE_FILES` at the top of the script.
-- `generate.js` rewrites `airlines.json` from scratch (4-space JSON) — run it rather than hand-editing `slug` or `assets`; it also orders each entry's keys as `airlines.schema.json` lists them. `npm run build` / `npm test` also run it, so a build can leave the working tree dirty.
+- `generate.js` rewrites `airlines.json` from scratch (4-space JSON) and orders each entry's keys as `airlines.schema.json` lists them. There is no committed `slug` or `assets` (nor `AIRLINES.md`, which the website replaced) any more; read them from `dist/airlines.json` after a build. `npm run build` / `npm test` also run it, so a build can leave the working tree dirty.
 - The CJS build is produced by two regex replacements in `scripts/build.js` (`transformToCJS`): the `airlines.json` import and the single `export { ... }` list. It throws if either stops matching or another `import`/`export` appears, so adding an import to `index.js` means updating it.
 - `sync-data.js` treats Wikipedia as a hint, never an authority: it only applies a change when the data still validates (so a code that would clash with another active airline is held back for review), and its pull request is always reviewed by hand. Airlines whose name leads to the wrong page are mapped in `PAGE_TITLES`, rejected values go in `IGNORE`, both at the top of the script. Wikipedia rate-limits hard: keep requests batched.
 - `svg-validator.js` must stay free of Node-only imports, and every helper it uses from `scripts/lint/validators.js` must be a top-level `export function` so the build can inline it.
