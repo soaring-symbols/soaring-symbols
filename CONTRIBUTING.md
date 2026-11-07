@@ -34,13 +34,15 @@ assets/
 
 ### 2. SVG Specifications
 
-- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo) using the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi) and avoids path merging that can shift shapes:
+- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo) using the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes:
 
     ```bash
     npm run optimize -- assets/vietnam-airways/*.svg
     ```
 
     Online tools such as [SVGOMG](https://svgomg.net) use SVGO's defaults, which remove `role="img"` and can leave editor metadata behind, so prefer the command above.
+
+    `node scripts/lint-svg.js` checks that every SVG looks optimized, whichever tool produced it: no `width`/`height`, no XML declaration, comments or design-tool data, at most five decimals and no `-0` in path data. An SVG that a pull request adds or changes must also match the output of `npm run optimize` exactly (`npm run optimize:check` runs that check locally).
 
 - **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 

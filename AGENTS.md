@@ -48,6 +48,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 
 ## Gotchas
 
+- `lint-svg.js` checks what an optimized SVG looks like (`scripts/lint/rule-format.js`, modeled on Simple Icons' svglint rules), not that it matches one SVGO version: most older SVGs came from SVGOMG on SVGO 2.x and differ from today's output by a few bytes. Only the SVGs a PR adds or changes must match `npm run optimize` exactly.
 - `lint-svg.js` exits 0 even when it finds issues unless you pass `--check` — read its output, or use `--check` when the exit code matters. Some rules (e.g. one `<path>` per single-color SVG) only warn and are never changed by `--fix`. Files that intentionally break the rules are listed in `EXCLUDE_FILES` at the top of the script.
 - `generate.js` rewrites `airlines.json` from scratch (4-space JSON) and orders each entry's keys as `airlines.schema.json` lists them. There is no committed `slug` or `assets` (nor `AIRLINES.md`, which the website replaced) any more; read them from `dist/airlines.json` after a build. `npm run build` / `npm test` also run it, so a build can leave the working tree dirty.
 - The CJS build is produced by two regex replacements in `scripts/build.js` (`transformToCJS`): the `airlines.json` import and the single `export { ... }` list. It throws if either stops matching or another `import`/`export` appears, so adding an import to `index.js` means updating it.

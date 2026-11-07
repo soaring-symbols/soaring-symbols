@@ -39,14 +39,18 @@ export function ruleHexColors({ document, issues }) {
 export function ruleFillPlacement({ filePath, svgElement, document, issues }) {
     const elementsWithFill = document.querySelectorAll('[fill]')
 
-    // A fill that isn't hex is reported by ruleHexColors; moving it around
-    // here would only lose it
-    const hasUnknownFill = [...elementsWithFill].some((el) => {
+    // Leave alone fills this rule can't reason about: a gradient (url(#…)),
+    // which it would count as no color (#53), or a value that isn't hex,
+    // which ruleHexColors reports. Moving those around would lose them.
+    const hasOtherFill = [...elementsWithFill].some((el) => {
         const value = el.getAttribute('fill').trim()
 
-        return !HEX_REGEX.test(value) && !NON_COLORS.test(value)
+        return (
+            !HEX_REGEX.test(value) &&
+            !/^(none|currentColor|transparent|inherit)$/i.test(value)
+        )
     })
-    if (hasUnknownFill) return
+    if (hasOtherFill) return
 
     const allColors = [
         ...new Set(
@@ -120,7 +124,7 @@ export function ruleSvgAttrOrder(svgString) {
 
     const attributesString = svgTagMatch[1]
     const attributes = {}
-    const attrRegex = /([a-zA-Z0-9-]+)="([^"]*)"/g
+    const attrRegex = /([a-zA-Z0-9:-]+)="([^"]*)"/g
     let match
     while ((match = attrRegex.exec(attributesString)) !== null) {
         attributes[match[1]] = match[2]

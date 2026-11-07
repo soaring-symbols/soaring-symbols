@@ -8,6 +8,8 @@
 //   precision visibly shift some logos
 // - writes hex colors in full (#000000, not #000 or black), as lint-svg expects
 // - orders attributes the way lint-svg expects (role, viewBox, xmlns, fill, d)
+// - drops width/height, raster images, off-canvas paths, <style> and scripts,
+//   as Simple Icons' config does
 const EDITOR_NS = /inkscape\.org|sodipodi\.sourceforge\.net/
 const EDITOR_PREFIX = /^(ns\d+|sodipodi|inkscape)$/
 
@@ -60,6 +62,13 @@ export default {
                 },
             },
         },
+        'removeDimensions',
+        'removeRasterImages',
+        'removeOffCanvasPaths',
+        'removeStyleElement',
+        'removeScripts',
+        // Inlined CSS becomes fill="…" attributes, which lint-svg reads
+        'convertStyleToAttrs',
         {
             name: 'sortAttrs',
             params: {
