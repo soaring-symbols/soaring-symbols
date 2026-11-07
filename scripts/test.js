@@ -347,12 +347,16 @@ describe('wikipedia infobox parsing (sync-data)', () => {
 })
 
 describe('svg-validator', () => {
-    const svg = new JSDOM(
+    // One parser for every file: a JSDOM window per SVG is slow
+    const parser = new new JSDOM('').window.DOMParser()
+    const parse = (source) =>
+        parser.parseFromString(source, 'image/svg+xml').documentElement
+    const svg = parse(
         readFileSync(
             require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            'utf8',
         ),
-        { contentType: 'image/svg+xml' },
-    ).window.document.querySelector('svg')
+    )
 
     it('is self-contained in both module formats', async () => {
         const {
@@ -366,9 +370,6 @@ describe('svg-validator', () => {
     })
 
     const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
-    const parse = (source) =>
-        new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
-            .documentElement
 
     // lint-svg.js --check passes in CI, so every SVG it lints must pass the
     // same error-level checks in the browser
@@ -380,22 +381,16 @@ describe('svg-validator', () => {
             .map((entry) => entry.name)
         for (const dir of dirs) {
             for (const file of readdirSync(`${assetsDir}/${dir}`)) {
+                const path = `${assetsDir}/${dir}/${file}`
                 if (!file.endsWith('.svg')) continue
                 if (EXCLUDE_FILES.includes(`assets/${dir}/${file}`)) continue
-                const source = readFileSync(
-                    `${assetsDir}/${dir}/${file}`,
-                    'utf8',
-                )
+                const source = readFileSync(path, 'utf8')
                 const type = /icon|tail/.test(file) ? 'icon' : 'logo'
-                for (const check of runSvgValidations(
-                    parse(source),
-                    type,
-                    null,
-                    {
-                        fileName: file,
-                        source,
-                    },
-                )) {
+                const checks = runSvgValidations(parse(source), type, null, {
+                    fileName: file,
+                    source,
+                })
+                for (const check of checks) {
                     if (check.level === 'error' && !check.pass) {
                         failures.push(
                             `${dir}/${file}: ${check.label} (${check.detail})`,

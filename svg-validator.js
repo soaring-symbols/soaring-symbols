@@ -1,4 +1,5 @@
 import {
+    isMonoFile,
     validateRequiredAttrs,
     validateTitleFirst,
     validateNoScripts,
@@ -17,10 +18,12 @@ import {
 
 // The same checks as `scripts/lint-svg.js`, in the browser. `fileName` tells
 // a -mono.svg apart (its fill is currentColor); `source`, the file's text,
-// adds the checks that need it (nothing before <svg>, attribute order).
+// adds the check that needs it (nothing before <svg>) and is what the
+// attribute order is read from, falling back to the parsed element as the
+// CLI does.
 export function runSvgValidations(svg, type, bbox = null, options = {}) {
     const { fileName = '', source = null } = options
-    const isMono = fileName.toLowerCase().endsWith('-mono.svg')
+    const isMono = isMonoFile(fileName)
     const row = (group, label, result, level = 'error') => ({
         group,
         label,
@@ -55,10 +58,12 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         row('Format', 'Number format', validateNumberFormat(svg)),
         ...(source === null
             ? []
-            : [
-                  row('Format', 'Starts with <svg>', validateNoProlog(source)),
-                  row('Format', 'Attribute order', validateAttrOrder(source)),
-              ]),
+            : [row('Format', 'Starts with <svg>', validateNoProlog(source))]),
+        row(
+            'Format',
+            'Attribute order',
+            validateAttrOrder(source ?? svg.outerHTML),
+        ),
         row('Style', 'Hex colors', validateHexColors(svg)),
         row('Style', 'Fill placement', validateFillPlacement(svg, isMono)),
         ...validateGeometry(type, bbox).map((check) => ({

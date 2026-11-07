@@ -1,9 +1,9 @@
 import {
     validateViewBox,
-    validateTitleFirst,
     validateNoTransforms,
     validateNoNestedGroups,
     validateSinglePath,
+    isMonoFile,
 } from './validators.js'
 
 // RULE: <title> must exist, be the first child and match the airline name
@@ -20,7 +20,7 @@ export function ruleTitle({
         titleElement = document.createElement('title')
         titleElement.textContent = airlineName
         svgElement.prepend(titleElement)
-    } else if (!validateTitleFirst(svgElement).pass) {
+    } else if (svgElement.firstElementChild !== titleElement) {
         issues.push(
             'Accessibility: <title> must be the first element inside <svg>.',
         )
@@ -77,10 +77,7 @@ export function ruleNoNestedGroups({ svgElement, warnings }) {
 // RULE (warning): a single-color SVG should draw everything in one <path>.
 // Not auto-fixable: merging paths safely needs a visual check.
 export function ruleSinglePath({ svgElement, filePath, warnings }) {
-    const { pass, count } = validateSinglePath(
-        svgElement,
-        filePath.endsWith('-mono.svg'),
-    )
+    const { pass, count } = validateSinglePath(svgElement, isMonoFile(filePath))
     if (!pass) {
         warnings.push(
             `Structure: Single-color SVG should use one <path>, found ${count} shapes.`,

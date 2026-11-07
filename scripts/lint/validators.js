@@ -4,6 +4,17 @@
 
 const r = (n) => Math.round(n * 1000) / 1000
 
+// Top-level constants are inlined by the build like the functions; only
+// functions may be exported (see scripts/build.js)
+const HEX = /^#(?:[0-9A-F]{3}){1,2}$/i
+// Paint keywords that are not colors to check or move
+const PAINT_KEYWORDS = /^(none|currentColor|transparent|inherit)$/i
+
+// Whether a file is a monochrome variant, drawn in currentColor
+export function isMonoFile(name) {
+    return name.toLowerCase().endsWith('-mono.svg')
+}
+
 // Check: <title> exists and has non-empty text content
 export function validateTitle(svg) {
     const title = svg.querySelector('title')
@@ -216,13 +227,14 @@ export function validateNoEditorData(svg) {
             }
         }
     }
-    const found = [...(comments.length ? ['comments'] : []), ...[...leftovers]]
+    const list = [...leftovers]
+    const found = comments.length ? ['comments', ...list] : list
 
     return {
         pass: found.length === 0,
         detail: found.length ? found.join(', ') : 'clean',
         comments,
-        leftovers: [...leftovers],
+        leftovers: list,
     }
 }
 
@@ -275,16 +287,15 @@ export function toFullHex(hex) {
 // `invalid` holds values that aren't hex at all (color names, rgb()), `short`
 // hex that only needs rewriting.
 export function validateHexColors(svg) {
-    const hex = /^#(?:[0-9A-F]{3}){1,2}$/i
-    const nonColors = /^(none|currentColor|transparent|inherit|url\(.*\))$/i
     const invalid = []
     const short = []
     for (const attr of ['fill', 'stroke', 'stop-color']) {
         const els = [svg, ...svg.querySelectorAll(`[${attr}]`)]
         for (const el of els.filter((e) => e.hasAttribute(attr))) {
             const value = el.getAttribute(attr).trim()
-            if (nonColors.test(value)) continue
-            if (!hex.test(value)) {
+            if (PAINT_KEYWORDS.test(value) || /^url\(.*\)$/.test(value))
+                continue
+            if (!HEX.test(value)) {
                 invalid.push({ el, attr, value })
                 continue
             }
@@ -309,79 +320,63 @@ export function validateHexColors(svg) {
 // (currentColor for a -mono file), and none of its children has one; a
 // multi-color SVG has no fill on the root. Gradients and non-hex fills are
 // left alone (`skipped`): validateHexColors reports the latter.
-// `rootFill` is the fill the root should have (null for none) and
-// `redundant` the children whose fill should go.
+// `rootFill` is the fill the root should have (null for none), `rootOk`
+// whether it has it, and `redundant` the children whose fill should go.
 export function validateFillPlacement(svg, isMono = false) {
-    const hex = /^#(?:[0-9A-F]{3}){1,2}$/i
     // The root counts: a single-color SVG keeps its fill there
     const withFill = [svg, ...svg.querySelectorAll('[fill]')].filter((el) =>
         el.hasAttribute('fill'),
     )
-    const skipped = withFill.some((el) => {
-        const value = el.getAttribute('fill').trim()
-
-        return (
-            !hex.test(value) &&
-            !/^(none|currentColor|transparent|inherit)$/i.test(value)
-        )
+    const fills = withFill.map((el) => el.getAttribute('fill').trim())
+    const result = (pass, detail, rest) => ({
+        pass,
+        detail,
+        skipped: false,
+        rootFill: null,
+        rootOk: true,
+        redundant: [],
+        ...rest,
     })
-    if (skipped) {
-        return {
-            pass: true,
-            detail: 'skipped: gradient or non-hex fill',
-            skipped,
-            rootFill: null,
-            redundant: [],
-        }
+
+    if (fills.some((f) => !HEX.test(f) && !PAINT_KEYWORDS.test(f))) {
+        return result(true, 'skipped: gradient or non-hex fill', {
+            skipped: true,
+        })
     }
 
-    const colors = [
-        ...new Set(
-            withFill
-                .map((el) => el.getAttribute('fill').toLowerCase())
-                .filter((f) => hex.test(f)),
-        ),
-    ]
+    const colors = new Set(
+        fills.filter((f) => HEX.test(f)).map((f) => f.toLowerCase()),
+    )
     const existing = svg.getAttribute('fill')
 
-    if (colors.length > 1) {
-        const pass = !svg.hasAttribute('fill')
+    if (colors.size > 1) {
+        const rootOk = existing === null
 
-        return {
-            pass,
-            detail: pass
-                ? `${colors.length} colors, no root fill`
-                : `root <svg> should have no fill in a multi-color SVG`,
-            skipped,
-            multiColor: true,
-            rootFill: null,
-            rootOk: pass,
-            redundant: [],
-        }
+        return result(
+            rootOk,
+            rootOk
+                ? `${colors.size} colors, no root fill`
+                : 'root <svg> should have no fill in a multi-color SVG',
+            { rootOk },
+        )
     }
 
-    const rootFill = isMono ? 'currentColor' : colors[0] || 'currentColor'
+    const rootFill = isMono ? 'currentColor' : [...colors][0] || 'currentColor'
     const rootOk = isMono
         ? existing === rootFill
         : existing?.toLowerCase() === rootFill
-    const redundant = withFill.filter(
-        (el) => el.tagName.toLowerCase() !== 'svg',
-    )
+    const redundant = withFill.filter((el) => el !== svg)
     const problems = [
         !rootOk && `root <svg> should have fill="${rootFill}"`,
         redundant.length &&
             `remove fill from ${redundant.length} child element${redundant.length > 1 ? 's' : ''}`,
     ].filter(Boolean)
 
-    return {
-        pass: problems.length === 0,
-        detail: problems.length ? problems.join(' · ') : `fill="${rootFill}"`,
-        skipped,
-        multiColor: false,
-        rootFill,
-        rootOk,
-        redundant,
-    }
+    return result(
+        problems.length === 0,
+        problems.length ? problems.join(' · ') : `fill="${rootFill}"`,
+        { rootFill, rootOk, redundant },
+    )
 }
 
 // Check (warning): a single-color SVG draws everything in one <path>

@@ -11,7 +11,7 @@ export interface SvgValidation {
 export interface SvgValidationOptions {
     /** The file name, so a `-mono.svg` is expected to use `fill="currentColor"`. */
     fileName?: string
-    /** The file's text, which adds the checks the parsed DOM can't answer: nothing before `<svg>` and attribute order. */
+    /** The file's text: adds the check for anything before `<svg>`, and the attribute order is read from it rather than the parsed element. */
     source?: string | null
 }
 

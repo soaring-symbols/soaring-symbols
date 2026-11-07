@@ -1,4 +1,5 @@
 import {
+    isMonoFile,
     validateHexColors,
     validateFillPlacement,
     orderPathAttrs,
@@ -27,22 +28,18 @@ export function ruleHexColors({ svgElement, issues }) {
 //       Gradients (url(#…), #53) and non-hex fills (reported by ruleHexColors)
 //       are left alone: moving those around would lose them.
 export function ruleFillPlacement({ filePath, svgElement, issues }) {
-    const { skipped, multiColor, rootFill, rootOk, redundant } =
-        validateFillPlacement(svgElement, filePath.includes('-mono.svg'))
+    const { skipped, rootFill, rootOk, redundant } = validateFillPlacement(
+        svgElement,
+        isMonoFile(filePath),
+    )
     if (skipped) return
 
-    if (multiColor) {
-        if (!rootOk) {
-            issues.push(
-                'Fill: Root <svg> should not have a fill attribute in multi-color icons.',
-            )
-            svgElement.removeAttribute('fill')
-        }
-
-        return
-    }
-
-    if (!rootOk) {
+    if (!rootOk && rootFill === null) {
+        issues.push(
+            'Fill: Root <svg> should not have a fill attribute in multi-color icons.',
+        )
+        svgElement.removeAttribute('fill')
+    } else if (!rootOk) {
         issues.push(`Fill: Root <svg> should have fill="${rootFill}".`)
         svgElement.setAttribute('fill', rootFill)
     }
