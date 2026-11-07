@@ -2,7 +2,7 @@
 // entry's keys, drop the fields only the build adds, delete committed
 // -mono.svg files the build derives, and validate the catalog as it would be
 // published.
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import { removeDerivedMonos, toSlug } from '../utils/index.js'
 import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
@@ -38,6 +38,13 @@ if (problems.length) {
 }
 
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))
+
+// AIRLINES.md was generated until the website took over its job; a pull
+// request rebased from before then may bring it back
+if (existsSync('AIRLINES.md')) {
+    rmSync('AIRLINES.md')
+    console.log('✅ Removed AIRLINES.md; the website lists every airline')
+}
 
 if (removedMonos.length) {
     console.log(
