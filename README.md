@@ -31,7 +31,7 @@ This is the one roadmap for the collection and every integration around it, incl
 ### Not planned
 
 - Iconify icon set: Iconify declined to add the collection, as airline logos are too niche for its users ([iconify/icon-sets#223](https://github.com/iconify/icon-sets/issues/223)). A self-published Iconify JSON would miss what makes Iconify useful (its API, search and auto-installed `@iconify-json` packages), so the SVGs from npm or jsDelivr remain the way to use the marks.
-- Swift and Android packages: bundled marks go stale until the app ships an update, and Android needs every SVG converted to a VectorDrawable. Native apps can load the marks by URL instead, from jsDelivr or the planned image endpoint. We'll reconsider if someone asks for a package.
+- Swift and Android packages: bundled marks go stale until the app ships an update, and Android needs every SVG converted to a VectorDrawable. Native apps can load the marks by URL instead, from jsDelivr or the image endpoint. We'll reconsider if someone asks for a package.
 
 ## Installation
 
