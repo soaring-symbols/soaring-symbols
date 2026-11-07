@@ -6,7 +6,7 @@
 //   element itself, which removeEditorsNSData misses
 // - keeps paths separate and 5 decimals, since mergePaths and the default
 //   precision visibly shift some logos
-// - writes hex colors in full (#000000, not #000), as lint-svg expects
+// - writes hex colors in full (#000000, not #000 or black), as lint-svg expects
 // - orders attributes the way lint-svg expects (role, viewBox, xmlns, fill, d)
 const EDITOR_NS = /inkscape\.org|sodipodi\.sourceforge\.net/
 const EDITOR_PREFIX = /^(ns\d+|sodipodi|inkscape)$/
@@ -56,7 +56,7 @@ export default {
                 overrides: {
                     removeUnknownsAndDefaults: { keepRoleAttr: true },
                     mergePaths: false,
-                    convertColors: { shorthex: false },
+                    convertColors: { shorthex: false, shortname: false },
                 },
             },
         },

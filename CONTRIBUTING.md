@@ -42,7 +42,7 @@ assets/
 
     Online tools such as [SVGOMG](https://svgomg.net) use SVGO's defaults, which remove `role="img"` and can leave editor metadata behind, so prefer the command above.
 
-- **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
+- **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 
 - **Single-Color Assets**: A single-color SVG (including every `-mono` file) should draw everything in one `<path>`. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes; `npm run lint:svg` warns about single-color files with more than one shape.
 
@@ -118,7 +118,7 @@ Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them
 3. Run `node scripts/lint-svg.js --fix` and `npm run generate`, which sorts `airlines.json`, checks it against the schema and removes `-mono.svg` files the build makes itself (and `AIRLINES.md`, which is no longer kept).
 4. Submit a pull request with the new SVG files and your `airlines.json` entry. Please provide a clear description of your changes.
 
-Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
+Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, a check that every SVG the pull request adds or changes is already optimized (`npm run optimize:check` runs the same check locally), `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
 
 #### Subsidiaries and shared logos
 

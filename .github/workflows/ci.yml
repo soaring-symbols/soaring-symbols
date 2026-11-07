@@ -21,6 +21,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The merge commit and its base, to find the SVGs a PR changes
+          fetch-depth: 2
 
       - uses: actions/setup-node@v7
         with:
@@ -36,8 +39,16 @@ jobs:
       - name: Prettier
         run: npm run format:check
 
-      # Fails on anything `lint-svg.js --fix` would rewrite; warnings only report
+      # Only the SVGs this PR adds or changes: older ones were optimized with
+      # other tools and still differ by a few bytes
+      - name: Check changed SVGs are optimized
+        if: github.event_name == 'pull_request'
+        run: node scripts/check-optimized.js --base HEAD^1
+
+      # Fails on any issue in an SVG; warnings only report. Runs even when the
+      # step above fails, so a PR sees every SVG problem at once
       - name: Lint SVGs
+        if: ${{ !cancelled() }}
         run: node scripts/lint-svg.js --check
 
       # Runs generate, builds dist/ and tests the ESM and CJS builds
