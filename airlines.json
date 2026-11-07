@@ -4713,6 +4713,32 @@
         }
     },
     {
+        "name": "Winair",
+        "iata": "WM",
+        "icao": "WIA",
+        "callsign": "WINDWARD",
+        "country": "SX",
+        "flag_carrier": true,
+        "website": "https://www.winair.sx",
+        "hubs": [
+            "SXM"
+        ],
+        "founded": 1961,
+        "branding": {
+            "primary_color": "#cd2026"
+        },
+        "slug": "winair",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#cd2026"
+                ]
+            }
+        }
+    },
+    {
         "name": "Wizz Air",
         "iata": "W6",
         "icao": "WZZ",
