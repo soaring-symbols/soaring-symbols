@@ -13,6 +13,12 @@ import {
 } from './lint/rule-structure.js'
 import { ruleNoScripts } from './lint/rule-security.js'
 import {
+    ruleNoDimensions,
+    ruleNoEditorData,
+    ruleNumberFormat,
+    ruleNoProlog,
+} from './lint/rule-format.js'
+import {
     ruleHexColors,
     ruleFillPlacement,
     rulePathAttrOrder,
@@ -25,8 +31,11 @@ const DRY_RUN = !process.argv.includes('--fix')
 // Exit with 1 when any file has an issue (warnings never fail), for CI
 const CHECK = process.argv.includes('--check')
 
+// Gradient SVGs the fill rules would break (#53), and broken files to redraw
 const EXCLUDE_FILES = [
     'assets/british-airways/icon.svg',
+    // Five paths have fill="url" with no gradient behind them; redraw (#52)
+    'assets/china-airlines/icon.svg',
     'assets/iberia/icon.svg',
     'assets/iberia/logo.svg',
     'assets/southwest-airlines/icon.svg',
@@ -45,11 +54,14 @@ const DOM_RULES = [
     ruleNoNestedGroups,
     ruleHexColors,
     ruleFillPlacement,
+    ruleNoDimensions,
+    ruleNoEditorData,
+    ruleNumberFormat,
 ]
 
 // String rules run against the serialized SVG string (regex-based fixes).
 // Each rule: (svgString, ctx) => { content, changed, message? }
-const STRING_RULES = [rulePathAttrOrder, ruleSvgAttrOrder]
+const STRING_RULES = [ruleNoProlog, rulePathAttrOrder, ruleSvgAttrOrder]
 
 // Airline names from the catalog, keyed by asset folder (slug)
 const catalogNames = new Map(

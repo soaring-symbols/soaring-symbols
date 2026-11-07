@@ -5,13 +5,25 @@ const SVG_ATTR_ORDER = ['role', 'viewBox', 'xmlns', 'fill']
 
 const PAINT_ATTRS = ['fill', 'stroke', 'stop-color']
 
-// RULE: Hex colors must be six-digit lowercase, so the colors read from the
-//       SVGs into airlines.json share one form
+// Paint values that are not colors to convert
+const NON_COLORS = /^(none|currentColor|transparent|inherit|url\(.*\))$/i
+
+// RULE: Colors must be six-digit lowercase hex, so the colors read from the
+//       SVGs into airlines.json share one form. Short hex is expanded; color
+//       names and rgb() values are left to `npm run optimize`, which turns
+//       them into hex.
 export function ruleHexColors({ document, issues }) {
     PAINT_ATTRS.forEach((attr) => {
         document.querySelectorAll(`[${attr}]`).forEach((el) => {
-            const value = el.getAttribute(attr)
-            if (!value.match(HEX_REGEX)) return
+            const value = el.getAttribute(attr).trim()
+            if (NON_COLORS.test(value)) return
+            if (!HEX_REGEX.test(value)) {
+                issues.push(
+                    `Style: Color "${value}" in ${attr} is not a hex color. Run \`npm run optimize\` to convert color names and rgb() values, or write it as six-digit lowercase hex (e.g. "#ff6600"). Not fixable with --fix.`,
+                )
+
+                return
+            }
             const full = toFullHex(value)
             if (value === full) return
             issues.push(
@@ -26,6 +38,19 @@ export function ruleHexColors({ document, issues }) {
 //       Multi-color SVGs must not have a fill on the root <svg>.
 export function ruleFillPlacement({ filePath, svgElement, document, issues }) {
     const elementsWithFill = document.querySelectorAll('[fill]')
+
+    // Leave alone fills this rule can't reason about: a gradient (url(#…)),
+    // which it would count as no color (#53), or a value that isn't hex,
+    // which ruleHexColors reports. Moving those around would lose them.
+    const hasOtherFill = [...elementsWithFill].some((el) => {
+        const value = el.getAttribute('fill').trim()
+
+        return (
+            !HEX_REGEX.test(value) &&
+            !/^(none|currentColor|transparent|inherit)$/i.test(value)
+        )
+    })
+    if (hasOtherFill) return
 
     const allColors = [
         ...new Set(
@@ -99,7 +124,7 @@ export function ruleSvgAttrOrder(svgString) {
 
     const attributesString = svgTagMatch[1]
     const attributes = {}
-    const attrRegex = /([a-zA-Z0-9-]+)="([^"]*)"/g
+    const attrRegex = /([a-zA-Z0-9:-]+)="([^"]*)"/g
     let match
     while ((match = attrRegex.exec(attributesString)) !== null) {
         attributes[match[1]] = match[2]

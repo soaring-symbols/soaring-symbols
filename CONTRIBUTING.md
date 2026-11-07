@@ -34,15 +34,17 @@ assets/
 
 ### 2. SVG Specifications
 
-- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo) using the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi) and avoids path merging that can shift shapes:
+- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes:
 
     ```bash
     npm run optimize -- assets/vietnam-airways/*.svg
     ```
 
-    Online tools such as [SVGOMG](https://svgomg.net) use SVGO's defaults, which remove `role="img"` and can leave editor metadata behind, so prefer the command above.
+    Online tools such as [SVGOMG](https://svgomg.net) work too. They use SVGO's defaults, which drop `role="img"` and may write a color as a name (`red`); run `node scripts/lint-svg.js --fix` afterwards to add `role="img"` back, and write any named color as hex.
 
-- **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
+    `node scripts/lint-svg.js` checks that every SVG looks optimized, whichever tool produced it: no `width`/`height`, no XML declaration, comments or design-tool data, at most five decimals in path data, and no leading zeros (`.5`, not `0.5`) or `-0`. An SVG that a pull request adds or changes must also be optimized: CI fails it if the project's config would still make it more than 10% smaller, which only happens to files that were never optimized (`npm run optimize:check` runs that check locally).
+
+- **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 
 - **Single-Color Assets**: A single-color SVG (including every `-mono` file) should draw everything in one `<path>`. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes; `npm run lint:svg` warns about single-color files with more than one shape.
 
@@ -118,7 +120,7 @@ Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them
 3. Run `node scripts/lint-svg.js --fix` and `npm run generate`, which sorts `airlines.json`, checks it against the schema and removes `-mono.svg` files the build makes itself (and `AIRLINES.md`, which is no longer kept).
 4. Submit a pull request with the new SVG files and your `airlines.json` entry. Please provide a clear description of your changes.
 
-Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
+Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, a check that every SVG the pull request adds or changes has been optimized (`npm run optimize:check` runs the same check locally), `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
 
 #### Subsidiaries and shared logos
 
