@@ -17,20 +17,21 @@ Browse the collection, open a page for any airline to download its marks, and ch
 
 ## Roadmap
 
+This is the one roadmap for the collection and every integration around it, including the ones built in other repositories (the API on the website, the Raycast extension). Plans that only concern the website itself, such as its pages and tooling, are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+
 - [x] npm package
 - [x] A `branding.primary_color` for every airline
 - [x] jsDelivr CDN
 - [x] Website with a browsable catalog, a page per airline and an SVG validator
 - [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
 - [x] Raycast extension
+- [ ] Image endpoint on the website, to load a mark by IATA or ICAO code, with monochrome marks in a chosen color and PNG for apps that can't render SVG
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs
-- [ ] Swift Package, with an asset catalog and a SwiftUI view
 
 ### Not planned
 
 - Iconify icon set: Iconify declined to add the collection, as airline logos are too niche for its users ([iconify/icon-sets#223](https://github.com/iconify/icon-sets/issues/223)). A self-published Iconify JSON would miss what makes Iconify useful (its API, search and auto-installed `@iconify-json` packages), so the SVGs from npm or jsDelivr remain the way to use the marks.
-
-Plans for the website itself are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+- Swift and Android packages: bundled marks go stale until the app ships an update, and Android needs every SVG converted to a VectorDrawable. Native apps can load the marks by URL instead, from jsDelivr or the planned image endpoint. We'll reconsider if someone asks for a package.
 
 ## Installation
 

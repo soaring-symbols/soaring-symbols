@@ -55,6 +55,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 - Code style: Prettier (4 spaces, single quotes, no semicolons, trailing commas, width 80) and ESLint (`eslint.config.mjs`, including a blank line before `return`). Lint-staged runs both on commit.
 - ESM everywhere (`"type": "module"`).
 - Commits follow Conventional Commits and are checked by commitlint, e.g. `feat: add Vietravel Airlines`, `fix(build): ...`, `chore(release): v0.2.1`.
+- The roadmap for the collection and every integration (npm, CDN, the website's API, Raycast, plugins, packages) lives only in this repository's `README.md`. The website's README tracks only plans for the site itself and links here, so update the roadmap in one place.
 
 ## Releasing
 
