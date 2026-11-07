@@ -1,9 +1,6 @@
 // Rules that catch SVGs which were never optimized, whichever SVGO version
-// or tool optimized the rest. Modeled on Simple Icons' svglint rules
-// (icon-precision, negative-zeros): they check what an optimized file looks
-// like instead of comparing it with one SVGO output. Leading zeros ("0.5")
-// are left to the optimize check on the SVGs a pull request changes: some
-// older files still have them, and they render the same.
+// or tool optimized the rest: they check what an optimized file looks like
+// instead of comparing it with one SVGO output.
 
 const MAX_DECIMALS = 5
 const OPTIMIZE_HINT = 'Run `npm run optimize`; not fixable with --fix.'
@@ -13,7 +10,10 @@ const EDITOR_PREFIX = /^(inkscape|sodipodi|sketch|serif|i|x|graph|a):/
 const EDITOR_NS = /^xmlns:(?!xlink$)/
 
 const pathData = (document) =>
-    [...document.querySelectorAll('path[d]')].map((el) => el.getAttribute('d'))
+    [...document.querySelectorAll('path[d]')].map((el) => [
+        el,
+        el.getAttribute('d'),
+    ])
 
 // RULE: No width or height on the root <svg>; the viewBox sets the size, so
 //       the marks scale to whatever box they are placed in
@@ -57,9 +57,10 @@ export function ruleNoEditorData({ svgElement, document, issues }) {
     }
 }
 
-// RULE: Path data has at most five decimals and no negative zero
+// RULE: Path data is written the way SVGO writes it: at most five decimals,
+//       no leading zero (".5", not "0.5") and no negative zero
 export function ruleNumberFormat({ document, issues }) {
-    for (const d of pathData(document)) {
+    for (const [el, d] of pathData(document)) {
         const long = d.match(new RegExp(`\\.\\d{${MAX_DECIMALS + 1},}`))
         if (long) {
             issues.push(
@@ -72,6 +73,15 @@ export function ruleNumberFormat({ document, issues }) {
             issues.push(
                 `Format: Path data has a negative zero. ${OPTIMIZE_HINT}`,
             )
+        }
+
+        // "0.5" -> ".5" and "-0.5" -> "-.5": the same numbers, written shorter
+        const trimmed = d.replace(/(?<![\d.])0\.(?=\d)/g, '.')
+        if (trimmed !== d) {
+            issues.push(
+                'Format: Path data has leading zeros ("0.5" should be ".5").',
+            )
+            el.setAttribute('d', trimmed)
         }
     }
 }
