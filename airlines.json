@@ -1356,6 +1356,32 @@
         }
     },
     {
+        "name": "Binter",
+        "iata": "NT",
+        "icao": "IBB",
+        "callsign": "BINTER",
+        "country": "ES",
+        "website": "https://www.bintercanarias.com",
+        "hubs": [
+            "LPA",
+            "TFN"
+        ],
+        "founded": 1988,
+        "branding": {
+            "primary_color": "#5bac29"
+        },
+        "slug": "binter",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#5bac29"
+                ]
+            }
+        }
+    },
+    {
         "name": "British Airways",
         "iata": "BA",
         "icao": "BAW",
@@ -3093,6 +3119,41 @@
         }
     },
     {
+        "name": "Level",
+        "iata": "LL",
+        "icao": "LVL",
+        "callsign": "DALI",
+        "country": "ES",
+        "website": "https://www.flylevel.com",
+        "hubs": [
+            "BCN"
+        ],
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#3fa74d"
+        },
+        "slug": "level",
+        "assets": {
+            "icon": {
+                "color": true,
+                "mono": false,
+                "colors": [
+                    "#00aadb",
+                    "#3fa74d"
+                ]
+            },
+            "logo": {
+                "color": true,
+                "mono": false,
+                "colors": [
+                    "#00aadb",
+                    "#3fa74d",
+                    "#1d1d1b"
+                ]
+            }
+        }
+    },
+    {
         "name": "Lion Air",
         "iata": "JT",
         "icao": "LNI",
@@ -4647,6 +4708,32 @@
                     "#003c71",
                     "#00aaa6",
                     "#ffffff"
+                ]
+            }
+        }
+    },
+    {
+        "name": "Winair",
+        "iata": "WM",
+        "icao": "WIA",
+        "callsign": "WINDWARD",
+        "country": "SX",
+        "flag_carrier": true,
+        "website": "https://www.winair.sx",
+        "hubs": [
+            "SXM"
+        ],
+        "founded": 1961,
+        "branding": {
+            "primary_color": "#cd2026"
+        },
+        "slug": "winair",
+        "assets": {
+            "logo": {
+                "color": true,
+                "mono": true,
+                "colors": [
+                    "#cd2026"
                 ]
             }
         }
