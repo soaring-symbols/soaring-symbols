@@ -9,6 +9,7 @@ import {
     ruleRequiredAttrs,
     ruleNoTransforms,
     ruleSinglePath,
+    ruleNoNestedGroups,
 } from './lint/rule-structure.js'
 import { ruleNoScripts } from './lint/rule-security.js'
 import {
@@ -39,6 +40,7 @@ const DOM_RULES = [
     ruleNoScripts,
     ruleNoTransforms,
     ruleSinglePath,
+    ruleNoNestedGroups,
     ruleHexColors,
     ruleFillPlacement,
 ]

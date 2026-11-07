@@ -55,6 +55,8 @@ assets/
 
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
 
+- **Groups**: A `<g>` is fine for sharing attributes such as `fill`, `fill-rule` or `clip-path`, but don't nest groups; flatten them in your editor (e.g. Inkscape's _Object → Ungroup_). `npm run lint:svg` warns about nested groups.
+
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 
     - `role="img"`

@@ -1,4 +1,8 @@
-import { validateViewBox, validateNoTransforms } from './validators.js'
+import {
+    validateViewBox,
+    validateNoTransforms,
+    validateNoNestedGroups,
+} from './validators.js'
 
 // RULE: <title> must exist, be the first child and match the airline name
 export function ruleTitle({
@@ -56,6 +60,14 @@ export function ruleNoTransforms({ svgElement, issues }) {
     if (!pass) {
         issues.push(`Structure: Transform attributes found: ${detail}`)
     }
+}
+
+// RULE (warning): groups may share attributes such as fill or clip-path,
+// but shouldn't be nested. Not auto-fixable: flattening needs a visual check.
+export function ruleNoNestedGroups({ svgElement, warnings }) {
+    const { pass, detail } = validateNoNestedGroups(svgElement)
+    if (!pass)
+        warnings.push(`Structure: Groups should not be nested, ${detail}.`)
 }
 
 const SHAPES = 'path, circle, rect, ellipse, polygon, polyline, line'

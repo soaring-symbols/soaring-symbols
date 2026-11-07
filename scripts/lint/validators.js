@@ -83,6 +83,17 @@ export function validateNoTransforms(svg) {
     return { pass, detail }
 }
 
+// Check: no <g> inside another <g> (a single level is fine for shared attributes)
+export function validateNoNestedGroups(svg) {
+    const nested = svg.querySelectorAll('g g').length
+    const pass = nested === 0
+
+    return {
+        pass,
+        detail: pass ? 'clean' : `${nested} nested <g> found`,
+    }
+}
+
 // Check: geometry — fills viewBox, fits within it, and is centered.
 // Requires a pre-computed bbox (e.g. from getBBox() in the browser).
 // Returns an array of SvgValidation-shaped objects (may be 1–3 items).
