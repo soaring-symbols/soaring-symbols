@@ -3938,6 +3938,27 @@
         }
     },
     {
+        "name": "Spring Airlines",
+        "iata": "9C",
+        "icao": "CQH",
+        "country": "CN",
+        "website": "https://www.ch.com",
+        "vectorized": true,
+        "branding": {
+            "primary_color": "#008856",
+            "colors": {
+                "icon": [
+                    "#008856"
+                ],
+                "logo": [
+                    "#008856",
+                    "#231815"
+                ]
+            }
+        },
+        "slug": "spring-airlines"
+    },
+    {
         "name": "Starlux Airlines",
         "iata": "JX",
         "icao": "SJX",
