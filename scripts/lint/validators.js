@@ -105,72 +105,91 @@ export function validateNoNestedGroups(svg) {
     }
 }
 
-// Check: geometry — fills viewBox, fits within it, and is centered.
+// Check: geometry - fills viewBox, fits within it, and is centered.
 // Requires a pre-computed bbox (e.g. from getBBox() in the browser).
-// Returns an array of SvgValidation-shaped objects (may be 1–3 items).
+// Returns an array of SvgValidation-shaped objects (1 or 3 items). Each check
+// has three outcomes: exact (within 0.01 of a viewBox unit) passes; off by
+// more but within its tolerance fails as a `warning`, which doesn't fail the
+// SVG but asks for a look; beyond the tolerance fails as an `error`.
 export function validateGeometry(type, bbox) {
     if (!bbox) return []
 
+    const exact = 0.01
     const size = type === 'logo' ? 64 : 24
-    const maxDim = Math.max(bbox.width, bbox.height)
-    const fills = maxDim / size >= 0.999
+    const half = size / 2
+    const row = (label, offset, tolerance, okDetail, offDetail) => {
+        if (offset <= exact)
+            return { label, pass: true, level: 'error', detail: okDetail }
 
-    const results = [
-        {
-            label: 'Fills viewBox',
-            pass: fills,
-            detail: fills
-                ? `${r(bbox.width)} × ${r(bbox.height)}`
-                : `${r(bbox.width)} × ${r(bbox.height)}, need ${size}px in largest dimension`,
-        },
-    ]
+        return {
+            label,
+            pass: false,
+            // 1e-9 absorbs float error: 24 - 23.976 is 0.024000000000001
+            level: offset <= tolerance + 1e-9 ? 'warning' : 'error',
+            detail: offDetail,
+        }
+    }
+    const dims = `${r(bbox.width)} × ${r(bbox.height)}`
+    const extent = `extends to (${r(bbox.x)}, ${r(bbox.y)}) → (${r(bbox.x + bbox.width)}, ${r(bbox.y + bbox.height)})`
+    const cx = bbox.x + bbox.width / 2
+    const cy = bbox.y + bbox.height / 2
+    const center = `center (${r(cx)}, ${r(cy)})`
 
-    if (!fills) {
-        results.push(
+    // The larger side should equal the viewBox size; up to 0.1% short passes
+    const short = size - Math.max(bbox.width, bbox.height)
+    const fills = row(
+        'Fills viewBox',
+        Math.max(short, 0),
+        size * 0.001,
+        dims,
+        `${dims}, ${r(short)} short of ${size} in the largest dimension`,
+    )
+    // Too small to judge the rest: they fail with it
+    if (fills.level === 'error' && !fills.pass) {
+        return [
+            fills,
             {
                 label: 'Fits viewBox',
                 pass: false,
-                detail: `extends to (${r(bbox.x)}, ${r(bbox.y)}) → (${r(bbox.x + bbox.width)}, ${r(bbox.y + bbox.height)})`,
+                level: 'error',
+                detail: extent,
             },
             {
                 label: 'Centered',
                 pass: false,
-                detail: `center (${r(bbox.x + bbox.width / 2)}, ${r(bbox.y + bbox.height / 2)}), expected (${size / 2}, ${size / 2})`,
+                level: 'error',
+                detail: `${center}, expected (${half}, ${half})`,
             },
-        )
-    } else {
-        const tolerance = 0.5
-        const fits =
-            bbox.x >= -tolerance &&
-            bbox.y >= -tolerance &&
-            bbox.x + bbox.width <= size + tolerance &&
-            bbox.y + bbox.height <= size + tolerance
-
-        results.push({
-            label: 'Fits viewBox',
-            pass: fits,
-            detail: fits
-                ? `${r(bbox.width)} × ${r(bbox.height)} at (${r(bbox.x)}, ${r(bbox.y)})`
-                : `extends to (${r(bbox.x)}, ${r(bbox.y)}) → (${r(bbox.x + bbox.width)}, ${r(bbox.y + bbox.height)})`,
-        })
-
-        const cx = bbox.x + bbox.width / 2
-        const cy = bbox.y + bbox.height / 2
-        const maxOffset = size * 0.05
-        const isCentered =
-            Math.abs(cx - size / 2) <= maxOffset &&
-            Math.abs(cy - size / 2) <= maxOffset
-
-        results.push({
-            label: 'Centered',
-            pass: isCentered,
-            detail: isCentered
-                ? `center (${r(cx)}, ${r(cy)})`
-                : `center (${r(cx)}, ${r(cy)}), expected (${size / 2}, ${size / 2})`,
-        })
+        ]
     }
 
-    return results
+    // How far the artwork reaches past the viewBox's edges
+    const overflow = Math.max(
+        -bbox.x,
+        -bbox.y,
+        bbox.x + bbox.width - size,
+        bbox.y + bbox.height - size,
+        0,
+    )
+    const offCenter = Math.max(Math.abs(cx - half), Math.abs(cy - half))
+
+    return [
+        fills,
+        row(
+            'Fits viewBox',
+            overflow,
+            0.5,
+            `${dims} at (${r(bbox.x)}, ${r(bbox.y)})`,
+            `${extent}, ${r(overflow)} past the edge`,
+        ),
+        row(
+            'Centered',
+            offCenter,
+            size * 0.05,
+            center,
+            `${center}, ${r(offCenter)} off (${half}, ${half})`,
+        ),
+    ]
 }
 
 // Check: <title> is the first element inside <svg>, so screen readers and

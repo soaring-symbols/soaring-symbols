@@ -2,7 +2,7 @@ export interface SvgValidation {
     /** Section the check belongs to. */
     group: 'Structure' | 'Format' | 'Style' | 'Geometry'
     label: string
-    /** `warning` checks are advice: `lint-svg.js --check` never fails on them. */
+    /** A failed `warning` is advice and doesn't fail the SVG, as `lint-svg.js --check` never fails on warnings. Geometry checks fail as a warning when close to exact but within their tolerance. */
     level: 'error' | 'warning'
     pass: boolean
     detail: string

@@ -457,6 +457,47 @@ describe('svg-validator', () => {
         assert.deepEqual(unclaimed, [], 'browser checks with no lint rule')
     })
 
+    it('grades geometry as exact, a warning or an error', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const grade = (bbox) =>
+            Object.fromEntries(
+                runSvgValidations(svg, 'icon', bbox)
+                    .filter((c) => c.group === 'Geometry')
+                    .map((c) => [c.label, c.pass ? 'pass' : c.level]),
+            )
+        // Off by less than 0.01: exact
+        assert.deepEqual(grade({ x: 0.005, y: 2, width: 23.995, height: 20 }), {
+            'Fills viewBox': 'pass',
+            'Fits viewBox': 'pass',
+            Centered: 'pass',
+        })
+        // Within each tolerance but not exact
+        assert.deepEqual(
+            grade({ x: 0.027, y: 1.507, width: 23.976, height: 21.016 }),
+            {
+                'Fills viewBox': 'warning',
+                'Fits viewBox': 'pass',
+                Centered: 'warning',
+            },
+        )
+        assert.deepEqual(grade({ x: -0.3, y: 2, width: 24.3, height: 20 }), {
+            'Fills viewBox': 'pass',
+            'Fits viewBox': 'warning',
+            Centered: 'warning',
+        })
+        // Beyond the tolerances
+        assert.deepEqual(grade({ x: 2, y: 2, width: 20, height: 20 }), {
+            'Fills viewBox': 'error',
+            'Fits viewBox': 'error',
+            Centered: 'error',
+        })
+        assert.deepEqual(grade({ x: 0, y: 4, width: 24, height: 10 }), {
+            'Fills viewBox': 'pass',
+            'Fits viewBox': 'pass',
+            Centered: 'error',
+        })
+    })
+
     it('expects currentColor in a -mono.svg', async () => {
         const { runSvgValidations } = await import('../dist/svg-validator.js')
         const svg = parse(
