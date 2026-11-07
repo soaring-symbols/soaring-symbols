@@ -51,7 +51,7 @@ assets/
     - **Logos** should use a `viewBox` of `0 0 64 64`.
     - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
-- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. The [validator page](https://soaring-symbols.anhthang.workers.dev/validate) checks this; `npm run lint:svg` doesn't yet.
+- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. The [validator page](https://soaring-symbols.anhthang.workers.dev/validate) checks this.
 
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
 

@@ -12,6 +12,7 @@ import {
     ruleNoNestedGroups,
 } from './lint/rule-structure.js'
 import { ruleNoScripts } from './lint/rule-security.js'
+import { ruleGeometry } from './lint/rule-geometry.js'
 import {
     ruleHexColors,
     ruleFillPlacement,
@@ -118,6 +119,9 @@ const lintSvgFile = (filePath) => {
             hasStructuralFixes = true
         }
     }
+
+    // Phase 3: Geometry rules
+    ruleGeometry(fixedContent, ctx)
 
     return {
         issues: [...ctx.issues, ...ctx.warnings],
