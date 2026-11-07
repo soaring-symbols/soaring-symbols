@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
+import { EXCLUDE_FILES } from './lint/exclude.js'
 import {
     extractInfobox,
     firstYear,
@@ -362,5 +363,83 @@ describe('svg-validator', () => {
         for (const validate of [validateCJS, validateESM]) {
             assert.ok(validate(svg, 'logo').some((check) => check.pass))
         }
+    })
+
+    const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+    const parse = (source) =>
+        new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
+            .documentElement
+
+    // lint-svg.js --check passes in CI, so every SVG it lints must pass the
+    // same error-level checks in the browser
+    it('agrees with lint-svg.js on every asset', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const failures = []
+        const dirs = readdirSync(assetsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        for (const dir of dirs) {
+            for (const file of readdirSync(`${assetsDir}/${dir}`)) {
+                if (!file.endsWith('.svg')) continue
+                if (EXCLUDE_FILES.includes(`assets/${dir}/${file}`)) continue
+                const source = readFileSync(
+                    `${assetsDir}/${dir}/${file}`,
+                    'utf8',
+                )
+                const type = /icon|tail/.test(file) ? 'icon' : 'logo'
+                for (const check of runSvgValidations(
+                    parse(source),
+                    type,
+                    null,
+                    {
+                        fileName: file,
+                        source,
+                    },
+                )) {
+                    if (check.level === 'error' && !check.pass) {
+                        failures.push(
+                            `${dir}/${file}: ${check.label} (${check.detail})`,
+                        )
+                    }
+                }
+            }
+        }
+        assert.deepEqual(failures, [])
+    })
+
+    it('reports what lint-svg.js would', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const source =
+            '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" role="img"><!-- c --><path d="M0.5 1.1234567" fill="#F60"/><title>X</title><g><g><path fill="red" d="M1 1"/></g></g></svg>'
+        const failing = runSvgValidations(parse(source), 'logo', null, {
+            fileName: 'logo.svg',
+            source,
+        })
+            .filter((check) => !check.pass)
+            .map((check) => `${check.group}/${check.label}/${check.level}`)
+        assert.deepEqual(failing, [
+            'Structure/Title first/error',
+            'Structure/No nested groups/warning',
+            'Structure/Single path/warning',
+            'Format/No width or height/error',
+            'Format/No editor data/error',
+            'Format/Number format/error',
+            'Format/Starts with <svg>/error',
+            'Format/Attribute order/error',
+            'Style/Hex colors/error',
+        ])
+    })
+
+    it('expects currentColor in a -mono.svg', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const svg = parse(
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title><path d="M1 1"/></svg>',
+        )
+        const fill = (fileName) =>
+            runSvgValidations(svg, 'icon', null, { fileName }).find(
+                (check) => check.label === 'Fill placement',
+            ).pass
+        assert.equal(fill('icon.svg'), true)
+        assert.equal(fill('icon-mono.svg'), false)
     })
 })

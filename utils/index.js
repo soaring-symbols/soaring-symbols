@@ -1,6 +1,7 @@
 import { readFileSync, existsSync, writeFileSync, rmSync } from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
+import { toFullHex } from '../scripts/lint/validators.js'
 
 const toSlug = (name) => {
     return slugify(name, {
@@ -14,14 +15,6 @@ const toSlug = (name) => {
 // single-color ones
 const PAINT_COLOR =
     /(?:fill|stroke|stop-color)\s*[:=]\s*["']?(#[0-9a-f]{3}(?:[0-9a-f]{3})?)\b/gi
-
-// The six-digit lowercase form of a hex color, so #fff and #ffffff count
-// as one color: #F60 -> #ff6600
-const toFullHex = (hex) =>
-    (hex.length === 4
-        ? '#' + [...hex.slice(1)].map((c) => c + c).join('')
-        : hex
-    ).toLowerCase()
 
 const extractColorsFromSvg = (filePath) => {
     const content = readFileSync(filePath, 'utf8')

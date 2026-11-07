@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join } from 'path'
 import { JSDOM } from 'jsdom'
 import { toSlug } from '../utils/index.js'
+import { EXCLUDE_FILES } from './lint/exclude.js'
 
 import {
     ruleTitle,
@@ -31,15 +32,6 @@ const DRY_RUN = !process.argv.includes('--fix')
 // Exit with 1 when any file has an issue (warnings never fail), for CI
 const CHECK = process.argv.includes('--check')
 
-// Gradient SVGs the fill rules would break (#53), and broken files to redraw
-const EXCLUDE_FILES = [
-    'assets/british-airways/icon.svg',
-    // Five paths have fill="url" with no gradient behind them; redraw (#52)
-    'assets/china-airlines/icon.svg',
-    'assets/iberia/icon.svg',
-    'assets/iberia/logo.svg',
-    'assets/southwest-airlines/icon.svg',
-]
 // ---------------------
 
 // DOM rules run against the parsed SVG element (may mutate DOM to fix issues).
