@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
+import { EXCLUDE_FILES } from './lint/exclude.js'
+import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import {
     extractInfobox,
     firstYear,
@@ -346,12 +348,16 @@ describe('wikipedia infobox parsing (sync-data)', () => {
 })
 
 describe('svg-validator', () => {
-    const svg = new JSDOM(
+    // One parser for every file: a JSDOM window per SVG is slow
+    const parser = new new JSDOM('').window.DOMParser()
+    const parse = (source) =>
+        parser.parseFromString(source, 'image/svg+xml').documentElement
+    const svg = parse(
         readFileSync(
             require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            'utf8',
         ),
-        { contentType: 'image/svg+xml' },
-    ).window.document.querySelector('svg')
+    )
 
     it('is self-contained in both module formats', async () => {
         const {
@@ -362,5 +368,105 @@ describe('svg-validator', () => {
         for (const validate of [validateCJS, validateESM]) {
             assert.ok(validate(svg, 'logo').some((check) => check.pass))
         }
+    })
+
+    const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+
+    // lint-svg.js --check passes in CI, so every SVG it lints must pass the
+    // same error-level checks in the browser
+    it('agrees with lint-svg.js on every asset', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const failures = []
+        const dirs = readdirSync(assetsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        for (const dir of dirs) {
+            for (const file of readdirSync(`${assetsDir}/${dir}`)) {
+                const path = `${assetsDir}/${dir}/${file}`
+                if (!file.endsWith('.svg')) continue
+                if (EXCLUDE_FILES.includes(`assets/${dir}/${file}`)) continue
+                const source = readFileSync(path, 'utf8')
+                const type = /icon|tail/.test(file) ? 'icon' : 'logo'
+                const checks = runSvgValidations(parse(source), type, null, {
+                    fileName: file,
+                    source,
+                })
+                for (const check of checks) {
+                    if (check.level === 'error' && !check.pass) {
+                        failures.push(
+                            `${dir}/${file}: ${check.label} (${check.detail})`,
+                        )
+                    }
+                }
+            }
+        }
+        assert.deepEqual(failures, [])
+    })
+
+    it('reports what lint-svg.js would', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const source =
+            '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" role="img"><!-- c --><path d="M0.5 1.1234567" fill="#F60"/><title>X</title><g><g><path fill="red" d="M1 1"/></g></g></svg>'
+        const failing = runSvgValidations(parse(source), 'logo', null, {
+            fileName: 'logo.svg',
+            source,
+        })
+            .filter((check) => !check.pass)
+            .map((check) => `${check.group}/${check.label}/${check.level}`)
+        assert.deepEqual(failing, [
+            'Structure/Title first/error',
+            'Structure/No nested groups/warning',
+            'Structure/Single path/warning',
+            'Format/No width or height/error',
+            'Format/No editor data/error',
+            'Format/Number format/error',
+            'Format/Starts with <svg>/error',
+            'Format/Attribute order/error',
+            'Style/Hex colors/error',
+        ])
+    })
+
+    // Every lint rule has a browser check and every browser check (geometry
+    // aside, which the CLI doesn't check yet) a rule, at the same level
+    it('has a browser check for every lint rule', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const source = readFileSync(
+            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            'utf8',
+        )
+        const checks = runSvgValidations(parse(source), 'logo', null, {
+            fileName: 'logo.svg',
+            source,
+        })
+        const levels = new Map(checks.map((c) => [c.label, c.level]))
+        const claimed = new Set()
+
+        for (const rule of [...DOM_RULES, ...STRING_RULES]) {
+            const entry = BROWSER_CHECKS.get(rule)
+            assert.ok(entry, `${rule.name} has no entry in BROWSER_CHECKS`)
+            for (const label of entry.labels) {
+                assert.ok(levels.has(label), `no browser check "${label}"`)
+                const level = entry.warning ? 'warning' : 'error'
+                assert.equal(levels.get(label), level, `level of "${label}"`)
+                claimed.add(label)
+            }
+        }
+        const unclaimed = checks
+            .filter((c) => c.group !== 'Geometry' && !claimed.has(c.label))
+            .map((c) => c.label)
+        assert.deepEqual(unclaimed, [], 'browser checks with no lint rule')
+    })
+
+    it('expects currentColor in a -mono.svg', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const svg = parse(
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title><path d="M1 1"/></svg>',
+        )
+        const fill = (fileName) =>
+            runSvgValidations(svg, 'icon', null, { fileName }).find(
+                (check) => check.label === 'Fill placement',
+            ).pass
+        assert.equal(fill('icon.svg'), true)
+        assert.equal(fill('icon-mono.svg'), false)
     })
 })
