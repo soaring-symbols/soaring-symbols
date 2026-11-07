@@ -59,7 +59,6 @@
   ],
   "files": [
     "dist/",
-    "AIRLINES.md",
     "API.md",
     "LICENSE",
     "README.md"
@@ -76,6 +75,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,ts}\"",
+    "format:check": "prettier --check \"**/*.{js,ts}\"",
     "release": "node scripts/release.js",
     "sync:data": "node scripts/sync-data.js",
     "optimize": "svgo --config svgo.config.mjs"

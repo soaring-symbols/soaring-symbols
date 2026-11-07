@@ -1,0 +1,56 @@
+# Check every pull request (and every push to main) the way a maintainer would
+# before merging: code lint and format, SVG lint, build and tests, and that
+# nothing the tooling generates or fixes was left out of the commit.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      # Skip the husky prepare script; no git hooks are needed here
+      - run: npm ci --ignore-scripts
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier
+        run: npm run format:check
+
+      # Fails on anything `lint-svg.js --fix` would rewrite; warnings only report
+      - name: Lint SVGs
+        run: node scripts/lint-svg.js --check
+
+      # Runs generate, builds dist/ and tests the ESM and CJS builds
+      - name: Build and test
+        run: npm test
+
+      # lint-svg --fix rewrites SVGs, and generate re-sorts airlines.json and
+      # deletes derived -mono.svg files, so any change means the PR missed a step
+      - name: Check generated files are committed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --short
+            git --no-pager diff
+            echo "::error::Generated files are out of date. Run \`node scripts/lint-svg.js --fix\` and \`npm run generate\`, then commit the changes."
+            exit 1
+          fi

@@ -1,6 +1,8 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import { writeDerivedMonos } from '../utils/index.js'
+import { publishCatalog } from '../utils/catalog.js'
+import { validateAirlines } from '../utils/schema.js'
 
 const inputFile = './index.js'
 const distDir = './dist'
@@ -32,13 +34,21 @@ async function copyDir(src, dest) {
 async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
-    // Copy required files and directories
-    // The catalog ships minified: the repo copy is indented for review, but
-    // consumers (bundlers, jsDelivr) only parse it
-    const airlines = await fs.readFile('./airlines.json', 'utf-8')
+    // The repo keeps only hand-written fields; the published catalog adds
+    // `slug` and `assets`. It ships minified: consumers (bundlers, jsDelivr)
+    // only parse it
+    const catalog = publishCatalog(
+        JSON.parse(await fs.readFile('./airlines.json', 'utf-8')),
+    )
+    const problems = validateAirlines(catalog, { published: true })
+    if (problems.length) {
+        throw new Error(
+            `airlines.json does not match airlines.schema.json:\n  - ${problems.join('\n  - ')}`,
+        )
+    }
     await fs.writeFile(
         path.join(distDir, 'airlines.json'),
-        JSON.stringify(JSON.parse(airlines)),
+        JSON.stringify(catalog),
     )
 
     const filesToCopy = [
@@ -62,7 +72,6 @@ async function copyFiles() {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
-    const catalog = JSON.parse(airlines)
     // Single-color assets get their -mono.svg here, not in the repo
     for (const airline of catalog.filter((a) => !a.marks)) {
         writeDerivedMonos(airline.slug, path.join(distDir, 'assets'))
