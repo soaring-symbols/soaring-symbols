@@ -2,8 +2,7 @@ import {
     validateViewBox,
     validateNoTransforms,
     validateNoNestedGroups,
-    validateSinglePath,
-    isMonoFile,
+    validateOnePathPerColor,
 } from './validators.js'
 
 // RULE: <title> must exist, be the first child and match the airline name
@@ -74,13 +73,17 @@ export function ruleNoNestedGroups({ svgElement, warnings }) {
         warnings.push(`Structure: Groups should not be nested, ${detail}.`)
 }
 
-// RULE (warning): a single-color SVG should draw everything in one <path>.
-// Not auto-fixable: merging paths safely needs a visual check.
-export function ruleSinglePath({ svgElement, filePath, warnings }) {
-    const { pass, count } = validateSinglePath(svgElement, isMonoFile(filePath))
-    if (!pass) {
-        warnings.push(
-            `Structure: Single-color SVG should use one <path>, found ${count} shapes.`,
-        )
-    }
+// RULE (warning): each color should be drawn in one <path>, so a
+// single-color SVG has one shape and a multi-color one a shape per color
+// (where shapes of the same color are drawn one after another). Not
+// auto-fixable: merging paths can leave holes where shapes overlap, so it
+// needs a visual check.
+export function ruleOnePathPerColor({ svgElement, warnings }) {
+    const { pass, count, merges, colors } = validateOnePathPerColor(svgElement)
+    if (pass) return
+    warnings.push(
+        colors === 1
+            ? `Structure: Single-color SVG should use one <path>, found ${count} shapes.`
+            : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>.`,
+    )
 }

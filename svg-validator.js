@@ -5,7 +5,7 @@ import {
     validateNoScripts,
     validateNoTransforms,
     validateNoNestedGroups,
-    validateSinglePath,
+    validateOnePathPerColor,
     validateNoDimensions,
     validateNoEditorData,
     validateNumberFormat,
@@ -14,6 +14,7 @@ import {
     validateHexColors,
     validateFillPlacement,
     validateNoStrokes,
+    validateNoStyles,
     validateGeometry,
 } from './scripts/lint/validators.js'
 
@@ -50,8 +51,8 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         ),
         row(
             'Structure',
-            'Single path',
-            validateSinglePath(svg, isMono),
+            'One path per color',
+            validateOnePathPerColor(svg),
             'warning',
         ),
         row('Format', 'No width or height', validateNoDimensions(svg)),
@@ -65,6 +66,7 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
             'Attribute order',
             validateAttrOrder(source ?? svg.outerHTML),
         ),
+        row('Style', 'No styles', validateNoStyles(svg)),
         row('Style', 'Hex colors', validateHexColors(svg)),
         row('Style', 'Fill placement', validateFillPlacement(svg, isMono)),
         row('Style', 'No strokes', validateNoStrokes(svg)),

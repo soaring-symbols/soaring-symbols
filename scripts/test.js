@@ -406,7 +406,7 @@ describe('svg-validator', () => {
     it('reports what lint-svg.js would', async () => {
         const { runSvgValidations } = await import('../dist/svg-validator.js')
         const source =
-            '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" role="img"><!-- c --><path d="M0.5 1.1234567" fill="#F60"/><title>X</title><g><g><path fill="red" d="M1 1"/></g></g></svg>'
+            '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" role="img"><!-- c --><path d="M0.5 1.1234567" fill="#F60"/><title>X</title><g><g><path fill="red" style="opacity:.5" d="M1 1"/></g></g></svg>'
         const failing = runSvgValidations(parse(source), 'logo', null, {
             fileName: 'logo.svg',
             source,
@@ -416,14 +416,38 @@ describe('svg-validator', () => {
         assert.deepEqual(failing, [
             'Structure/Title first/error',
             'Structure/No nested groups/warning',
-            'Structure/Single path/warning',
             'Format/No width or height/error',
             'Format/No editor data/error',
             'Format/Number format/error',
             'Format/Starts with <svg>/error',
             'Format/Attribute order/error',
+            'Style/No styles/error',
             'Style/Hex colors/error',
         ])
+    })
+
+    it('asks for one path per color, merging neighbours only', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const onePath = (body) =>
+            runSvgValidations(
+                parse(
+                    `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title>${body}</svg>`,
+                ),
+                'icon',
+            ).find((check) => check.label === 'One path per color').pass
+        const a = '<path fill="#ff0000" d="M1 1"/>'
+        const b = '<path fill="#0000ff" d="M2 2"/>'
+        assert.equal(onePath(a + b), true)
+        // Merging the two reds would draw one of them over the blue
+        assert.equal(onePath(a + b + a), true)
+        assert.equal(onePath(a + a + b), false)
+        // A single-color SVG, its fill on the root
+        assert.equal(onePath('<path d="M1 1"/><circle r="1"/>'), false)
+        // Same color, different clip: they can't share a path
+        assert.equal(
+            onePath(`${a}<path fill="#ff0000" clip-path="url(#c)" d="M2 2"/>`),
+            true,
+        )
     })
 
     it('reports every stroke, painting or not', async () => {

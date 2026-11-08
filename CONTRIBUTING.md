@@ -46,7 +46,7 @@ assets/
 
 - **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 
-- **Single-Color Assets**: A single-color SVG (including every `-mono` file) should draw everything in one `<path>`. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes; `npm run lint:svg` warns about single-color files with more than one shape.
+- **One Path per Color**: Draw each color in one `<path>`, so a single-color SVG (including every `-mono` file) has one `<path>` and a multi-color SVG one per color. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes. Only combine shapes drawn one after another: if another color sits between two shapes of the same color, merging them would change which one is drawn on top, so they stay apart. `npm run lint:svg` warns about shapes that could join the one before them.
 
 - **ViewBox Dimensions**:
 
@@ -56,6 +56,8 @@ assets/
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
+
+- **No Styles**: Write every color and property as an attribute (`fill="#ff6600"`, `stop-color="#ff6600"`), not in a `style` attribute or a `<style>` element. `npm run optimize` and `node scripts/lint-svg.js --fix` both turn `style` attributes into attributes; `npm run optimize` also inlines `<style>` elements.
 
 - **No Strokes**: Draw every shape as a filled outline and leave no `stroke` behind: strokes don't take the single fill color of the derived `-mono` files and throw off the geometry checks. Convert them in your editor (e.g. Inkscape's _Path → Stroke to Path_). `npm run lint:svg` reports any `stroke` or `stroke-*` attribute or style property; `node scripts/lint-svg.js --fix` removes the ones that paint nothing (`stroke="none"`, a lone `stroke-width`), but can't convert a stroke that paints.
 

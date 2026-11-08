@@ -3,6 +3,7 @@ import {
     validateHexColors,
     validateFillPlacement,
     validateNoStrokes,
+    validateNoStyles,
     orderPathAttrs,
     orderSvgAttrs,
 } from './validators.js'
@@ -21,6 +22,26 @@ export function ruleHexColors({ svgElement, issues }) {
     for (const { el, attr, value, full } of short) {
         issues.push(`Style: Hex color "${value}" should be written "${full}".`)
         el.setAttribute(attr, full)
+    }
+}
+
+// RULE: No styles. Style attributes become presentation attributes (a
+//       declaration wins over an attribute of the same name, as in CSS);
+//       <style> elements are left to `npm run optimize`, which inlines and
+//       removes them.
+export function ruleNoStyles({ svgElement, issues }) {
+    const { styleElements, styled } = validateNoStyles(svgElement)
+    if (styleElements.length) {
+        issues.push(
+            'Style: <style> element found. Run `npm run optimize` to turn its rules into attributes. Not fixable with --fix.',
+        )
+    }
+    for (const { el, decls } of styled) {
+        issues.push(
+            `Style: style="${el.getAttribute('style')}" on <${el.tagName.toLowerCase()}> should be written as attributes.`,
+        )
+        for (const [name, value] of decls) el.setAttribute(name, value)
+        el.removeAttribute('style')
     }
 }
 

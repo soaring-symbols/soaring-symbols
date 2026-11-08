@@ -8,7 +8,7 @@ import {
     ruleViewBox,
     ruleRequiredAttrs,
     ruleNoTransforms,
-    ruleSinglePath,
+    ruleOnePathPerColor,
     ruleNoNestedGroups,
 } from './rule-structure.js'
 import { ruleNoScripts } from './rule-security.js'
@@ -22,6 +22,7 @@ import {
     ruleHexColors,
     ruleFillPlacement,
     ruleNoStrokes,
+    ruleNoStyles,
     rulePathAttrOrder,
     ruleSvgAttrOrder,
 } from './rule-styling.js'
@@ -33,8 +34,9 @@ export const DOM_RULES = [
     ruleViewBox,
     ruleRequiredAttrs,
     ruleNoScripts,
+    ruleNoStyles,
     ruleNoTransforms,
-    ruleSinglePath,
+    ruleOnePathPerColor,
     ruleNoNestedGroups,
     ruleHexColors,
     ruleFillPlacement,
@@ -55,8 +57,9 @@ export const BROWSER_CHECKS = new Map([
     [ruleViewBox, { labels: ['Required attributes'] }],
     [ruleRequiredAttrs, { labels: ['Required attributes'] }],
     [ruleNoScripts, { labels: ['No embedded scripts'] }],
+    [ruleNoStyles, { labels: ['No styles'] }],
     [ruleNoTransforms, { labels: ['No transforms'] }],
-    [ruleSinglePath, { labels: ['Single path'], warning: true }],
+    [ruleOnePathPerColor, { labels: ['One path per color'], warning: true }],
     [ruleNoNestedGroups, { labels: ['No nested groups'], warning: true }],
     [ruleHexColors, { labels: ['Hex colors'] }],
     [ruleFillPlacement, { labels: ['Fill placement'] }],

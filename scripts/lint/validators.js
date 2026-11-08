@@ -335,6 +335,45 @@ export function validateHexColors(svg) {
     }
 }
 
+// Check: no <style> elements and no style attributes: every paint and
+// property is a presentation attribute (fill="…"), the one form the color,
+// fill and stroke checks and the catalog read. `styled` lists each element's
+// declarations as [name, value] pairs, which --fix turns into attributes.
+export function validateNoStyles(svg) {
+    const styleElements = [...svg.querySelectorAll('style')]
+    const styled = [svg, ...svg.querySelectorAll('[style]')]
+        .filter((el) => el.hasAttribute('style'))
+        .map((el) => ({
+            el,
+            decls: el
+                .getAttribute('style')
+                .split(';')
+                .map((decl) => decl.split(':'))
+                .filter(([name, ...value]) => name.trim() && value.length)
+                .map(([name, ...value]) => [
+                    name.trim().toLowerCase(),
+                    value
+                        .join(':')
+                        .replace(/!important/i, '')
+                        .trim(),
+                ]),
+        }))
+    const problems = [
+        styleElements.length && `${styleElements.length} <style> element(s)`,
+        ...styled.map(
+            ({ el }) =>
+                `<${el.tagName.toLowerCase()} style="${el.getAttribute('style')}">`,
+        ),
+    ].filter(Boolean)
+
+    return {
+        pass: problems.length === 0,
+        detail: problems.length ? problems.join(' · ') : 'clean',
+        styleElements,
+        styled,
+    }
+}
+
 // Check: no stroke at all: every shape is a filled outline, so it scales
 // with the artwork, takes one fill color (the derived -mono files recolor
 // fills only) and has a bounding box that matches what is drawn. `found`
@@ -443,34 +482,55 @@ export function validateFillPlacement(svg, isMono = false) {
     )
 }
 
-// Check (warning): a single-color SVG draws everything in one <path>
-export function validateSinglePath(svg, isMono = false) {
-    const hexFill = /#[0-9a-f]{3}(?:[0-9a-f]{3})?\b/gi
-    const markup = svg.outerHTML
-    const usesPaint = /url\(#|stroke=|stroke:|<(clipPath|mask)\b/i.test(markup)
-    const fills = new Set(
-        [...svg.querySelectorAll('[fill], [style]')].flatMap((el) =>
-            (
-                `${el.getAttribute('fill') || ''} ${el.getAttribute('style') || ''}`.match(
-                    hexFill,
-                ) || []
-            ).map((c) => c.toLowerCase()),
-        ),
-    )
-    if (!isMono && (usesPaint || fills.size > 1)) {
-        return { pass: true, detail: 'multi-color', count: 0 }
-    }
+// Check (warning): each color is drawn in one <path>. A shape painted like
+// the shape right before it, in the same parent, could be merged into it; in
+// a single-color SVG (and every -mono file) that means one shape in all.
+// Only neighbours count: merging past a shape of another color would change
+// which one is drawn on top. `count` is the number of shapes, `merges` how
+// many of them could join the one before.
+export function validateOnePathPerColor(svg) {
+    const inherited = ['fill', 'fill-rule', 'fill-opacity']
+    const own = ['opacity', 'clip-path', 'mask', 'filter']
+    const resolve = (el, attr) => {
+        for (let node = el; node; node = node.parentElement) {
+            if (node.hasAttribute(attr)) {
+                return node.getAttribute(attr).trim().toLowerCase()
+            }
+            if (node === svg) break
+        }
 
-    const count = [
+        return ''
+    }
+    const paint = (el) =>
+        [
+            ...inherited.map((attr) => resolve(el, attr)),
+            ...own.map((attr) => el.getAttribute(attr) ?? ''),
+        ].join('|')
+    const shapes = [
         ...svg.querySelectorAll(
             'path, circle, rect, ellipse, polygon, polyline, line',
         ),
-    ].filter((el) => !el.closest('defs, clipPath, mask')).length
+    ].filter((el) => !el.closest('defs, clipPath, mask'))
+    const merges = shapes.filter(
+        (el, i) =>
+            i > 0 &&
+            el.parentElement === shapes[i - 1].parentElement &&
+            paint(el) === paint(shapes[i - 1]),
+    ).length
+    const colors = new Set(shapes.map(paint)).size
+    const count = shapes.length
 
     return {
-        pass: count <= 1,
-        detail: count <= 1 ? 'one shape' : `${count} shapes`,
+        pass: merges === 0,
+        detail:
+            merges === 0
+                ? `${count} shape${count === 1 ? '' : 's'}, ${colors} color${colors === 1 ? '' : 's'}`
+                : colors === 1
+                  ? `${count} shapes in one color`
+                  : `${merges} of ${count} shapes share a color with the one before`,
         count,
+        merges,
+        colors,
     }
 }
 
