@@ -24,14 +24,34 @@ export function ruleHexColors({ svgElement, issues }) {
     }
 }
 
-// RULE: No strokes. Not auto-fixable: turning a stroke into a filled outline
-//       changes the path data (e.g. Inkscape's Path → Stroke to Path).
+// RULE: No strokes. A stroke that paints is not auto-fixable: turning it
+//       into a filled outline changes the path data (e.g. Inkscape's
+//       Path → Stroke to Path). Stroke attributes and style properties that
+//       paint nothing (stroke="none", a lone stroke-width) are removed.
 export function ruleNoStrokes({ svgElement, issues }) {
-    const { pass, detail } = validateNoStrokes(svgElement)
-    if (!pass) {
+    const { found, leftovers } = validateNoStrokes(svgElement)
+    for (const { el, value } of found) {
         issues.push(
-            `Style: Strokes found: ${detail}. Convert them to filled paths (e.g. Inkscape's Path → Stroke to Path). Not fixable with --fix.`,
+            `Style: <${el.tagName.toLowerCase()}> is drawn with stroke="${value}". Convert it to a filled path (e.g. Inkscape's Path → Stroke to Path). Not fixable with --fix.`,
         )
+    }
+    for (const { el, attrs, props } of leftovers) {
+        issues.push(
+            `Style: Unused stroke properties on <${el.tagName.toLowerCase()}>: ${[...attrs, ...props].join(', ')}.`,
+        )
+        attrs.forEach((name) => el.removeAttribute(name))
+        if (!props.length) continue
+        const style = el
+            .getAttribute('style')
+            .split(';')
+            .filter(
+                (decl) =>
+                    decl.trim() &&
+                    !props.includes(decl.split(':')[0].trim().toLowerCase()),
+            )
+            .join(';')
+        if (style) el.setAttribute('style', style)
+        else el.removeAttribute('style')
     }
 }
 

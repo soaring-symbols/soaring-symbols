@@ -335,39 +335,48 @@ export function validateHexColors(svg) {
     }
 }
 
-// Check: nothing is drawn with a stroke: every shape is a filled outline, so
-// it scales with the artwork, takes one fill color (the derived -mono files
-// recolor fills only) and has a bounding box that matches what is drawn.
-// stroke="none" and leftover stroke-* properties paint nothing and pass.
+// Check: no stroke at all: every shape is a filled outline, so it scales
+// with the artwork, takes one fill color (the derived -mono files recolor
+// fills only) and has a bounding box that matches what is drawn. `found`
+// lists the strokes that paint; `leftovers` the stroke attributes and style
+// properties that paint nothing (stroke="none", a lone stroke-width), which
+// can simply be removed.
 export function validateNoStrokes(svg) {
+    const isStroke = (name) => /^stroke(-|$)/i.test(name)
     const paints = (value) =>
-        value !== null &&
-        value !== '' &&
-        !/^(none|transparent)$/i.test(value.trim())
+        value !== '' && !/^(none|transparent)$/i.test(value.trim())
     const found = []
+    const leftovers = []
     for (const el of [svg, ...svg.querySelectorAll('*')]) {
-        const style = (el.getAttribute('style') || '').match(
-            /(?:^|;)\s*stroke\s*:\s*([^;]+)/i,
-        )
-        const value = paints(el.getAttribute('stroke'))
+        const attrs = [...el.attributes].map((a) => a.name).filter(isStroke)
+        const props = (el.getAttribute('style') || '')
+            .split(';')
+            .map((decl) => decl.split(':'))
+            .filter(([name]) => isStroke(name.trim()))
+            .map(([name, ...value]) => [
+                name.trim().toLowerCase(),
+                value.join(':').trim(),
+            ])
+        if (!attrs.length && !props.length) continue
+        const paint = el.hasAttribute('stroke')
             ? el.getAttribute('stroke').trim()
-            : style && paints(style[1])
-              ? style[1].trim()
-              : null
-        if (value) found.push({ el, value })
+            : (props.find(([name]) => name === 'stroke')?.[1] ?? '')
+        if (paints(paint)) found.push({ el, value: paint })
+        else leftovers.push({ el, attrs, props: props.map(([name]) => name) })
     }
+    const tag = (el) => `<${el.tagName.toLowerCase()}>`
+    const problems = [
+        ...found.map((s) => `${tag(s.el)} stroke="${s.value}"`),
+        ...leftovers.map(
+            (s) => `${tag(s.el)} unused ${[...s.attrs, ...s.props].join(', ')}`,
+        ),
+    ]
 
     return {
-        pass: found.length === 0,
-        detail: found.length
-            ? found
-                  .map(
-                      (s) =>
-                          `<${s.el.tagName.toLowerCase()} stroke="${s.value}">`,
-                  )
-                  .join(', ')
-            : 'clean',
+        pass: problems.length === 0,
+        detail: problems.length ? problems.join(' · ') : 'clean',
         found,
+        leftovers,
     }
 }
 

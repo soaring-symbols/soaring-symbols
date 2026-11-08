@@ -426,7 +426,7 @@ describe('svg-validator', () => {
         ])
     })
 
-    it('reports strokes that paint, not leftover stroke properties', async () => {
+    it('reports every stroke, painting or not', async () => {
         const { runSvgValidations } = await import('../dist/svg-validator.js')
         const noStrokes = (body) =>
             runSvgValidations(
@@ -434,17 +434,18 @@ describe('svg-validator', () => {
                     `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title>${body}</svg>`,
                 ),
                 'icon',
-            ).find((check) => check.label === 'No strokes')
-        assert.equal(noStrokes('<path stroke="#000000" d="M1 1"/>').pass, false)
-        assert.equal(
-            noStrokes('<path style="stroke:#000000" d="M1 1"/>').pass,
-            false,
-        )
-        assert.equal(
-            noStrokes('<path stroke="none" style="stroke-width:.6" d="M1 1"/>')
-                .pass,
-            true,
-        )
+            ).find((check) => check.label === 'No strokes').pass
+        assert.equal(noStrokes('<path d="M1 1"/>'), true)
+        for (const body of [
+            '<path stroke="#000000" d="M1 1"/>',
+            '<path style="stroke:#000000" d="M1 1"/>',
+            '<path stroke="none" d="M1 1"/>',
+            '<path stroke="transparent" d="M1 1"/>',
+            '<path stroke-width=".6" d="M1 1"/>',
+            '<path style="display:inline;stroke-width:.6" d="M1 1"/>',
+        ]) {
+            assert.equal(noStrokes(body), false, body)
+        }
     })
 
     // Every lint rule has a browser check and every browser check (geometry

@@ -57,7 +57,7 @@ assets/
 
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
 
-- **No Strokes**: Draw every shape as a filled outline, not with `stroke`: strokes don't take the single fill color of the derived `-mono` files and throw off the geometry checks. Convert them in your editor (e.g. Inkscape's _Path → Stroke to Path_). `stroke="none"` and leftover `stroke-width` paint nothing and are fine. `npm run lint:svg` reports strokes; `--fix` can't convert them.
+- **No Strokes**: Draw every shape as a filled outline and leave no `stroke` behind: strokes don't take the single fill color of the derived `-mono` files and throw off the geometry checks. Convert them in your editor (e.g. Inkscape's _Path → Stroke to Path_). `npm run lint:svg` reports any `stroke` or `stroke-*` attribute or style property; `node scripts/lint-svg.js --fix` removes the ones that paint nothing (`stroke="none"`, a lone `stroke-width`), but can't convert a stroke that paints.
 
 - **Groups**: A `<g>` is fine for sharing attributes such as `fill`, `fill-rule` or `clip-path`, but don't nest groups; flatten them in your editor (e.g. Inkscape's _Object → Ungroup_). `npm run lint:svg` warns about nested groups.
 
