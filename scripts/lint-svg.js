@@ -4,6 +4,7 @@ import { JSDOM } from 'jsdom'
 import { toSlug } from '../utils/index.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { DOM_RULES, STRING_RULES } from './lint/rules.js'
+import { ruleGeometry } from './lint/rule-geometry.js'
 
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
@@ -80,6 +81,9 @@ const lintSvgFile = (filePath) => {
             hasStructuralFixes = true
         }
     }
+
+    // Phase 3: Geometry, measured on the fixed content (reports only)
+    ruleGeometry(fixedContent, ctx)
 
     return {
         issues: [...ctx.issues, ...ctx.warnings],
@@ -166,7 +170,7 @@ const main = () => {
 
     if (CHECK && DRY_RUN && filesWithErrors > 0) {
         console.log(
-            `\n❌ ${filesWithErrors} file(s) need fixing. Run \`node scripts/lint-svg.js --fix\` and commit the result.`,
+            `\n❌ ${filesWithErrors} file(s) need fixing. Run \`node scripts/lint-svg.js --fix\` and commit the result; geometry issues need a manual fix.`,
         )
         process.exitCode = 1
     }
