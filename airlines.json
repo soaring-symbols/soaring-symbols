@@ -1836,6 +1836,23 @@
         }
     },
     {
+        "name": "Shandong Airlines",
+        "iata": "SC",
+        "icao": "CDG",
+        "callsign": "SHANDONG",
+        "country": "CN",
+        "website": "https://www.sda.cn",
+        "parent": "air-china",
+        "hubs": [
+            "TNA",
+            "TAO"
+        ],
+        "founded": 1994,
+        "branding": {
+            "primary_color": "#00315c"
+        }
+    },
+    {
         "name": "Shenzhen Airlines",
         "iata": "ZH",
         "icao": "CSZ",
