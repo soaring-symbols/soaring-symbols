@@ -1853,6 +1853,24 @@
         }
     },
     {
+        "name": "Sichuan Airlines",
+        "iata": "3U",
+        "icao": "CSC",
+        "callsign": "SICHUAN",
+        "country": "CN",
+        "website": "https://www.sichuanair.com",
+        "hubs": [
+            "CTU",
+            "TFU",
+            "CKG",
+            "KMG"
+        ],
+        "founded": 1986,
+        "branding": {
+            "primary_color": "#d7000f"
+        }
+    },
+    {
         "name": "Singapore Airlines",
         "iata": "SQ",
         "icao": "SIA",
