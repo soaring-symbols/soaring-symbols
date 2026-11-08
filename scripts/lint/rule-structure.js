@@ -83,28 +83,42 @@ export function ruleNoNestedGroups({ svgElement, issues, warnings }) {
 
 // RULE (warning): each color should be drawn in one <path>, so a
 // single-color SVG has one shape and a multi-color one a shape per color
-// (where shapes of the same color are drawn one after another). In a
-// single-color SVG --fix joins neighbouring <path>s when the result renders
-// the same (fix-structure.js): merging can leave holes where shapes overlap.
-// Multi-color SVGs are left for the editor.
-export function ruleOnePathPerColor({ svgElement, issues, warnings }) {
+// (where shapes of the same color are drawn one after another). Merging is
+// experimental: only `--fix --merge-paths` joins the neighbouring <path>s of
+// a single-color SVG, when the result renders the same (fix-structure.js),
+// and the result still needs a look. Without the flag the warning says
+// whether it would. Multi-color SVGs are left for the editor.
+export function ruleOnePathPerColor({
+    svgElement,
+    mergePaths: merge,
+    issues,
+    warnings,
+}) {
     let result = validateOnePathPerColor(svgElement)
     if (result.pass) return
     let outcome = 'unchanged'
     if (result.colors === 1) {
-        outcome = applyIfAlike(svgElement, mergePaths)
-        if (outcome === 'fixed') {
-            issues.push(
-                `Structure: Merged ${result.count} shapes into ${validateOnePathPerColor(svgElement).count}.`,
-            )
+        outcome = applyIfAlike(svgElement, mergePaths, { apply: merge })
+        if (merge && outcome === 'fixed') {
+            const { count } = result
             result = validateOnePathPerColor(svgElement)
+            issues.push(
+                `Structure: Merged ${count} shapes into ${result.count} (experimental, check the result).`,
+            )
             if (result.pass) return
+            outcome = 'unchanged'
         }
     }
+    const hint = {
+        fixed: ' (`--fix --merge-paths` can merge them, experimental: check the result)',
+        'renders differently':
+            ' (merging changes the rendering, e.g. a hole where shapes overlap)',
+        unchanged: '',
+    }[outcome]
     const { count, merges, colors } = result
     warnings.push(
         colors === 1
-            ? `Structure: Single-color SVG should use one <path>, found ${count} shapes${outcome === 'renders differently' ? ' (--fix left them: merging changes the rendering, e.g. a hole where shapes overlap)' : ''}.`
+            ? `Structure: Single-color SVG should use one <path>, found ${count} shapes${hint}.`
             : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>.`,
     )
 }

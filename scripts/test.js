@@ -586,11 +586,11 @@ describe('svg-validator', () => {
         )
     })
 
-    const fixStructure = (body) => {
+    const fixStructure = (body, { mergePaths = true } = {}) => {
         const svg = parse(
             `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title>${body}</svg>`,
         )
-        const ctx = { svgElement: svg, issues: [], warnings: [] }
+        const ctx = { svgElement: svg, mergePaths, issues: [], warnings: [] }
         ruleNoNestedGroups(ctx)
         ruleOnePathPerColor(ctx)
 
@@ -609,6 +609,18 @@ describe('svg-validator', () => {
             paths[0].getAttribute('d'),
             'm2 2h8v8h-8zM12 12l8 0 0 8-8 0z',
         )
+    })
+
+    it('merges paths only with --merge-paths', () => {
+        const { issues, warnings, paths } = fixStructure(
+            '<path d="M2 2h8v8H2z"/><path d="M12 12h8v8h-8z"/>',
+            { mergePaths: false },
+        )
+        // Still a warning, so --check passes, with a hint at the flag
+        assert.deepEqual(issues, [])
+        assert.equal(warnings.length, 1)
+        assert.match(warnings[0], /--merge-paths/)
+        assert.equal(paths.length, 2)
     })
 
     it('leaves paths whose merge would leave a hole', () => {

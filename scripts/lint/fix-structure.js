@@ -17,14 +17,15 @@ const OWN = new Set(['opacity', 'clip-path', 'mask'])
 const NUMBER = /^[\s,]*([+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)/
 
 // Applies `fix` to a copy of `svg` and, when it renders the same, moves the
-// result into `svg`. Returns 'unchanged', 'fixed' or 'renders differently'.
-export function applyIfAlike(svg, fix) {
+// result into `svg` (unless `apply` is false, to only ask whether it would).
+// Returns 'unchanged', 'fixed' or 'renders differently'.
+export function applyIfAlike(svg, fix, { apply = true } = {}) {
     const copy = svg.cloneNode(true)
     fix(copy)
     if (copy.outerHTML === svg.outerHTML) return 'unchanged'
     if (!rendersAlike(svg.outerHTML, copy.outerHTML))
         return 'renders differently'
-    svg.replaceChildren(...copy.childNodes)
+    if (apply) svg.replaceChildren(...copy.childNodes)
 
     return 'fixed'
 }

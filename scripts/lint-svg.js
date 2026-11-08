@@ -11,6 +11,8 @@ const ASSETS_DIR = 'assets'
 const DRY_RUN = !process.argv.includes('--fix')
 // Exit with 1 when any file has an issue (warnings never fail), for CI
 const CHECK = process.argv.includes('--check')
+// Experimental: join the paths of single-color SVGs (see ruleOnePathPerColor)
+const MERGE_PATHS = process.argv.includes('--merge-paths')
 
 // ---------------------
 
@@ -59,6 +61,7 @@ const lintSvgFile = (filePath) => {
         isIcon,
         airlineName: getAirlineName(filePath),
         isCatalogName: catalogNames.has(basename(dirname(filePath))),
+        mergePaths: MERGE_PATHS,
         issues: [],
         // Reported only; never trigger a rewrite in --fix mode
         warnings: [],
