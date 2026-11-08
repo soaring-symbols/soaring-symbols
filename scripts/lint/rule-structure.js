@@ -1,4 +1,10 @@
-import { validateViewBox, validateNoTransforms } from './validators.js'
+import {
+    validateViewBox,
+    validateNoTransforms,
+    validateNoNestedGroups,
+    validateSinglePath,
+    isMonoFile,
+} from './validators.js'
 
 // RULE: <title> must exist, be the first child and match the airline name
 export function ruleTitle({
@@ -41,11 +47,13 @@ export function ruleViewBox({ svgElement, isIcon, issues }) {
     }
 }
 
-// RULE: role, viewBox, and xmlns must be present on the root <svg>
+// RULE: role, viewBox, and xmlns must be present on the root <svg>.
+//       A missing role="img" (SVGOMG drops it) is added back.
 export function ruleRequiredAttrs({ svgElement, issues }) {
     for (const attr of ['role', 'viewBox', 'xmlns']) {
         if (!svgElement.hasAttribute(attr)) {
             issues.push(`Structure: Missing required attribute \`${attr}\`.`)
+            if (attr === 'role') svgElement.setAttribute('role', 'img')
         }
     }
 }
@@ -58,32 +66,21 @@ export function ruleNoTransforms({ svgElement, issues }) {
     }
 }
 
-const SHAPES = 'path, circle, rect, ellipse, polygon, polyline, line'
-const HEX_FILL = /#[0-9a-f]{3}(?:[0-9a-f]{3})?\b/gi
+// RULE (warning): groups may share attributes such as fill or clip-path,
+// but shouldn't be nested. Not auto-fixable: flattening needs a visual check.
+export function ruleNoNestedGroups({ svgElement, warnings }) {
+    const { pass, detail } = validateNoNestedGroups(svgElement)
+    if (!pass)
+        warnings.push(`Structure: Groups should not be nested, ${detail}.`)
+}
 
 // RULE (warning): a single-color SVG should draw everything in one <path>.
 // Not auto-fixable: merging paths safely needs a visual check.
 export function ruleSinglePath({ svgElement, filePath, warnings }) {
-    const markup = svgElement.outerHTML
-    const isMono = filePath.endsWith('-mono.svg')
-    const usesPaint = /url\(#|stroke=|stroke:|<(clipPath|mask)\b/i.test(markup)
-    const fills = new Set(
-        [...svgElement.querySelectorAll('[fill], [style]')].flatMap((el) =>
-            (
-                `${el.getAttribute('fill') || ''} ${el.getAttribute('style') || ''}`.match(
-                    HEX_FILL,
-                ) || []
-            ).map((c) => c.toLowerCase()),
-        ),
-    )
-    if (!isMono && (usesPaint || fills.size > 1)) return
-
-    const shapes = [...svgElement.querySelectorAll(SHAPES)].filter(
-        (el) => !el.closest('defs, clipPath, mask'),
-    )
-    if (shapes.length > 1) {
+    const { pass, count } = validateSinglePath(svgElement, isMonoFile(filePath))
+    if (!pass) {
         warnings.push(
-            `Structure: Single-color SVG should use one <path>, found ${shapes.length} shapes.`,
+            `Structure: Single-color SVG should use one <path>, found ${count} shapes.`,
         )
     }
 }
