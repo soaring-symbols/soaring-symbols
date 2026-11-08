@@ -1839,9 +1839,15 @@
         "name": "Shenzhen Airlines",
         "iata": "ZH",
         "icao": "CSZ",
+        "callsign": "SHENZHEN AIR",
         "country": "CN",
         "website": "https://www.shenzhenair.com",
         "alliance": "Star Alliance",
+        "parent": "air-china",
+        "hubs": [
+            "SZX"
+        ],
+        "founded": 1992,
         "branding": {
             "primary_color": "#cc0100"
         }
