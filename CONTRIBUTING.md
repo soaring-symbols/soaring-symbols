@@ -98,7 +98,6 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 | `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
 | `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
 | `ceased`       |    No    | Year a defunct airline ceased operations; requires `defunct`.                                 |
-| `vectorized`   |    No    | `true` if you manually vectorized the SVG.                                                    |
 | `branding`     |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |
 
 #### Generated Asset Metadata
@@ -118,7 +117,7 @@ Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them
 1. Prepare your SVG files according to the naming and specification guidelines, optimize them with `npm run optimize`, and check them with `npm run lint:svg`.
 2. Add the new airline's base information to the `airlines.json` file, ensuring the list remains sorted alphabetically.
 3. Run `node scripts/lint-svg.js --fix` and `npm run generate`, which sorts `airlines.json`, checks it against the schema and removes `-mono.svg` files the build makes itself (and `AIRLINES.md`, which is no longer kept).
-4. Submit a pull request with the new SVG files and your `airlines.json` entry. Please provide a clear description of your changes.
+4. Submit a pull request with the new SVG files and your `airlines.json` entry. Fill in the pull request template: for each SVG, link the file or page it came from (the airline's website, brand guideline or press kit first; Wikimedia Commons or Wikipedia only when the airline publishes no SVG; never a third-party logo site) and say what you changed, such as recoloring, cropping the icon from the logo or vectorizing a PNG by hand.
 
 Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, a check that every SVG the pull request adds or changes has been optimized (`npm run optimize:check` runs the same check locally), `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
 

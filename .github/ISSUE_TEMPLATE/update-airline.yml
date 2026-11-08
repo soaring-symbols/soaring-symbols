@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This form is for requesting **UPDATES** to existing assets. Please be precise about the changes and provide the latest official source.
+        This form is for requesting **UPDATES** to existing assets. Please be precise about the changes and provide the latest source, official if the airline publishes one.
   
   - type: input
     id: airline_name
@@ -38,10 +38,12 @@ body:
     id: source_file_link
     attributes:
       label: Direct Link to NEW SVG File or Brand/Press Kit Page
-      description: Provide the direct URL to the **updated** SVG file or the official brand page showing the new design.
+      description: Provide the direct URL to the **updated** SVG file or the official brand page showing the new design. If the airline publishes no SVG, link the logo's file page on Wikimedia Commons or Wikipedia.
       placeholder: |
         https://www.airline.com/assets/new-logo.svg
         OR
         https://www.airline.com/about/2024-brand-guide
+        OR
+        https://en.wikipedia.org/wiki/File:Airline_logo.svg
     validations:
       required: false

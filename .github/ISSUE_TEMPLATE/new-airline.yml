@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve the Soaring Symbols library! This form is for **NEW** icons only. We require official, direct sources for all assets.
+        Thanks for helping improve the Soaring Symbols library! This form is for **NEW** icons only. Please link a direct source for every asset, official if the airline publishes one.
   
   - type: input
     id: airline_name
@@ -29,13 +29,16 @@ body:
     attributes:
       label: Direct Link to SVG File or Brand/Press Kit Page
       description: |
-        **Crucial:** Provide the direct URL to the SVG file, or a specific **brand guideline** or **press kit** page on the official website. **Do NOT use non-official sources.**
-        - If linking to a brand/press kit page, ensure it contains a downloadable SVG file.
-        - If the SVG is not available, provide a high-quality PNG or JPG link, but note that vectorization may be needed.
+        **Crucial:** Provide a direct link to the source, in this order of preference:
+        1. An SVG on the airline's own website, or its **brand guideline** or **press kit** page (make sure that page offers a downloadable SVG).
+        2. If the airline publishes no SVG: the logo's file page on Wikimedia Commons or Wikipedia (e.g. `https://en.wikipedia.org/wiki/File:...svg`). Not a third-party logo site.
+        3. If no SVG exists anywhere: a high-quality PNG or JPG, but note that vectorization may be needed.
       placeholder: |
         https://www.airline.com/assets/logo.svg
         OR
         https://www.airline.com/about/brand-guide-download-page
+        OR
+        https://en.wikipedia.org/wiki/File:Airline_logo.svg
     validations:
       required: true
       
