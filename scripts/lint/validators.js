@@ -7,6 +7,8 @@ const r = (n) => Math.round(n * 1000) / 1000
 // Top-level constants are inlined by the build like the functions; only
 // functions may be exported (see scripts/build.js)
 const HEX = /^#(?:[0-9A-F]{3}){1,2}$/i
+// A fill painted with a gradient or pattern
+const GRADIENT = /^url\(#[^)]+\)$/i
 // Paint keywords that are not colors to check or move
 const PAINT_KEYWORDS = /^(none|currentColor|transparent|inherit)$/i
 
@@ -421,10 +423,14 @@ export function validateNoStrokes(svg) {
 
 // Check: a single-color SVG sets its fill once, on the root <svg>
 // (currentColor for a -mono file), and none of its children has one; a
-// multi-color SVG has no fill on the root. Gradients and non-hex fills are
-// left alone (`skipped`): validateHexColors reports the latter.
+// multi-color SVG has no fill on the root. A gradient (url(#…)) counts as a
+// color, so an SVG with one is multi-color unless it is its only fill, which
+// is left where it is. Other non-hex fills are left alone (`skipped`):
+// validateHexColors reports them.
 // `rootFill` is the fill the root should have (null for none), `rootOk`
-// whether it has it, and `redundant` the children whose fill should go.
+// whether it has it, `redundant` the children whose fill should go and
+// `inheriting` the shapes of a multi-color SVG that are painted with the
+// root's fill, which has to move onto them.
 export function validateFillPlacement(svg, isMono = false) {
     // The root counts: a single-color SVG keeps its fill there
     const withFill = [svg, ...svg.querySelectorAll('[fill]')].filter((el) =>
@@ -438,30 +444,54 @@ export function validateFillPlacement(svg, isMono = false) {
         rootFill: null,
         rootOk: true,
         redundant: [],
+        inheriting: [],
         ...rest,
     })
 
-    if (fills.some((f) => !HEX.test(f) && !PAINT_KEYWORDS.test(f))) {
-        return result(true, 'skipped: gradient or non-hex fill', {
-            skipped: true,
-        })
+    if (
+        fills.some(
+            (f) => !HEX.test(f) && !PAINT_KEYWORDS.test(f) && !GRADIENT.test(f),
+        )
+    ) {
+        return result(true, 'skipped: non-hex fill', { skipped: true })
     }
 
     const colors = new Set(
-        fills.filter((f) => HEX.test(f)).map((f) => f.toLowerCase()),
+        fills
+            .filter((f) => HEX.test(f) || GRADIENT.test(f))
+            .map((f) => f.toLowerCase()),
     )
     const existing = svg.getAttribute('fill')
 
     if (colors.size > 1) {
         const rootOk = existing === null
+        const ownFill = (el) => {
+            for (let node = el; node && node !== svg; node = node.parentElement)
+                if (node.hasAttribute('fill')) return true
+
+            return false
+        }
+        const inheriting = rootOk
+            ? []
+            : [
+                  ...svg.querySelectorAll(
+                      'path, circle, rect, ellipse, polygon, polyline, line',
+                  ),
+              ].filter(
+                  (el) => !el.closest('defs, clipPath, mask') && !ownFill(el),
+              )
 
         return result(
             rootOk,
             rootOk
                 ? `${colors.size} colors, no root fill`
                 : 'root <svg> should have no fill in a multi-color SVG',
-            { rootOk },
+            { rootOk, inheriting },
         )
+    }
+
+    if (GRADIENT.test([...colors][0] ?? '')) {
+        return result(true, 'one gradient fill', {})
     }
 
     const rootFill = isMono ? 'currentColor' : [...colors][0] || 'currentColor'

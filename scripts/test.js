@@ -10,6 +10,7 @@ import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
+import { ruleFillPlacement } from './lint/rule-styling.js'
 import {
     extractInfobox,
     firstYear,
@@ -542,6 +543,43 @@ describe('svg-validator', () => {
             'Fits viewBox': 'pass',
             Centered: 'error',
         })
+    })
+
+    it('counts a gradient as a color in fill placement (#53)', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const fill = (root, body) =>
+            runSvgValidations(
+                parse(
+                    `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"${root}><title>X</title>${body}</svg>`,
+                ),
+                'icon',
+            ).find((check) => check.label === 'Fill placement').pass
+        const gradient = '<path fill="url(#a)" d="M1 1"/>'
+        assert.equal(
+            fill('', `${gradient}<path fill="#111111" d="M2 2"/>`),
+            true,
+        )
+        assert.equal(fill(' fill="currentColor"', gradient + gradient), true)
+        assert.equal(
+            fill(' fill="#111111"', `${gradient}<path d="M2 2"/>`),
+            false,
+        )
+    })
+
+    it('moves the root fill onto the shapes that use it', () => {
+        const svg = parse(
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title><path fill="url(#a)" d="M1 1"/><path d="M2 2"/></svg>',
+        )
+        const issues = []
+        ruleFillPlacement({ filePath: 'icon.svg', svgElement: svg, issues })
+        assert.equal(issues.length, 1)
+        assert.equal(svg.getAttribute('fill'), null)
+        assert.deepEqual(
+            [...svg.querySelectorAll('path')].map((p) =>
+                p.getAttribute('fill'),
+            ),
+            ['url(#a)', '#111111'],
+        )
     })
 
     it('expects currentColor in a -mono.svg', async () => {

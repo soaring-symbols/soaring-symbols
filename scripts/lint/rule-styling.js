@@ -77,20 +77,21 @@ export function ruleNoStrokes({ svgElement, issues }) {
 }
 
 // RULE: fill should be on the root <svg> and removed from child elements when single-color.
-//       Multi-color SVGs must not have a fill on the root <svg>.
-//       Gradients (url(#…), #53) and non-hex fills (reported by ruleHexColors)
-//       are left alone: moving those around would lose them.
+//       Multi-color SVGs (a gradient counts as a color, #53) must not have a
+//       fill on the root <svg>: the shapes painted with it get it on their
+//       own. Non-hex fills (reported by ruleHexColors) are left alone:
+//       moving those around would lose them.
 export function ruleFillPlacement({ filePath, svgElement, issues }) {
-    const { skipped, rootFill, rootOk, redundant } = validateFillPlacement(
-        svgElement,
-        isMonoFile(filePath),
-    )
+    const { skipped, rootFill, rootOk, redundant, inheriting } =
+        validateFillPlacement(svgElement, isMonoFile(filePath))
     if (skipped) return
 
     if (!rootOk && rootFill === null) {
         issues.push(
             'Fill: Root <svg> should not have a fill attribute in multi-color icons.',
         )
+        const fill = svgElement.getAttribute('fill')
+        for (const el of inheriting) el.setAttribute('fill', fill)
         svgElement.removeAttribute('fill')
     } else if (!rootOk) {
         issues.push(`Fill: Root <svg> should have fill="${rootFill}".`)
