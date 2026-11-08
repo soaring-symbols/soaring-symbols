@@ -13,6 +13,7 @@ import {
     validateAttrOrder,
     validateHexColors,
     validateFillPlacement,
+    validateNoStrokes,
     validateGeometry,
 } from './scripts/lint/validators.js'
 
@@ -66,6 +67,7 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         ),
         row('Style', 'Hex colors', validateHexColors(svg)),
         row('Style', 'Fill placement', validateFillPlacement(svg, isMono)),
+        row('Style', 'No strokes', validateNoStrokes(svg)),
         ...validateGeometry(type, bbox).map((check) => ({
             group: 'Geometry',
             level: 'error',

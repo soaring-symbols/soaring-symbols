@@ -21,6 +21,7 @@ import {
 import {
     ruleHexColors,
     ruleFillPlacement,
+    ruleNoStrokes,
     rulePathAttrOrder,
     ruleSvgAttrOrder,
 } from './rule-styling.js'
@@ -37,6 +38,7 @@ export const DOM_RULES = [
     ruleNoNestedGroups,
     ruleHexColors,
     ruleFillPlacement,
+    ruleNoStrokes,
     ruleNoDimensions,
     ruleNoEditorData,
     ruleNumberFormat,
@@ -58,6 +60,7 @@ export const BROWSER_CHECKS = new Map([
     [ruleNoNestedGroups, { labels: ['No nested groups'], warning: true }],
     [ruleHexColors, { labels: ['Hex colors'] }],
     [ruleFillPlacement, { labels: ['Fill placement'] }],
+    [ruleNoStrokes, { labels: ['No strokes'] }],
     [ruleNoDimensions, { labels: ['No width or height'] }],
     [ruleNoEditorData, { labels: ['No editor data'] }],
     [ruleNumberFormat, { labels: ['Number format'] }],

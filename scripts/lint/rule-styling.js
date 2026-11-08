@@ -2,6 +2,7 @@ import {
     isMonoFile,
     validateHexColors,
     validateFillPlacement,
+    validateNoStrokes,
     orderPathAttrs,
     orderSvgAttrs,
 } from './validators.js'
@@ -20,6 +21,17 @@ export function ruleHexColors({ svgElement, issues }) {
     for (const { el, attr, value, full } of short) {
         issues.push(`Style: Hex color "${value}" should be written "${full}".`)
         el.setAttribute(attr, full)
+    }
+}
+
+// RULE: No strokes. Not auto-fixable: turning a stroke into a filled outline
+//       changes the path data (e.g. Inkscape's Path → Stroke to Path).
+export function ruleNoStrokes({ svgElement, issues }) {
+    const { pass, detail } = validateNoStrokes(svgElement)
+    if (!pass) {
+        issues.push(
+            `Style: Strokes found: ${detail}. Convert them to filled paths (e.g. Inkscape's Path → Stroke to Path). Not fixable with --fix.`,
+        )
     }
 }
 

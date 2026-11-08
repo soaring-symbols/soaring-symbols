@@ -335,6 +335,42 @@ export function validateHexColors(svg) {
     }
 }
 
+// Check: nothing is drawn with a stroke: every shape is a filled outline, so
+// it scales with the artwork, takes one fill color (the derived -mono files
+// recolor fills only) and has a bounding box that matches what is drawn.
+// stroke="none" and leftover stroke-* properties paint nothing and pass.
+export function validateNoStrokes(svg) {
+    const paints = (value) =>
+        value !== null &&
+        value !== '' &&
+        !/^(none|transparent)$/i.test(value.trim())
+    const found = []
+    for (const el of [svg, ...svg.querySelectorAll('*')]) {
+        const style = (el.getAttribute('style') || '').match(
+            /(?:^|;)\s*stroke\s*:\s*([^;]+)/i,
+        )
+        const value = paints(el.getAttribute('stroke'))
+            ? el.getAttribute('stroke').trim()
+            : style && paints(style[1])
+              ? style[1].trim()
+              : null
+        if (value) found.push({ el, value })
+    }
+
+    return {
+        pass: found.length === 0,
+        detail: found.length
+            ? found
+                  .map(
+                      (s) =>
+                          `<${s.el.tagName.toLowerCase()} stroke="${s.value}">`,
+                  )
+                  .join(', ')
+            : 'clean',
+        found,
+    }
+}
+
 // Check: a single-color SVG sets its fill once, on the root <svg>
 // (currentColor for a -mono file), and none of its children has one; a
 // multi-color SVG has no fill on the root. Gradients and non-hex fills are

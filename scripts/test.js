@@ -426,6 +426,27 @@ describe('svg-validator', () => {
         ])
     })
 
+    it('reports strokes that paint, not leftover stroke properties', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const noStrokes = (body) =>
+            runSvgValidations(
+                parse(
+                    `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title>${body}</svg>`,
+                ),
+                'icon',
+            ).find((check) => check.label === 'No strokes')
+        assert.equal(noStrokes('<path stroke="#000000" d="M1 1"/>').pass, false)
+        assert.equal(
+            noStrokes('<path style="stroke:#000000" d="M1 1"/>').pass,
+            false,
+        )
+        assert.equal(
+            noStrokes('<path stroke="none" style="stroke-width:.6" d="M1 1"/>')
+                .pass,
+            true,
+        )
+    })
+
     // Every lint rule has a browser check and every browser check (geometry
     // aside, which the CLI doesn't check yet) a rule, at the same level
     it('has a browser check for every lint rule', async () => {
