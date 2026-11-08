@@ -6,5 +6,11 @@
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "json.schemas": [
+        {
+            "fileMatch": ["/airlines.json"],
+            "url": "./airlines.schema.json"
+        }
+    ]
 }

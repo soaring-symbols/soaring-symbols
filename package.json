@@ -1,6 +1,6 @@
 {
   "name": "soaring-symbols",
-  "version": "0.1.0-alpha.13",
+  "version": "0.2.3",
   "description": "A curated collection of airline branding assets — logos, icons, and tail designs in SVG format.",
   "license": "MIT",
   "author": {
@@ -14,18 +14,24 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./svg-validator": {
-      "types": "./dist/svg-validator.d.ts",
-      "import": "./dist/svg-validator.js",
-      "require": "./dist/svg-validator.cjs"
-    },
-    "./utils": {
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.js"
+      "import": {
+        "types": "./dist/svg-validator.d.ts",
+        "default": "./dist/svg-validator.js"
+      },
+      "require": {
+        "types": "./dist/svg-validator.d.cts",
+        "default": "./dist/svg-validator.cjs"
+      }
     },
     "./package.json": "./package.json",
     "./assets/*": "./dist/assets/*"
@@ -53,7 +59,6 @@
   ],
   "files": [
     "dist/",
-    "AIRLINES.md",
     "API.md",
     "LICENSE",
     "README.md"
@@ -70,8 +75,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,ts}\"",
+    "format:check": "prettier --check \"**/*.{js,ts}\"",
     "release": "node scripts/release.js",
-    "optimize": "svgo --config svgo.config.mjs"
+    "sync:data": "node scripts/sync-data.js",
+    "optimize": "svgo --config svgo.config.mjs",
+    "optimize:check": "node scripts/check-optimized.js"
   },
   "lint-staged": {
     "*.js": [
@@ -79,22 +87,21 @@
       "eslint --fix"
     ]
   },
-  "dependencies": {
-    "slugify": "^1.6.6"
-  },
   "devDependencies": {
-    "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^21.0.1",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@types/jsdom": "^27.0.0",
-    "eslint": "^10.3.0",
+    "ajv": "^8.20.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.6.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "jsdom": "^27.0.1",
-    "lint-staged": "^17.0.4",
+    "lint-staged": "^17.6.0",
     "lodash.sortby": "^4.7.0",
-    "prettier": "^3.8.3",
-    "svgo": "4.0.0"
+    "prettier": "^3.9.10",
+    "slugify": "^1.6.6",
+    "svgo": "4.1.0"
   }
 }

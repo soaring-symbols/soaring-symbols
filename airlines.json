@@ -3,2219 +3,1837 @@
         "name": "Aegean Airlines",
         "iata": "A3",
         "icao": "AEE",
+        "callsign": "AEGEAN",
         "country": "GR",
         "flag_carrier": true,
         "website": "https://en.aegeanair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ATH",
+            "SKG"
+        ],
+        "founded": 1995,
         "branding": {
-            "primary_color": "#002677",
-            "colors": {
-                "icon": [
-                    "#93a5cf",
-                    "#002677"
-                ],
-                "logo": [
-                    "#93a5cf",
-                    "#002677"
-                ]
-            }
-        },
-        "slug": "aegean-airlines"
+            "primary_color": "#002677"
+        }
     },
     {
         "name": "Aer Lingus",
         "iata": "EI",
         "icao": "EIN",
+        "callsign": "SHAMROCK",
         "country": "IE",
         "flag_carrier": true,
         "website": "https://www.aerlingus.com",
+        "hubs": [
+            "DUB"
+        ],
+        "founded": 1936,
         "branding": {
             "primary_color": "#006472",
-            "tagline": "You're Very Welcome",
-            "colors": {
-                "icon": [
-                    "#82c341",
-                    "#3cb14a"
-                ],
-                "logo": [
-                    "#82c341",
-                    "#3cb14a",
-                    "#006472"
-                ]
-            }
-        },
-        "slug": "aer-lingus"
+            "tagline": "You're Very Welcome"
+        }
     },
     {
         "name": "Aerolíneas Argentinas",
         "iata": "AR",
         "icao": "ARG",
+        "callsign": "ARGENTINA",
         "country": "AR",
         "flag_carrier": true,
         "website": "https://www.aerolineas.com.ar",
         "alliance": "SkyTeam",
+        "hubs": [
+            "AEP",
+            "EZE"
+        ],
+        "founded": 1949,
         "branding": {
             "primary_color": "#0080be",
-            "tagline": "Soaring in the sky",
-            "colors": {
-                "icon": [
-                    "#0080be"
-                ],
-                "logo": [
-                    "#0080be"
-                ]
-            }
-        },
-        "slug": "aerolineas-argentinas"
+            "tagline": "Soaring in the sky"
+        }
     },
     {
         "name": "Aeroméxico",
         "iata": "AM",
         "icao": "AMX",
+        "callsign": "AEROMEXICO",
         "country": "MX",
         "flag_carrier": true,
         "website": "https://www.aeromexico.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "MEX"
+        ],
+        "founded": 1934,
         "branding": {
             "primary_color": "#020c41",
-            "tagline": "Being close, getting far",
-            "colors": {
-                "icon": [
-                    "#020c41"
-                ],
-                "logo": [
-                    "#020c41"
-                ]
-            }
-        },
-        "slug": "aeromexico"
+            "tagline": "Being close, getting far"
+        }
     },
     {
         "name": "Air Albania",
         "iata": "ZB",
         "icao": "ABN",
+        "callsign": "AIR ALBANIA",
         "country": "AL",
         "flag_carrier": true,
         "website": "https://www.airalbania.com.al",
+        "hubs": [
+            "TIA"
+        ],
+        "founded": 2018,
+        "defunct": true,
+        "ceased": 2025,
         "branding": {
-            "primary_color": "#ce1f2e",
-            "colors": {
-                "icon": [
-                    "#231f20",
-                    "#ce1f2e"
-                ],
-                "logo": [
-                    "#231f20",
-                    "#ce1f2e"
-                ]
-            }
-        },
-        "slug": "air-albania"
+            "primary_color": "#ce1f2e"
+        }
     },
     {
         "name": "Air Algérie",
         "iata": "AH",
         "icao": "DAH",
+        "callsign": "AIR ALGERIE",
         "country": "DZ",
         "flag_carrier": true,
         "website": "https://airalgerie.dz",
+        "hubs": [
+            "ALG"
+        ],
+        "founded": 1947,
         "branding": {
-            "primary_color": "#e2231a",
-            "colors": {
-                "icon": [
-                    "#e2231a"
-                ],
-                "logo": [
-                    "#e2231a"
-                ]
-            }
-        },
-        "slug": "air-algerie"
+            "primary_color": "#e2231a"
+        }
     },
     {
         "name": "Air Arabia",
         "iata": "G9",
         "icao": "ABY",
+        "callsign": "ARABIA",
         "country": "AE",
         "website": "https://www.airarabia.com",
+        "founded": 2003,
         "branding": {
-            "primary_color": "#ed1b48",
-            "colors": {
-                "icon": [
-                    "#ff0041"
-                ],
-                "logo": [
-                    "#ed1b48"
-                ]
-            }
-        },
-        "slug": "air-arabia"
+            "primary_color": "#ed1b48"
+        }
     },
     {
         "name": "Air Astana",
         "iata": "KC",
         "icao": "KZR",
+        "callsign": "ASTANALINE",
         "country": "KZ",
         "flag_carrier": true,
         "website": "https://airastana.com",
+        "hubs": [
+            "ALA",
+            "TSE"
+        ],
+        "founded": 2001,
         "branding": {
-            "primary_color": "#a48c5d",
-            "colors": {
-                "icon": [
-                    "#a48c5d"
-                ],
-                "logo": [
-                    "#9b804d",
-                    "#253168"
-                ]
-            }
-        },
-        "slug": "air-astana"
+            "primary_color": "#a48c5d"
+        }
     },
     {
         "name": "Air Berlin",
         "iata": "AB",
         "icao": "BER",
+        "callsign": "AIR BERLIN",
         "country": "DE",
         "website": "https://www.airberlin.com",
         "alliance": "oneworld",
+        "hubs": [
+            "TXL"
+        ],
+        "founded": 1978,
         "defunct": true,
+        "ceased": 2017,
         "branding": {
-            "primary_color": "#cc2234",
-            "colors": {
-                "icon": [
-                    "#cc1f2f"
-                ],
-                "logo": [
-                    "#cc2234"
-                ]
-            }
-        },
-        "slug": "air-berlin"
+            "primary_color": "#cc2234"
+        }
     },
     {
         "name": "Air Canada",
         "iata": "AC",
         "icao": "ACA",
+        "callsign": "AIR CANADA",
         "country": "CA",
         "flag_carrier": true,
         "website": "https://www.aircanada.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "YUL",
+            "YYZ",
+            "YVR"
+        ],
+        "founded": 1937,
         "branding": {
-            "primary_color": "#f01428",
-            "colors": {
-                "icon": [
-                    "#f01428"
-                ],
-                "logo": [
-                    "#f01428",
-                    "#000000"
-                ]
-            }
-        },
-        "slug": "air-canada"
+            "primary_color": "#f01428"
+        }
     },
     {
         "name": "Air China",
         "iata": "CA",
         "icao": "CCA",
+        "callsign": "AIR CHINA",
         "country": "CN",
         "flag_carrier": true,
         "website": "https://www.airchina.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "PEK",
+            "PKX",
+            "CTU",
+            "TFU"
+        ],
+        "founded": 1988,
         "branding": {
-            "primary_color": "#ED1C24",
-            "colors": {
-                "icon": [
-                    "#ed1c24"
-                ],
-                "logo": [
-                    "#e60012",
-                    "#000"
-                ]
-            }
-        },
-        "slug": "air-china"
+            "primary_color": "#ed1c24"
+        }
     },
     {
         "name": "Air Dolomiti",
         "iata": "EN",
         "icao": "DLA",
+        "callsign": "DOLOMITI",
         "country": "IT",
         "website": "https://www.airdolomiti.eu",
+        "founded": 1989,
         "branding": {
-            "primary_color": "#009eb3",
-            "colors": {
-                "icon": [
-                    "#009eb3"
-                ],
-                "logo": [
-                    "#009eb3",
-                    "#062647"
-                ]
-            }
-        },
-        "slug": "air-dolomiti"
+            "primary_color": "#009eb3"
+        }
     },
     {
         "name": "Air Europa",
         "iata": "UX",
         "icao": "AEA",
+        "callsign": "EUROPA",
         "country": "ES",
         "website": "https://www.aireuropa.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "MAD"
+        ],
+        "founded": 1986,
         "branding": {
-            "primary_color": "#006fde",
-            "colors": {
-                "icon": [
-                    "#006fde"
-                ],
-                "logo": [
-                    "#006fde"
-                ]
-            }
-        },
-        "slug": "air-europa"
+            "primary_color": "#006fde"
+        }
     },
     {
         "name": "Air France",
         "iata": "AF",
         "icao": "AFR",
+        "callsign": "AIRFRANS",
         "country": "FR",
         "flag_carrier": true,
         "website": "https://airfrance.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CDG"
+        ],
+        "founded": 1933,
         "branding": {
-            "primary_color": "#051039",
-            "colors": {
-                "icon": [
-                    "#f00"
-                ],
-                "logo": [
-                    "#f00",
-                    "#051039"
-                ]
-            }
-        },
-        "slug": "air-france"
+            "primary_color": "#051039"
+        }
     },
     {
         "name": "Air India",
         "iata": "AI",
         "icao": "AIC",
+        "callsign": "AIRINDIA",
         "country": "IN",
         "flag_carrier": true,
         "website": "https://www.airindia.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "DEL"
+        ],
+        "founded": 1932,
         "branding": {
-            "primary_color": "#da0e29",
-            "colors": {
-                "icon": [
-                    "#fed9a0"
-                ],
-                "logo": [
-                    "#da0e29",
-                    "#fed9a0"
-                ]
-            }
-        },
-        "slug": "air-india"
+            "primary_color": "#da0e29"
+        }
     },
     {
         "name": "Air Mauritius",
         "iata": "MK",
         "icao": "MAU",
+        "callsign": "AIR MAURITIUS",
         "country": "MU",
         "flag_carrier": true,
         "website": "https://www.airmauritius.com",
         "alliance": "Vanilla Alliance",
+        "hubs": [
+            "MRU"
+        ],
+        "founded": 1967,
         "branding": {
-            "primary_color": "#be2239",
-            "colors": {
-                "icon": [
-                    "#be2239"
-                ],
-                "logo": [
-                    "#be2239"
-                ]
-            }
-        },
-        "slug": "air-mauritius"
+            "primary_color": "#be2239"
+        }
     },
     {
         "name": "Air New Zealand",
         "iata": "NZ",
         "icao": "ANZ",
+        "callsign": "NEW ZEALAND",
         "country": "NZ",
         "flag_carrier": true,
         "website": "https://www.airnewzealand.co.nz",
         "alliance": "Star Alliance",
+        "hubs": [
+            "AKL",
+            "CHC",
+            "WLG"
+        ],
+        "founded": 1940,
         "branding": {
-            "primary_color": "#000000",
-            "colors": {
-                "icon": [
-                    "#000000"
-                ],
-                "logo": [
-                    "#000000"
-                ]
-            }
-        },
-        "slug": "air-new-zealand"
+            "primary_color": "#000000"
+        }
     },
     {
         "name": "Air Serbia",
         "iata": "JU",
         "icao": "ASL",
+        "callsign": "AIR SERBIA",
         "country": "RS",
         "flag_carrier": true,
         "website": "https://www.airserbia.com",
+        "hubs": [
+            "BEG"
+        ],
+        "founded": 1927,
         "branding": {
-            "primary_color": "#0e203f",
-            "colors": {
-                "icon": [
-                    "#0e203f"
-                ],
-                "logo": [
-                    "#0e203f"
-                ]
-            }
-        },
-        "slug": "air-serbia"
+            "primary_color": "#0e203f"
+        }
     },
     {
         "name": "Air Transat",
         "iata": "TS",
         "icao": "TSC",
+        "callsign": "AIR TRANSAT",
         "country": "CA",
         "website": "https://airtransat.com",
+        "hubs": [
+            "YUL",
+            "YYZ"
+        ],
+        "founded": 1986,
         "branding": {
-            "primary_color": "#172b54",
-            "colors": {
-                "icon": [
-                    "#00b3f0"
-                ],
-                "logo": [
-                    "#172b54",
-                    "#00b3f0"
-                ]
-            }
-        },
-        "slug": "air-transat"
+            "primary_color": "#172b54"
+        }
     },
     {
         "name": "AirAsia",
         "iata": "AK",
         "icao": "AXM",
+        "callsign": "RED CAP",
         "country": "MY",
         "website": "https://www.airasia.com",
+        "founded": 1993,
         "branding": {
             "primary_color": "#ff0000",
-            "tagline": "Now Everyone Can Fly",
-            "colors": {
-                "logo": [
-                    "#ff0000"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "AirAsia Cambodia",
-                "iata": "KT",
-                "icao": "KTC",
-                "country": "KH"
-            },
-            {
-                "name": "Thai AirAsia",
-                "iata": "FD",
-                "icao": "AIQ",
-                "country": "TH"
-            },
-            {
-                "name": "Indonesia AirAsia",
-                "iata": "QZ",
-                "icao": "AWQ",
-                "country": "ID"
-            },
-            {
-                "name": "Philippines AirAsia",
-                "iata": "Z2",
-                "icao": "APG",
-                "country": "PH"
-            }
-        ],
-        "slug": "airasia"
+            "tagline": "Now Everyone Can Fly"
+        }
+    },
+    {
+        "name": "AirAsia Cambodia",
+        "iata": "KT",
+        "icao": "KTC",
+        "callsign": "RED NAGA",
+        "country": "KH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2022,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
     },
     {
         "name": "airBaltic",
         "iata": "BT",
         "icao": "BTI",
+        "callsign": "AIR BALTIC",
         "country": "LV",
         "flag_carrier": true,
         "website": "https://www.airbaltic.com",
+        "hubs": [
+            "RIX"
+        ],
+        "founded": 1995,
         "branding": {
-            "primary_color": "#152649",
-            "colors": {
-                "logo": [
-                    "#152649"
-                ]
-            }
-        },
-        "slug": "airbaltic"
+            "primary_color": "#152649"
+        }
     },
     {
         "name": "Akasa Air",
         "iata": "QP",
         "icao": "AKJ",
+        "callsign": "AKASA AIR",
         "country": "IN",
         "website": "https://www.akasaair.com",
+        "founded": 2021,
         "branding": {
             "primary_color": "#ff6300",
-            "tagline": "It’s Your Sky",
-            "colors": {
-                "icon": [
-                    "#ff6300"
-                ],
-                "logo": [
-                    "#5c0fd9",
-                    "#ff6300"
-                ]
-            }
-        },
-        "slug": "akasa-air"
+            "tagline": "It’s Your Sky"
+        }
     },
     {
         "name": "Alaska Airlines",
         "iata": "AS",
         "icao": "ASA",
+        "callsign": "ALASKA",
         "country": "US",
         "website": "https://www.alaskaair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "ANC",
+            "LAX",
+            "PDX",
+            "SAN",
+            "SFO",
+            "SEA"
+        ],
+        "founded": 1932,
         "branding": {
             "primary_color": "#01426a",
-            "tagline": "Fly smart. Land happy",
-            "colors": {
-                "logo": [
-                    "#01426a"
-                ]
-            }
-        },
-        "slug": "alaska-airlines"
+            "tagline": "Fly smart. Land happy"
+        }
     },
     {
         "name": "All Nippon Airways",
         "iata": "NH",
         "icao": "ANA",
+        "callsign": "ALL NIPPON",
         "country": "JP",
         "website": "https://www.ana.co.jp",
         "alliance": "Star Alliance",
+        "hubs": [
+            "HND",
+            "NRT"
+        ],
+        "founded": 1952,
         "branding": {
-            "primary_color": "#00146e",
-            "colors": {
-                "logo": [
-                    "#00146e",
-                    "#00aff0"
-                ]
-            }
-        },
-        "slug": "all-nippon-airways"
+            "primary_color": "#00146e"
+        }
     },
     {
         "name": "American Airlines",
         "iata": "AA",
         "icao": "AAL",
+        "callsign": "AMERICAN",
         "country": "US",
         "website": "https://www.aa.com",
         "alliance": "oneworld",
+        "hubs": [
+            "CLT",
+            "ORD",
+            "DFW",
+            "LAX",
+            "MIA",
+            "JFK",
+            "LGA",
+            "PHL",
+            "PHX",
+            "DCA"
+        ],
+        "founded": 1930,
         "branding": {
-            "primary_color": "#0078d2",
-            "colors": {
-                "icon": [
-                    "#19aade",
-                    "#e02527",
-                    "#71251d",
-                    "#e8ebee"
-                ],
-                "logo": [
-                    "#eb2023",
-                    "#6c221f",
-                    "#e7ebee",
-                    "#05aee9",
-                    "#334357"
-                ]
-            }
-        },
-        "slug": "american-airlines"
+            "primary_color": "#0078d2"
+        }
     },
     {
         "name": "Asiana Airlines",
         "iata": "OZ",
         "icao": "AAR",
+        "callsign": "ASIANA",
         "country": "KR",
         "website": "https://flyasiana.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "GMP",
+            "ICN"
+        ],
+        "founded": 1988,
         "branding": {
             "primary_color": "#4a4f54",
-            "guidelines": "https://flyasiana.com/C/VN/EN/contents/ci",
-            "colors": {
-                "icon": [
-                    "#e60013"
-                ],
-                "logo": [
-                    "#e60013",
-                    "#4a4f54"
-                ]
-            }
-        },
-        "slug": "asiana-airlines"
+            "guidelines": "https://flyasiana.com/C/VN/EN/contents/ci"
+        }
     },
     {
         "name": "Atlantic Airways",
         "iata": "RC",
         "icao": "FLI",
+        "callsign": "FAROELINE",
         "country": "FO",
         "flag_carrier": true,
         "website": "https://www.atlanticairways.com",
+        "hubs": [
+            "FAE"
+        ],
+        "founded": 1987,
         "branding": {
-            "primary_color": "#004c93",
-            "colors": {
-                "icon": [
-                    "#004c93",
-                    "#db001b"
-                ],
-                "logo": [
-                    "#db001b",
-                    "#004c93"
-                ]
-            }
-        },
-        "slug": "atlantic-airways"
+            "primary_color": "#004c93"
+        }
     },
     {
         "name": "Austrian Airlines",
         "iata": "OS",
         "icao": "AUA",
+        "callsign": "AUSTRIAN",
         "country": "AT",
         "flag_carrier": true,
         "website": "https://www.austrian.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "VIE"
+        ],
+        "founded": 1923,
         "branding": {
-            "primary_color": "#d81824",
-            "colors": {
-                "icon": [
-                    "#d81e05"
-                ],
-                "logo": [
-                    "#d81e05",
-                    "#fff",
-                    "#fefefe",
-                    "#fdfdfd",
-                    "#fbfbfc",
-                    "#fafafa",
-                    "#f9f9f9",
-                    "#f8f8f8",
-                    "#f6f7f7",
-                    "#f5f5f6",
-                    "#f4f4f5",
-                    "#f3f3f3",
-                    "#f2f2f2",
-                    "#f0f1f1",
-                    "#eff0f0",
-                    "#eeeeef",
-                    "#ededee",
-                    "#ececec",
-                    "#eaebeb",
-                    "#e9eaea",
-                    "#e8e8e9",
-                    "#e7e7e8",
-                    "#e5e6e7",
-                    "#e4e5e6",
-                    "#e3e4e4",
-                    "#e2e2e3",
-                    "#e1e1e2",
-                    "#dfe0e1",
-                    "#dedfe0",
-                    "#dddedf",
-                    "#dcdddd",
-                    "#dadbdc",
-                    "#d9dadb"
-                ]
-            }
-        },
-        "slug": "austrian-airlines"
+            "primary_color": "#d81824"
+        }
     },
     {
         "name": "avianca",
         "iata": "AV",
         "icao": "AVA",
+        "callsign": "AVIANCA",
         "country": "CO",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
         "alliance": "Star Alliance",
-        "branding": {
-            "primary_color": "#ff0000",
-            "colors": {
-                "icon": [
-                    "#ff0000"
-                ],
-                "logo": [
-                    "#ff0000"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "Avianca Costa Rica",
-                "iata": "LR",
-                "icao": "LRC",
-                "country": "CR",
-                "flag_carrier": true
-            },
-            {
-                "name": "Avianca Ecuador",
-                "iata": "2K",
-                "icao": "GLG",
-                "country": "EC"
-            },
-            {
-                "name": "Avianca El Salvador",
-                "iata": "TA",
-                "icao": "TAI",
-                "country": "SV",
-                "flag_carrier": true
-            }
+        "hubs": [
+            "BOG"
         ],
-        "slug": "avianca"
+        "founded": 1919,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
+    },
+    {
+        "name": "Avianca Costa Rica",
+        "iata": "LR",
+        "icao": "LRC",
+        "callsign": "LACSA",
+        "country": "CR",
+        "flag_carrier": true,
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "hubs": [
+            "SJO"
+        ],
+        "founded": 1945,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
+    },
+    {
+        "name": "Avianca Ecuador",
+        "iata": "2K",
+        "icao": "GLG",
+        "callsign": "GALAPAGOS",
+        "country": "EC",
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "hubs": [
+            "UIO"
+        ],
+        "founded": 1985,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
+    },
+    {
+        "name": "Avianca El Salvador",
+        "iata": "TA",
+        "icao": "TAI",
+        "country": "SV",
+        "flag_carrier": true,
+        "website": "https://www.avianca.com",
+        "parent": "avianca",
+        "marks": "avianca",
+        "founded": 1931,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
     },
     {
         "name": "Azerbaijan Airlines",
         "iata": "J2",
         "icao": "AHY",
+        "callsign": "AZAL",
         "country": "AZ",
         "flag_carrier": true,
         "website": "https://azal.az",
+        "hubs": [
+            "GYD"
+        ],
+        "founded": 1992,
         "branding": {
-            "primary_color": "#082e6a",
-            "colors": {
-                "icon": [
-                    "#082e6a",
-                    "#0098da",
-                    "#51c2e1",
-                    "#9fd7e0"
-                ],
-                "logo": [
-                    "#082e6a",
-                    "#0098da",
-                    "#51c2e1",
-                    "#9fd7e0"
-                ]
-            }
-        },
-        "slug": "azerbaijan-airlines"
+            "primary_color": "#082e6a"
+        }
     },
     {
         "name": "Azul",
         "iata": "AD",
         "icao": "AZU",
+        "callsign": "AZUL",
         "country": "BR",
         "website": "https://www.voeazul.com.br",
+        "hubs": [
+            "CNF",
+            "VCP",
+            "REC"
+        ],
+        "founded": 2008,
         "branding": {
-            "primary_color": "#005baa",
-            "colors": {
-                "icon": [
-                    "#5061aa",
-                    "#8b328a",
-                    "#5d80c0",
-                    "#e94e29",
-                    "#d5262a",
-                    "#f6a022",
-                    "#6a95cd",
-                    "#306fb6",
-                    "#73c8dd",
-                    "#92c143",
-                    "#169bd6",
-                    "#199aa6",
-                    "#a5bfdf",
-                    "#3fb7af",
-                    "#ae2258",
-                    "#79c199",
-                    "#e5df1f",
-                    "#33bacf",
-                    "#6ca9db",
-                    "#de5097",
-                    "#604596",
-                    "#fad803",
-                    "#0bb8e7",
-                    "#41ad4c",
-                    "#e7b720",
-                    "#b9cf37"
-                ],
-                "logo": [
-                    "#041e42",
-                    "#5162aa",
-                    "#8c338a",
-                    "#5d81c1",
-                    "#e75027",
-                    "#d5292a",
-                    "#f6a124",
-                    "#6a95cd",
-                    "#3370b6",
-                    "#74c7dc",
-                    "#92c144",
-                    "#199bd6",
-                    "#1f9aa7",
-                    "#a5bfdf",
-                    "#3fb6af",
-                    "#af2458",
-                    "#7ac19a",
-                    "#e5df22",
-                    "#34bbd0",
-                    "#6ba8db",
-                    "#df5297",
-                    "#604696",
-                    "#f9d805",
-                    "#16b9e7",
-                    "#42ad4b",
-                    "#e6b722",
-                    "#b9cf36"
-                ]
-            }
-        },
-        "slug": "azul"
+            "primary_color": "#005baa"
+        }
     },
     {
         "name": "Bamboo Airways",
         "iata": "QH",
         "icao": "BAV",
+        "callsign": "BAMBOO",
         "country": "VN",
         "website": "https://www.bambooairways.com",
+        "founded": 2017,
         "branding": {
             "primary_color": "#64ae53",
             "tagline": "More than just a flight",
-            "guidelines": "https://www.bambooairways.com/documents/d/global/bamboo-airway-guideline-new",
-            "colors": {
-                "icon": [
-                    "#00558e",
-                    "#4ebcec",
-                    "#64ae53"
-                ],
-                "logo": [
-                    "#00558e",
-                    "#4ebcec",
-                    "#64ae53"
-                ]
-            }
-        },
-        "slug": "bamboo-airways"
+            "guidelines": "https://www.bambooairways.com/documents/d/global/bamboo-airway-guideline-new"
+        }
     },
     {
         "name": "Bangkok Airways",
         "iata": "PG",
         "icao": "BKP",
+        "callsign": "BANGKOK AIR",
         "country": "TH",
         "website": "https://www.bangkokair.com",
+        "hubs": [
+            "BKK",
+            "USM"
+        ],
+        "founded": 1968,
         "branding": {
             "primary_color": "#000f8f",
-            "tagline": "Asia’s Boutique Airline",
-            "colors": {
-                "icon": [
-                    "#e1001e",
-                    "#74613c",
-                    "#000f8f"
-                ],
-                "logo": [
-                    "#000f8f",
-                    "#e1001e",
-                    "#74613c"
-                ]
-            }
-        },
-        "slug": "bangkok-airways"
+            "tagline": "Asia’s Boutique Airline"
+        }
+    },
+    {
+        "name": "Binter",
+        "iata": "NT",
+        "icao": "IBB",
+        "callsign": "BINTER",
+        "country": "ES",
+        "website": "https://www.bintercanarias.com",
+        "hubs": [
+            "LPA",
+            "TFN"
+        ],
+        "founded": 1988,
+        "branding": {
+            "primary_color": "#5bac29"
+        }
     },
     {
         "name": "British Airways",
         "iata": "BA",
         "icao": "BAW",
+        "callsign": "SPEEDBIRD",
         "country": "GB",
         "flag_carrier": true,
         "website": "https://www.britishairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "LGW",
+            "LHR"
+        ],
+        "founded": 1974,
         "branding": {
-            "primary_color": "#2e5c99",
-            "colors": {
-                "icon": [
-                    "#ce210f"
-                ],
-                "logo": [
-                    "#2e5c99",
-                    "#ce210f"
-                ]
-            }
-        },
-        "slug": "british-airways"
+            "primary_color": "#2e5c99"
+        }
     },
     {
         "name": "Brussels Airlines",
         "iata": "SN",
         "icao": "BEL",
+        "callsign": "BEE-LINE",
         "country": "BE",
         "flag_carrier": true,
         "website": "https://www.brusselsairlines.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "BRU"
+        ],
+        "founded": 2006,
         "branding": {
-            "primary_color": "#051446",
-            "colors": {
-                "icon": [
-                    "#e5002b"
-                ],
-                "logo": [
-                    "#e5002b",
-                    "#051446"
-                ]
-            }
-        },
-        "slug": "brussels-airlines"
+            "primary_color": "#051446"
+        }
     },
     {
         "name": "Cathay Pacific",
         "iata": "CX",
         "icao": "CPA",
+        "callsign": "CATHAY",
         "country": "HK",
         "flag_carrier": true,
         "website": "https://www.cathaypacific.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HKG"
+        ],
+        "founded": 1946,
         "branding": {
-            "primary_color": "#005d63",
-            "colors": {
-                "icon": [
-                    "#005d63"
-                ],
-                "logo": [
-                    "#005d63"
-                ]
-            }
-        },
-        "slug": "cathay-pacific"
+            "primary_color": "#005d63"
+        }
     },
     {
         "name": "Cebu Pacific",
         "iata": "5J",
         "icao": "CEB",
+        "callsign": "CEBU",
         "country": "PH",
         "website": "https://www.cebupacificair.com",
+        "founded": 1988,
         "branding": {
-            "primary_color": "#0096d6",
-            "colors": {
-                "icon": [
-                    "#06a7e0",
-                    "#039482"
-                ],
-                "logo": [
-                    "#06a7e0",
-                    "#039482",
-                    "#2574bb"
-                ]
-            }
-        },
-        "slug": "cebu-pacific"
+            "primary_color": "#0096d6"
+        }
     },
     {
         "name": "China Airlines",
         "iata": "CI",
         "icao": "CAL",
+        "callsign": "DYNASTY",
         "country": "TW",
+        "flag_carrier": true,
         "website": "https://www.china-airlines.com",
         "alliance": "SkyTeam",
-        "flag_carrier": true,
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 1959,
         "branding": {
-            "primary_color": "#2b3088",
-            "colors": {
-                "icon": [
-                    "#be1d2d",
-                    "#fff",
-                    "#ee566c"
-                ],
-                "logo": [
-                    "#a12132",
-                    "#fff",
-                    "#1d294c",
-                    "#ca5766"
-                ]
-            }
-        },
-        "slug": "china-airlines"
+            "primary_color": "#2b3088"
+        }
     },
     {
         "name": "China Eastern Airlines",
         "iata": "MU",
         "icao": "CES",
+        "callsign": "CHINA EASTERN",
         "country": "CN",
         "website": "https://www.ceair.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "KMG",
+            "SHA",
+            "PVG",
+            "XIY"
+        ],
+        "founded": 1988,
         "branding": {
-            "primary_color": "#1a4fa3",
-            "colors": {
-                "icon": [
-                    "#1b1d80",
-                    "#df0011"
-                ],
-                "logo": [
-                    "#1b1d80",
-                    "#df0011"
-                ]
-            }
-        },
-        "slug": "china-eastern-airlines"
+            "primary_color": "#1a4fa3"
+        }
     },
     {
         "name": "China Southern Airlines",
         "iata": "CZ",
         "icao": "CSN",
+        "callsign": "CHINA SOUTHERN",
         "country": "CN",
         "flag_carrier": false,
         "website": "https://www.csair.com",
+        "hubs": [
+            "PKX",
+            "CAN",
+            "SZX"
+        ],
+        "founded": 1988,
         "branding": {
-            "primary_color": "#0093D0",
-            "colors": {
-                "icon": [
-                    "#0093d0",
-                    "#fff",
-                    "#ed1b2f"
-                ],
-                "logo": [
-                    "#0093d0",
-                    "#fff",
-                    "#ed1b2f",
-                    "#002052"
-                ],
-                "tail": [
-                    "#0093d0",
-                    "#fff",
-                    "#ed1b2f"
-                ]
-            }
-        },
-        "slug": "china-southern-airlines"
+            "primary_color": "#0093d0"
+        }
     },
     {
         "name": "Condor",
         "iata": "DE",
         "icao": "CFG",
+        "callsign": "CONDOR",
         "country": "DE",
         "website": "https://www.condor.com",
+        "founded": 1955,
         "branding": {
-            "primary_color": "#000000",
-            "colors": {
-                "icon": [
-                    "#000"
-                ],
-                "logo": [
-                    "#000"
-                ]
-            }
-        },
-        "slug": "condor"
+            "primary_color": "#000000"
+        }
     },
     {
         "name": "Copa Airlines",
         "iata": "CM",
         "icao": "CMP",
+        "callsign": "COPA",
         "country": "PA",
         "flag_carrier": true,
         "website": "https://www.copaair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "PTY"
+        ],
+        "founded": 1944,
         "branding": {
-            "primary_color": "#0032a0",
-            "colors": {
-                "icon": [
-                    "#0032a0"
-                ],
-                "logo": [
-                    "#0032a0"
-                ]
-            }
-        },
-        "slug": "copa-airlines"
+            "primary_color": "#0032a0"
+        }
     },
     {
         "name": "Delta Air Lines",
         "iata": "DL",
         "icao": "DAL",
+        "callsign": "DELTA",
         "country": "US",
         "flag_carrier": false,
         "website": "https://www.delta.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "ATL",
+            "BOS",
+            "DTW",
+            "LAX",
+            "MSP",
+            "JFK",
+            "LGA",
+            "SLC",
+            "SEA"
+        ],
+        "founded": 1925,
         "branding": {
-            "primary_color": "#E31837",
-            "colors": {
-                "icon": [
-                    "#98002e",
-                    "#e31837"
-                ],
-                "logo": [
-                    "#98002e",
-                    "#e31837",
-                    "#003d79"
-                ]
-            }
-        },
-        "slug": "delta-air-lines"
+            "primary_color": "#e31837"
+        }
     },
     {
         "name": "easyJet",
         "iata": "U2",
         "icao": "EZY",
+        "callsign": "EASY",
         "country": "GB",
         "website": "https://www.easyjet.com",
+        "founded": 1995,
         "branding": {
-            "primary_color": "#ff6600",
-            "colors": {
-                "icon": [
-                    "#ff6601",
-                    "#fff"
-                ],
-                "logo": [
-                    "#f60"
-                ]
-            }
-        },
-        "slug": "easyjet"
+            "primary_color": "#ff6600"
+        }
     },
     {
         "name": "EgyptAir",
         "iata": "MS",
         "icao": "MSR",
+        "callsign": "EGYPTAIR",
         "country": "EG",
         "flag_carrier": true,
         "website": "https://www.egyptair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "CAI"
+        ],
+        "founded": 1932,
         "branding": {
-            "primary_color": "#002855",
-            "colors": {
-                "icon": [
-                    "#00265d"
-                ],
-                "logo": [
-                    "#00265d"
-                ]
-            }
-        },
-        "slug": "egyptair"
+            "primary_color": "#002855"
+        }
     },
     {
         "name": "Emirates",
         "iata": "EK",
         "icao": "UAE",
+        "callsign": "EMIRATES",
         "country": "AE",
         "flag_carrier": true,
         "website": "https://www.emirates.com",
+        "hubs": [
+            "DXB"
+        ],
+        "founded": 1985,
         "branding": {
             "primary_color": "#d71921",
-            "tagline": "Fly Better",
-            "colors": {
-                "icon": [
-                    "#d71921"
-                ],
-                "logo": [
-                    "#d71921"
-                ]
-            }
-        },
-        "slug": "emirates"
+            "tagline": "Fly Better"
+        }
     },
     {
         "name": "Ethiopian Airlines",
         "iata": "ET",
         "icao": "ETH",
+        "callsign": "ETHIOPIAN",
         "country": "ET",
         "flag_carrier": true,
-        "alliance": "Star Alliance",
         "website": "https://www.ethiopianairlines.com",
+        "alliance": "Star Alliance",
+        "hubs": [
+            "ADD"
+        ],
+        "founded": 1945,
         "branding": {
-            "primary_color": "#b71d20",
-            "colors": {
-                "icon": [
-                    "#b71d20",
-                    "#ffbe0b",
-                    "#557c39"
-                ],
-                "logo": [
-                    "#b71d20",
-                    "#ffbe0b",
-                    "#557c39"
-                ]
-            }
-        },
-        "slug": "ethiopian-airlines"
+            "primary_color": "#b71d20"
+        }
     },
     {
         "name": "Etihad Airways",
         "iata": "EY",
         "icao": "ETD",
+        "callsign": "ETIHAD",
         "country": "AE",
         "flag_carrier": true,
         "website": "https://www.etihad.com",
+        "hubs": [
+            "AUH"
+        ],
+        "founded": 2003,
         "branding": {
-            "primary_color": "#bd8b13",
-            "colors": {
-                "logo": [
-                    "#bd8b13"
-                ]
-            }
-        },
-        "slug": "etihad-airways"
+            "primary_color": "#bd8b13"
+        }
     },
     {
         "name": "Eurowings",
         "iata": "EW",
         "icao": "EWG",
+        "callsign": "EUROWINGS",
         "country": "DE",
         "website": "https://www.eurowings.com",
+        "founded": 1993,
         "branding": {
-            "primary_color": "#7c2045",
-            "colors": {
-                "icon": [
-                    "#7cc5d3",
-                    "#7c2045"
-                ],
-                "logo": [
-                    "#7c2045",
-                    "#7cc5d3",
-                    "#2090b6",
-                    "#c1beb9",
-                    "#a22455"
-                ]
-            }
-        },
-        "slug": "eurowings"
+            "primary_color": "#7c2045"
+        }
     },
     {
         "name": "EVA Air",
         "iata": "BR",
         "icao": "EVA",
+        "callsign": "EVA",
         "country": "TW",
         "flag_carrier": false,
         "website": "https://www.evaair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 1989,
         "branding": {
-            "primary_color": "#00a64f",
-            "colors": {
-                "icon": [
-                    "#d06537",
-                    "#409e54"
-                ],
-                "logo": [
-                    "#00a64f",
-                    "#fff",
-                    "#f0451c"
-                ],
-                "tail": [
-                    "#fff",
-                    "#00a64f",
-                    "#f0451c"
-                ]
-            }
-        },
-        "slug": "eva-air"
+            "primary_color": "#00a64f"
+        }
     },
     {
         "name": "Ewa Air",
         "iata": "ZD",
         "icao": "EWR",
+        "callsign": "MAYOTTE AIR",
         "country": "FR",
         "website": "https://ewa-air.com",
+        "hubs": [
+            "DZA"
+        ],
         "branding": {
-            "primary_color": "#e1251b",
-            "colors": {
-                "logo": [
-                    "#e1251b"
-                ]
-            }
-        },
-        "slug": "ewa-air"
+            "primary_color": "#e1251b"
+        }
     },
     {
         "name": "Fiji Airways",
         "iata": "FJ",
         "icao": "FJI",
+        "callsign": "FIJI",
         "country": "FJ",
         "flag_carrier": true,
         "website": "https://www.fijiairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "NAN"
+        ],
+        "founded": 1947,
         "branding": {
-            "primary_color": "#473729",
-            "colors": {
-                "icon": [
-                    "#473729"
-                ],
-                "logo": [
-                    "#2c1e16"
-                ]
-            }
-        },
-        "slug": "fiji-airways"
+            "primary_color": "#473729"
+        }
     },
     {
         "name": "Finnair",
         "iata": "AY",
         "icao": "FIN",
+        "callsign": "FINNAIR",
         "country": "FI",
         "flag_carrier": true,
-        "website": "http://www.finnair.com",
+        "website": "https://www.finnair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HEL"
+        ],
+        "founded": 1923,
         "branding": {
-            "primary_color": "#0c0243",
-            "colors": {
-                "icon": [
-                    "#0c0243"
-                ],
-                "logo": [
-                    "#0c0243"
-                ]
-            }
-        },
-        "slug": "finnair"
+            "primary_color": "#0c0243"
+        }
     },
     {
         "name": "Firefly",
         "iata": "FY",
         "icao": "FFM",
+        "callsign": "FIREFLY",
         "country": "MY",
         "website": "https://www.fireflyz.com.my",
+        "hubs": [
+            "SZB",
+            "PEN"
+        ],
+        "founded": 2007,
         "branding": {
-            "primary_color": "#ef5713",
-            "colors": {
-                "icon": [
-                    "#ef5713",
-                    "#fc9200",
-                    "#ffc200"
-                ],
-                "logo": [
-                    "#ef5713",
-                    "#fc9200",
-                    "#ffc200"
-                ]
-            }
-        },
-        "slug": "firefly"
+            "primary_color": "#ef5713"
+        }
     },
     {
         "name": "Flybe",
         "iata": "BE",
         "icao": "BEE",
+        "callsign": "JERSEY",
         "country": "GB",
         "website": "https://www.flybe.com",
+        "hubs": [
+            "BHX",
+            "MAN",
+            "EXT"
+        ],
         "defunct": true,
+        "ceased": 2020,
         "branding": {
-            "primary_color": "#5a3f99",
-            "colors": {
-                "logo": [
-                    "#5a3f99"
-                ]
-            }
-        },
-        "slug": "flybe"
+            "primary_color": "#5a3f99"
+        }
     },
     {
         "name": "flydubai",
         "iata": "FZ",
         "icao": "FDB",
+        "callsign": "SKYDUBAI",
         "country": "AE",
         "website": "https://www.flydubai.com",
+        "hubs": [
+            "DXB"
+        ],
+        "founded": 2008,
         "branding": {
-            "primary_color": "#ff8200",
-            "colors": {
-                "logo": [
-                    "#ff8200",
-                    "#006496"
-                ]
-            }
-        },
-        "slug": "flydubai"
+            "primary_color": "#ff8200"
+        }
     },
     {
         "name": "flynas",
         "iata": "XY",
         "icao": "KNE",
+        "callsign": "FLYNAS",
         "country": "SA",
         "website": "https://www.flynas.com",
+        "founded": 2007,
         "branding": {
-            "primary_color": "#00b7ac",
-            "colors": {
-                "icon": [
-                    "#00b7ac"
-                ],
-                "logo": [
-                    "#00b7ac"
-                ]
-            }
-        },
-        "slug": "flynas"
+            "primary_color": "#00b7ac"
+        }
     },
     {
         "name": "Frontier Airlines",
         "iata": "F9",
         "icao": "FFT",
+        "callsign": "FRONTIER FLIGHT",
         "country": "US",
         "website": "https://www.flyfrontier.com",
+        "founded": 1994,
         "branding": {
-            "primary_color": "#008c44",
-            "colors": {
-                "icon": [
-                    "#026845"
-                ],
-                "logo": [
-                    "#026845"
-                ]
-            }
-        },
-        "slug": "frontier-airlines"
+            "primary_color": "#008c44"
+        }
     },
     {
         "name": "Garuda Indonesia",
         "iata": "GA",
         "icao": "GIA",
+        "callsign": "INDONESIA",
         "country": "ID",
         "flag_carrier": true,
         "website": "https://www.garuda-indonesia.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CGK"
+        ],
+        "founded": 1949,
         "branding": {
-            "primary_color": "#002560",
-            "colors": {
-                "icon": [
-                    "#008b99",
-                    "#002560"
-                ],
-                "logo": [
-                    "#008b99",
-                    "#002560",
-                    "#4c4847"
-                ]
-            }
-        },
-        "slug": "garuda-indonesia"
+            "primary_color": "#002560"
+        }
     },
     {
         "name": "GOL",
         "iata": "G3",
         "icao": "GLO",
+        "callsign": "GOL",
         "country": "BR",
         "website": "https://www.voegol.com.br",
+        "hubs": [
+            "BSB",
+            "GIG",
+            "CGH",
+            "GRU"
+        ],
+        "founded": 2000,
         "branding": {
-            "primary_color": "#f58220",
-            "colors": {
-                "icon": [
-                    "#c1bfbc",
-                    "#ee7203"
-                ],
-                "logo": [
-                    "#37322d",
-                    "#ff7020"
-                ]
-            }
-        },
-        "slug": "gol"
+            "primary_color": "#f58220"
+        }
     },
     {
         "name": "Hainan Airlines",
         "iata": "HU",
         "icao": "CHH",
+        "callsign": "HAINAN",
         "country": "CN",
         "website": "https://www.hainanairlines.com",
+        "hubs": [
+            "PEK",
+            "CKG",
+            "HAK",
+            "SZX",
+            "XIY"
+        ],
+        "founded": 1989,
         "branding": {
-            "primary_color": "#d71920",
-            "colors": {
-                "icon": [
-                    "#e60012"
-                ],
-                "logo": [
-                    "#e60012"
-                ]
-            }
-        },
-        "slug": "hainan-airlines"
+            "primary_color": "#d71920"
+        }
     },
     {
         "name": "Hawaiian Airlines",
         "iata": "HA",
         "icao": "HAL",
+        "callsign": "HAWAIIAN",
         "country": "US",
         "website": "https://www.hawaiianairlines.com",
         "alliance": "oneworld",
+        "hubs": [
+            "HNL",
+            "OGG"
+        ],
+        "founded": 1929,
         "branding": {
-            "primary_color": "#4e2582",
-            "colors": {
-                "icon": [
-                    "#413691",
-                    "#ef3138"
-                ],
-                "logo": [
-                    "#413691",
-                    "#ef3138"
-                ]
-            }
-        },
-        "slug": "hawaiian-airlines"
+            "primary_color": "#4e2582"
+        }
     },
     {
         "name": "HK Express",
         "iata": "UO",
         "icao": "HKE",
+        "callsign": "HONGKONG SHUTTLE",
         "country": "HK",
         "website": "https://www.hkexpress.com",
+        "hubs": [
+            "HKG"
+        ],
+        "founded": 2004,
         "branding": {
-            "primary_color": "#702b91",
-            "colors": {
-                "icon": [
-                    "#702b91",
-                    "#21b9da"
-                ],
-                "logo": [
-                    "#702b91",
-                    "#21b9da"
-                ]
-            }
-        },
-        "slug": "hk-express"
+            "primary_color": "#702b91"
+        }
     },
     {
         "name": "Iberia",
         "iata": "IB",
         "icao": "IBE",
+        "callsign": "IBERIA",
         "country": "ES",
         "flag_carrier": true,
         "website": "https://www.iberia.com",
         "alliance": "oneworld",
+        "hubs": [
+            "MAD"
+        ],
+        "founded": 1927,
         "branding": {
-            "primary_color": "",
-            "colors": {}
-        },
-        "slug": "iberia"
+            "primary_color": "#dc1c2e"
+        }
     },
     {
         "name": "Icelandair",
         "iata": "FI",
         "icao": "ICE",
+        "callsign": "ICEAIR",
         "country": "IS",
         "flag_carrier": true,
         "website": "https://www.icelandair.com",
+        "hubs": [
+            "KEF",
+            "RKV"
+        ],
+        "founded": 1937,
         "branding": {
-            "primary_color": "#0c0243",
-            "colors": {
-                "icon": [
-                    "#0c0243"
-                ],
-                "logo": [
-                    "#0c0243"
-                ],
-                "tail": [
-                    "#0c0243"
-                ]
-            }
-        },
-        "slug": "icelandair"
+            "primary_color": "#0c0243"
+        }
     },
     {
         "name": "IndiGo",
         "iata": "6E",
         "icao": "IGO",
+        "callsign": "IFLY",
         "country": "IN",
         "website": "https://www.goindigo.in",
+        "hubs": [
+            "DEL"
+        ],
+        "founded": 2005,
         "branding": {
-            "primary_color": "#001b94",
-            "colors": {
-                "icon": [
-                    "#001b94"
-                ],
-                "logo": [
-                    "#001b94"
-                ]
-            }
-        },
-        "slug": "indigo"
+            "primary_color": "#001b94"
+        }
+    },
+    {
+        "name": "Indonesia AirAsia",
+        "iata": "QZ",
+        "icao": "AWQ",
+        "callsign": "WAGON AIR",
+        "country": "ID",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 1999,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
     },
     {
         "name": "ITA Airways",
         "iata": "AZ",
         "icao": "ITY",
+        "callsign": "ITARROW",
         "country": "IT",
         "flag_carrier": true,
         "website": "https://www.ita-airways.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "FCO"
+        ],
+        "founded": 2020,
         "branding": {
-            "primary_color": "#006643",
-            "colors": {
-                "logo": [
-                    "#006e44",
-                    "#c2251b"
-                ]
-            }
-        },
-        "slug": "ita-airways"
+            "primary_color": "#006643"
+        }
     },
     {
         "name": "Japan Airlines",
         "iata": "JL",
         "icao": "JAL",
+        "callsign": "JAPAN AIR",
         "country": "JP",
         "flag_carrier": true,
         "website": "https://www.jal.co.jp",
         "alliance": "oneworld",
+        "hubs": [
+            "HND",
+            "NRT"
+        ],
+        "founded": 1951,
         "branding": {
-            "primary_color": "#e50012",
-            "colors": {
-                "icon": [
-                    "#e50012"
-                ],
-                "logo": [
-                    "#e50012",
-                    "#000000"
-                ]
-            }
-        },
-        "slug": "japan-airlines"
+            "primary_color": "#e50012"
+        }
     },
     {
         "name": "Jet2.com",
         "iata": "LS",
         "icao": "EXS",
+        "callsign": "CHANNEX",
         "country": "GB",
         "website": "https://www.jet2.com",
         "branding": {
-            "primary_color": "#d71920",
-            "colors": {
-                "icon": [
-                    "#e2231a"
-                ],
-                "logo": [
-                    "#e2231a"
-                ]
-            }
-        },
-        "slug": "jet2com"
+            "primary_color": "#d71920"
+        }
     },
     {
         "name": "JetBlue Airways",
         "iata": "B6",
         "icao": "JBU",
+        "callsign": "JETBLUE",
         "country": "US",
         "flag_carrier": false,
         "website": "https://www.jetblue.com",
+        "founded": 1998,
         "branding": {
-            "primary_color": "#003876",
-            "colors": {
-                "logo": [
-                    "#003876"
-                ]
-            }
-        },
-        "slug": "jetblue-airways"
+            "primary_color": "#003876"
+        }
     },
     {
         "name": "Jetstar",
         "iata": "JQ",
         "icao": "JST",
+        "callsign": "JETSTAR",
         "country": "AU",
         "website": "https://www.jetstar.com",
+        "founded": 2003,
         "branding": {
-            "primary_color": "#ff5111",
-            "colors": {
-                "icon": [
-                    "#ff5111"
-                ],
-                "logo": [
-                    "#000000",
-                    "#ff5111"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "Jetstar Japan",
-                "iata": "GK",
-                "icao": "JJP",
-                "country": "JP"
-            }
+            "primary_color": "#ff5111"
+        }
+    },
+    {
+        "name": "Jetstar Japan",
+        "iata": "GK",
+        "icao": "JJP",
+        "callsign": "ORANGE LINER",
+        "country": "JP",
+        "website": "https://www.jetstar.com/jp/en/home",
+        "parent": "jetstar",
+        "marks": "jetstar",
+        "founded": 2011,
+        "branding": {
+            "primary_color": "#ff5111"
+        }
+    },
+    {
+        "name": "Juneyao Air",
+        "iata": "HO",
+        "icao": "DKH",
+        "callsign": "AIR JUNEYAO",
+        "country": "CN",
+        "website": "https://www.juneyaoair.com",
+        "hubs": [
+            "SHA",
+            "PVG"
         ],
-        "slug": "jetstar"
+        "founded": 2005,
+        "branding": {
+            "primary_color": "#7c0044"
+        }
     },
     {
         "name": "Kenya Airways",
         "iata": "KQ",
         "icao": "KQA",
+        "callsign": "KENYA",
         "country": "KE",
         "flag_carrier": true,
         "website": "https://www.kenya-airways.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "NBO"
+        ],
+        "founded": 1977,
         "branding": {
-            "primary_color": "#ed1c24",
-            "colors": {
-                "icon": [
-                    "#ed1c24"
-                ],
-                "logo": [
-                    "#ed1c24"
-                ]
-            }
-        },
-        "slug": "kenya-airways"
+            "primary_color": "#ed1c24"
+        }
     },
     {
         "name": "KLM",
         "iata": "KL",
         "icao": "KLM",
+        "callsign": "KLM",
         "country": "NL",
         "flag_carrier": true,
         "website": "https://www.klm.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "AMS"
+        ],
+        "founded": 1919,
         "branding": {
-            "primary_color": "#009fd9",
-            "colors": {
-                "icon": [
-                    "#009fd9"
-                ],
-                "logo": [
-                    "#009fd9"
-                ]
-            }
-        },
-        "slug": "klm"
+            "primary_color": "#009fd9"
+        }
     },
     {
         "name": "Korean Air",
         "iata": "KE",
         "icao": "KAL",
+        "callsign": "KOREAN AIR",
         "country": "KR",
         "flag_carrier": true,
         "website": "https://www.koreanair.com",
+        "hubs": [
+            "GMP",
+            "ICN"
+        ],
+        "founded": 1962,
         "branding": {
-            "primary_color": "#051766",
-            "colors": {
-                "icon": [
-                    "#051766"
-                ],
-                "logo": [
-                    "#051766"
-                ]
-            }
-        },
-        "slug": "korean-air"
+            "primary_color": "#051766"
+        }
     },
     {
         "name": "Kuwait Airways",
         "iata": "KU",
         "icao": "KAC",
+        "callsign": "KUWAITI",
         "country": "KW",
         "flag_carrier": true,
         "website": "https://www.kuwaitairways.com",
+        "hubs": [
+            "KWI"
+        ],
+        "founded": 1953,
         "branding": {
-            "primary_color": "#1c285b",
-            "colors": {
-                "icon": [
-                    "#1c285b"
-                ],
-                "logo": [
-                    "#1c285b"
-                ]
-            }
-        },
-        "slug": "kuwait-airways"
+            "primary_color": "#1c285b"
+        }
     },
     {
         "name": "LATAM Airlines",
         "iata": "LA",
         "icao": "LAN",
+        "callsign": "LAN CHILE",
         "country": "CL",
         "website": "https://www.latamairlines.com",
+        "founded": 2012,
         "branding": {
-            "primary_color": "#1b0088",
-            "colors": {
-                "icon": [
-                    "#ed1650",
-                    "#1b0088"
-                ],
-                "logo": [
-                    "#1b0088",
-                    "#ed1650"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "LATAM Airlines Brasil",
-                "iata": "JJ",
-                "icao": "TAM",
-                "country": "BR"
-            },
-            {
-                "name": "LATAM Airlines Colombia",
-                "iata": "4C",
-                "icao": "ARE",
-                "country": "CO"
-            },
-            {
-                "name": "LATAM Airlines Ecuador",
-                "iata": "XL",
-                "icao": "LNE",
-                "country": "EC"
-            },
-            {
-                "name": "LATAM Airlines Perú",
-                "iata": "LP",
-                "icao": "LPE",
-                "country": "PE"
-            },
-            {
-                "name": "LATAM Airlines Paraguay",
-                "iata": "PZ",
-                "icao": "LAP",
-                "country": "PY"
-            }
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Brasil",
+        "iata": "JJ",
+        "icao": "TAM",
+        "callsign": "TAM",
+        "country": "BR",
+        "website": "https://www.latam.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "BSB",
+            "FOR",
+            "CGH",
+            "GRU"
         ],
-        "slug": "latam-airlines"
+        "founded": 1961,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Colombia",
+        "iata": "4C",
+        "icao": "ARE",
+        "callsign": "LAN COLOMBIA",
+        "country": "CO",
+        "website": "https://www.latam.com/es_co",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "BOG"
+        ],
+        "founded": 1980,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Ecuador",
+        "iata": "XL",
+        "icao": "LNE",
+        "callsign": "AEROLANE",
+        "country": "EC",
+        "website": "https://www.latamairlines.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "GYE",
+            "UIO"
+        ],
+        "founded": 2002,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Paraguay",
+        "iata": "PZ",
+        "icao": "LAP",
+        "callsign": "PARAGUAYA",
+        "country": "PY",
+        "website": "https://www.latam.com/es_py",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "ASU"
+        ],
+        "founded": 1962,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Perú",
+        "iata": "LP",
+        "icao": "LPE",
+        "callsign": "LAN PERÚ",
+        "country": "PE",
+        "website": "https://www.latam.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "LIM"
+        ],
+        "founded": 1998,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "Level",
+        "iata": "LL",
+        "icao": "LVL",
+        "callsign": "DALI",
+        "country": "ES",
+        "website": "https://www.flylevel.com",
+        "hubs": [
+            "BCN"
+        ],
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#3fa74d"
+        }
     },
     {
         "name": "Lion Air",
         "iata": "JT",
         "icao": "LNI",
+        "callsign": "LION INTER",
         "country": "ID",
         "website": "https://www.lionair.co.id",
+        "hubs": [
+            "CGK",
+            "UPG",
+            "SUB"
+        ],
+        "founded": 1999,
         "branding": {
-            "primary_color": "#ed1b2f",
-            "colors": {
-                "icon": [
-                    "#fb0102"
-                ],
-                "logo": [
-                    "#fb0102"
-                ]
-            }
-        },
-        "slug": "lion-air"
+            "primary_color": "#ed1b2f"
+        }
     },
     {
         "name": "LOT Polish Airlines",
         "iata": "LO",
         "icao": "LOT",
+        "callsign": "LOT",
         "country": "PL",
         "flag_carrier": true,
         "website": "https://www.lot.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "WAW"
+        ],
+        "founded": 1928,
         "branding": {
-            "primary_color": "#252668",
-            "colors": {
-                "icon": [
-                    "#252668"
-                ],
-                "logo": [
-                    "#252668"
-                ]
-            }
-        },
-        "slug": "lot-polish-airlines"
+            "primary_color": "#252668"
+        }
     },
     {
         "name": "Lufthansa",
         "iata": "LH",
         "icao": "DLH",
+        "callsign": "LUFTHANSA",
         "country": "DE",
         "flag_carrier": true,
         "website": "https://www.lufthansa.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "FRA",
+            "MUC"
+        ],
+        "founded": 1953,
         "branding": {
-            "primary_color": "#05164d",
-            "colors": {
-                "icon": [
-                    "#05164d"
-                ],
-                "logo": [
-                    "#05164d"
-                ]
-            }
-        },
-        "slug": "lufthansa"
+            "primary_color": "#05164d"
+        }
     },
     {
         "name": "Malaysia Airlines",
         "iata": "MH",
         "icao": "MAS",
+        "callsign": "MALAYSIAN",
         "country": "MY",
         "flag_carrier": true,
         "website": "https://www.malaysiaairlines.com",
         "alliance": "oneworld",
+        "hubs": [
+            "KUL"
+        ],
+        "founded": 1947,
         "branding": {
-            "primary_color": "#174887",
-            "colors": {
-                "icon": [
-                    "#174887"
-                ],
-                "logo": [
-                    "#174887"
-                ]
-            }
-        },
-        "slug": "malaysia-airlines"
+            "primary_color": "#174887"
+        }
     },
     {
         "name": "Myanmar National Airlines",
         "iata": "UB",
         "icao": "UBA",
+        "callsign": "UNIONAIR",
         "country": "MM",
         "flag_carrier": true,
         "website": "https://www.flymna.com",
+        "hubs": [
+            "RGN"
+        ],
+        "founded": 1948,
         "branding": {
-            "primary_color": "#fdb515",
-            "colors": {
-                "icon": [
-                    "#fdb515"
-                ],
-                "logo": [
-                    "#582900",
-                    "#a59c87",
-                    "#fdb515"
-                ]
-            }
-        },
-        "slug": "myanmar-national-airlines"
+            "primary_color": "#fdb515"
+        }
     },
     {
         "name": "Norwegian Air Shuttle",
         "iata": "DY",
         "icao": "NOZ",
+        "callsign": "NORDIC",
         "country": "NO",
         "website": "https://www.norwegian.com",
+        "founded": 1993,
         "branding": {
-            "primary_color": "#d81939",
-            "colors": {
-                "icon": [
-                    "#e5212d",
-                    "#fff"
-                ],
-                "logo": [
-                    "#e6222e"
-                ]
-            }
-        },
-        "slug": "norwegian-air-shuttle"
+            "primary_color": "#d81939"
+        }
     },
     {
         "name": "Oman Air",
         "iata": "WY",
         "icao": "OMA",
+        "callsign": "OMAN AIR",
         "country": "OM",
         "flag_carrier": true,
         "website": "https://www.omanair.com",
         "alliance": "oneworld",
+        "hubs": [
+            "MCT"
+        ],
+        "founded": 1949,
         "branding": {
-            "primary_color": "#b39759",
-            "colors": {
-                "icon": [
-                    "#b39759",
-                    "#a6a8ab"
-                ],
-                "logo": [
-                    "#b39759",
-                    "#a6a8ab"
-                ]
-            }
-        },
-        "slug": "oman-air"
+            "primary_color": "#b39759"
+        }
     },
     {
         "name": "Pacific Airlines",
         "iata": "BL",
         "icao": "PIC",
+        "callsign": "PACIFIC",
         "country": "VN",
         "flag_carrier": false,
         "website": "https://www.pacificairlines.com",
+        "founded": 1990,
         "branding": {
-            "primary_color": "#324471",
-            "colors": {
-                "icon": [
-                    "#f79633",
-                    "#324471"
-                ],
-                "logo": [
-                    "#f79633",
-                    "#324471"
-                ]
-            }
-        },
-        "slug": "pacific-airlines"
+            "primary_color": "#324471"
+        }
     },
     {
         "name": "Paranair",
         "iata": "ZP",
         "icao": "AZP",
+        "callsign": "GUARANI",
         "country": "PY",
         "website": "https://www.paranair.com",
+        "hubs": [
+            "ASU"
+        ],
+        "founded": 2015,
         "branding": {
-            "primary_color": "#0037a2",
-            "colors": {
-                "icon": [
-                    "#cd1025"
-                ],
-                "logo": [
-                    "#0037a2",
-                    "#cd1025"
-                ]
-            }
-        },
-        "slug": "paranair"
+            "primary_color": "#0037a2"
+        }
     },
     {
         "name": "Peach Aviation",
         "iata": "MM",
         "icao": "APJ",
+        "callsign": "AIR PEACH",
         "country": "JP",
         "website": "https://www.flypeach.com",
+        "founded": 2011,
         "branding": {
-            "primary_color": "#9b308c",
-            "colors": {
-                "logo": [
-                    "#9b308c"
-                ]
-            }
-        },
-        "slug": "peach-aviation"
+            "primary_color": "#9b308c"
+        }
     },
     {
         "name": "Pegasus Airlines",
         "iata": "PC",
         "icao": "PGT",
+        "callsign": "SUNTURK",
         "country": "TR",
         "website": "https://www.flypgs.com",
+        "founded": 1991,
         "branding": {
-            "primary_color": "#fdb913",
-            "colors": {
-                "icon": [
-                    "#dc2c2b"
-                ],
-                "logo": [
-                    "#e31f26"
-                ]
-            }
-        },
-        "slug": "pegasus-airlines"
+            "primary_color": "#fdb913"
+        }
     },
     {
         "name": "Philippine Airlines",
         "iata": "PR",
         "icao": "PAL",
+        "callsign": "PHILIPPINE",
         "country": "PH",
         "flag_carrier": true,
         "website": "https://www.philippineairlines.com",
+        "hubs": [
+            "MNL"
+        ],
+        "founded": 1941,
         "branding": {
             "primary_color": "#001f60",
-            "tagline": "The Heart of the Filipino",
-            "colors": {
-                "icon": [
-                    "#001f60",
-                    "#ffcc05",
-                    "#ee2a29"
-                ],
-                "logo": [
-                    "#001f60",
-                    "#ffcc05",
-                    "#ee2a29",
-                    "#1e2d5f"
-                ]
-            }
-        },
-        "slug": "philippine-airlines"
+            "tagline": "The Heart of the Filipino"
+        }
+    },
+    {
+        "name": "Philippines AirAsia",
+        "iata": "Z2",
+        "icao": "APG",
+        "callsign": "COOL RED",
+        "country": "PH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2010,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
     },
     {
         "name": "Qantas",
         "iata": "QF",
         "icao": "QFA",
+        "callsign": "QANTAS",
         "country": "AU",
         "flag_carrier": true,
         "website": "https://www.qantas.com",
         "alliance": "oneworld",
+        "hubs": [
+            "BNE",
+            "MEL",
+            "PER",
+            "SYD"
+        ],
+        "founded": 1920,
         "branding": {
-            "primary_color": "",
-            "colors": {
-                "logo": [
-                    "#e40000",
-                    "#fff",
-                    "#323232"
-                ]
-            }
-        },
-        "slug": "qantas"
+            "primary_color": "#e40000"
+        }
     },
     {
         "name": "Qatar Airways",
         "iata": "QR",
         "icao": "QTR",
+        "callsign": "QATARI",
         "country": "QA",
         "flag_carrier": true,
         "website": "https://www.qatarairways.com",
         "alliance": "oneworld",
+        "hubs": [
+            "DOH"
+        ],
+        "founded": 1993,
         "branding": {
             "primary_color": "#662046",
-            "guidelines": "https://www.qatarairways.com/content/dam/tradepartners/pdf-files/Brand-Elements_Section-1.pdf",
-            "colors": {
-                "icon": [
-                    "#818a8f",
-                    "#662046"
-                ],
-                "logo": [
-                    "#818a8f",
-                    "#5e6a71",
-                    "#662046"
-                ]
-            }
-        },
-        "slug": "qatar-airways"
+            "guidelines": "https://www.qatarairways.com/content/dam/tradepartners/pdf-files/Brand-Elements_Section-1.pdf"
+        }
     },
     {
         "name": "Riyadh Air",
         "iata": "RX",
         "icao": "RXI",
+        "callsign": "RIYADH",
         "country": "SA",
         "flag_carrier": true,
         "website": "https://www.riyadhair.com",
+        "hubs": [
+            "RUH",
+            "ELQ"
+        ],
+        "founded": 2023,
         "branding": {
-            "primary_color": "#240852",
-            "colors": {
-                "icon": [
-                    "#240852"
-                ],
-                "logo": [
-                    "#240852"
-                ]
-            }
-        },
-        "slug": "riyadh-air"
+            "primary_color": "#240852"
+        }
     },
     {
         "name": "Royal Air Maroc",
         "iata": "AT",
         "icao": "RAM",
+        "callsign": "ROYAL AIR MAROC",
         "country": "MA",
         "flag_carrier": true,
         "website": "https://www.royalairmaroc.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "CMN",
+            "TNG"
+        ],
+        "founded": 1953,
         "branding": {
-            "primary_color": "#c20831",
-            "colors": {
-                "icon": [
-                    "#c20831"
-                ],
-                "logo": [
-                    "#c20831"
-                ],
-                "tail": [
-                    "#f7f7f7",
-                    "#00875d",
-                    "#c20831"
-                ]
-            }
-        },
-        "slug": "royal-air-maroc"
+            "primary_color": "#c20831"
+        }
     },
     {
         "name": "Royal Brunei Airlines",
         "iata": "BI",
         "icao": "RBA",
+        "callsign": "BRUNEI",
         "country": "BN",
         "website": "https://www.flyroyalbrunei.com",
+        "hubs": [
+            "BWN"
+        ],
+        "founded": 1974,
         "branding": {
-            "primary_color": "#ffe600",
-            "colors": {
-                "logo": [
-                    "#ffe600",
-                    "#000000"
-                ]
-            }
-        },
-        "slug": "royal-brunei-airlines"
+            "primary_color": "#ffe600"
+        }
     },
     {
         "name": "Ryanair",
         "iata": "FR",
         "icao": "RYR",
+        "callsign": "RYANAIR",
         "country": "IE",
         "website": "https://www.ryanair.com",
+        "founded": 1984,
         "branding": {
-            "primary_color": "#073590",
-            "colors": {
-                "icon": [
-                    "#f1c931"
-                ],
-                "logo": [
-                    "#073590",
-                    "#f1c931"
-                ]
-            }
-        },
-        "slug": "ryanair"
+            "primary_color": "#073590"
+        }
+    },
+    {
+        "name": "SAS Connect",
+        "iata": "SL",
+        "icao": "SZS",
+        "callsign": "SPINNAKER",
+        "country": "IE",
+        "website": "https://www.flysas.com",
+        "parent": "scandinavian-airlines",
+        "marks": "scandinavian-airlines",
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#000099"
+        }
     },
     {
         "name": "Saudia",
         "iata": "SV",
         "icao": "SVA",
+        "callsign": "SAUDIA",
         "country": "SA",
         "flag_carrier": true,
         "website": "https://www.saudia.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "JED"
+        ],
+        "founded": 1945,
         "branding": {
-            "primary_color": "#0a6937",
-            "colors": {
-                "icon": [
-                    "#0a6937"
-                ],
-                "logo": [
-                    "#006631"
-                ]
-            }
-        },
-        "slug": "saudia"
+            "primary_color": "#0a6937"
+        }
     },
     {
         "name": "Scandinavian Airlines",
         "iata": "SK",
         "icao": "SAS",
+        "callsign": "SCANDINAVIAN",
         "country": "DK,NO,SE",
         "flag_carrier": true,
         "website": "https://www.flysas.com",
         "alliance": "Star Alliance",
-        "branding": {
-            "primary_color": "#000099",
-            "colors": {
-                "logo": [
-                    "#000099"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "SAS Connect",
-                "iata": "SL",
-                "icao": "SZS",
-                "country": "IE"
-            }
+        "hubs": [
+            "CPH",
+            "OSL",
+            "ARN"
         ],
-        "slug": "scandinavian-airlines"
+        "founded": 1946,
+        "branding": {
+            "primary_color": "#000099"
+        }
     },
     {
         "name": "Scoot",
         "iata": "TR",
         "icao": "TGW",
+        "callsign": "SCOOTER",
         "country": "SG",
         "website": "https://www.flyscoot.com",
         "alliance": "Value Alliance",
+        "hubs": [
+            "SIN"
+        ],
+        "founded": 2011,
         "branding": {
-            "primary_color": "#ffe900",
-            "colors": {
-                "logo": [
-                    "#ffe900",
-                    "#000000"
-                ]
-            }
-        },
-        "slug": "scoot"
+            "primary_color": "#ffe900"
+        }
     },
     {
         "name": "Shandong Airlines",
@@ -2224,571 +1842,489 @@
         "country": "CN",
         "website": "https://www.sda.cn",
         "branding": {
-            "primary_color": "#1e406c",
-            "colors": {
-                "icon": [
-                    "#1e406c"
-                ],
-                "logo": [
-                    "#1e406c",
-                    "#eb6127"
-                ]
-            }
-        },
-        "slug": "shandong-airlines"
+            "primary_color": "#1e406c"
+        }
+    },
+    {
+        "name": "Shenzhen Airlines",
+        "iata": "ZH",
+        "icao": "CSZ",
+        "callsign": "SHENZHEN AIR",
+        "country": "CN",
+        "website": "https://www.shenzhenair.com",
+        "alliance": "Star Alliance",
+        "parent": "air-china",
+        "hubs": [
+            "SZX"
+        ],
+        "founded": 1992,
+        "branding": {
+            "primary_color": "#cc0100"
+        }
+    },
+    {
+        "name": "Sichuan Airlines",
+        "iata": "3U",
+        "icao": "CSC",
+        "callsign": "SICHUAN",
+        "country": "CN",
+        "website": "https://www.sichuanair.com",
+        "hubs": [
+            "CTU",
+            "TFU",
+            "CKG",
+            "KMG"
+        ],
+        "founded": 1986,
+        "branding": {
+            "primary_color": "#d7000f"
+        }
     },
     {
         "name": "Singapore Airlines",
         "iata": "SQ",
         "icao": "SIA",
+        "callsign": "SINGAPORE",
         "country": "SG",
         "flag_carrier": true,
         "website": "https://www.singaporeair.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "SIN"
+        ],
+        "founded": 1947,
         "branding": {
-            "primary_color": "#232f67",
-            "colors": {
-                "icon": [
-                    "#f99f1c"
-                ],
-                "logo": [
-                    "#f99f1c",
-                    "#232f67"
-                ]
-            }
-        },
-        "slug": "singapore-airlines"
+            "primary_color": "#232f67"
+        }
     },
     {
         "name": "Southwest Airlines",
         "iata": "WN",
         "icao": "SWA",
+        "callsign": "SOUTHWEST",
         "country": "US",
         "website": "https://www.southwest.com",
+        "founded": 1967,
         "branding": {
-            "primary_color": "#304cb2",
-            "colors": {
-                "icon": [
-                    "#cccccc"
-                ],
-                "logo": [
-                    "#304cb2",
-                    "#cccccc"
-                ]
-            }
-        },
-        "slug": "southwest-airlines"
+            "primary_color": "#304cb2"
+        }
     },
     {
         "name": "Spirit Airlines",
         "iata": "NK",
         "icao": "NKS",
+        "callsign": "SPIRIT WINGS",
         "country": "US",
         "website": "https://www.spirit.com",
+        "founded": 1964,
         "defunct": true,
+        "ceased": 2026,
         "branding": {
-            "primary_color": "#ffec00",
-            "colors": {
-                "logo": [
-                    "#231f20"
-                ]
-            }
-        },
-        "slug": "spirit-airlines"
+            "primary_color": "#ffec00"
+        }
     },
     {
         "name": "Starlux Airlines",
         "iata": "JX",
         "icao": "SJX",
+        "callsign": "STARWALKER",
         "country": "TW",
         "website": "https://www.starlux-airlines.com",
+        "hubs": [
+            "TPE"
+        ],
+        "founded": 2018,
         "branding": {
-            "primary_color": "#996a4e",
-            "colors": {
-                "icon": [
-                    "#996a4e",
-                    "#84754e"
-                ],
-                "logo": [
-                    "#3f464a",
-                    "#84754e",
-                    "#996a4e"
-                ]
-            }
-        },
-        "slug": "starlux-airlines"
+            "primary_color": "#996a4e"
+        }
     },
     {
         "name": "Sun PhuQuoc Airways",
         "iata": "9G",
         "icao": "SPQ",
+        "callsign": "SUN LUX",
         "country": "VN",
         "website": "https://www.sunphuquocairways.com",
+        "hubs": [
+            "PQC",
+            "SGN",
+            "HAN"
+        ],
+        "founded": 2025,
         "branding": {
-            "primary_color": "#ca1c2a",
-            "colors": {
-                "icon": [
-                    "#f1c217"
-                ],
-                "logo": [
-                    "#ca1c2a",
-                    "#f1c217"
-                ]
-            }
-        },
-        "slug": "sun-phuquoc-airways"
+            "primary_color": "#ca1c2a"
+        }
     },
     {
         "name": "SWISS",
         "iata": "LX",
         "icao": "SWR",
+        "callsign": "SWISS",
         "country": "CH",
         "flag_carrier": true,
         "website": "https://www.swiss.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ZRH"
+        ],
+        "founded": 2002,
         "branding": {
-            "primary_color": "#cf0a2c",
-            "colors": {
-                "icon": [
-                    "#cf0a2c"
-                ],
-                "logo": [
-                    "#cf0a2c"
-                ]
-            }
-        },
-        "slug": "swiss"
+            "primary_color": "#cf0a2c"
+        }
     },
     {
         "name": "T'way Air",
         "iata": "TW",
         "icao": "TWB",
+        "callsign": "SONOROUS",
         "country": "KR",
         "website": "https://www.twayair.com",
+        "hubs": [
+            "TAE",
+            "GMP",
+            "ICN"
+        ],
+        "founded": 2005,
         "branding": {
-            "primary_color": "#d22c25",
-            "colors": {
-                "logo": [
-                    "#d22c25",
-                    "#82ab42"
-                ]
-            }
-        },
-        "slug": "tway-air"
+            "primary_color": "#d22c25"
+        }
     },
     {
         "name": "TAP Air Portugal",
         "iata": "TP",
         "icao": "TAP",
+        "callsign": "AIR PORTUGAL",
         "country": "PT",
         "flag_carrier": true,
         "website": "https://www.tapairportugal.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "LIS"
+        ],
+        "founded": 1945,
         "branding": {
-            "primary_color": "#bfd730",
-            "colors": {
-                "icon": [
-                    "#ed1c24",
-                    "#b82025",
-                    "#bfd730",
-                    "#72bf44"
-                ],
-                "logo": [
-                    "#ed1c24",
-                    "#b82025",
-                    "#bfd730",
-                    "#72bf44",
-                    "#1d1d1b"
-                ]
-            }
-        },
-        "slug": "tap-air-portugal"
+            "primary_color": "#bfd730"
+        }
     },
     {
         "name": "TAROM",
         "iata": "RO",
         "icao": "ROT",
+        "callsign": "TAROM",
         "country": "RO",
         "flag_carrier": true,
         "website": "https://www.tarom.ro",
         "alliance": "SkyTeam",
+        "hubs": [
+            "OTP"
+        ],
+        "founded": 1920,
         "branding": {
-            "primary_color": "#003366",
-            "colors": {
-                "icon": [
-                    "#003366"
-                ],
-                "logo": [
-                    "#003366"
-                ],
-                "tail": [
-                    "#003366"
-                ]
-            }
-        },
-        "slug": "tarom"
+            "primary_color": "#003366"
+        }
+    },
+    {
+        "name": "Thai AirAsia",
+        "iata": "FD",
+        "icao": "AIQ",
+        "callsign": "THAI ASIA",
+        "country": "TH",
+        "website": "https://www.airasia.com",
+        "parent": "airasia",
+        "marks": "airasia",
+        "founded": 2003,
+        "branding": {
+            "primary_color": "#ff0000"
+        }
     },
     {
         "name": "Thai Airways",
         "iata": "TG",
         "icao": "THA",
+        "callsign": "THAI",
         "country": "TH",
         "flag_carrier": true,
         "website": "https://www.thaiairways.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "BKK"
+        ],
+        "founded": 1960,
         "branding": {
-            "primary_color": "#306",
-            "tagline": "Grace to Growth",
-            "colors": {
-                "icon": [
-                    "#fc0",
-                    "#306",
-                    "#c09"
-                ],
-                "logo": [
-                    "#f5c300",
-                    "#370e62",
-                    "#b6007d"
-                ]
-            }
-        },
-        "slug": "thai-airways"
+            "primary_color": "#330066",
+            "tagline": "Grace to Growth"
+        }
     },
     {
         "name": "Transavia",
         "iata": "HV",
         "icao": "TRA",
+        "callsign": "TRANSAVIA",
         "country": "NL",
         "website": "https://www.transavia.com",
         "branding": {
-            "primary_color": "#00d66c",
-            "colors": {
-                "icon": [
-                    "#00d66c"
-                ],
-                "logo": [
-                    "#00d66c"
-                ]
-            }
-        },
-        "slug": "transavia"
+            "primary_color": "#00d66c"
+        }
     },
     {
         "name": "Turkish Airlines",
         "iata": "TK",
         "icao": "THY",
+        "callsign": "TURKISH",
         "country": "TR",
         "flag_carrier": true,
         "website": "https://www.turkishairlines.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "IST"
+        ],
+        "founded": 1933,
         "branding": {
             "primary_color": "#c90019",
-            "guidelines": "https://www.turkishairlines.com/en-int/press-room/logo-archive",
-            "colors": {
-                "icon": [
-                    "#ffffff",
-                    "#c90019"
-                ],
-                "logo": [
-                    "#ffffff",
-                    "#c90019",
-                    "#1a171b"
-                ]
-            }
-        },
-        "slug": "turkish-airlines"
+            "guidelines": "https://www.turkishairlines.com/en-int/press-room/logo-archive"
+        }
     },
     {
         "name": "United Airlines",
         "iata": "UA",
         "icao": "UAL",
+        "callsign": "UNITED",
         "country": "US",
         "website": "https://www.united.com",
         "alliance": "Star Alliance",
+        "hubs": [
+            "ORD",
+            "DEN",
+            "GUM",
+            "IAH",
+            "LAX",
+            "EWR",
+            "SFO",
+            "IAD"
+        ],
+        "founded": 1931,
         "branding": {
-            "primary_color": "#1414d2",
-            "colors": {
-                "icon": [
-                    "#1414d2"
-                ],
-                "logo": [
-                    "#1414d2"
-                ]
-            }
-        },
-        "slug": "united-airlines"
+            "primary_color": "#1414d2"
+        }
     },
     {
         "name": "VietJet Air",
         "iata": "VJ",
         "icao": "VJC",
+        "callsign": "VIETJET",
         "country": "VN",
         "website": "https://www.vietjetair.com",
+        "founded": 2007,
         "branding": {
             "primary_color": "#e12127",
-            "tagline": "Enjoy Flying!",
-            "colors": {
-                "logo": [
-                    "#e12127"
-                ]
-            }
-        },
-        "slug": "vietjet-air"
+            "tagline": "Enjoy Flying!"
+        }
     },
     {
         "name": "Vietnam Airlines",
         "iata": "VN",
         "icao": "HVN",
+        "callsign": "VIET NAM AIRLINES",
         "country": "VN",
         "flag_carrier": true,
         "website": "https://www.vietnamairlines.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "HAN",
+            "SGN"
+        ],
+        "founded": 1956,
         "branding": {
             "primary_color": "#d99e09",
             "tagline": "Reach Further",
-            "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
-            "colors": {
-                "icon": [
-                    "#d99e09"
-                ],
-                "logo": [
-                    "#d99e09",
-                    "#005e80"
-                ]
-            }
-        },
-        "slug": "vietnam-airlines"
+            "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
+        }
     },
     {
         "name": "Vietravel Airlines",
         "iata": "VU",
         "icao": "VAG",
+        "callsign": "VIETRAVEL AIR",
         "country": "VN",
         "website": "https://www.vietravelairlines.com",
+        "founded": 2019,
         "vectorized": true,
         "branding": {
             "primary_color": "#0066b3",
-            "tagline": "Open Your World",
-            "colors": {
-                "icon": [
-                    "#ffc80b",
-                    "#ffe800"
-                ],
-                "logo": [
-                    "#0066b3",
-                    "#ffc80b",
-                    "#ffe800"
-                ]
-            }
-        },
-        "slug": "vietravel-airlines"
+            "tagline": "Open Your World"
+        }
     },
     {
         "name": "Virgin Atlantic",
         "iata": "VS",
         "icao": "VIR",
+        "callsign": "VIRGIN",
         "country": "GB",
         "website": "https://www.virginatlantic.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "LHR",
+            "MAN"
+        ],
+        "founded": 1984,
         "branding": {
-            "primary_color": "#da0530",
-            "colors": {
-                "icon": [
-                    "#da0530",
-                    "#ffffff"
-                ],
-                "logo": [
-                    "#da0530",
-                    "#ffffff",
-                    "#5b056a"
-                ]
-            }
-        },
-        "slug": "virgin-atlantic"
+            "primary_color": "#da0530"
+        }
     },
     {
         "name": "Virgin Australia",
         "iata": "VA",
         "icao": "VOZ",
+        "callsign": "VELOCITY",
         "country": "AU",
         "website": "https://www.virginaustralia.com",
+        "hubs": [
+            "BNE",
+            "MEL",
+            "SYD"
+        ],
+        "founded": 2000,
         "branding": {
-            "primary_color": "#e31e23",
-            "colors": {
-                "icon": [
-                    "#e31e23"
-                ],
-                "logo": [
-                    "#e10a0a",
-                    "#ffffff",
-                    "#414042"
-                ]
-            }
-        },
-        "slug": "virgin-australia"
+            "primary_color": "#e31e23"
+        }
     },
     {
         "name": "Viva",
         "iata": "VB",
         "icao": "VIV",
+        "callsign": "VIVA",
         "country": "MX",
         "website": "https://www.vivaaerobus.com",
         "branding": {
-            "primary_color": "#00ae44",
-            "colors": {
-                "icon": [
-                    "#73c900"
-                ],
-                "logo": [
-                    "#00ae44",
-                    "#73c900"
-                ]
-            }
-        },
-        "slug": "viva"
+            "primary_color": "#00ae44"
+        }
     },
     {
         "name": "Volaris",
         "iata": "Y4",
         "icao": "VOI",
+        "callsign": "VOLARIS",
         "country": "MX",
         "website": "https://www.volaris.com",
+        "founded": 2005,
         "branding": {
-            "primary_color": "#5b2d82",
-            "colors": {
-                "icon": [
-                    "#eeefef",
-                    "#b5d5f0",
-                    "#6cadde",
-                    "#d6a6cc",
-                    "#dae7a2",
-                    "#231f20",
-                    "#91268f",
-                    "#8dc63f"
-                ],
-                "logo": [
-                    "#231f20",
-                    "#eeefef",
-                    "#b5d5f0",
-                    "#6cadde",
-                    "#d6a6cc",
-                    "#dae7a2",
-                    "#91268f",
-                    "#8dc63f"
-                ]
-            }
-        },
-        "slug": "volaris"
+            "primary_color": "#5b2d82"
+        }
     },
     {
         "name": "Volotea",
         "iata": "V7",
         "icao": "VOE",
+        "callsign": "VOLOTEA",
         "country": "ES",
         "website": "https://www.volotea.com",
+        "founded": 2011,
         "branding": {
-            "primary_color": "#ed164a",
-            "colors": {
-                "icon": [
-                    "#ed164a"
-                ],
-                "logo": [
-                    "#432129",
-                    "#ed164a"
-                ]
-            }
-        },
-        "slug": "volotea"
+            "primary_color": "#ed164a"
+        }
     },
     {
         "name": "Vueling",
         "iata": "VY",
         "icao": "VLG",
+        "callsign": "VUELING",
         "country": "ES",
         "website": "https://www.vueling.com",
+        "founded": 2004,
         "branding": {
-            "primary_color": "#ffcc00",
-            "colors": {
-                "logo": [
-                    "#504f4e",
-                    "#fc0"
-                ]
-            }
-        },
-        "slug": "vueling"
+            "primary_color": "#ffcc00"
+        }
     },
     {
         "name": "WestJet",
         "iata": "WS",
         "icao": "WJA",
+        "callsign": "WESTJET",
         "country": "CA",
         "website": "https://www.westjet.com",
+        "hubs": [
+            "YYC",
+            "YYZ",
+            "YVR"
+        ],
+        "founded": 1994,
         "branding": {
-            "primary_color": "#00aaa6",
-            "colors": {
-                "icon": [
-                    "#00aaa6",
-                    "#003c71",
-                    "#fff"
-                ],
-                "logo": [
-                    "#003c71",
-                    "#00aaa6",
-                    "#ffffff"
-                ]
-            }
-        },
-        "slug": "westjet"
+            "primary_color": "#00aaa6"
+        }
+    },
+    {
+        "name": "Winair",
+        "iata": "WM",
+        "icao": "WIA",
+        "callsign": "WINDWARD",
+        "country": "SX",
+        "flag_carrier": true,
+        "website": "https://www.winair.sx",
+        "hubs": [
+            "SXM"
+        ],
+        "founded": 1961,
+        "branding": {
+            "primary_color": "#cd2026"
+        }
     },
     {
         "name": "Wizz Air",
         "iata": "W6",
         "icao": "WZZ",
+        "callsign": "WIZZ AIR",
         "country": "HU",
         "website": "https://www.wizzair.com",
+        "founded": 2003,
         "branding": {
-            "primary_color": "#c6007e",
-            "colors": {
-                "logo": [
-                    "#c6007e"
-                ]
-            }
-        },
-        "subsidiaries": [
-            {
-                "name": "Wizz Air Abu Dhabi",
-                "iata": "5W",
-                "icao": "WAZ",
-                "country": "AE"
-            },
-            {
-                "name": "Wizz Air UK",
-                "iata": "W9",
-                "icao": "WUK",
-                "country": "GB"
-            }
-        ],
-        "slug": "wizz-air"
+            "primary_color": "#c6007e"
+        }
+    },
+    {
+        "name": "Wizz Air Abu Dhabi",
+        "iata": "5W",
+        "icao": "WAZ",
+        "callsign": "WIZZ SKY",
+        "country": "AE",
+        "website": "https://www.wizzair.com",
+        "parent": "wizz-air",
+        "marks": "wizz-air",
+        "founded": 2019,
+        "defunct": true,
+        "ceased": 2025,
+        "branding": {
+            "primary_color": "#c6007e"
+        }
+    },
+    {
+        "name": "Wizz Air UK",
+        "iata": "W9",
+        "icao": "WUK",
+        "callsign": "WIZZ GO",
+        "country": "GB",
+        "website": "https://www.wizzair.com",
+        "parent": "wizz-air",
+        "marks": "wizz-air",
+        "founded": 2017,
+        "branding": {
+            "primary_color": "#c6007e"
+        }
     },
     {
         "name": "XiamenAir",
         "iata": "MF",
         "icao": "CXA",
+        "callsign": "XIAMEN AIR",
         "country": "CN",
         "website": "https://www.xiamenair.com",
         "alliance": "SkyTeam",
+        "hubs": [
+            "FOC",
+            "XMN"
+        ],
+        "founded": 1984,
         "branding": {
-            "primary_color": "#008cd5",
-            "colors": {
-                "icon": [
-                    "#008cd5"
-                ],
-                "logo": [
-                    "#008cd5",
-                    "#004384"
-                ]
-            }
-        },
-        "slug": "xiamenair"
+            "primary_color": "#008cd5"
+        }
     }
 ]

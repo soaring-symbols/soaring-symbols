@@ -1,0 +1,53 @@
+# Compare airlines.json with Wikipedia once a month and open (or update) a
+# pull request with what changed. Nothing is merged automatically.
+#
+# Needs "Allow GitHub Actions to create and approve pull requests" under
+# Settings > Actions > General.
+name: Sync airline data
+
+on:
+  schedule:
+    - cron: '0 3 1 * *' # 03:00 UTC on the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-data
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      # Skip the husky prepare script; no git hooks are needed here
+      - run: npm ci --ignore-scripts
+
+      - name: Compare with Wikipedia and apply changes
+        run: node scripts/sync-data.js --write --summary sync-summary.md
+
+      - name: Show the report on the run page
+        run: cat sync-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Build and test the changed data before proposing it
+      - run: npm test
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/sync-airline-data
+          delete-branch: true
+          add-paths: |
+            airlines.json
+          commit-message: 'chore(data): sync airline data from wikipedia'
+          title: 'chore(data): sync airline data from wikipedia'
+          body-path: sync-summary.md
