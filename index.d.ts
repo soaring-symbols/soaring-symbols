@@ -48,6 +48,10 @@ export interface Airline {
     readonly defunct?: boolean
     /** Year a defunct airline ceased operations. */
     readonly ceased?: number
+    /**
+     * The SVGs were vectorized by hand.
+     * @deprecated Removed in 0.3; nothing reads it.
+     */
     readonly vectorized?: boolean
     readonly branding?: AirlineBranding
     readonly assets: Readonly<Partial<Record<AssetType, AssetInfo>>>

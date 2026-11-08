@@ -126,7 +126,8 @@
                     "$ref": "#/$defs/year"
                 },
                 "vectorized": {
-                    "description": "The SVGs were vectorized by hand.",
+                    "description": "Deprecated: removed in 0.3. The SVGs were vectorized by hand; a pull request's description records each SVG's source instead.",
+                    "deprecated": true,
                     "type": "boolean"
                 },
                 "branding": { "$ref": "#/$defs/branding" },

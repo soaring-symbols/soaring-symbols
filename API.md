@@ -135,7 +135,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `founded`      | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                |
 | `defunct`      | `boolean?`  | `true` if the airline has ceased operations.                                                                                         |
 | `ceased`       | `number?`   | Year a defunct airline ceased operations.                                                                                            |
-| `vectorized`   | `boolean?`  | `true` if the SVG was vectorized by hand.                                                                                            |
+| `vectorized`   | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                            |
 | `branding`     | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                           |
 | `assets`       | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                |
 
