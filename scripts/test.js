@@ -12,6 +12,10 @@ import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
 import {
+    ruleNoNestedGroups,
+    ruleOnePathPerColor,
+} from './lint/rule-structure.js'
+import {
     extractInfobox,
     firstYear,
     infoboxParams,
@@ -580,6 +584,41 @@ describe('svg-validator', () => {
             ),
             ['url(#a)', '#111111'],
         )
+    })
+
+    const fixStructure = (body) => {
+        const svg = parse(
+            `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title>${body}</svg>`,
+        )
+        const ctx = { svgElement: svg, issues: [], warnings: [] }
+        ruleNoNestedGroups(ctx)
+        ruleOnePathPerColor(ctx)
+
+        return { ...ctx, paths: [...svg.querySelectorAll('path')] }
+    }
+
+    it('flattens nested groups and merges single-color paths', () => {
+        const { issues, warnings, paths } = fixStructure(
+            '<g fill-rule="evenodd"><g fill="#111111"><path d="m2 2h8v8h-8z"/></g><path d="m12 12 8 0 0 8-8 0z"/></g>',
+        )
+        assert.equal(issues.length, 2)
+        assert.deepEqual(warnings, [])
+        assert.equal(paths.length, 1)
+        // The second path's relative moveto and implicit lineto survive
+        assert.equal(
+            paths[0].getAttribute('d'),
+            'm2 2h8v8h-8zM12 12l8 0 0 8-8 0z',
+        )
+    })
+
+    it('leaves paths whose merge would leave a hole', () => {
+        // Opposite winding: as one path the inner square is cut out
+        const { issues, warnings, paths } = fixStructure(
+            '<path d="M2 2h16v16H2z"/><path d="M6 6v8h8V6z"/>',
+        )
+        assert.deepEqual(issues, [])
+        assert.equal(warnings.length, 1)
+        assert.equal(paths.length, 2)
     })
 
     it('expects currentColor in a -mono.svg', async () => {

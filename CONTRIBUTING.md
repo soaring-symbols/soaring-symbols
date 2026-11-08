@@ -46,7 +46,7 @@ assets/
 
 - **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 
-- **One Path per Color**: Draw each color in one `<path>`, so a single-color SVG (including every `-mono` file) has one `<path>` and a multi-color SVG one per color. Combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes. Only combine shapes drawn one after another: if another color sits between two shapes of the same color, merging them would change which one is drawn on top, so they stay apart. `npm run lint:svg` warns about shapes that could join the one before them.
+- **One Path per Color**: Draw each color in one `<path>`, so a single-color SVG (including every `-mono` file) has one `<path>` and a multi-color SVG one per color. In a single-color SVG, `node scripts/lint-svg.js --fix` joins neighbouring `<path>`s when the result renders the same, and leaves them apart (still warning) when overlapping shapes would leave a hole. Otherwise combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes. Only combine shapes drawn one after another: if another color sits between two shapes of the same color, merging them would change which one is drawn on top, so they stay apart. `npm run lint:svg` warns about shapes that could join the one before them.
 
 - **ViewBox Dimensions**:
 
@@ -61,7 +61,7 @@ assets/
 
 - **No Strokes**: Draw every shape as a filled outline and leave no `stroke` behind: strokes don't take the single fill color of the derived `-mono` files and throw off the geometry checks. Convert them in your editor (e.g. Inkscape's _Path → Stroke to Path_). `npm run lint:svg` reports any `stroke` or `stroke-*` attribute or style property; `node scripts/lint-svg.js --fix` removes the ones that paint nothing (`stroke="none"`, a lone `stroke-width`), but can't convert a stroke that paints.
 
-- **Groups**: A `<g>` is fine for sharing attributes such as `fill`, `fill-rule` or `clip-path`, but don't nest groups; flatten them in your editor (e.g. Inkscape's _Object → Ungroup_). `npm run lint:svg` warns about nested groups.
+- **Groups**: A `<g>` is fine for sharing attributes such as `fill`, `fill-rule` or `clip-path`, but don't nest groups. `node scripts/lint-svg.js --fix` flattens them when the result renders the same; otherwise flatten them in your editor (e.g. Inkscape's _Object → Ungroup_). `npm run lint:svg` warns about nested groups.
 
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 

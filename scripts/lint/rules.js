@@ -36,8 +36,9 @@ export const DOM_RULES = [
     ruleNoScripts,
     ruleNoStyles,
     ruleNoTransforms,
-    ruleOnePathPerColor,
+    // Flattening first, so paths from different groups can meet
     ruleNoNestedGroups,
+    ruleOnePathPerColor,
     ruleHexColors,
     ruleFillPlacement,
     ruleNoStrokes,
