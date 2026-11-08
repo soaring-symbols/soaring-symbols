@@ -1,13 +1,22 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import { writeDerivedMonos } from '../utils/index.js'
+import { publishCatalog } from '../utils/catalog.js'
+import { validateAirlines } from '../utils/schema.js'
 
 const inputFile = './index.js'
 const distDir = './dist'
 
 // Helper to recursively copy a directory
 async function copyDir(src, dest) {
+    // Skip OS junk such as .DS_Store so it never reaches the package
+    const entries = (await fs.readdir(src, { withFileTypes: true })).filter(
+        (entry) => !entry.name.startsWith('.'),
+    )
+    // Empty folders (e.g. left behind locally; git can't track them) are not
+    // copied either
+    if (!entries.length) return
     await fs.mkdir(dest, { recursive: true })
-    const entries = await fs.readdir(src, { withFileTypes: true })
 
     for (const entry of entries) {
         const srcPath = path.join(src, entry.name)
@@ -25,17 +34,33 @@ async function copyDir(src, dest) {
 async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
-    // Copy required files and directories
+    // The repo keeps only hand-written fields; the published catalog adds
+    // `slug` and `assets`. It ships minified: consumers (bundlers, jsDelivr)
+    // only parse it
+    const catalog = publishCatalog(
+        JSON.parse(await fs.readFile('./airlines.json', 'utf-8')),
+    )
+    const problems = validateAirlines(catalog, { published: true })
+    if (problems.length) {
+        throw new Error(
+            `airlines.json does not match airlines.schema.json:\n  - ${problems.join('\n  - ')}`,
+        )
+    }
+    await fs.writeFile(
+        path.join(distDir, 'airlines.json'),
+        JSON.stringify(catalog),
+    )
+
     const filesToCopy = [
-        { src: './airlines.json', dest: 'airlines.json' },
+        // The declarations have no default export, so the same file serves
+        // both the import (.d.ts) and require (.d.cts) conditions
         { src: './index.d.ts', dest: 'index.d.ts' },
+        { src: './index.d.ts', dest: 'index.d.cts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.ts' },
+        { src: './svg-validator.d.ts', dest: 'svg-validator.d.cts' },
     ]
 
-    const dirsToCopy = [
-        { src: './assets', dest: 'assets' },
-        { src: './utils', dest: 'utils' },
-    ]
+    const dirsToCopy = [{ src: './assets', dest: 'assets' }]
 
     // Copy individual files
     for (const file of filesToCopy) {
@@ -46,6 +71,37 @@ async function copyFiles() {
     for (const dir of dirsToCopy) {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
+
+    // Single-color assets get their -mono.svg here, not in the repo
+    for (const airline of catalog.filter((a) => !a.marks)) {
+        writeDerivedMonos(airline.slug, path.join(distDir, 'assets'))
+    }
+    // After the monos, so airlines sharing marks get those too
+    await copySharedMarks(catalog)
+}
+
+const escapeXml = (text) =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Airlines with `marks` use another airline's SVGs. Copy those files to their
+// own slug in dist (never in the repo), titled with their own name, so every
+// airline's files live at assets/<slug>/ like any other.
+async function copySharedMarks(airlines) {
+    for (const airline of airlines.filter((a) => a.marks)) {
+        const src = path.join(distDir, 'assets', airline.marks)
+        const dest = path.join(distDir, 'assets', airline.slug)
+        await fs.mkdir(dest, { recursive: true })
+        for (const file of await fs.readdir(src)) {
+            const svg = await fs.readFile(path.join(src, file), 'utf-8')
+            await fs.writeFile(
+                path.join(dest, file),
+                svg.replace(
+                    /<title>[^<]*<\/title>/,
+                    `<title>${escapeXml(airline.name)}</title>`,
+                ),
+            )
+        }
+    }
 }
 
 // ESM version (as-is, just copy to dist)
@@ -55,40 +111,22 @@ async function buildESM() {
     await fs.writeFile(path.join(distDir, 'index.js'), content)
 }
 
-// Transform the ESM code to CJS format
+// Transform the ESM code to CJS format. index.js only imports airlines.json
+// and has a single named export list; fail loudly if anything else is left.
 function transformToCJS(content) {
-    return (
-        content
-            // Replace imports with requires
-            .replace(
-                /import\s*{\s*readFileSync\s*}\s*from\s*['"]fs['"]/,
-                "const { readFileSync } = require('fs')",
-            )
-            .replace(
-                /import\s*{\s*join\s*}\s*from\s*['"]path['"]/,
-                "const { join } = require('path')",
-            )
-            .replace(
-                /import\s*{\s*toSlug,\s*getAirlineAssets\s*}\s*from\s*['"](\.\/utils\/index\.js)['"]/,
-                "const { toSlug, getAirlineAssets } = require('./utils')",
-            )
-            .replace(
-                /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+(?:assert|with)\s*{\s*type:\s*['"]json['"]\s*}/,
-                "const airlines = require('./airlines.json')",
-            )
-            // Remove fileURLToPath import and __dirname setup since CJS has __dirname built-in
-            .replace(
-                /import\s*{\s*fileURLToPath\s*}\s*from\s*['"]url['"];?\s*/,
-                '',
-            )
-            .replace(
-                /const\s+__dirname\s*=\s*fileURLToPath\s*\(\s*new\s+URL\s*\(\s*['"]\.\.?\s*['"]\s*,\s*import\.meta\.url\s*\)\s*\)\s*;?/,
-                '',
-            )
-            // Replace export statements
-            .replace(/export\s*{\s*([^}]+)\s*}/, 'module.exports = { $1 }')
-            .replace(/export\s+default\s*{[^}]+}/, '')
-    )
+    const out = content
+        .replace(
+            /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/,
+            "const airlines = require('./airlines.json')",
+        )
+        .replace(/^export\s*{([^}]+)}/m, 'module.exports = {$1}')
+    if (/^\s*(import|export)\s/m.test(out)) {
+        throw new Error(
+            'transformToCJS: index.js has an unhandled import/export',
+        )
+    }
+
+    return out
 }
 
 // CJS version

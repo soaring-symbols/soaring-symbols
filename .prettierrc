@@ -3,5 +3,11 @@
     "semi": false,
     "tabWidth": 4,
     "trailingComma": "all",
-    "printWidth": 80
+    "printWidth": 80,
+    "overrides": [
+        {
+            "files": ["*.yml", "*.yaml"],
+            "options": { "tabWidth": 2 }
+        }
+    ]
 }
