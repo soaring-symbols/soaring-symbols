@@ -1,5 +1,6 @@
-// Release to npm: test, bump the version in package.json, publish, then commit the bump.
-// No git tag or GitHub release is created.
+// Release to npm: test, bump the version in package.json, publish, purge
+// jsDelivr's cache of the changed files, then commit the bump. No git tag or
+// GitHub release is created.
 //
 // Usage: npm run release -- [bump] [--dry-run]
 //   bump: patch (default), minor, major or an exact version such as 0.2.0.
@@ -10,6 +11,7 @@
 import { spawnSync } from 'child_process'
 import { readFileSync } from 'fs'
 import { parseArgs } from 'util'
+import { purgeRelease } from './purge-cdn.js'
 
 const BRANCH = 'main'
 const REMOTE = 'origin'
@@ -119,6 +121,8 @@ console.log(`\n  version:   ${version}\n  dist-tag:  latest`)
 if (dryRun) {
     step('Dry run: showing the package contents')
     run('npm', ['pack', '--dry-run'])
+    step('Dry run: files jsDelivr would be purged of')
+    await purgeRelease({ version, previous: currentVersion, dryRun: true })
     restoreReleaseFiles()
     console.log('\n✅ Dry run finished; no changes were kept.')
     process.exit(0)
@@ -130,6 +134,10 @@ if (!run('npm', ['publish', '--tag', 'latest'], { allowFail: true })) {
     restoreReleaseFiles()
     fail('npm publish failed; the version bump was reverted.')
 }
+
+// --- Purge jsDelivr (never fatal: the release is already out) ---
+step('Purging the changed files from jsDelivr')
+await purgeRelease({ version, previous: currentVersion })
 
 // --- Commit the bump (not pushed) ---
 step('Committing the version bump')
