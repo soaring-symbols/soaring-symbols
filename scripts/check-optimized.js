@@ -1,6 +1,7 @@
 // Check that SVGs have been optimized, with `npm run optimize` or another
 // SVGO-based tool such as SVGOMG: a file passes unless the project's SVGO
-// config (svgo.config.mjs) would still make it more than 10% smaller.
+// config (svgo.config.mjs, at the precision `npm run optimize` would pick)
+// would still make it more than 10% smaller.
 // Different SVGO versions and settings round numbers and pick path commands
 // a little differently, so an optimized file rarely matches this config byte
 // for byte; one that was never optimized shrinks by far more.
@@ -12,8 +13,8 @@
 // Only changed files are checked by default: some older SVGs are still over
 // the limit (#54). Exits with 1 when a file needs optimizing.
 import { readFileSync } from 'fs'
-import { loadConfig, optimize } from 'svgo'
 import { selectSvgs } from './lint/changed.js'
+import { optimizeSvg } from './lint/optimize.js'
 
 const { files } = selectSvgs(process.argv.slice(2))
 
@@ -23,17 +24,17 @@ if (!files.length) {
 }
 
 // Share of its size SVGO may still remove from an optimized file. SVGOMG's
-// output stays under 7% with any precision; unoptimized exports lose 15-40%.
+// output stays under 7%, and a file optimized at five decimals instead of
+// three under 9% on average; unoptimized exports lose 15-40%.
 const MAX_SAVING = 0.1
 
-const config = await loadConfig('svgo.config.mjs')
 // GitHub Actions turns ::error lines into annotations on the pull request
 const inCI = Boolean(process.env.GITHUB_ACTIONS)
 
 const unoptimized = files
     .map((file) => {
         const svg = readFileSync(file, 'utf8')
-        const optimized = optimize(svg, { ...config, path: file }).data
+        const optimized = optimizeSvg(svg, file).data
 
         return { file, saving: 1 - optimized.length / svg.length }
     })

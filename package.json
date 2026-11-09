@@ -78,7 +78,7 @@
     "format:check": "prettier --check \"**/*.{js,ts}\"",
     "release": "node scripts/release.js",
     "sync:data": "node scripts/sync-data.js",
-    "optimize": "svgo --config svgo.config.mjs",
+    "optimize": "node scripts/optimize.js",
     "optimize:check": "node scripts/check-optimized.js"
   },
   "lint-staged": {

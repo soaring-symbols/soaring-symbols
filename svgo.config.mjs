@@ -1,11 +1,13 @@
 // SVGO config for airline assets: npm run optimize -- assets/<slug>/*.svg
+// runs it through scripts/lint/optimize.js, which tries three decimals first
+// and four or five for the few shapes that move at three. Used on its own
+// (svgo --config svgo.config.mjs), it writes three.
 //
 // Differs from SVGO's defaults so the output passes lint-svg and renders the same:
 // - keeps role="img" (removeUnknownsAndDefaults drops it by default)
 // - strips Inkscape/Sodipodi metadata even when the namespace is declared on the
 //   element itself, which removeEditorsNSData misses
-// - keeps paths separate and 5 decimals, since mergePaths and the default
-//   precision visibly shift some logos
+// - keeps paths separate, since mergePaths visibly shifts some logos
 // - writes hex colors in full (#000000, not #000 or black), as lint-svg expects
 // - orders attributes the way lint-svg expects (role, viewBox, xmlns, fill, d)
 // - drops width/height, raster images, off-canvas paths, <style> and scripts
@@ -108,7 +110,7 @@ const expandColors = {
 
 export default {
     multipass: true,
-    floatPrecision: 5,
+    floatPrecision: 3,
     plugins: [
         removeEditorMetadata,
         expandColors,

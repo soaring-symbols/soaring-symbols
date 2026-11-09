@@ -1,6 +1,4 @@
-import { optimize } from 'svgo'
-import svgoConfig from '../../svgo.config.mjs'
-import { rendersAlike } from './render.js'
+import { optimizeSvg, PRECISIONS } from './optimize.js'
 import {
     validateHexColors,
     validateNoEditorData,
@@ -26,10 +24,11 @@ const NEEDS_SVGO = [
 ]
 
 // PRE-PHASE: an SVG with a problem only SVGO fixes (see NEEDS_SVGO) is run
-// through the project's svgo.config.mjs, as `npm run optimize` would, and
-// the rules then lint the result. The result is kept only when it renders
-// like the original; otherwise the file is linted as it is and the rules
-// report each problem. Returns the content the rules should lint.
+// through the project's svgo.config.mjs, as `npm run optimize` would (at the
+// lowest precision that renders like the original), and the rules then lint
+// the result. When no precision renders alike, the file is linted as it is
+// and the rules report each problem. Returns the content the rules should
+// lint.
 export function ruleOptimize(source, svgElement, { issues, warnings }) {
     const found = NEEDS_SVGO.filter(([, has]) => has(svgElement)).map(
         ([name]) => name,
@@ -38,11 +37,12 @@ export function ruleOptimize(source, svgElement, { issues, warnings }) {
 
     let optimized
     try {
-        optimized = optimize(source, svgoConfig).data
+        const result = optimizeSvg(source)
+        optimized = result.data
         if (optimized === source) return source
-        if (!rendersAlike(source, optimized)) {
+        if (!result.alike) {
             warnings.push(
-                `Format: Optimizing with svgo.config.mjs (for ${found.join(', ')}) changes the rendering, so --fix left it; fix it in your editor.`,
+                `Format: Optimizing with svgo.config.mjs (for ${found.join(', ')}) changes the rendering even at ${PRECISIONS.at(-1)} decimals, so --fix left it; fix it in your editor.`,
             )
 
             return source
