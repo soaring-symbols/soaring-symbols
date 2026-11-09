@@ -30,6 +30,7 @@ import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
 import { ruleOptimize } from './lint/rule-optimize.js'
+import { optimizeSvg } from './lint/optimize.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
@@ -889,6 +890,25 @@ describe('svg-validator', () => {
         assert.equal(issues.length, 1)
         assert.deepEqual(warnings, [])
         assert.doesNotMatch(content, /metadata|style|transform|\.1234567|-0/)
+    })
+
+    it('optimizes at three decimals unless the shapes would move', () => {
+        const optimizeAsset = (file) =>
+            optimizeSvg(
+                readFileSync(
+                    new URL(`../assets/${file}`, import.meta.url),
+                    'utf8',
+                ),
+            )
+        const vietnam = optimizeAsset('vietnam-airlines/logo.svg')
+        assert.equal(vietnam.precision, 3)
+        assert.ok(vietnam.alike)
+        assert.doesNotMatch(vietnam.data, /\.\d{4}/)
+
+        // Small circles drawn as arcs shift at three decimals
+        const brussels = optimizeAsset('brussels-airlines/icon.svg')
+        assert.ok(brussels.precision > 3, `${brussels.precision} decimals`)
+        assert.ok(brussels.alike)
     })
 
     it('keeps black in a multi-color svg, however it is written', () => {
