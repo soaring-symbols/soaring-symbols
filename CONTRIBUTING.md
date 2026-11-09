@@ -125,6 +125,8 @@ Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them
 
 Every pull request runs the CI workflow (`.github/workflows/ci.yml`): ESLint, Prettier, `node scripts/lint-svg.js --check`, a check that every SVG the pull request adds or changes has been optimized (`npm run optimize:check` runs the same check locally), `npm test`, and a check that running the tooling leaves no uncommitted changes. If it fails on SVG lint or on uncommitted changes, run `node scripts/lint-svg.js --fix` and `npm run generate` locally and commit what they change.
 
+To lint and fix only your own SVGs, try the experimental `node scripts/lint-svg.js --changed --fix`: it works on the SVGs added or changed since `origin/main` (`--base <ref>` picks another ref; listing files, as in `node scripts/lint-svg.js --fix assets/<slug>/icon.svg`, works too) and leaves every other file alone; the run starts with a `🧪 EXPERIMENTAL` line so you know it was limited. Without `--changed`, `--base` or file names, `node scripts/lint-svg.js` lints every SVG as before. It is a shortcut, not the final check: before opening the pull request, run `node scripts/lint-svg.js --check` on every SVG, as CI does, or check your files on the [validator page](https://soaringsymbols.org/validate).
+
 #### Subsidiaries and shared logos
 
 A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline that owns it. It needs SVGs only when its logo differs:

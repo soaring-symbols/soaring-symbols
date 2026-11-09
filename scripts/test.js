@@ -1,5 +1,5 @@
 // Tests for the built package in dist/. Run with `npm test` (builds first).
-import { describe, it, before } from 'node:test'
+import { describe, it, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
+import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
@@ -350,6 +351,31 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     it('returns nothing for a page without an airline infobox', () => {
         assert.equal(extractInfobox('No infobox here'), '')
         assert.deepEqual(infoboxParams(''), {})
+    })
+})
+
+describe('lint file selection (lint-svg --changed)', () => {
+    // Paths and git refs are read from the repo, like lint-svg.js does
+    const outside = process.cwd()
+    before(() => process.chdir(fileURLToPath(new URL('..', import.meta.url))))
+    after(() => process.chdir(outside))
+
+    it('keeps listed SVGs that exist, normalized and deduplicated', () => {
+        const { listed, files } = selectSvgs([
+            '--fix',
+            './assets/iberia/icon.svg',
+            'assets/iberia/icon.svg',
+            'assets/iberia/missing.svg',
+            'README.md',
+        ])
+        assert.equal(listed, true)
+        assert.deepEqual(files, ['assets/iberia/icon.svg'])
+    })
+
+    it('reads --base as the ref, not as a file', () => {
+        const { base, listed } = selectSvgs(['--changed', '--base', 'HEAD'])
+        assert.equal(base, 'HEAD')
+        assert.equal(listed, false)
     })
 })
 

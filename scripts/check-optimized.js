@@ -11,36 +11,11 @@
 //
 // Only changed files are checked by default: some older SVGs are still over
 // the limit (#54). Exits with 1 when a file needs optimizing.
-import { execFileSync } from 'child_process'
-import { existsSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import { loadConfig, optimize } from 'svgo'
+import { selectSvgs } from './lint/changed.js'
 
-const args = process.argv.slice(2)
-const baseIndex = args.indexOf('--base')
-const base = baseIndex === -1 ? null : args[baseIndex + 1]
-const listed = args.filter(
-    (arg, i) => arg !== '--base' && (baseIndex === -1 || i !== baseIndex + 1),
-)
-
-const git = (...gitArgs) =>
-    execFileSync('git', gitArgs, { encoding: 'utf8' })
-        .split('\n')
-        .filter(Boolean)
-
-// SVGs under assets/ added or modified since `ref`, including uncommitted and
-// untracked files
-const changedSince = (ref) => {
-    const since = git('merge-base', ref, 'HEAD')[0]
-
-    return [
-        ...git('diff', '--name-only', '--diff-filter=d', since, '--', 'assets'),
-        ...git('ls-files', '--others', '--exclude-standard', '--', 'assets'),
-    ]
-}
-
-const files = [
-    ...new Set(listed.length ? listed : changedSince(base ?? 'origin/main')),
-].filter((file) => file.endsWith('.svg') && existsSync(file))
+const { files } = selectSvgs(process.argv.slice(2))
 
 if (!files.length) {
     console.log('✅ No changed SVGs to check.')

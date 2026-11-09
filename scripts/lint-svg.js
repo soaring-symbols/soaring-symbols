@@ -2,6 +2,7 @@ import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join } from 'path'
 import { JSDOM } from 'jsdom'
 import { toSlug } from '../utils/index.js'
+import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleGeometry } from './lint/rule-geometry.js'
@@ -14,6 +15,14 @@ const DRY_RUN = !process.argv.includes('--fix')
 const CHECK = process.argv.includes('--check')
 // Experimental: join the paths of single-color SVGs (see ruleOnePathPerColor)
 const MERGE_PATHS = process.argv.includes('--merge-paths')
+// Experimental: lint only the SVGs listed, or with --changed those added or
+// changed since origin/main (or --base <ref>), so a pull request's own files
+// can be fixed without touching or reporting the others. `--base <ref>` alone
+// counts too (its ref is not a flag). With none of these, every SVG is linted,
+// as CI does.
+const ARGS = process.argv.slice(2)
+const SCOPED =
+    ARGS.includes('--changed') || ARGS.some((arg) => !arg.startsWith('--'))
 
 // ---------------------
 
@@ -120,45 +129,64 @@ const main = () => {
     let filesFixed = 0
     let filesWithErrors = 0
 
-    const airlineDirs = readdirSync(ASSETS_DIR, { withFileTypes: true })
-        .filter((dirent) => dirent.isDirectory())
-        .map((dirent) => dirent.name)
+    const selection = SCOPED ? selectSvgs(ARGS) : null
+    if (selection) {
+        const from = selection.listed
+            ? 'listed'
+            : `changed since ${selection.base}`
+        console.log(
+            `--- 🧪 EXPERIMENTAL: only the ${selection.files.length} SVG(s) ${from}. CI still lints every SVG. ---\n`,
+        )
+    }
 
-    for (const dir of airlineDirs) {
-        const airlinePath = join(ASSETS_DIR, dir)
+    // Files grouped by airline folder, in folder order
+    const byDir = new Map()
+    const files = selection
+        ? selection.files.filter((f) => f.startsWith(`${ASSETS_DIR}/`))
+        : readdirSync(ASSETS_DIR, { withFileTypes: true })
+              .filter((dirent) => dirent.isDirectory())
+              .flatMap((dirent) =>
+                  readdirSync(join(ASSETS_DIR, dirent.name))
+                      .filter((f) => f.endsWith('.svg'))
+                      .map((f) => `${ASSETS_DIR}/${dirent.name}/${f}`),
+              )
+    for (const file of files.sort()) {
+        const dir = basename(dirname(file))
+        if (!byDir.has(dir)) byDir.set(dir, [])
+        byDir.get(dir).push(file)
+    }
+
+    for (const [dir, dirFiles] of byDir) {
         const issuesInDir = []
         let wasFixedInDir = false
 
-        readdirSync(airlinePath)
-            .filter((f) => f.endsWith('.svg'))
-            .forEach((file) => {
-                filesChecked++
-                const fullPath = join(airlinePath, file)
+        dirFiles.forEach((fullPath) => {
+            filesChecked++
+            const file = basename(fullPath)
 
-                const relativePath = join(dir, file).replace(/\\/g, '/')
-                if (EXCLUDE_FILES.includes(`assets/${relativePath}`)) {
-                    console.log(`🟡 Skipping excluded file: ${relativePath}\n`)
+            if (EXCLUDE_FILES.includes(fullPath)) {
+                console.log(`🟡 Skipping excluded file: ${dir}/${file}\n`)
 
-                    return
+                return
+            }
+
+            const result = lintSvgFile(fullPath)
+
+            if (result.errorCount > 0) filesWithErrors++
+
+            if (result.issues.length > 0) {
+                filesWithIssues++
+                result.issues.forEach((issue) =>
+                    issuesInDir.push(`${file}: ${issue}`),
+                )
+
+                if (!DRY_RUN && result.fixedContent) {
+                    writeFileSync(fullPath, result.fixedContent)
+                    wasFixedInDir = true
+                    filesFixed++
                 }
-
-                const result = lintSvgFile(fullPath)
-
-                if (result.errorCount > 0) filesWithErrors++
-
-                if (result.issues.length > 0) {
-                    filesWithIssues++
-                    result.issues.forEach((issue) =>
-                        issuesInDir.push(`${file}: ${issue}`),
-                    )
-
-                    if (!DRY_RUN && result.fixedContent) {
-                        writeFileSync(fullPath, result.fixedContent)
-                        wasFixedInDir = true
-                        filesFixed++
-                    }
-                }
-            })
+            }
+        })
 
         if (issuesInDir.length > 0) {
             console.log(`📁 Checking "${dir}"...`)
@@ -179,6 +207,12 @@ const main = () => {
         if (!DRY_RUN) console.log(`Fixed ${filesFixed} file(s).`)
     } else {
         console.log('✅ All files are compliant.')
+    }
+
+    if (selection) {
+        console.log(
+            '\n🧪 Only some SVGs were linted. Before opening a pull request, run `node scripts/lint-svg.js --check` on all of them (as CI does) or check your files on https://soaringsymbols.org/validate.',
+        )
     }
 
     if (CHECK && DRY_RUN && filesWithErrors > 0) {
