@@ -33,6 +33,7 @@ import { ruleOptimize } from './lint/rule-optimize.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
+    ruleTitle,
 } from './lint/rule-structure.js'
 import {
     extractInfobox,
@@ -785,6 +786,27 @@ describe('svg-validator', () => {
             fill(' fill="#111111"', `${gradient}<path d="M2 2"/>`),
             false,
         )
+    })
+
+    it('writes <title> without an empty xmlns', () => {
+        for (const title of ['', '<title xmlns="">Old Name</title>']) {
+            const svg = parse(
+                `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">${title}<path d="M1 1"/></svg>`,
+            )
+            const issues = []
+            ruleTitle({
+                svgElement: svg,
+                document: svg.ownerDocument,
+                airlineName: 'Korean Air',
+                isCatalogName: true,
+                issues,
+            })
+            assert.ok(issues.length > 0, title)
+            assert.match(
+                svg.outerHTML,
+                /<svg [^>]*><title>Korean Air<\/title><path/,
+            )
+        }
     })
 
     it('moves the root fill onto the shapes that use it', () => {
