@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
-import { writeDerivedMonos } from '../utils/index.js'
+import { getAssetDirs, writeDerivedMonos } from '../utils/index.js'
 import { publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 
@@ -35,7 +35,7 @@ async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
     // The repo keeps only hand-written fields; the published catalog adds
-    // `slug` and `assets`. It ships minified: consumers (bundlers, jsDelivr)
+    // `assets` and `history`. It ships minified: consumers (bundlers, jsDelivr)
     // only parse it
     const catalog = publishCatalog(
         JSON.parse(await fs.readFile('./airlines.json', 'utf-8')),
@@ -72,9 +72,12 @@ async function copyFiles() {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
-    // Single-color assets get their -mono.svg here, not in the repo
+    // Single-color assets, older marks included, get their -mono.svg here,
+    // not in the repo
     for (const airline of catalog.filter((a) => !a.marks)) {
-        writeDerivedMonos(airline.slug, path.join(distDir, 'assets'))
+        for (const dir of getAssetDirs(airline.slug)) {
+            writeDerivedMonos(dir, path.join(distDir, 'assets'))
+        }
     }
     // After the monos, so airlines sharing marks get those too
     await copySharedMarks(catalog)
@@ -85,13 +88,17 @@ const escapeXml = (text) =>
 
 // Airlines with `marks` use another airline's SVGs. Copy those files to their
 // own slug in dist (never in the repo), titled with their own name, so every
-// airline's files live at assets/<slug>/ like any other.
+// airline's files live at assets/<slug>/ like any other. Only the current
+// marks are shared, never the history/ folder.
 async function copySharedMarks(airlines) {
     for (const airline of airlines.filter((a) => a.marks)) {
         const src = path.join(distDir, 'assets', airline.marks)
         const dest = path.join(distDir, 'assets', airline.slug)
         await fs.mkdir(dest, { recursive: true })
-        for (const file of await fs.readdir(src)) {
+        const files = (await fs.readdir(src, { withFileTypes: true }))
+            .filter((entry) => entry.isFile())
+            .map((entry) => entry.name)
+        for (const file of files) {
             const svg = await fs.readFile(path.join(src, file), 'utf-8')
             await fs.writeFile(
                 path.join(dest, file),

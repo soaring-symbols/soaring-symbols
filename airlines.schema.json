@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes (see $defs/published); leave it out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, and `history` to those with older marks (see $defs/published); leave both out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, and `history` when it has older marks.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -139,6 +139,10 @@
                 "assets": {
                     "description": "Added by the build from the SVGs; only in the published catalog.",
                     "$ref": "#/$defs/assets"
+                },
+                "history": {
+                    "description": "Added by the build from assets/<slug>/history/<year>/ when the airline has older marks; only in the published catalog.",
+                    "$ref": "#/$defs/history"
                 }
             }
         },
@@ -163,6 +167,23 @@
                 "icon": { "$ref": "#/$defs/assetInfo" },
                 "logo": { "$ref": "#/$defs/assetInfo" },
                 "tail": { "$ref": "#/$defs/assetInfo" }
+            }
+        },
+        "history": {
+            "description": "The marks an airline used before its current ones, oldest first. Each was used from `since` until the next entry's `since`, the last one until the current marks; its files are at assets/<slug>/history/<since>/.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["since", "assets"],
+                "properties": {
+                    "since": {
+                        "description": "Year the mark was introduced, also its folder name.",
+                        "$ref": "#/$defs/year"
+                    },
+                    "assets": { "$ref": "#/$defs/assets" }
+                }
             }
         },
         "assetInfo": {

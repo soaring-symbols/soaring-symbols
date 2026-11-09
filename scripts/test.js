@@ -2,13 +2,28 @@
 import { describe, it, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import {
+    existsSync,
+    mkdirSync,
+    mkdtempSync,
+    readFileSync,
+    readdirSync,
+    rmSync,
+    writeFileSync,
+} from 'node:fs'
+import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
-import { getAirlineAssets } from '../utils/index.js'
+import {
+    findHistoryProblems,
+    getAirlineAssets,
+    getAirlineHistory,
+    getAssetDirs,
+} from '../utils/index.js'
+import { publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
@@ -159,6 +174,44 @@ for (const [format, api] of [
                 assert.ok(getAssetPath('QF', 'icon', { mono: true }))
             })
 
+            it('returns an older mark from the history with since', () => {
+                const airline = {
+                    ...getAirline('VN'),
+                    history: [
+                        {
+                            since: 1989,
+                            assets: {
+                                logo: {
+                                    color: true,
+                                    mono: false,
+                                    colors: ['#00579c', '#d99e09'],
+                                },
+                            },
+                        },
+                    ],
+                }
+                assert.equal(
+                    getAssetPath(airline, 'logo', { since: 1989 }),
+                    'soaring-symbols/assets/vietnam-airlines/history/1989/logo.svg',
+                )
+                assert.equal(
+                    getAssetPath(airline, 'logo', { since: 1989, mono: true }),
+                    undefined,
+                )
+                assert.equal(
+                    getAssetPath(airline, 'icon', { since: 1989 }),
+                    undefined,
+                )
+                assert.equal(
+                    getAssetPath(airline, 'logo', { since: 2002 }),
+                    undefined,
+                )
+                assert.equal(
+                    getAssetPath('VN', 'logo', { since: 1989 }),
+                    undefined,
+                )
+            })
+
             it('returns undefined for an unknown airline', () => {
                 assert.equal(getAssetPath('ZZZZ', 'logo'), undefined)
             })
@@ -169,21 +222,27 @@ for (const [format, api] of [
 
             it('returns a resolvable SVG for every listed asset', () => {
                 for (const a of listAirlines()) {
-                    for (const [type, info] of Object.entries(a.assets)) {
-                        for (const mono of [false, true]) {
-                            const path = getAssetPath(a, type, { mono })
-                            const listed = mono ? info.mono : info.color
-                            assert.equal(
-                                Boolean(path),
-                                listed,
-                                `${a.slug} ${type}`,
-                            )
-                            if (!path) continue
-                            const svg = readFileSync(
-                                require.resolve(path),
-                                'utf8',
-                            )
-                            assert.match(svg, /^<svg[\s>]/, path)
+                    const marks = [{ assets: a.assets }, ...(a.history ?? [])]
+                    for (const { since, assets } of marks) {
+                        for (const [type, info] of Object.entries(assets)) {
+                            for (const mono of [false, true]) {
+                                const path = getAssetPath(a, type, {
+                                    mono,
+                                    since,
+                                })
+                                const listed = mono ? info.mono : info.color
+                                assert.equal(
+                                    Boolean(path),
+                                    listed,
+                                    `${a.slug} ${type}`,
+                                )
+                                if (!path) continue
+                                const svg = readFileSync(
+                                    require.resolve(path),
+                                    'utf8',
+                                )
+                                assert.match(svg, /^<svg[\s>]/, path)
+                            }
                         }
                     }
                 }
@@ -200,7 +259,7 @@ describe('airlines.json schema', () => {
         assert.deepEqual(validateAirlines(shipped, { published: true }), [])
     })
 
-    it('keeps a slug but no assets in the repo copy', () => {
+    it('keeps a slug but no assets or history in the repo copy', () => {
         const source = JSON.parse(
             readFileSync(new URL('../airlines.json', import.meta.url)),
         )
@@ -208,6 +267,7 @@ describe('airlines.json schema', () => {
         for (const a of source) {
             assert.match(a.slug, /^[a-z0-9]+(-[a-z0-9]+)*$/, a.name)
             assert.equal(a.assets, undefined, a.name)
+            assert.equal(a.history, undefined, a.name)
         }
     })
 
@@ -313,6 +373,106 @@ describe('airlines.json assets metadata', () => {
         for (const { name: dir } of dirs) {
             assert.ok(slugs.has(dir), `assets/${dir} has no airline`)
         }
+    })
+})
+
+describe('asset history (assets/<slug>/history/<year>/)', () => {
+    const svg = (color) =>
+        `<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 64 64"><title>Korean Air</title><path fill="${color}" d="M0 0h64v64H0z"/></svg>`
+    let assetsDir
+    const write = (file, content = svg('#051766')) => {
+        mkdirSync(join(assetsDir, file, '..'), { recursive: true })
+        writeFileSync(join(assetsDir, file), content)
+    }
+    const source = JSON.parse(
+        readFileSync(new URL('../airlines.json', import.meta.url)),
+    )
+    const koreanAir = source.find((a) => a.slug === 'korean-air')
+
+    before(() => {
+        assetsDir = mkdtempSync(join(tmpdir(), 'history-'))
+        write('korean-air/logo.svg')
+        write('korean-air/history/2002/logo.svg', svg('#00256c'))
+        write('korean-air/history/1984/logo.svg', svg('#c60c30'))
+        write('korean-air/history/1984/icon.svg', svg('#c60c30'))
+    })
+    after(() => rmSync(assetsDir, { recursive: true, force: true }))
+
+    it('lists the history folders oldest first, after the current one', () => {
+        assert.deepEqual(getAssetDirs('korean-air', assetsDir), [
+            'korean-air',
+            join('korean-air', 'history', '1984'),
+            join('korean-air', 'history', '2002'),
+        ])
+        assert.deepEqual(getAssetDirs('vietnam-airlines', assetsDir), [
+            'vietnam-airlines',
+        ])
+    })
+
+    it('describes each older mark like the current assets', () => {
+        assert.deepEqual(getAirlineHistory('korean-air', assetsDir), [
+            {
+                since: 1984,
+                assets: {
+                    icon: { color: true, mono: true, colors: ['#c60c30'] },
+                    logo: { color: true, mono: true, colors: ['#c60c30'] },
+                },
+            },
+            {
+                since: 2002,
+                assets: {
+                    logo: { color: true, mono: true, colors: ['#00256c'] },
+                },
+            },
+        ])
+        assert.deepEqual(findHistoryProblems('korean-air', assetsDir), [])
+    })
+
+    it('publishes history only for airlines that have it', () => {
+        const borrower = source.find((a) => a.marks)
+        const catalog = publishCatalog(
+            [
+                koreanAir,
+                borrower,
+                source.find((a) => a.slug === borrower.marks),
+            ],
+            assetsDir,
+        )
+        const published = catalog.find((a) => a.slug === 'korean-air')
+        assert.deepEqual(
+            published.history.map((mark) => mark.since),
+            [1984, 2002],
+        )
+        assert.equal(Object.keys(published).at(-1), 'history')
+        assert.equal(catalog.find((a) => a.marks).history, undefined)
+        assert.deepEqual(validateAirlines(catalog, { published: true }), [])
+    })
+
+    it('reports malformed history folders', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'history-bad-'))
+        const put = (file) => {
+            mkdirSync(join(dir, file, '..'), { recursive: true })
+            writeFileSync(join(dir, file), svg('#000000'))
+        }
+        put('x/history/logo.svg')
+        put('x/history/old/logo.svg')
+        put('x/history/2999/logo.svg')
+        put('x/history/1990/logo-2.svg')
+        put('x/history/1995/logo-mono.svg')
+        const problems = findHistoryProblems('x', dir)
+        rmSync(dir, { recursive: true, force: true })
+        const has = (text) =>
+            assert.ok(
+                problems.some((p) => p.includes(text)),
+                `${text} in ${problems.join('; ')}`,
+            )
+        has('history/logo.svg must be in a year folder')
+        has('history/old/ must be named after the year')
+        has('history/2999/ must be named after the year')
+        has('history/1990/logo-2.svg is not icon, logo or tail')
+        has('history/1990/ has no icon.svg')
+        has('history/1995/ has no icon.svg')
+        assert.equal(problems.length, 6)
     })
 })
 

@@ -1,9 +1,14 @@
 // Tidy airlines.json and check it before it is committed: sort it, order each
 // entry's keys, fill in a missing slug, drop the fields only the build adds,
 // validate the catalog as it would be published, check every slug has its
-// asset folder, and delete committed -mono.svg files the build derives.
+// asset folder and well-formed history folders, and delete committed
+// -mono.svg files the build derives.
 import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs'
-import { removeDerivedMonos } from '../utils/index.js'
+import {
+    findHistoryProblems,
+    getAssetDirs,
+    removeDerivedMonos,
+} from '../utils/index.js'
 import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 
@@ -39,7 +44,16 @@ for (const { name, slug, marks } of airlines) {
         )
         process.exit(1)
     }
-    if (!marks) removedMonos.push(...removeDerivedMonos(slug))
+    if (marks) continue
+    const historyProblems = findHistoryProblems(slug)
+    if (historyProblems.length) {
+        console.error(`❌ ${name} has a malformed assets/${slug}/history:`)
+        historyProblems.forEach((problem) => console.error(`  - ${problem}`))
+        process.exit(1)
+    }
+    for (const dir of getAssetDirs(slug)) {
+        removedMonos.push(...removeDerivedMonos(dir))
+    }
 }
 
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))

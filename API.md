@@ -50,12 +50,16 @@ Returns the package path of one SVG file, ready to pass to `require.resolve`, `i
     - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
     - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
     - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
-- **Returns:** `string`, or `undefined` if the airline is unknown or that file does not exist.
+    - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
+- **Returns:** `string`, or `undefined` if the airline is unknown, it has no older mark from `since`, or that file does not exist.
 
 ```js
 getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
 getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-mono.svg'
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
+
+// An older mark, once the airline has one in its history
+getAssetPath('KE', 'logo', { since: 1984 }) // 'soaring-symbols/assets/korean-air/history/1984/logo.svg'
 ```
 
 #### Using the path
@@ -138,6 +142,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `vectorized`   | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                            |
 | `branding`     | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                           |
 | `assets`       | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                |
+| `history`      | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.              |
 
 ### AssetInfo
 
@@ -160,6 +165,37 @@ assets/<slug>/
 ├── logo.svg
 └── logo-mono.svg   # hand-made for a multi-color logo, optional
 ```
+
+### History
+
+An airline that changed its logo but kept its name may list its older marks in `history`, oldest first. Each entry was used from its `since` year until the next entry's `since`, and the last one until the current marks in `assets`. Airlines that borrow another airline's marks (`marks`) have no history.
+
+| Field    | Type     | Description                                                                        |
+| :------- | :------- | :--------------------------------------------------------------------------------- |
+| `since`  | `number` | Year the mark was introduced; also the name of its folder.                         |
+| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`. |
+
+```json
+"history": [
+    {
+        "since": 1984,
+        "assets": {
+            "icon": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] },
+            "logo": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] }
+        }
+    }
+]
+```
+
+The files sit next to the current ones, under `history/<since>/`, and `getAssetPath(airline, type, { since })` returns their path:
+
+```plaintext
+assets/<slug>/history/<since>/
+├── icon.svg
+└── logo.svg
+```
+
+On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`.
 
 ## Subsidiaries in 0.2.2
 
