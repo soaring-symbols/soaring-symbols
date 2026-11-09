@@ -5,6 +5,7 @@ import { toSlug } from '../utils/index.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleGeometry } from './lint/rule-geometry.js'
+import { ruleOptimize } from './lint/rule-optimize.js'
 
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
@@ -38,9 +39,10 @@ const getAirlineName = (filePath) => {
 
 const lintSvgFile = (filePath) => {
     const originalContent = readFileSync(filePath, 'utf8')
-    const dom = new JSDOM(originalContent, { contentType: 'image/svg+xml' })
-    const document = dom.window.document
-    const svgElement = document.querySelector('svg')
+    const parse = (source) =>
+        new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
+    let document = parse(originalContent)
+    let svgElement = document.querySelector('svg')
 
     if (!svgElement) {
         return {
@@ -65,6 +67,14 @@ const lintSvgFile = (filePath) => {
         issues: [],
         // Reported only; never trigger a rewrite in --fix mode
         warnings: [],
+    }
+
+    // Phase 0: SVGO, for the problems only it fixes; the rules lint its result
+    const source = ruleOptimize(originalContent, svgElement, ctx)
+    if (source !== originalContent) {
+        document = parse(source)
+        svgElement = document.querySelector('svg')
+        Object.assign(ctx, { document, svgElement })
     }
 
     // Phase 1: DOM rules

@@ -11,6 +11,7 @@ import { validateAirlines } from '../utils/schema.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
+import { ruleOptimize } from './lint/rule-optimize.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
@@ -631,6 +632,25 @@ describe('svg-validator', () => {
         assert.deepEqual(issues, [])
         assert.equal(warnings.length, 1)
         assert.equal(paths.length, 2)
+    })
+
+    it('runs SVGO on what only SVGO fixes, keeping the rendering', () => {
+        const optimizeLint = (source) => {
+            const ctx = { issues: [], warnings: [] }
+            const content = ruleOptimize(source, parse(source), ctx)
+
+            return { content, ...ctx }
+        }
+        const clean =
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000"><title>X</title><path d="M0 0h24v24H0z"/></svg>'
+        assert.equal(optimizeLint(clean).content, clean)
+
+        const { content, issues, warnings } = optimizeLint(
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title><metadata>x</metadata><style>.a{fill:red}</style><g transform="translate(0 2)"><path class="a" d="M0 0h24.1234567v20H-0z"/></g></svg>',
+        )
+        assert.equal(issues.length, 1)
+        assert.deepEqual(warnings, [])
+        assert.doesNotMatch(content, /metadata|style|transform|\.1234567|-0/)
     })
 
     it('expects currentColor in a -mono.svg', async () => {
