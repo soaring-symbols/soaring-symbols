@@ -46,11 +46,72 @@ const removeEditorMetadata = {
     }),
 }
 
+// Black is SVG's default fill, so removeUnknownsAndDefaults drops it when it
+// is written as #000 or black (convertColors turns black into #000 first),
+// and minifyStyles shortens #000000 inside style="…" before
+// convertStyleToAttrs runs. A multi-color logo would then lose its black
+// parts' fill. This runs before preset-default: it writes 3-digit hex and
+// black as six-digit hex, which SVGO keeps, and moves color declarations out
+// of style="…" into attributes. Other named colors become short hex in
+// convertColors and are expanded here on the next multipass pass.
+const COLOR_PROPS = [
+    'fill',
+    'stroke',
+    'stop-color',
+    'flood-color',
+    'lighting-color',
+    'color',
+]
+
+const expandColor = (value) => {
+    const color = value.trim().toLowerCase()
+    if (color === 'black') return '#000000'
+    const short = color.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/)
+
+    return short
+        ? `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}`
+        : value
+}
+
+const expandColors = {
+    name: 'expandColors',
+    fn: () => ({
+        element: {
+            enter: (node) => {
+                const { attributes } = node
+                if (attributes.style) {
+                    const kept = []
+                    for (const decl of attributes.style.split(';')) {
+                        const i = decl.indexOf(':')
+                        const prop = decl.slice(0, i).trim().toLowerCase()
+                        const value = decl.slice(i + 1).trim()
+                        if (
+                            i > 0 &&
+                            COLOR_PROPS.includes(prop) &&
+                            !/!important/i.test(value)
+                        ) {
+                            // style="…" outranks the attribute it replaces
+                            attributes[prop] = value
+                        } else if (decl.trim()) kept.push(decl.trim())
+                    }
+                    if (kept.length) attributes.style = kept.join(';')
+                    else delete attributes.style
+                }
+                for (const prop of COLOR_PROPS) {
+                    if (attributes[prop] != null)
+                        attributes[prop] = expandColor(attributes[prop])
+                }
+            },
+        },
+    }),
+}
+
 export default {
     multipass: true,
     floatPrecision: 5,
     plugins: [
         removeEditorMetadata,
+        expandColors,
         {
             name: 'preset-default',
             params: {

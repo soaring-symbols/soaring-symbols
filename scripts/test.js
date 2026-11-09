@@ -6,6 +6,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
+import { optimize } from 'svgo'
+import svgoConfig from '../svgo.config.mjs'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
 import { selectSvgs } from './lint/changed.js'
@@ -705,6 +707,25 @@ describe('svg-validator', () => {
         assert.equal(issues.length, 1)
         assert.deepEqual(warnings, [])
         assert.doesNotMatch(content, /metadata|style|transform|\.1234567|-0/)
+    })
+
+    it('keeps black in a multi-color svg, however it is written', () => {
+        const svg = (black, extra = '') =>
+            `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title>${extra}<path fill="#ff0000" d="M0 0h10v10H0z"/><path ${black} d="M12 12h10v10H12z"/></svg>`
+        for (const [black, extra] of [
+            ['fill="#000"'],
+            ['fill="black"'],
+            ['style="fill:#000000"'],
+            ['style="fill:black"'],
+            ['class="k"', '<style>.k{fill:#000}</style>'],
+        ]) {
+            const out = optimize(svg(black, extra), svgoConfig).data
+            assert.match(
+                out,
+                /<path fill="#000000" d="M12 12h10v10H12z"\/>/,
+                black,
+            )
+        }
     })
 
     it('expects currentColor in a -mono.svg', async () => {
