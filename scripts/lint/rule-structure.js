@@ -6,7 +6,11 @@ import {
 } from './validators.js'
 import { applyIfAlike, flattenGroups, mergePaths } from './fix-structure.js'
 
-// RULE: <title> must exist, be the first child and match the airline name
+const SVG_NS = 'http://www.w3.org/2000/svg'
+
+// RULE: <title> must exist, be the first child and match the airline name.
+// It is created in the SVG namespace: document.createElement() would give it
+// no namespace, which serializes as <title xmlns="">.
 export function ruleTitle({
     svgElement,
     document,
@@ -15,9 +19,16 @@ export function ruleTitle({
     issues,
 }) {
     let titleElement = svgElement.querySelector('title')
+    if (titleElement && titleElement.namespaceURI !== SVG_NS) {
+        issues.push('Accessibility: <title> must not set its own xmlns.')
+        const replacement = document.createElementNS(SVG_NS, 'title')
+        replacement.textContent = titleElement.textContent
+        titleElement.replaceWith(replacement)
+        titleElement = replacement
+    }
     if (!titleElement) {
         issues.push('Accessibility: Missing <title> element.')
-        titleElement = document.createElement('title')
+        titleElement = document.createElementNS(SVG_NS, 'title')
         titleElement.textContent = airlineName
         svgElement.prepend(titleElement)
     } else if (svgElement.firstElementChild !== titleElement) {

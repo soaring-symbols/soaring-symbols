@@ -20,6 +20,8 @@ Source: the airline's own SVG, brand guideline or press kit first; Wikimedia Com
 or Wikipedia only when the airline publishes no SVG; never a third-party logo site.
 Changes: anything you did beyond optimizing, e.g. recolored to the website's #cc0100,
 icon cropped from the logo, tagline dropped, vectorized by hand from a PNG.
+Older marks (history/<year>/): list them as `history/1984/logo.svg`, and link a source
+for the year the mark was introduced too.
 -->
 
 ## Checklist

@@ -13,6 +13,19 @@ export interface AssetInfo {
     readonly colors: readonly string[]
 }
 
+export type AssetMap = Readonly<Partial<Record<AssetType, AssetInfo>>>
+
+/**
+ * One of the marks an airline used before its current ones. It was used from
+ * `since` until the next entry's `since`, the last entry until the current
+ * marks. Its files are at `assets/<slug>/history/<since>/`.
+ */
+export interface HistoricalMarks {
+    /** Year the mark was introduced (e.g. 1984). */
+    readonly since: number
+    readonly assets: AssetMap
+}
+
 export interface AirlineBranding {
     readonly primary_color?: string
     readonly tagline?: string
@@ -54,12 +67,22 @@ export interface Airline {
      */
     readonly vectorized?: boolean
     readonly branding?: AirlineBranding
-    readonly assets: Readonly<Partial<Record<AssetType, AssetInfo>>>
+    readonly assets: AssetMap
+    /**
+     * Marks the airline used before its current ones, oldest first; absent
+     * when there are none.
+     */
+    readonly history?: readonly HistoricalMarks[]
 }
 
 export interface AssetPathOptions {
     /** Return the `-mono.svg` variant. */
     mono?: boolean
+    /**
+     * Return the file of the older mark introduced that year, from the
+     * airline's `history`, instead of the current one.
+     */
+    since?: number
 }
 
 export function listAirlines(): Airline[]

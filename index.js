@@ -66,8 +66,10 @@ function getAirline(query) {
 
 /**
  * Package path of one asset file, e.g.
- * 'soaring-symbols/assets/vietnam-airlines/logo.svg'.
- * Returns undefined when the airline or that file does not exist.
+ * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
+ * of an older mark from the airline's `history`, e.g.
+ * 'soaring-symbols/assets/korean-air/history/1984/logo.svg'.
+ * Returns undefined when the airline, that mark or that file does not exist.
  */
 function getAssetPath(airline, type, options = {}) {
     const entry = typeof airline === 'string' ? getAirline(airline) : airline
@@ -76,11 +78,18 @@ function getAssetPath(airline, type, options = {}) {
             `Unknown asset type "${type}", expected one of: ${ASSET_TYPES.join(', ')}`,
         )
     }
-    const asset = entry?.assets?.[type]
+    const { since } = options
+    const assets =
+        since === undefined
+            ? entry?.assets
+            : entry?.history?.find((mark) => mark.since === since)?.assets
+    const asset = assets?.[type]
     const mono = Boolean(options.mono)
     if (!asset || !(mono ? asset.mono : asset.color)) return undefined
+    const dir =
+        since === undefined ? entry.slug : `${entry.slug}/history/${since}`
 
-    return `soaring-symbols/assets/${entry.slug}/${type}${mono ? '-mono' : ''}.svg`
+    return `soaring-symbols/assets/${dir}/${type}${mono ? '-mono' : ''}.svg`
 }
 
 export { listAirlines, getAirline, getAssetPath }

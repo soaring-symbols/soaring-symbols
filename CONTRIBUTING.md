@@ -32,6 +32,29 @@ assets/
     └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
 ```
 
+#### Older Marks (Logo History)
+
+When an airline changes its logo but keeps its name (e.g. Korean Air's 2025 rebrand), the new marks replace the files in `assets/<slug>/`, so everyone linking them gets the current logo. The old marks are welcome too: put them in `assets/<slug>/history/<year>/`, where `<year>` is the year that mark was **introduced**, with the same file names as the current ones.
+
+```plaintext
+assets/
+└── korean-air/
+    ├── icon.svg         # current marks (2025)
+    ├── logo.svg
+    └── history/
+        └── 1984/        # the marks introduced in 1984, used until 2025
+            ├── icon.svg
+            └── logo.svg
+```
+
+- **One folder per mark**, named after the four-digit year it was introduced (look it up in the airline's Wikipedia article or press release). A mark is taken to be used until the next one's year; the newest history folder until the current marks.
+- **Only `icon`, `logo` and `tail`** (`.svg`, or a hand-made `-mono.svg` for a multi-color mark) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
+- **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's **current** name (`lint-svg.js --fix` writes it). Single-color marks get their `-mono.svg` from the build, as in `assets/<slug>/`.
+- **Nothing to add to `airlines.json`:** the build reads the folders and publishes them as the airline's `history`. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files, or has no color file.
+- **Never move the current files into `history/` without new ones:** `assets/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
+- **When the name changes too**, this is not the place: ask in an issue or discussion first, since a new name means a new slug.
+- Say in the pull request where each old mark came from, as for any SVG.
+
 ### 2. SVG Specifications
 
 - **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes:

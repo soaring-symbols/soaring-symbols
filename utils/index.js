@@ -1,4 +1,10 @@
-import { readFileSync, existsSync, writeFileSync, rmSync } from 'fs'
+import {
+    readFileSync,
+    readdirSync,
+    existsSync,
+    writeFileSync,
+    rmSync,
+} from 'fs'
 import { join } from 'path'
 import slugify from 'slugify'
 import { toFullHex } from '../scripts/lint/validators.js'
@@ -97,7 +103,92 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
     return assets
 }
 
+// Older marks live in assets/<slug>/history/<year>/, one folder per year a
+// mark was introduced, with the same file names as the current ones. The
+// current files stay in assets/<slug>/, so nothing that links them changes.
+const HISTORY_DIR = 'history'
+const HISTORY_FILE = /^(icon|logo|tail)(-mono)?\.svg$/
+
+// The asset folders of an airline relative to `assetsDir`: its own, then one
+// per history year, oldest first. writeDerivedMonos and removeDerivedMonos run
+// on each.
+const getHistoryYears = (slug, assetsDir = 'assets') => {
+    const historyDir = join(assetsDir, slug, HISTORY_DIR)
+    if (!existsSync(historyDir)) return []
+
+    return (
+        readdirSync(historyDir, { withFileTypes: true })
+            // Anything else is reported by findHistoryProblems
+            .filter((d) => d.isDirectory() && /^\d{4}$/.test(d.name))
+            .map((d) => d.name)
+            .sort()
+    )
+}
+
+const getAssetDirs = (slug, assetsDir = 'assets') => [
+    slug,
+    ...getHistoryYears(slug, assetsDir).map((year) =>
+        join(slug, HISTORY_DIR, year),
+    ),
+]
+
+// The marks an airline used before its current ones, oldest first:
+// [{ since: 1984, assets: { logo: { color, mono, colors } } }]. Each entry
+// was used from `since` until the next one's `since`, the last one until the
+// current marks.
+const getAirlineHistory = (slug, assetsDir = 'assets') =>
+    getHistoryYears(slug, assetsDir).map((year) => ({
+        since: Number(year),
+        assets: getAirlineAssets(join(slug, HISTORY_DIR, year), assetsDir),
+    }))
+
+// What is wrong with an airline's history folders, as readable messages:
+// a folder that isn't a year up to this one, a file other than the asset
+// files, an empty folder, or a history/ folder holding files itself
+const findHistoryProblems = (slug, assetsDir = 'assets') => {
+    const historyDir = join(assetsDir, slug, HISTORY_DIR)
+    if (!existsSync(historyDir)) return []
+    const thisYear = new Date().getFullYear()
+
+    return readdirSync(historyDir, { withFileTypes: true })
+        .filter((d) => !d.name.startsWith('.'))
+        .flatMap((d) => {
+            const where = `${historyDir}/${d.name}`
+            if (!d.isDirectory()) {
+                return [
+                    `${where} must be in a year folder, e.g. ${historyDir}/1984/`,
+                ]
+            }
+            const year = Number(d.name)
+            if (!/^\d{4}$/.test(d.name) || year < 1900 || year > thisYear) {
+                return [
+                    `${where}/ must be named after the year the mark was introduced, e.g. 1984`,
+                ]
+            }
+            const files = readdirSync(join(historyDir, d.name)).filter(
+                (f) => !f.startsWith('.'),
+            )
+            const wrong = files
+                .filter((f) => !HISTORY_FILE.test(f))
+                .map(
+                    (f) =>
+                        `${where}/${f} is not icon, logo or tail (.svg or -mono.svg)`,
+                )
+            const hasColor = files.some((f) =>
+                /^(icon|logo|tail)\.svg$/.test(f),
+            )
+
+            return hasColor
+                ? wrong
+                : [...wrong, `${where}/ has no icon.svg, logo.svg or tail.svg`]
+        })
+}
+
 export {
+    HISTORY_DIR,
+    getAssetDirs,
+    getAirlineHistory,
+    findHistoryProblems,
     assetTypes,
     toSlug,
     toFullHex,
