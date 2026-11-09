@@ -15,7 +15,7 @@ We welcome contributions from the community to enrich the Soaring Symbols collec
 
 This project uses a "color-first" approach, where the default asset is the full-color version.
 
-- **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name must be a slugified, lowercase version of the airline's name (e.g., `assets/vietnam-airways/`).
+- **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name is the airline's `slug` in `airlines.json`: its name slugified, in lowercase with hyphens (e.g., `assets/vietnam-airlines/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
     - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
@@ -78,9 +78,11 @@ assets/
 
 ### 3. JSON Data Updates
 
-When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information. Everything else the package publishes about the airline (its `slug` and the `assets` found in its SVGs) is added by the build, so the repository's `airlines.json` never holds it.
+When adding a new airline, you only need to add an entry to the `airlines.json` file with the base information, including its `slug`. The `assets` the package publishes about the airline are found in its SVGs by the build, so the repository's `airlines.json` never holds them.
 
 Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run generate` sorts the file, puts every entry's fields in the schema's order, and checks the whole file against the schema. It stops, without writing anything, if an entry has an unknown field, a malformed code or color, or an alliance it does not know. VS Code picks the schema up from the workspace settings, so it autocompletes fields and underlines mistakes as you type. A new field or alliance goes into the schema in the same pull request.
+
+Every airline needs its own `slug`, defunct or not: it names the `assets/<slug>/` folder and is what `parent` and `marks` point at. It must be the name slugified, exactly as `npm run generate` writes it when you leave it out; any other value is rejected, as is a slug another airline already has. `npm run generate` also stops when an airline without `marks` has no `assets/<slug>/` folder.
 
 IATA and ICAO codes must be unique among active airlines. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code.
 
@@ -89,6 +91,7 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 | Field Name     | Required | Description                                                                                   |
 | :------------- | :------: | :-------------------------------------------------------------------------------------------- |
 | `name`         |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**        |
+| `slug`         |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.           |
 | `iata`         |   Yes    | The airline's two-character IATA code.                                                        |
 | `icao`         |   Yes    | The airline's three-character ICAO code.                                                      |
 | `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
@@ -106,7 +109,7 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 
 #### Generated Asset Metadata
 
-In the published package (`dist/airlines.json`), each airline also has a `slug` (from `name`) and an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
+In the published package (`dist/airlines.json`), each airline also has an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
 
 | Field Name | Description                                                                                                     |
 | :--------- | :-------------------------------------------------------------------------------------------------------------- |
@@ -114,7 +117,7 @@ In the published package (`dist/airlines.json`), each airline also has a `slug` 
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Don't add `slug` or `assets` to `airlines.json`: `npm run generate` removes them.
+Don't add `assets` to `airlines.json`: `npm run generate` removes it.
 
 ### 4. Pull Requests
 
@@ -142,6 +145,7 @@ This is what a complete entry looks like in `airlines.json`:
 ```json
 {
     "name": "Vietnam Airlines",
+    "slug": "vietnam-airlines",
     "iata": "VN",
     "icao": "HVN",
     "callsign": "VIET NAM AIRLINES",
@@ -158,13 +162,12 @@ This is what a complete entry looks like in `airlines.json`:
 }
 ```
 
-The published copy in `dist/airlines.json` adds the generated fields:
+The published copy in `dist/airlines.json` adds the generated `assets`:
 
 ```json
 {
     "name": "Vietnam Airlines",
     ...
-    "slug": "vietnam-airlines",
     "assets": {
         "icon": {
             "color": true,

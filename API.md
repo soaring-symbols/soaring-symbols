@@ -92,6 +92,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 ```json
 {
     "name": "Vietnam Airlines",
+    "slug": "vietnam-airlines",
     "iata": "VN",
     "icao": "HVN",
     "callsign": "VIET NAM AIRLINES",
@@ -106,7 +107,6 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
         "tagline": "Reach Further",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
     },
-    "slug": "vietnam-airlines",
     "assets": {
         "icon": { "color": true, "mono": true, "colors": ["#d99e09"] },
         "logo": {
@@ -121,11 +121,11 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | Field          | Type        | Description                                                                                                                          |
 | :------------- | :---------- | :----------------------------------------------------------------------------------------------------------------------------------- |
 | `name`         | `string`    | Full airline name.                                                                                                                   |
+| `slug`         | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`.                                               |
 | `iata`         | `string`    | 2-character IATA code.                                                                                                               |
 | `icao`         | `string`    | 3-letter ICAO code.                                                                                                                  |
 | `callsign`     | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                 |
 | `country`      | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                        |
-| `slug`         | `string`    | URL-friendly name, also the asset folder name.                                                                                       |
 | `website`      | `string?`   | Official website.                                                                                                                    |
 | `flag_carrier` | `boolean?`  | `true` for a national flag carrier.                                                                                                  |
 | `alliance`     | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                      |

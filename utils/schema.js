@@ -9,8 +9,8 @@ const schema = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
 )
 const ajv = new Ajv2020({ allErrors: true })
-// The repo's airlines.json, and the copy the build publishes with `slug` and
-// `assets` added to every entry
+// The repo's airlines.json, and the copy the build publishes with `assets`
+// added to every entry
 const validateSource = ajv.compile(schema)
 const validatePublished = ajv.getSchema(`${schema.$id}#/$defs/published`)
 
@@ -63,10 +63,38 @@ const findDuplicateCodes = (airlines) => {
     })
 }
 
+// A slug is always the slugified name, never chosen by hand
+const findWrongSlugs = (airlines) =>
+    airlines
+        .filter((a) => a.slug !== toSlug(a.name))
+        .map(
+            (a) =>
+                `${a.name}: slug must be "${toSlug(a.name)}", not "${a.slug}"`,
+        )
+
+// Slugs name the asset folders and what `parent` and `marks` point at, so no
+// two airlines may share one, defunct or not
+const findDuplicateSlugs = (airlines) => {
+    const seen = new Map()
+
+    return airlines.flatMap((a) => {
+        const first = seen.get(a.slug)
+        if (!first) {
+            seen.set(a.slug, a)
+
+            return []
+        }
+
+        return [
+            `slug "${a.slug}" is used by more than one airline: ${first.name}, ${a.name}`,
+        ]
+    })
+}
+
 // `parent` and `marks` must name another airline in the catalog, and `marks`
 // must point at one with SVGs of its own (no chains)
 const findBrokenReferences = (airlines) => {
-    const bySlug = new Map(airlines.map((a) => [toSlug(a.name), a]))
+    const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
     return airlines.flatMap((a) =>
         ['parent', 'marks'].flatMap((field) => {
@@ -89,7 +117,7 @@ const findBrokenReferences = (airlines) => {
 
 // Check an airlines.json array against airlines.schema.json and the rules a
 // schema can't express: the repo's copy by default, or with `published` the
-// built one, whose entries must also have `slug` and `assets`. Returns one
+// built one, whose entries must also have `assets`. Returns one
 // readable message per problem, e.g.
 // 'Vietnam Airlines: /branding/primary_color must match pattern ...';
 // an empty array means the data is valid.
@@ -101,7 +129,12 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         )
     }
 
-    return [...findDuplicateCodes(airlines), ...findBrokenReferences(airlines)]
+    return [
+        ...findWrongSlugs(airlines),
+        ...findDuplicateSlugs(airlines),
+        ...findDuplicateCodes(airlines),
+        ...findBrokenReferences(airlines),
+    ]
 }
 
 export { airlineFields, isValidField, validateAirlines }

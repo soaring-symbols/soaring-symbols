@@ -81,6 +81,7 @@ const vna = getAirline('VN')
 /* output example
 {
     "name": "Vietnam Airlines",
+    "slug": "vietnam-airlines",
     "iata": "VN",
     "icao": "HVN",
     "callsign": "VIET NAM AIRLINES",
@@ -95,7 +96,6 @@ const vna = getAirline('VN')
         "tagline": "Reach Further",
         "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
     },
-    "slug": "vietnam-airlines",
     "assets": {
         "icon": { "color": true, "mono": true, "colors": ["#d99e09"] },
         "logo": { "color": true, "mono": true, "colors": ["#d99e09", "#005e80"] }

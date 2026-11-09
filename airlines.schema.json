@@ -2,17 +2,17 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `slug` and `assets` to every entry of the copy it publishes (see $defs/published); leave them out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes (see $defs/published); leave it out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `slug` and `assets`.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`.",
             "type": "array",
             "items": {
                 "allOf": [
                     { "$ref": "#/$defs/airline" },
-                    { "type": "object", "required": ["slug", "assets"] }
+                    { "type": "object", "required": ["assets"] }
                 ]
             }
         },
@@ -59,6 +59,7 @@
             "additionalProperties": false,
             "required": [
                 "name",
+                "slug",
                 "iata",
                 "icao",
                 "country",
@@ -75,6 +76,10 @@
                 "name": {
                     "$ref": "#/$defs/name",
                     "description": "Full name of the airline; the array is sorted by it."
+                },
+                "slug": {
+                    "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
+                    "$ref": "#/$defs/slug"
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
@@ -131,10 +136,6 @@
                     "type": "boolean"
                 },
                 "branding": { "$ref": "#/$defs/branding" },
-                "slug": {
-                    "description": "Added by the build from `name`; only in the published catalog.",
-                    "$ref": "#/$defs/slug"
-                },
                 "assets": {
                     "description": "Added by the build from the SVGs; only in the published catalog.",
                     "$ref": "#/$defs/assets"

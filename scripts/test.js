@@ -198,22 +198,50 @@ describe('airlines.json schema', () => {
         assert.deepEqual(validateAirlines(shipped, { published: true }), [])
     })
 
-    it('keeps slug and assets out of the repo copy', () => {
+    it('keeps a slug but no assets in the repo copy', () => {
         const source = JSON.parse(
             readFileSync(new URL('../airlines.json', import.meta.url)),
         )
         assert.deepEqual(validateAirlines(source), [])
         for (const a of source) {
-            assert.equal(a.slug, undefined, a.name)
+            assert.match(a.slug, /^[a-z0-9]+(-[a-z0-9]+)*$/, a.name)
             assert.equal(a.assets, undefined, a.name)
         }
     })
 
-    it('requires slug and assets in the published catalog', () => {
+    it('requires assets in the published catalog', () => {
         const source = JSON.parse(
             readFileSync(new URL('../airlines.json', import.meta.url)),
         )
         assert.notDeepEqual(validateAirlines(source, { published: true }), [])
+    })
+
+    it('rejects a missing, hand-picked or duplicate slug', () => {
+        const source = JSON.parse(
+            readFileSync(new URL('../airlines.json', import.meta.url)),
+        )
+        const [first, second, ...rest] = source
+        const { slug, ...unslugged } = first
+        assert.notDeepEqual(validateAirlines([unslugged, second, ...rest]), [])
+        assert.deepEqual(
+            validateAirlines([
+                { ...first, slug: `${slug}-x` },
+                second,
+                ...rest,
+            ]),
+            [`${first.name}: slug must be "${slug}", not "${slug}-x"`],
+        )
+        // Two airlines with the same name can't both get its slug
+        assert.deepEqual(
+            validateAirlines([
+                first,
+                { ...second, name: first.name, slug },
+                ...rest,
+            ]),
+            [
+                `slug "${slug}" is used by more than one airline: ${first.name}, ${first.name}`,
+            ],
+        )
     })
 })
 

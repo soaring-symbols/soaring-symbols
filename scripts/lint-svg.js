@@ -29,7 +29,7 @@ const SCOPED =
 // Airline names from the catalog, keyed by asset folder (slug)
 const catalogNames = new Map(
     JSON.parse(readFileSync('airlines.json', 'utf8')).map((a) => [
-        toSlug(a.name),
+        a.slug ?? toSlug(a.name),
         a.name,
     ]),
 )

@@ -1,14 +1,14 @@
 // The two shapes of the airline catalog. The repo keeps only the fields people
-// write (normalizeCatalog); the build adds `slug` and `assets`, which come from
-// the name and the SVGs on disk, to the copy it publishes (publishCatalog).
-// Keeping the generated fields out of the repo means a pull request that adds
-// an airline only touches its own entry.
+// write, `slug` included (normalizeCatalog); the build adds `assets`, which
+// comes from the SVGs on disk, to the copy it publishes (publishCatalog).
+// Keeping generated fields out of the repo means a pull request that adds an
+// airline only touches its own entry.
 import sortBy from 'lodash.sortby'
 import { getAirlineAssets, toFullHex, toSlug } from './index.js'
 import { airlineFields } from './schema.js'
 
 // Fields only the published catalog has
-const GENERATED_FIELDS = ['slug', 'assets']
+const GENERATED_FIELDS = ['assets']
 
 // A copy of the object with its keys in the given order; unknown keys go
 // last so the schema check can report them
@@ -22,7 +22,8 @@ const orderKeys = (object, fields) =>
     )
 
 // The catalog as the repo keeps it: sorted by name, keys in the schema's
-// order, colors in six-digit lowercase hex, and no generated fields
+// order, colors in six-digit lowercase hex, a `slug` from the name where an
+// entry has none yet, and no generated fields
 const normalizeCatalog = (airlines) =>
     sortBy(airlines, (a) => a.name.toLowerCase()).map((airline) => {
         const entry = Object.fromEntries(
@@ -30,6 +31,7 @@ const normalizeCatalog = (airlines) =>
                 ([key]) => !GENERATED_FIELDS.includes(key),
             ),
         )
+        entry.slug ??= toSlug(entry.name)
         if (entry.branding?.primary_color) {
             entry.branding = {
                 ...entry.branding,
@@ -40,15 +42,17 @@ const normalizeCatalog = (airlines) =>
         return orderKeys(entry, airlineFields)
     })
 
-// The catalog as the package ships it: every entry also gets its `slug` and
-// the `assets` found in `assetsDir`. An airline with `marks` reports the files
-// of the airline it names, which the build copies to its own slug.
+// The catalog as the package ships it: every entry also gets the `assets`
+// found in `assetsDir`. An airline with `marks` reports the files of the
+// airline it names, which the build copies to its own slug.
 const publishCatalog = (airlines, assetsDir = 'assets') =>
     normalizeCatalog(airlines).map((airline) => {
-        const slug = toSlug(airline.name)
-        const assets = getAirlineAssets(airline.marks ?? slug, assetsDir)
+        const assets = getAirlineAssets(
+            airline.marks ?? airline.slug,
+            assetsDir,
+        )
 
-        return orderKeys({ ...airline, slug, assets }, airlineFields)
+        return orderKeys({ ...airline, assets }, airlineFields)
     })
 
 export { normalizeCatalog, publishCatalog }
