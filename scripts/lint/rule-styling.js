@@ -7,16 +7,17 @@ import {
     orderPathAttrs,
     orderSvgAttrs,
 } from './validators.js'
+import { OPTIMIZE_HINT } from './rule-format.js'
 
 // RULE: Colors must be six-digit lowercase hex, so the colors read from the
 //       SVGs into airlines.json share one form. Short hex is expanded; color
-//       names and rgb() values are left to `npm run optimize`, which turns
-//       them into hex.
+//       names and rgb() values are left to SVGO (rule-optimize.js), which
+//       turns them into hex.
 export function ruleHexColors({ svgElement, issues }) {
     const { invalid, short } = validateHexColors(svgElement)
     for (const { attr, value } of invalid) {
         issues.push(
-            `Style: Color "${value}" in ${attr} is not a hex color. Run \`npm run optimize\` to convert color names and rgb() values, or write it as six-digit lowercase hex (e.g. "#ff6600"). Not fixable with --fix.`,
+            `Style: Color "${value}" in ${attr} is not a hex color. Write it as six-digit lowercase hex (e.g. "#ff6600"). ${OPTIMIZE_HINT}`,
         )
     }
     for (const { el, attr, value, full } of short) {
@@ -27,14 +28,12 @@ export function ruleHexColors({ svgElement, issues }) {
 
 // RULE: No styles. Style attributes become presentation attributes (a
 //       declaration wins over an attribute of the same name, as in CSS);
-//       <style> elements are left to `npm run optimize`, which inlines and
-//       removes them.
+//       <style> elements are left to SVGO (rule-optimize.js), which inlines
+//       and removes them.
 export function ruleNoStyles({ svgElement, issues }) {
     const { styleElements, styled } = validateNoStyles(svgElement)
     if (styleElements.length) {
-        issues.push(
-            'Style: <style> element found. Run `npm run optimize` to turn its rules into attributes. Not fixable with --fix.',
-        )
+        issues.push(`Style: <style> element found. ${OPTIMIZE_HINT}`)
     }
     for (const { el, decls } of styled) {
         issues.push(

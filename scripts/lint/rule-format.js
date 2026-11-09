@@ -9,7 +9,9 @@ import {
     stripProlog,
 } from './validators.js'
 
-const OPTIMIZE_HINT = 'Run `npm run optimize`; not fixable with --fix.'
+// --fix gets here only when SVGO couldn't fix it (rule-optimize.js)
+export const OPTIMIZE_HINT =
+    '--fix runs it through svgo.config.mjs (as `npm run optimize` does) when that keeps the rendering; otherwise fix it by hand.'
 
 // RULE: No width or height on the root <svg>; the viewBox sets the size, so
 //       the marks scale to whatever box they are placed in

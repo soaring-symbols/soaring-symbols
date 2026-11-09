@@ -1,5 +1,5 @@
 // Tests for the built package in dist/. Run with `npm test` (builds first).
-import { describe, it, before } from 'node:test'
+import { describe, it, before, after } from 'node:test'
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
@@ -8,9 +8,11 @@ import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 import { getAirlineAssets } from '../utils/index.js'
 import { validateAirlines } from '../utils/schema.js'
+import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
+import { ruleOptimize } from './lint/rule-optimize.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
@@ -352,6 +354,31 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     })
 })
 
+describe('lint file selection (lint-svg --changed)', () => {
+    // Paths and git refs are read from the repo, like lint-svg.js does
+    const outside = process.cwd()
+    before(() => process.chdir(fileURLToPath(new URL('..', import.meta.url))))
+    after(() => process.chdir(outside))
+
+    it('keeps listed SVGs that exist, normalized and deduplicated', () => {
+        const { listed, files } = selectSvgs([
+            '--fix',
+            './assets/iberia/icon.svg',
+            'assets/iberia/icon.svg',
+            'assets/iberia/missing.svg',
+            'README.md',
+        ])
+        assert.equal(listed, true)
+        assert.deepEqual(files, ['assets/iberia/icon.svg'])
+    })
+
+    it('reads --base as the ref, not as a file', () => {
+        const { base, listed } = selectSvgs(['--changed', '--base', 'HEAD'])
+        assert.equal(base, 'HEAD')
+        assert.equal(listed, false)
+    })
+})
+
 describe('svg-validator', () => {
     // One parser for every file: a JSDOM window per SVG is slow
     const parser = new new JSDOM('').window.DOMParser()
@@ -631,6 +658,25 @@ describe('svg-validator', () => {
         assert.deepEqual(issues, [])
         assert.equal(warnings.length, 1)
         assert.equal(paths.length, 2)
+    })
+
+    it('runs SVGO on what only SVGO fixes, keeping the rendering', () => {
+        const optimizeLint = (source) => {
+            const ctx = { issues: [], warnings: [] }
+            const content = ruleOptimize(source, parse(source), ctx)
+
+            return { content, ...ctx }
+        }
+        const clean =
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff0000"><title>X</title><path d="M0 0h24v24H0z"/></svg>'
+        assert.equal(optimizeLint(clean).content, clean)
+
+        const { content, issues, warnings } = optimizeLint(
+            '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title><metadata>x</metadata><style>.a{fill:red}</style><g transform="translate(0 2)"><path class="a" d="M0 0h24.1234567v20H-0z"/></g></svg>',
+        )
+        assert.equal(issues.length, 1)
+        assert.deepEqual(warnings, [])
+        assert.doesNotMatch(content, /metadata|style|transform|\.1234567|-0/)
     })
 
     it('expects currentColor in a -mono.svg', async () => {
