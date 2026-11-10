@@ -37,6 +37,7 @@ import {
     ruleTitle,
 } from './lint/rule-structure.js'
 import {
+    carriedOn,
     extractInfobox,
     firstYear,
     infoboxParams,
@@ -625,6 +626,32 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     it('reads the year out of a date template', () => {
         assert.equal(firstYear(params.ceased), 2020)
         assert.equal(firstYear(''), undefined)
+    })
+
+    it("picks the infobox of the name asked for on a renamed airline's page", () => {
+        const renamed = `{{Infobox airline
+| airline = Pacific Airlines
+| callsign = PACIFIC
+}}
+=== Jetstar Pacific ===
+{{Infobox airline
+| airline = Jetstar Pacific Airlines
+| callsign = PACIFIC EXPRESS
+| ceased = {{end date|2020|07|29|df=yes}}<br />{{small|(rebranded to ''Pacific Airlines'')}}
+}}`
+        const callsignOf = (name) =>
+            infoboxParams(extractInfobox(renamed, name)).callsign
+        assert.equal(callsignOf('Pacific Airlines'), 'PACIFIC')
+        assert.equal(callsignOf('Jetstar Pacific'), 'PACIFIC EXPRESS')
+        assert.equal(callsignOf('Someone Else'), 'PACIFIC')
+        assert.equal(callsignOf(), 'PACIFIC')
+
+        const { ceased } = infoboxParams(
+            extractInfobox(renamed, 'Jetstar Pacific'),
+        )
+        assert.equal(firstYear(ceased), 2020)
+        assert.equal(carriedOn(ceased), 'rebranded to Pacific Airlines')
+        assert.equal(carriedOn(params.ceased), undefined)
     })
 
     it('returns nothing for a page without an airline infobox', () => {

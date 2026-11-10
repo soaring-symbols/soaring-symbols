@@ -1,6 +1,7 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
 // report (or apply) what changed: IATA/ICAO codes, callsign, hubs, and
-// whether the airline ceased operations.
+// whether the airline ceased operations. A rename or merger is only
+// reported, since its new name needs an entry of its own.
 //
 //   node scripts/sync-data.js                     report only
 //   node scripts/sync-data.js --write             apply, then npm run generate
@@ -13,6 +14,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isValidField, validateAirlines } from '../utils/schema.js'
 import {
+    carriedOn,
     extractInfobox,
     fetchAirportCodes,
     fetchPages,
@@ -60,7 +62,7 @@ console.log(`Fetching ${airlines.length} Wikipedia pages...`)
 const pages = await fetchPages(airlines.map(titleOf))
 const paramsByName = Object.fromEntries(
     airlines.map((a) => {
-        const params = infoboxParams(extractInfobox(pages[titleOf(a)]))
+        const params = infoboxParams(extractInfobox(pages[titleOf(a)], a.name))
         // Some infoboxes use the singular name
         params.hubs ??= params.hub
 
@@ -124,6 +126,14 @@ for (const airline of airlines) {
         if (airline.ceased !== ceased) propose('ceased', ceased)
     } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
+    }
+    // A rename or merger needs the new name as an entry of its own, which
+    // only a person can add
+    const ending = carriedOn(params.ceased)
+    if (ending && !airline.successor) {
+        note(
+            `Wikipedia says it ceased "${ending}"; add the airline that carried on and set successor (see "Renames and mergers" in CONTRIBUTING.md)`,
+        )
     }
 
     if (changes.length) proposals.push({ airline, changes })
