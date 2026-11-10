@@ -25,8 +25,9 @@ const NEEDS_SVGO = [
 
 // PRE-PHASE: an SVG with a problem only SVGO fixes (see NEEDS_SVGO) is run
 // through the project's svgo.config.mjs, as `npm run optimize` would (at the
-// lowest precision that renders like the original), and the rules then lint
-// the result. When no precision renders alike, the file is linted as it is
+// lowest precision that renders like the original with its edges in place),
+// and the rules then lint the result. When no precision does, the file is
+// linted as it is
 // and the rules report each problem. Returns the content the rules should
 // lint.
 export function ruleOptimize(source, svgElement, { issues, warnings }) {
@@ -42,7 +43,7 @@ export function ruleOptimize(source, svgElement, { issues, warnings }) {
         if (optimized === source) return source
         if (!result.alike) {
             warnings.push(
-                `Format: Optimizing with svgo.config.mjs (for ${found.join(', ')}) changes the rendering even at ${PRECISIONS.at(-1)} decimals, so --fix left it; fix it in your editor.`,
+                `Format: Optimizing with svgo.config.mjs (for ${found.join(', ')}) changes the rendering or moves the artwork even at ${PRECISIONS.at(-1)} decimals, so --fix left it; fix it in your editor.`,
             )
 
             return source

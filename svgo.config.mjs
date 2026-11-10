@@ -1,6 +1,7 @@
 // SVGO config for airline assets: npm run optimize -- assets/<slug>/*.svg
 // runs it through scripts/lint/optimize.js, which tries three decimals first
-// and four or five for the few shapes that move at three. Used on its own
+// and four or five for the shapes that move at three, visibly or off the
+// edge of the viewBox. Used on its own
 // (svgo --config svgo.config.mjs), it writes three.
 //
 // Differs from SVGO's defaults so the output passes lint-svg and renders the same:

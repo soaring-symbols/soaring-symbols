@@ -32,6 +32,7 @@ import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
 import { ruleOptimize } from './lint/rule-optimize.js'
 import { optimizeSvg } from './lint/optimize.js'
+import { measureBBox } from './lint/render.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
@@ -1093,6 +1094,35 @@ describe('svg-validator', () => {
         const brussels = optimizeAsset('brussels-airlines/icon.svg')
         assert.ok(brussels.precision > 3, `${brussels.precision} decimals`)
         assert.ok(brussels.alike)
+    })
+
+    it('keeps the artwork on the edges of the viewBox it filled', () => {
+        const edges = (svg) => {
+            const { x, y, width, height } = measureBBox(svg)
+
+            return [x, y, x + width, y + height]
+        }
+        // At three decimals, rounding errors add up to 0.019 here
+        // (Philippine Airlines) and take an edge off the viewBox (Saudia)
+        for (const file of [
+            'philippine-airlines/logo.svg',
+            'saudia/icon.svg',
+        ]) {
+            const source = readFileSync(
+                new URL(`../assets/${file}`, import.meta.url),
+                'utf8',
+            )
+            const result = optimizeSvg(source)
+            assert.ok(result.precision > 3, `${file}: ${result.precision}`)
+            assert.ok(result.alike, file)
+            const before = edges(source)
+            edges(result.data).forEach((edge, i) =>
+                assert.ok(
+                    Math.abs(edge - before[i]) < 0.001,
+                    `${file}: edge ${i} moved from ${before[i]} to ${edge}`,
+                ),
+            )
+        }
     })
 
     it('keeps black in a multi-color svg, however it is written', () => {

@@ -9,12 +9,21 @@ const SIZE = 256
 // (the seam between them), so 96 lets seams go and catches holes.
 const TOLERANCE = 96
 
+// No SVG uses <text>, and loading system fonts is the slow part
+const FONT = { loadSystemFonts: false }
+
 const render = (svgString) =>
     new Resvg(svgString, {
         fitTo: { mode: 'width', value: SIZE },
-        // No SVG uses <text>, and loading system fonts is the slow part
-        font: { loadSystemFonts: false },
+        font: FONT,
     }).render().pixels
+
+// The artwork's bounding box in viewBox units ({ x, y, width, height }), as
+// the browser's getBBox() gives it (both leave strokes out); undefined for an
+// SVG that draws nothing. jsdom has no layout, so resvg measures it.
+export function measureBBox(svgString) {
+    return new Resvg(svgString, { font: FONT }).getBBox()
+}
 
 // Whether two SVGs render the same, apart from antialiasing along the edges
 // shapes share. The --fix steps that rewrite shapes or groups check their
