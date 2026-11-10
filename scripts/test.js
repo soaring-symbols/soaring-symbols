@@ -1097,31 +1097,42 @@ describe('svg-validator', () => {
     })
 
     it('keeps the artwork on the edges of the viewBox it filled', () => {
+        const read = (file) =>
+            readFileSync(new URL(`../assets/${file}`, import.meta.url), 'utf8')
         const edges = (svg) => {
             const { x, y, width, height } = measureBBox(svg)
 
             return [x, y, x + width, y + height]
         }
-        // At three decimals, rounding errors add up to 0.019 here
-        // (Philippine Airlines) and take an edge off the viewBox (Saudia)
+        // Rounding the original at three decimals moves an edge off the
+        // viewBox (Saudia) or by 0.019 (Philippine Airlines)
         for (const file of [
-            'philippine-airlines/logo.svg',
             'saudia/icon.svg',
+            'philippine-airlines/logo.svg',
+            'bamboo-airways/logo.svg',
+            // Fills 64 at three decimals (-0.0002 to 64.0002), not 63.998
+            'virgin-australia/logo-mono.svg',
         ]) {
-            const source = readFileSync(
-                new URL(`../assets/${file}`, import.meta.url),
-                'utf8',
-            )
+            const source = read(file)
             const result = optimizeSvg(source)
-            assert.ok(result.precision > 3, `${file}: ${result.precision}`)
             assert.ok(result.alike, file)
+            const size = file.includes('/logo') ? 64 : 24
             const before = edges(source)
-            edges(result.data).forEach((edge, i) =>
+            edges(result.data).forEach((edge, i) => {
+                const viewBox = i < 2 ? 0 : size
+                if (Math.abs(before[i] - viewBox) < 0.0005) {
+                    assert.ok(
+                        Math.abs(edge - viewBox) < 0.0005,
+                        `${file}: edge ${i} left the viewBox (${edge})`,
+                    )
+                }
                 assert.ok(
-                    Math.abs(edge - before[i]) < 0.001,
+                    Math.abs(edge - before[i]) < 0.01,
                     `${file}: edge ${i} moved from ${before[i]} to ${edge}`,
-                ),
-            )
+                )
+            })
+            // Optimizing the result again changes nothing
+            assert.equal(optimizeSvg(result.data).data, result.data, file)
         }
     })
 
