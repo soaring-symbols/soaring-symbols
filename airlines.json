@@ -1352,6 +1352,24 @@
         }
     },
     {
+        "name": "Jetstar Pacific",
+        "slug": "jetstar-pacific",
+        "iata": "BL",
+        "icao": "PIC",
+        "callsign": "PACIFIC EXPRESS",
+        "country": "VN",
+        "website": "https://www.jetstar.com/vn/en/home",
+        "parent": "vietnam-airlines",
+        "marks": "jetstar",
+        "founded": 2008,
+        "defunct": true,
+        "ceased": 2020,
+        "successor": "pacific-airlines",
+        "branding": {
+            "primary_color": "#ff5111"
+        }
+    },
+    {
         "name": "Juneyao Air",
         "slug": "juneyao-air",
         "iata": "HO",
@@ -1692,6 +1710,7 @@
         "country": "VN",
         "flag_carrier": false,
         "website": "https://www.pacificairlines.com",
+        "parent": "vietnam-airlines",
         "founded": 1990,
         "branding": {
             "primary_color": "#324471"
