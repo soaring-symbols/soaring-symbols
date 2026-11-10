@@ -123,7 +123,7 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 | `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
 | `flag_carrier` |    No    | `true` or `false`.                                                                            |
 | `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
-| `parent`       |    No    | Slug of the airline that owns this one, e.g. "airasia".                                       |
+| `parent`       |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                        |
 | `marks`        |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).        |
 | `hubs`         |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.        |
 | `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
@@ -157,7 +157,7 @@ To lint and fix only your own SVGs, try the experimental `node scripts/lint-svg.
 
 #### Subsidiaries and shared logos
 
-A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline that owns it. It needs SVGs only when its logo differs:
+A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline group it is a subsidiary of: the airline that owns it, or whose network it flies in (Jetstar Japan and Jetstar Pacific under `jetstar`). Listing an airline's subsidiaries means finding the entries whose `parent` is its slug. It needs SVGs only when its logo differs:
 
 - **Same logo as another airline:** add no `assets/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's own slug in the published package, so the repository keeps one copy.
 - **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
@@ -173,7 +173,7 @@ Each entry is one name, and its slug never changes, so links to `assets/<slug>/`
 
 `founded` and `ceased` give the years the airline flew under that name. Codes can stay the same on every entry: a code shared with an active airline finds the active one.
 
-Pacific Airlines, for example, flew as Jetstar Pacific with the Jetstar logo from 2008 to 2020, then went back to its own name:
+Pacific Airlines, for example, flew as Jetstar Pacific, part of the Jetstar group with its logo, from 2008 to 2020, then went back to its own name under Vietnam Airlines:
 
 ```json
 {
@@ -184,7 +184,7 @@ Pacific Airlines, for example, flew as Jetstar Pacific with the Jetstar logo fro
     "callsign": "PACIFIC EXPRESS",
     "country": "VN",
     "website": "https://www.jetstar.com/vn/en/home",
-    "parent": "vietnam-airlines",
+    "parent": "jetstar",
     "marks": "jetstar",
     "founded": 2008,
     "defunct": true,

@@ -47,7 +47,7 @@ export interface Airline {
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
     readonly alliance?: string
-    /** Slug of the airline that owns this one (e.g. "airasia"). */
+    /** Slug of the airline group this one is a subsidiary of (e.g. "airasia"). */
     readonly parent?: string
     /**
      * Slug of the airline whose marks this one uses (e.g. "airasia"). Its

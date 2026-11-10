@@ -108,7 +108,7 @@
                     ]
                 },
                 "parent": {
-                    "description": "Slug of the airline in this catalog that owns this one, e.g. \"airasia\" for Thai AirAsia.",
+                    "description": "Slug of the airline group in this catalog that this one is a subsidiary of: the airline that owns it, or whose network it flies in, e.g. \"airasia\" for Thai AirAsia or \"jetstar\" for Jetstar Japan.",
                     "$ref": "#/$defs/slug"
                 },
                 "marks": {

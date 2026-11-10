@@ -133,7 +133,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `website`      | `string?`   | Official website.                                                                                                                    |
 | `flag_carrier` | `boolean?`  | `true` for a national flag carrier.                                                                                                  |
 | `alliance`     | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                      |
-| `parent`       | `string?`   | Slug of the airline that owns this one, e.g. `"airasia"` for Thai AirAsia.                                                           |
+| `parent`       | `string?`   | Slug of the airline group this one is a subsidiary of, e.g. `"airasia"` for Thai AirAsia; filter on it to list a group's airlines.   |
 | `marks`        | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes. |
 | `hubs`         | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.         |
 | `founded`      | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                |

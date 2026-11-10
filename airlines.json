@@ -1359,7 +1359,7 @@
         "callsign": "PACIFIC EXPRESS",
         "country": "VN",
         "website": "https://www.jetstar.com/vn/en/home",
-        "parent": "vietnam-airlines",
+        "parent": "jetstar",
         "marks": "jetstar",
         "founded": 2008,
         "defunct": true,
