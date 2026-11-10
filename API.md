@@ -59,7 +59,7 @@ getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-ai
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
 
 // An older mark, once the airline has one in its history
-getAssetPath('KE', 'logo', { since: 1984 }) // 'soaring-symbols/assets/korean-air/history/1984/logo.svg'
+getAssetPath('9G', 'logo', { since: 2025 }) // 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'
 ```
 
 #### Using the path
@@ -180,10 +180,9 @@ An airline that changed its logo but kept its name may list its older marks in `
 ```json
 "history": [
     {
-        "since": 1984,
+        "since": 2025,
         "assets": {
-            "icon": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] },
-            "logo": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] }
+            "logo": { "color": true, "mono": true, "colors": ["#ca1c2a", "#f1c217"] }
         }
     }
 ]
@@ -205,7 +204,6 @@ Each entry is one name, and a slug never changes, so links and stored slugs keep
 
 ```js
 // Pacific Airlines flew as Jetstar Pacific from 2008 to 2020
-// (an example: neither is in the catalog yet)
 getAirline('Jetstar Pacific') // { slug: 'jetstar-pacific', defunct: true, ceased: 2020, successor: 'pacific-airlines', ... }
 getAirline('BL') // Pacific Airlines, the active one
 getAirline('pacific-airlines').predecessors // ['jetstar-pacific']

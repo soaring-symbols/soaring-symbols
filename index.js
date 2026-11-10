@@ -68,7 +68,7 @@ function getAirline(query) {
  * Package path of one asset file, e.g.
  * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
  * of an older mark from the airline's `history`, e.g.
- * 'soaring-symbols/assets/korean-air/history/1984/logo.svg'.
+ * 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'.
  * Returns undefined when the airline, that mark or that file does not exist.
  */
 function getAssetPath(airline, type, options = {}) {

@@ -34,17 +34,18 @@ assets/
 
 #### Older Marks (Logo History)
 
-When an airline changes its logo but keeps its name (e.g. Korean Air's 2025 rebrand), the new marks replace the files in `assets/<slug>/`, so everyone linking them gets the current logo. The old marks are welcome too: put them in `assets/<slug>/history/<year>/`, where `<year>` is the year that mark was **introduced**, with the same file names as the current ones.
+When an airline changes its logo but keeps its name (e.g. Sun PhuQuoc Airways' 2026 logo), the new marks replace the files in `assets/<slug>/`, so everyone linking them gets the current logo. The old marks are welcome too: put them in `assets/<slug>/history/<year>/`, where `<year>` is the year that mark was **introduced**, with the same file names as the current ones.
 
 ```plaintext
 assets/
-└── korean-air/
-    ├── icon.svg         # current marks (2025)
+└── sun-phuquoc-airways/
+    ├── icon.svg         # current marks (2026)
     ├── logo.svg
+    ├── logo-mono.svg
     └── history/
-        └── 1984/        # the marks introduced in 1984, used until 2025
-            ├── icon.svg
-            └── logo.svg
+        └── 2025/        # the logo introduced in 2025, used until 2026
+            ├── logo.svg
+            └── logo-mono.svg
 ```
 
 - **One folder per mark**, named after the four-digit year it was introduced (look it up in the airline's Wikipedia article or press release). A mark is taken to be used until the next one's year; the newest history folder until the current marks.
@@ -201,17 +202,11 @@ Pacific Airlines, for example, flew as Jetstar Pacific with the Jetstar logo fro
     "website": "https://www.pacificairlines.com",
     "parent": "vietnam-airlines",
     "founded": 1990,
-    "branding": { "primary_color": "..." }
+    "branding": { "primary_color": "#324471" }
 }
 ```
 
-```plaintext
-assets/pacific-airlines/
-├── logo.svg         # the logo since 2020
-└── history/
-    └── 1991/        # the logo it flew before 2008
-        └── logo.svg
-```
+Jetstar Pacific has no folder, since it flew the Jetstar logo. Pacific Airlines' logo from before 2008, once someone draws it, goes in `assets/pacific-airlines/history/<year introduced>/`.
 
 A merger works like rule 1: the absorbed airline becomes defunct with `successor` set to the airline it joined (e.g. Vistara → `air-india`), and several airlines may share one successor. Following `successor` must end at an airline without one. The build lists the old entries in the successor's `predecessors`, so the link is written once, and it all ships as a patch release, since no file moves.
 
