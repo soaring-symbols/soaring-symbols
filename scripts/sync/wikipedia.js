@@ -73,17 +73,18 @@ export function extractInfobox(wikitext, name) {
         infoboxes.push(wikitext.slice(match.index, end))
         pattern.lastIndex = end
     }
-    if (!name || infoboxes.length < 2) return infoboxes[0] ?? ''
+    if (!name) return infoboxes[0] ?? ''
 
     const wanted = name.trim().toLowerCase()
-    const nameOf = (infobox) =>
-        listItems(infoboxParams(infobox).airline)[0]?.toLowerCase() ?? ''
-
-    return (
-        infoboxes.find((infobox) => nameOf(infobox) === wanted) ??
-        infoboxes.find((infobox) => nameOf(infobox).startsWith(wanted)) ??
-        infoboxes[0]
+    const names = infoboxes.map(
+        (infobox) =>
+            listItems(infoboxParams(infobox).airline)[0]?.toLowerCase() ?? '',
     )
+    const exact = names.indexOf(wanted)
+    const index =
+        exact >= 0 ? exact : names.findIndex((n) => n.startsWith(wanted))
+
+    return infoboxes[Math.max(index, 0)] ?? ''
 }
 
 // Infobox parameters as { lowercased name: raw value }

@@ -57,8 +57,10 @@ const getPredecessors = (airlines) => {
         (a) => a.ceased ?? Infinity,
     )
     for (const a of ceased) {
-        if (!predecessors.has(a.successor)) predecessors.set(a.successor, [])
-        predecessors.get(a.successor).push(a.slug)
+        predecessors.set(a.successor, [
+            ...(predecessors.get(a.successor) ?? []),
+            a.slug,
+        ])
     }
 
     return predecessors

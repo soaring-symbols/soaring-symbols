@@ -22,6 +22,7 @@ import {
     getAirlineAssets,
     getAirlineHistory,
     getAssetDirs,
+    toSlug,
 } from '../utils/index.js'
 import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
@@ -313,7 +314,7 @@ describe('airlines.json schema', () => {
 describe('renames and mergers (successor)', () => {
     const entry = (name, fields = {}) => ({
         name,
-        slug: name.toLowerCase().replace(/ /g, '-'),
+        slug: toSlug(name),
         iata: 'BL',
         icao: 'PIC',
         country: 'VN',
@@ -370,30 +371,26 @@ describe('renames and mergers (successor)', () => {
     })
 
     it('publishes predecessors on the successor, earliest to cease first', () => {
-        const dir = mkdtempSync(join(tmpdir(), 'successor-'))
-        try {
-            const catalog = publishCatalog(
-                [
-                    renamed('B Air', 'c-air', 2020),
-                    renamed('A Air', 'c-air', 2010),
-                    renamed('Old C Air', 'b-air', 2015),
-                    entry('C Air'),
-                ],
-                dir,
-            )
-            const bySlug = (slug) => catalog.find((a) => a.slug === slug)
-            assert.deepEqual(bySlug('c-air').predecessors, ['a-air', 'b-air'])
-            assert.deepEqual(bySlug('b-air').predecessors, ['old-c-air'])
-            assert.equal(bySlug('a-air').predecessors, undefined)
-            // Generated, so the repo copy never keeps it
-            assert.equal(
-                normalizeCatalog(catalog).find((a) => a.slug === 'c-air')
-                    .predecessors,
-                undefined,
-            )
-        } finally {
-            rmSync(dir, { recursive: true, force: true })
-        }
+        const catalog = publishCatalog(
+            [
+                renamed('B Air', 'c-air', 2020),
+                renamed('A Air', 'c-air', 2010),
+                renamed('Old C Air', 'b-air', 2015),
+                entry('C Air'),
+            ],
+            // No SVGs needed: a missing folder reads as no assets
+            join(tmpdir(), 'soaring-symbols-no-assets'),
+        )
+        const bySlug = (slug) => catalog.find((a) => a.slug === slug)
+        assert.deepEqual(bySlug('c-air').predecessors, ['a-air', 'b-air'])
+        assert.deepEqual(bySlug('b-air').predecessors, ['old-c-air'])
+        assert.equal(bySlug('a-air').predecessors, undefined)
+        // Generated, so the repo copy never keeps it
+        assert.equal(
+            normalizeCatalog(catalog).find((a) => a.slug === 'c-air')
+                .predecessors,
+            undefined,
+        )
     })
 })
 

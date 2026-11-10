@@ -97,18 +97,16 @@ const findDuplicateSlugs = (airlines) => {
 const findBrokenReferences = (airlines) => {
     const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
+    // A chain longer than the catalog must loop; a loop that doesn't pass
+    // through `a` is reported by its own members
     const findLoop = (a) => {
-        const seen = new Set([a])
-        for (let next = bySlug.get(a.successor); next;) {
+        let next = bySlug.get(a.successor)
+        for (let i = 0; next && i < airlines.length; i++) {
             if (next === a) {
                 return [
                     `${a.name}: successor "${a.successor}" leads back to it`,
                 ]
             }
-            // A loop that doesn't pass through `a` is reported by its own
-            // members
-            if (seen.has(next)) return []
-            seen.add(next)
             next = bySlug.get(next.successor)
         }
 
