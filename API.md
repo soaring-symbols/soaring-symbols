@@ -27,7 +27,7 @@ const skyTeam = all.filter((airline) => airline.alliance === 'SkyTeam')
 
 Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name.
 
-Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name.
+Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. An airline that was renamed or merged into another stays in the catalog under its old name, so a former name still finds it, and its `successor` leads on (see [Renames and mergers](#renames-and-mergers)).
 
 - **Argument:** `query` (string)
 - **Returns:** `Airline`, or `undefined` if nothing matches.
@@ -139,6 +139,8 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `founded`      | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                |
 | `defunct`      | `boolean?`  | `true` if the airline has ceased operations.                                                                                         |
 | `ceased`       | `number?`   | Year a defunct airline ceased operations.                                                                                            |
+| `successor`    | `string?`   | Slug of the airline that carried on a defunct one after a rename or a merger (see [Renames and mergers](#renames-and-mergers)).      |
+| `predecessors` | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                |
 | `vectorized`   | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                            |
 | `branding`     | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                           |
 | `assets`       | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                |
@@ -196,6 +198,22 @@ assets/<slug>/history/<since>/
 ```
 
 On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`.
+
+### Renames and mergers
+
+Each entry is one name, and a slug never changes, so links and stored slugs keep working. When an airline is renamed, or merged into another, its entry stays under its old name with `defunct: true`, the year in `ceased`, its marks, and `successor` set to the airline that carried on. That airline lists the old entries in `predecessors`. An airline that goes back to an earlier name uses that name's entry again, with its older marks in [`history`](#history). A code they share finds the active airline.
+
+```js
+// Pacific Airlines flew as Jetstar Pacific from 2008 to 2020
+// (an example: neither is in the catalog yet)
+getAirline('Jetstar Pacific') // { slug: 'jetstar-pacific', defunct: true, ceased: 2020, successor: 'pacific-airlines', ... }
+getAirline('BL') // Pacific Airlines, the active one
+getAirline('pacific-airlines').predecessors // ['jetstar-pacific']
+
+// The airline flying today under a name that may have changed
+const current = (airline) =>
+    airline.successor ? current(getAirline(airline.successor)) : airline
+```
 
 ## Subsidiaries in 0.2.2
 

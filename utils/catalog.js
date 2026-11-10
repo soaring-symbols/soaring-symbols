@@ -1,7 +1,7 @@
 // The two shapes of the airline catalog. The repo keeps only the fields people
 // write, `slug` included (normalizeCatalog); the build adds `assets` and
-// `history`, which come from the SVGs on disk, to the copy it publishes
-// (publishCatalog).
+// `history`, which come from the SVGs on disk, and `predecessors`, the
+// reverse of `successor`, to the copy it publishes (publishCatalog).
 // Keeping generated fields out of the repo means a pull request that adds an
 // airline only touches its own entry.
 import sortBy from 'lodash.sortby'
@@ -14,7 +14,7 @@ import {
 import { airlineFields } from './schema.js'
 
 // Fields only the published catalog has
-const GENERATED_FIELDS = ['assets', 'history']
+const GENERATED_FIELDS = ['assets', 'history', 'predecessors']
 
 // A copy of the object with its keys in the given order; unknown keys go
 // last so the schema check can report them
@@ -48,12 +48,32 @@ const normalizeCatalog = (airlines) =>
         return orderKeys(entry, airlineFields)
     })
 
+// The slugs of the defunct airlines each airline carried on, by its slug:
+// those whose `successor` names it, the earliest to cease first
+const getPredecessors = (airlines) => {
+    const predecessors = new Map()
+    const ceased = sortBy(
+        airlines.filter((a) => a.successor),
+        (a) => a.ceased ?? Infinity,
+    )
+    for (const a of ceased) {
+        if (!predecessors.has(a.successor)) predecessors.set(a.successor, [])
+        predecessors.get(a.successor).push(a.slug)
+    }
+
+    return predecessors
+}
+
 // The catalog as the package ships it: every entry also gets the `assets`
-// found in `assetsDir`, and the `history` of its older marks when it has
-// any. An airline with `marks` reports the current files of the airline it
-// names, which the build copies to its own slug, and no history.
-const publishCatalog = (airlines, assetsDir = 'assets') =>
-    normalizeCatalog(airlines).map((airline) => {
+// found in `assetsDir`, the `history` of its older marks when it has any,
+// and `predecessors` when it carried on a defunct airline. An airline with
+// `marks` reports the current files of the airline it names, which the
+// build copies to its own slug, and no history.
+const publishCatalog = (airlines, assetsDir = 'assets') => {
+    const catalog = normalizeCatalog(airlines)
+    const predecessorsOf = getPredecessors(catalog)
+
+    return catalog.map((airline) => {
         const assets = getAirlineAssets(
             airline.marks ?? airline.slug,
             assetsDir,
@@ -63,10 +83,18 @@ const publishCatalog = (airlines, assetsDir = 'assets') =>
             ? []
             : getAirlineHistory(airline.slug, assetsDir)
 
+        const predecessors = predecessorsOf.get(airline.slug)
+
         return orderKeys(
-            { ...airline, assets, ...(history.length && { history }) },
+            {
+                ...airline,
+                ...(predecessors && { predecessors }),
+                assets,
+                ...(history.length && { history }),
+            },
             airlineFields,
         )
     })
+}
 
 export { normalizeCatalog, publishCatalog }

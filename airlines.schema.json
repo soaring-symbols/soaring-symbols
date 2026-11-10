@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, and `history` to those with older marks (see $defs/published); leave both out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, and `history` when it has older marks.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -70,6 +70,10 @@
                 "ceased": {
                     "required": ["defunct"],
                     "properties": { "defunct": { "const": true } }
+                },
+                "successor": {
+                    "required": ["defunct"],
+                    "properties": { "defunct": { "const": true } }
                 }
             },
             "properties": {
@@ -129,6 +133,17 @@
                 "ceased": {
                     "description": "Year a defunct airline ceased operations.",
                     "$ref": "#/$defs/year"
+                },
+                "successor": {
+                    "description": "Slug of the airline that carried on this defunct one, after a rename or a merger, e.g. \"air-india\" for Vistara. The defunct entry keeps its own slug and SVGs.",
+                    "$ref": "#/$defs/slug"
+                },
+                "predecessors": {
+                    "description": "Added by the build: slugs of the defunct airlines whose `successor` is this one, oldest first; only in the published catalog.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/slug" }
                 },
                 "vectorized": {
                     "description": "Deprecated: removed in 0.3. The SVGs were vectorized by hand; a pull request's description records each SVG's source instead.",

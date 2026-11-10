@@ -62,6 +62,16 @@ export interface Airline {
     /** Year a defunct airline ceased operations. */
     readonly ceased?: number
     /**
+     * Slug of the airline that carried on this defunct one after a rename or
+     * a merger (e.g. "air-india" for Vistara).
+     */
+    readonly successor?: string
+    /**
+     * Slugs of the defunct airlines whose `successor` is this one, the
+     * earliest to cease first; absent when there are none.
+     */
+    readonly predecessors?: readonly string[]
+    /**
      * The SVGs were vectorized by hand.
      * @deprecated Removed in 0.3; nothing reads it.
      */

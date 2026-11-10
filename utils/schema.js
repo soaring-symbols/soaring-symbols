@@ -91,13 +91,32 @@ const findDuplicateSlugs = (airlines) => {
     })
 }
 
-// `parent` and `marks` must name another airline in the catalog, and `marks`
-// must point at one with SVGs of its own (no chains)
+// `parent`, `marks` and `successor` must name another airline in the
+// catalog, `marks` one with SVGs of its own (no chains), and following
+// `successor` must end at an airline without one (no loops)
 const findBrokenReferences = (airlines) => {
     const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
+    const findLoop = (a) => {
+        const seen = new Set([a])
+        for (let next = bySlug.get(a.successor); next;) {
+            if (next === a) {
+                return [
+                    `${a.name}: successor "${a.successor}" leads back to it`,
+                ]
+            }
+            // A loop that doesn't pass through `a` is reported by its own
+            // members
+            if (seen.has(next)) return []
+            seen.add(next)
+            next = bySlug.get(next.successor)
+        }
+
+        return []
+    }
+
     return airlines.flatMap((a) =>
-        ['parent', 'marks'].flatMap((field) => {
+        ['parent', 'marks', 'successor'].flatMap((field) => {
             const slug = a[field]
             if (slug === undefined) return []
             const target = bySlug.get(slug)
@@ -109,6 +128,7 @@ const findBrokenReferences = (airlines) => {
                     `${a.name}: marks "${slug}" uses the marks of "${target.marks}"; point at that airline instead`,
                 ]
             }
+            if (field === 'successor') return findLoop(a)
 
             return []
         }),

@@ -23,7 +23,7 @@ import {
     getAirlineHistory,
     getAssetDirs,
 } from '../utils/index.js'
-import { publishCatalog } from '../utils/catalog.js'
+import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
@@ -306,6 +306,93 @@ describe('airlines.json schema', () => {
                 `slug "${slug}" is used by more than one airline: ${first.name}, ${first.name}`,
             ],
         )
+    })
+})
+
+describe('renames and mergers (successor)', () => {
+    const entry = (name, fields = {}) => ({
+        name,
+        slug: name.toLowerCase().replace(/ /g, '-'),
+        iata: 'BL',
+        icao: 'PIC',
+        country: 'VN',
+        website: 'https://www.pacificairlines.com',
+        branding: { primary_color: '#0b2a63' },
+        ...fields,
+    })
+    const renamed = (name, successor, ceased) =>
+        entry(name, { defunct: true, ceased, successor })
+
+    it('accepts a defunct airline whose successor shares its codes', () => {
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Jetstar Pacific', 'pacific-airlines', 2020),
+                entry('Pacific Airlines'),
+            ]),
+            [],
+        )
+    })
+
+    it('allows a successor only on a defunct airline', () => {
+        assert.notDeepEqual(
+            validateAirlines([
+                entry('Jetstar Pacific', { successor: 'pacific-airlines' }),
+                entry('Pacific Airlines', { iata: 'XX', icao: 'XXX' }),
+            ]),
+            [],
+        )
+    })
+
+    it('rejects a successor that is missing, itself or a loop', () => {
+        assert.deepEqual(
+            validateAirlines([renamed('Jetstar Pacific', 'nowhere', 2020)]),
+            ['Jetstar Pacific: successor "nowhere" is not another airline'],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Jetstar Pacific', 'jetstar-pacific', 2020),
+            ]),
+            [
+                'Jetstar Pacific: successor "jetstar-pacific" is not another airline',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Old Air', 'new-air', 2010),
+                renamed('New Air', 'old-air', 2020),
+            ]),
+            [
+                'Old Air: successor "new-air" leads back to it',
+                'New Air: successor "old-air" leads back to it',
+            ],
+        )
+    })
+
+    it('publishes predecessors on the successor, earliest to cease first', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'successor-'))
+        try {
+            const catalog = publishCatalog(
+                [
+                    renamed('B Air', 'c-air', 2020),
+                    renamed('A Air', 'c-air', 2010),
+                    renamed('Old C Air', 'b-air', 2015),
+                    entry('C Air'),
+                ],
+                dir,
+            )
+            const bySlug = (slug) => catalog.find((a) => a.slug === slug)
+            assert.deepEqual(bySlug('c-air').predecessors, ['a-air', 'b-air'])
+            assert.deepEqual(bySlug('b-air').predecessors, ['old-c-air'])
+            assert.equal(bySlug('a-air').predecessors, undefined)
+            // Generated, so the repo copy never keeps it
+            assert.equal(
+                normalizeCatalog(catalog).find((a) => a.slug === 'c-air')
+                    .predecessors,
+                undefined,
+            )
+        } finally {
+            rmSync(dir, { recursive: true, force: true })
+        }
     })
 })
 
