@@ -18,8 +18,8 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name is the airline's `slug` in `airlines.json`: its name slugified, in lowercase with hyphens (e.g., `assets/vietnam-airlines/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
-    - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
-    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
+  - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
+  - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
 
 **Correct Structure Example:**
 
@@ -74,8 +74,8 @@ assets/
 
 - **ViewBox Dimensions**:
 
-    - **Logos** should use a `viewBox` of `0 0 64 64`.
-    - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
+  - **Logos** should use a `viewBox` of `0 0 64 64`.
+  - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
@@ -89,10 +89,10 @@ assets/
 
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 
-    - `role="img"`
-    - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
-    - `xmlns="http://www.w3.org/2000/svg"`
-    - A `<title>Airline Name</title>` element providing a text description.
+  - `role="img"`
+  - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
+  - `xmlns="http://www.w3.org/2000/svg"`
+  - A `<title>Airline Name</title>` element providing a text description.
 
 > [\!WARNING]
 > **Note on SVG Integrity:**
@@ -157,7 +157,13 @@ To lint and fix only your own SVGs, try the experimental `node scripts/lint-svg.
 
 #### Subsidiaries and shared logos
 
-A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline group it is a subsidiary of: the airline that owns it, or whose network it flies in (Jetstar Japan and Jetstar Pacific under `jetstar`). Listing an airline's subsidiaries means finding the entries whose `parent` is its slug. It needs SVGs only when its logo differs:
+A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline group it is a subsidiary of. Listing an airline's subsidiaries means finding the entries whose `parent` is its slug. `parent` holds one airline, even when several own a share, so pick it this way:
+
+- **Flies under a group's brand** (its name or logo, as Jetstar Japan, Thai AirAsia or LATAM Airlines Brasil do): that group, even when another shareholder owns more. Jetstar Japan is `jetstar`, although Japan Airlines holds 50% and Qantas a third.
+- **A brand of its own:** its largest shareholder that is an airline in the catalog, e.g. `vietnam-airlines` for Pacific Airlines or `air-china` for Shenzhen Airlines. None, no `parent`.
+- **Each name is an entry:** when a subsidiary leaves a group's brand, its new name is a new entry with its own `parent` (see [Renames and mergers](#renames-and-mergers)). Jetstar Pacific stays under `jetstar`, and Pacific Airlines, its name since 2020, is under `vietnam-airlines`.
+
+A subsidiary needs SVGs only when its logo differs:
 
 - **Same logo as another airline:** add no `assets/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's own slug in the published package, so the repository keeps one copy.
 - **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
