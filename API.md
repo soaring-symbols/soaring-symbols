@@ -47,10 +47,10 @@ getAirline('XX') // undefined
 Returns the package path of one SVG file, ready to pass to `require.resolve`, `import.meta.resolve` or your bundler.
 
 - **Arguments:**
-    - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
-    - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
-    - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
-    - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
+  - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
+  - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
+  - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
+  - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
 - **Returns:** `string`, or `undefined` if the airline is unknown, it has no older mark from `since`, or that file does not exist.
 
 ```js

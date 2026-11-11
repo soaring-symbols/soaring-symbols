@@ -18,8 +18,8 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name is the airline's `slug` in `airlines.json`: its name slugified, in lowercase with hyphens (e.g., `assets/vietnam-airlines/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
-    - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
-    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
+  - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
+  - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
 
 **Correct Structure Example:**
 
@@ -60,13 +60,13 @@ assets/
 
 - **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes. It writes three decimals, like SVGOMG, and four or five only for a file whose shapes would visibly move at three:
 
-    ```bash
-    npm run optimize -- assets/vietnam-airways/*.svg
-    ```
+  ```bash
+  npm run optimize -- assets/vietnam-airways/*.svg
+  ```
 
-    Online tools such as [SVGOMG](https://svgomg.net) work too. They use SVGO's defaults, which drop `role="img"` and may write a color as a name (`red`); run `node scripts/lint-svg.js --fix` afterwards to add `role="img"` back and turn any named color into hex.
+  Online tools such as [SVGOMG](https://svgomg.net) work too. They use SVGO's defaults, which drop `role="img"` and may write a color as a name (`red`); run `node scripts/lint-svg.js --fix` afterwards to add `role="img"` back and turn any named color into hex.
 
-    `node scripts/lint-svg.js` checks that every SVG looks optimized, whichever tool produced it: no `width`/`height`, no XML declaration, comments or design-tool data, at most five decimals in path data, and no leading zeros (`.5`, not `0.5`) or `-0`. When a file still has design-tool data, longer decimals or `-0`, color names or `rgb()`, a `<style>` element or a `transform`, `node scripts/lint-svg.js --fix` runs it through the project's config, as `npm run optimize` would, and keeps the result only if it renders the same; otherwise it reports what to fix by hand. An SVG that a pull request adds or changes must also be optimized: CI fails it if the project's config would still make it more than 10% smaller, which only happens to files that were never optimized (`npm run optimize:check` runs that check locally).
+  `node scripts/lint-svg.js` checks that every SVG looks optimized, whichever tool produced it: no `width`/`height`, no XML declaration, comments or design-tool data, at most five decimals in path data, and no leading zeros (`.5`, not `0.5`) or `-0`. When a file still has design-tool data, longer decimals or `-0`, color names or `rgb()`, a `<style>` element or a `transform`, `node scripts/lint-svg.js --fix` runs it through the project's config, as `npm run optimize` would, and keeps the result only if it renders the same; otherwise it reports what to fix by hand. An SVG that a pull request adds or changes must also be optimized: CI fails it if the project's config would still make it more than 10% smaller, which only happens to files that were never optimized (`npm run optimize:check` runs that check locally).
 
 - **Colors**: Write colors as six-digit lowercase hex (`#ff6600`, not `#F60` or `orange`). `npm run optimize` (and `node scripts/lint-svg.js --fix`, which runs it on such files) turns color names and `rgb()` values into hex, and `node scripts/lint-svg.js --fix` expands short hex colors in fills, strokes and gradient stops.
 
@@ -74,8 +74,8 @@ assets/
 
 - **ViewBox Dimensions**:
 
-    - **Logos** should use a `viewBox` of `0 0 64 64`.
-    - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
+  - **Logos** should use a `viewBox` of `0 0 64 64`.
+  - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
@@ -89,10 +89,10 @@ assets/
 
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 
-    - `role="img"`
-    - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
-    - `xmlns="http://www.w3.org/2000/svg"`
-    - A `<title>Airline Name</title>` element providing a text description.
+  - `role="img"`
+  - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
+  - `xmlns="http://www.w3.org/2000/svg"`
+  - A `<title>Airline Name</title>` element providing a text description.
 
 > [\!WARNING]
 > **Note on SVG Integrity:**
