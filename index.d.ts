@@ -97,11 +97,6 @@ export interface Airline {
      * earliest to cease first; absent when there are none.
      */
     readonly predecessors?: readonly string[]
-    /**
-     * The SVGs were vectorized by hand.
-     * @deprecated Removed in 0.3; nothing reads it.
-     */
-    readonly vectorized?: boolean
     readonly branding?: AirlineBranding
     readonly assets: AssetMap
     /**

@@ -143,7 +143,6 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `ceased`         | `number?`   | Year a defunct airline ceased operations.                                                                                                     |
 | `successor`      | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)). |
 | `predecessors`   | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                         |
-| `vectorized`     | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                                     |
 | `branding`       | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.          |
 | `assets`         | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                         |
 | `history`        | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                       |
@@ -233,6 +232,13 @@ getAirline('pacific-airlines').predecessors // ['jetstar-pacific']
 const current = (airline) =>
     airline.successor ? current(getAirline(airline.successor)) : airline
 ```
+
+## Changes in 0.3
+
+0.3 removes what 0.2 had marked for removal and fixes a name, so code written for 0.2 may need two changes:
+
+- **`vectorized` is gone.** It said an airline's SVGs were vectorized by hand. Nothing in the package read it; each SVG's source is recorded in its pull request instead.
+- **Binter is Binter Canarias**, the name its website uses, with the slug `binter-canarias`. The old `binter` slug and its `assets/binter/` files are gone; `getAirline('NT')` and `getAirline('IBB')` find it either way.
 
 ## Subsidiaries in 0.2.2
 

@@ -159,11 +159,6 @@
                     "uniqueItems": true,
                     "items": { "$ref": "#/$defs/slug" }
                 },
-                "vectorized": {
-                    "description": "Deprecated: removed in 0.3. The SVGs were vectorized by hand; a pull request's description records each SVG's source instead.",
-                    "deprecated": true,
-                    "type": "boolean"
-                },
                 "branding": { "$ref": "#/$defs/branding" },
                 "assets": {
                     "description": "Added by the build from the SVGs; only in the published catalog.",
