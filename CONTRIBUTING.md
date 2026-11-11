@@ -58,7 +58,7 @@ assets/
 
 ### 2. SVG Specifications
 
-- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes. It writes three decimals, like SVGOMG, and four or five only for a file whose shapes would visibly move at three:
+- **SVG Optimization**: All submitted SVGs must be optimized with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes. It writes three decimals, like SVGOMG, and four or five only for a file whose shapes would move at three, visibly or just enough to take the artwork off the edge of the viewBox (63.999 instead of 64):
 
   ```bash
   npm run optimize -- assets/vietnam-airways/*.svg
@@ -99,6 +99,7 @@ assets/
 >
 > - **Preserve White Paths:** Please ensure that legitimate white paths within a logo are preserved and not removed or filled during optimization.
 > - **Visual Verification:** It's highly recommended to double-check the visual appearance of the logo/icon after optimization to ensure color accuracy and alignment within the `viewBox`.
+> - **`npm run optimize` is experimental:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges, but a shape can still shift slightly. It lists any bounding box value that changed (e.g. `y 28.253 → 28.254`); compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor, and revert any that is even slightly off.
 
 ### 3. JSON Data Updates
 
