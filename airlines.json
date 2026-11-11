@@ -2109,6 +2109,22 @@
         }
     },
     {
+        "name": "SpiceJet",
+        "slug": "spicejet",
+        "iata": "SG",
+        "icao": "SEJ",
+        "callsign": "SPICEJET",
+        "country": "IN",
+        "website": "https://www.spicejet.com",
+        "hubs": [
+            "DEL"
+        ],
+        "founded": 2005,
+        "branding": {
+            "primary_color": "#c30b12"
+        }
+    },
+    {
         "name": "Spirit Airlines",
         "slug": "spirit-airlines",
         "iata": "NK",
