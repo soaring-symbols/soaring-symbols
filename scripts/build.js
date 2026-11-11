@@ -119,12 +119,20 @@ async function copySharedMarks(airlines) {
     }
 }
 
-// A renamed airline's slug follows its new name. Links to the old slug keep
-// working: its current files are also published at each previous slug
+// A renamed airline's slug follows its new name. Links to an old slug keep
+// working: when a release shipped that slug (published-slugs.json), the
+// airline's current files are also published there. A former name that was
+// never a slug in the package (Air Pacific for Fiji Airways) has no links to
+// keep, so it gets no copy; getAirline() still finds it.
 async function copyFormerSlugs(airlines) {
+    const published = new Set(
+        JSON.parse(await fs.readFile('./published-slugs.json', 'utf-8')),
+    )
     for (const airline of airlines) {
         for (const slug of airline.previous_slugs ?? []) {
-            await copyCurrentMarks(airline.slug, slug, airline.name)
+            if (published.has(slug)) {
+                await copyCurrentMarks(airline.slug, slug, airline.name)
+            }
         }
     }
 }
