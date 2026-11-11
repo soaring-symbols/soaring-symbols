@@ -660,11 +660,8 @@
         }
     },
     {
-        "name": "Binter",
-        "slug": "binter",
-        "previous_names": [
-            "Binter Canarias"
-        ],
+        "name": "Binter Canarias",
+        "slug": "binter-canarias",
         "iata": "NT",
         "icao": "IBB",
         "callsign": "BINTER",
@@ -1440,7 +1437,8 @@
         ],
         "founded": 1962,
         "branding": {
-            "primary_color": "#051766"
+            "primary_color": "#051766",
+            "since": 2025
         }
     },
     {
@@ -2103,7 +2101,8 @@
         "founded": 2025,
         "branding": {
             "primary_color": "#ca1c2a",
-            "tagline": "Taking flight from identity - reaching new heights through experience"
+            "tagline": "Taking flight from identity - reaching new heights through experience",
+            "since": 2026
         }
     },
     {
@@ -2122,24 +2121,6 @@
         "founded": 2002,
         "branding": {
             "primary_color": "#cf0a2c"
-        }
-    },
-    {
-        "name": "T'way Air",
-        "slug": "tway-air",
-        "iata": "TW",
-        "icao": "TWB",
-        "callsign": "SONOROUS",
-        "country": "KR",
-        "website": "https://www.twayair.com",
-        "hubs": [
-            "TAE",
-            "GMP",
-            "ICN"
-        ],
-        "founded": 2005,
-        "branding": {
-            "primary_color": "#d22c25"
         }
     },
     {
@@ -2222,6 +2203,29 @@
         "website": "https://www.transavia.com",
         "branding": {
             "primary_color": "#00d66c"
+        }
+    },
+    {
+        "name": "Trinity Airways",
+        "slug": "trinity-airways",
+        "previous_names": [
+            "Hansung Airlines",
+            "T'way Air"
+        ],
+        "iata": "TW",
+        "icao": "TWB",
+        "callsign": "SONOROUS",
+        "country": "KR",
+        "website": "https://www.trinityairways.com",
+        "hubs": [
+            "TAE",
+            "GMP",
+            "ICN"
+        ],
+        "founded": 2005,
+        "branding": {
+            "primary_color": "#686058",
+            "since": 2026
         }
     },
     {

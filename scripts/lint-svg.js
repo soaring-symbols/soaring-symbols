@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
-import { getAssetDirs, toSlug } from '../utils/index.js'
+import { HISTORY_DIR, getAssetDirs, toSlug } from '../utils/index.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { DOM_RULES, STRING_RULES } from './lint/rules.js'
@@ -26,11 +26,11 @@ const SCOPED =
 
 // ---------------------
 
-// Airline names from the catalog, keyed by asset folder (slug)
-const catalogNames = new Map(
+// Catalog entries, keyed by asset folder (slug)
+const catalog = new Map(
     JSON.parse(readFileSync('airlines.json', 'utf8')).map((a) => [
         a.slug ?? toSlug(a.name),
-        a.name,
+        a,
     ]),
 )
 
@@ -42,7 +42,7 @@ const getSlugOf = (filePath) => relative(ASSETS_DIR, filePath).split(/[\\/]/)[0]
 // so prefer the catalog and fall back to the folder for airlines not added yet
 const getAirlineName = (filePath) => {
     const dirName = getSlugOf(filePath)
-    if (catalogNames.has(dirName)) return catalogNames.get(dirName)
+    if (catalog.has(dirName)) return catalog.get(dirName).name
 
     return dirName
         .split('-')
@@ -51,6 +51,9 @@ const getAirlineName = (filePath) => {
 }
 
 const lintSvgFile = (filePath) => {
+    const [slug, folder] = relative(ASSETS_DIR, filePath).split(/[\\/]/)
+    const airline = catalog.get(slug)
+    const inHistory = folder === HISTORY_DIR
     const originalContent = readFileSync(filePath, 'utf8')
     const parse = (source) =>
         new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
@@ -75,7 +78,10 @@ const lintSvgFile = (filePath) => {
         document,
         isIcon,
         airlineName: getAirlineName(filePath),
-        isCatalogName: catalogNames.has(getSlugOf(filePath)),
+        isCatalogName: Boolean(airline),
+        // Only an older mark (assets/<slug>/history/<year>/) may keep a
+        // former name as its title
+        formerNames: inHistory ? airline?.previous_names : undefined,
         mergePaths: MERGE_PATHS,
         issues: [],
         // Reported only; never trigger a rewrite in --fix mode

@@ -23,6 +23,17 @@ export type AssetMap = Readonly<Partial<Record<AssetType, AssetInfo>>>
 export interface HistoricalMarks {
     /** Year the mark was introduced (e.g. 1984). */
     readonly since: number
+    /**
+     * Year the next mark replaced it (e.g. 2025). Missing in releases before
+     * it was added.
+     */
+    readonly until?: number
+    /**
+     * The airline's name on the mark: the current one, or a former one for a
+     * mark used before a rename (e.g. "T'way Air"). Missing in releases
+     * before it was added.
+     */
+    readonly name?: string
     readonly assets: AssetMap
 }
 
@@ -30,6 +41,8 @@ export interface AirlineBranding {
     readonly primary_color?: string
     readonly tagline?: string
     readonly guidelines?: string
+    /** Year the current marks were introduced; set when it has `history`. */
+    readonly since?: number
 }
 
 export interface Airline {
@@ -45,7 +58,8 @@ export interface Airline {
     readonly slug: string
     /**
      * Names the airline flew under before `name`, oldest first (e.g.
-     * ["Binter Canarias"] for Binter). getAirline() finds it by them.
+     * ["Hansung Airlines", "T'way Air"] for Trinity Airways). getAirline()
+     * finds it by them.
      */
     readonly previous_names?: readonly string[]
     /**

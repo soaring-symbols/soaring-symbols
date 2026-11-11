@@ -8,7 +8,8 @@ import { applyIfAlike, flattenGroups, mergePaths } from './fix-structure.js'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
-// RULE: <title> must exist, be the first child and match the airline name.
+// RULE: <title> must exist, be the first child and match the airline name
+// (an older mark in history/ may keep one of its previous_names).
 // It is created in the SVG namespace: document.createElement() would give it
 // no namespace, which serializes as <title xmlns="">.
 export function ruleTitle({
@@ -16,6 +17,7 @@ export function ruleTitle({
     document,
     airlineName,
     isCatalogName,
+    formerNames = [],
     issues,
 }) {
     let titleElement = svgElement.querySelector('title')
@@ -38,9 +40,13 @@ export function ruleTitle({
         svgElement.prepend(titleElement)
     }
 
-    if (isCatalogName && titleElement.textContent !== airlineName) {
+    // An older mark keeps the name it was used under, when that is one of
+    // the airline's previous_names; anything else gets the current name
+    const allowed = [airlineName, ...formerNames]
+    if (isCatalogName && !allowed.includes(titleElement.textContent)) {
+        const expected = allowed.map((name) => `"${name}"`).join(' or ')
         issues.push(
-            `Accessibility: <title> should be "${airlineName}", not "${titleElement.textContent}".`,
+            `Accessibility: <title> should be ${expected}, not "${titleElement.textContent}".`,
         )
         titleElement.textContent = airlineName
     }

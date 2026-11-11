@@ -95,6 +95,27 @@ const findDuplicateSlugs = (airlines) => {
     )
 }
 
+// An airline with older marks says when its current ones came in, after the
+// last older one, so every older mark has an end year
+const findOpenHistory = (airlines) =>
+    airlines
+        .filter((a) => a.history)
+        .flatMap((a) => {
+            // The last older mark ends when the current ones came in
+            const { since, until } = a.history.at(-1)
+            if (until === undefined) {
+                return [
+                    `${a.name}: has older marks, so branding.since needs the year its current marks came in`,
+                ]
+            }
+
+            return until > since
+                ? []
+                : [
+                      `${a.name}: branding.since (${until}) must come after its last older mark (${since})`,
+                  ]
+        })
+
 // A former name is not the current one
 const findCurrentPreviousNames = (airlines) =>
     airlines
@@ -161,6 +182,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findWrongSlugs(airlines),
         ...findDuplicateSlugs(airlines),
         ...findCurrentPreviousNames(airlines),
+        ...findOpenHistory(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),
     ]

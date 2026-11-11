@@ -140,13 +140,22 @@ for (const [format, api] of [
             })
 
             it('finds a renamed airline by its former slug and name', () => {
-                const binter = api.getAirline('binter')
-                assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
-                assert.equal(api.getAirline('binter-canarias'), binter)
-                assert.equal(api.getAirline('Binter Canarias'), binter)
+                const trinity = api.getAirline('trinity-airways')
+                assert.deepEqual(trinity.previous_slugs, [
+                    'hansung-airlines',
+                    'tway-air',
+                ])
+                assert.equal(api.getAirline('tway-air'), trinity)
+                assert.equal(api.getAirline("T'way Air"), trinity)
+                assert.equal(api.getAirline('TW'), trinity)
                 assert.equal(
-                    api.getAssetPath('binter-canarias', 'logo'),
-                    'soaring-symbols/assets/binter/logo.svg',
+                    api.getAssetPath('tway-air', 'logo'),
+                    'soaring-symbols/assets/trinity-airways/logo.svg',
+                )
+                // Its T'way Air logo is in its history, under the new slug
+                assert.equal(
+                    api.getAssetPath('tway-air', 'logo', { since: 2010 }),
+                    'soaring-symbols/assets/trinity-airways/history/2010/logo.svg',
                 )
             })
 
@@ -574,6 +583,7 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
         assert.deepEqual(getAirlineHistory('korean-air', assetsDir), [
             {
                 since: 1984,
+                name: 'Korean Air',
                 assets: {
                     icon: { color: true, mono: true, colors: ['#c60c30'] },
                     logo: { color: true, mono: true, colors: ['#c60c30'] },
@@ -581,6 +591,7 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
             },
             {
                 since: 2002,
+                name: 'Korean Air',
                 assets: {
                     logo: { color: true, mono: true, colors: ['#00256c'] },
                 },
@@ -601,12 +612,31 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
         )
         const published = catalog.find((a) => a.slug === 'korean-air')
         assert.deepEqual(
-            published.history.map((mark) => mark.since),
-            [1984, 2002],
+            published.history.map(({ since, until, name }) => [
+                since,
+                until,
+                name,
+            ]),
+            [
+                [1984, 2002, 'Korean Air'],
+                [2002, koreanAir.branding.since, 'Korean Air'],
+            ],
         )
-        assert.equal(Object.keys(published).at(-1), 'history')
-        assert.equal(catalog.find((a) => a.marks).history, undefined)
-        assert.deepEqual(validateAirlines(catalog, { published: true }), [])
+        // Older marks need the year the current ones came in, after the last
+        const errorsWith = (branding) =>
+            validateAirlines(
+                publishCatalog([{ ...koreanAir, branding }], assetsDir),
+                { published: true },
+            )
+        assert.deepEqual(errorsWith({ primary_color: '#051766' }), [
+            'Korean Air: has older marks, so branding.since needs the year its current marks came in',
+        ])
+        assert.deepEqual(
+            errorsWith({ primary_color: '#051766', since: 2002 }),
+            [
+                'Korean Air: branding.since (2002) must come after its last older mark (2002)',
+            ],
+        )
     })
 
     it('reports malformed history folders', () => {
@@ -972,6 +1002,36 @@ describe('svg-validator', () => {
             fill(' fill="#111111"', `${gradient}<path d="M2 2"/>`),
             false,
         )
+    })
+
+    it('lets an older mark keep a former name as its title', () => {
+        const titleOf = (title, formerNames) => {
+            const svgElement = parse(
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>${title}</title><path d="M0 0h64v64H0z"/></svg>`,
+            )
+            const issues = []
+            ruleTitle({
+                svgElement,
+                document: svgElement.ownerDocument,
+                airlineName: 'Trinity Airways',
+                isCatalogName: true,
+                formerNames,
+                issues,
+            })
+
+            return [
+                svgElement.querySelector('title').textContent,
+                issues.length,
+            ]
+        }
+        // In history/, a previous name stays
+        assert.deepEqual(
+            titleOf("T'way Air", ['Hansung Airlines', "T'way Air"]),
+            ["T'way Air", 0],
+        )
+        // Anything else, or a current mark, gets the current name
+        assert.deepEqual(titleOf('Tway', ["T'way Air"]), ['Trinity Airways', 1])
+        assert.deepEqual(titleOf("T'way Air", []), ['Trinity Airways', 1])
     })
 
     it('writes <title> without an empty xmlns', () => {
