@@ -86,7 +86,7 @@
                     "$ref": "#/$defs/slug"
                 },
                 "previous_names": {
-                    "description": "Names the airline flew under before `name`, oldest first, e.g. [\"Binter Canarias\"] for Binter. Its slug follows the current name; the build keeps every former name's slug working (see `previous_slugs`).",
+                    "description": "Names the airline flew under before `name`, oldest first, e.g. [\"Hansung Airlines\", \"T'way Air\"] for Trinity Airways. Its slug follows the current name; the build keeps every former name's slug working (see `previous_slugs`).",
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,

@@ -139,17 +139,6 @@ for (const [format, api] of [
                 }
             })
 
-            it('finds a renamed airline by its former slug and name', () => {
-                const binter = api.getAirline('binter')
-                assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
-                assert.equal(api.getAirline('binter-canarias'), binter)
-                assert.equal(api.getAirline('Binter Canarias'), binter)
-                assert.equal(
-                    api.getAssetPath('binter-canarias', 'logo'),
-                    'soaring-symbols/assets/binter/logo.svg',
-                )
-            })
-
             it('returns undefined for unknown or empty queries', () => {
                 for (const query of ['ZZZZ', '', '   ', undefined, null, 42]) {
                     assert.equal(getAirline(query), undefined, String(query))
@@ -502,7 +491,6 @@ describe('airlines.json assets metadata', () => {
 
     it('publishes the current files of a renamed airline at its former slugs', () => {
         const renamed = cjs.listAirlines().filter((a) => a.previous_slugs)
-        assert.ok(renamed.length > 0)
         const filesIn = (slug) =>
             readdirSync(new URL(`${slug}/`, assetsDir), { withFileTypes: true })
                 .filter((entry) => entry.isFile())

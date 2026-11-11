@@ -660,11 +660,8 @@
         }
     },
     {
-        "name": "Binter",
-        "slug": "binter",
-        "previous_names": [
-            "Binter Canarias"
-        ],
+        "name": "Binter Canarias",
+        "slug": "binter-canarias",
         "iata": "NT",
         "icao": "IBB",
         "callsign": "BINTER",

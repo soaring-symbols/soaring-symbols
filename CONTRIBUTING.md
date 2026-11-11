@@ -175,7 +175,7 @@ A subsidiary needs SVGs only when its logo differs:
 
 Each entry is one airline, not one brand: a new name or logo for the same airline changes its entry, and only a different airline gets a new one.
 
-**A new name** (Binter Canarias became Binter in 2014; T'way Air became Trinity Airways):
+**A new name** (T'way Air became Trinity Airways in 2026, with a new logo):
 
 1. Change `name` and add the old one to `previous_names`, oldest first.
 2. Let `npm run generate` give it the slug of the new name, and rename its folder to match (`git mv assets/<old slug> assets/<new slug>`), along with any `parent`, `marks` or `successor` that points at the old slug.
@@ -183,11 +183,19 @@ Each entry is one airline, not one brand: a new name or logo for the same airlin
 
 ```json
 {
-    "name": "Binter",
-    "slug": "binter",
-    "previous_names": ["Binter Canarias"],
+    "name": "Trinity Airways",
+    "slug": "trinity-airways",
+    "previous_names": ["Hansung Airlines", "T'way Air"],
     ...
 }
+```
+
+```plaintext
+assets/trinity-airways/
+├── icon.svg, logo.svg   # Trinity Airways' marks
+└── history/
+    └── 2010/            # the T'way Air logo, introduced in 2010
+        └── logo.svg
 ```
 
 Nothing breaks, so it ships as a patch release: the build publishes the slugs of the old names as `previous_slugs` and copies the airline's current files to `assets/<old slug>/` in the package, so links to the old slug keep working, and `getAirline()` finds the airline by an old slug or name. An old slug can't be another airline's, and `npm run generate` stops if it is.

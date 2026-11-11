@@ -45,7 +45,8 @@ export interface Airline {
     readonly slug: string
     /**
      * Names the airline flew under before `name`, oldest first (e.g.
-     * ["Binter Canarias"] for Binter). getAirline() finds it by them.
+     * ["Hansung Airlines", "T'way Air"] for Trinity Airways). getAirline()
+     * finds it by them.
      */
     readonly previous_names?: readonly string[]
     /**

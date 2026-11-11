@@ -205,10 +205,11 @@ On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline
 Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old names in `previous_names`. The old slugs stay valid: `previous_slugs` lists them, `getAirline()` finds the airline by them or by an old name, and the package also ships the airline's current files at `assets/<old slug>/`, so links and stored slugs keep working. Its older logos are in [`history`](#history).
 
 ```js
-// Binter flew as Binter Canarias until 2014
-getAirline('binter-canarias') // { slug: 'binter', previous_names: ['Binter Canarias'], previous_slugs: ['binter-canarias'], ... }
-getAirline('Binter Canarias').slug // 'binter'
-getAssetPath('binter-canarias', 'logo') // 'soaring-symbols/assets/binter/logo.svg'
+// Trinity Airways flew as Hansung Airlines, then T'way Air until 2026
+getAirline('tway-air') // { slug: 'trinity-airways', previous_names: ['Hansung Airlines', "T'way Air"], previous_slugs: ['hansung-airlines', 'tway-air'], ... }
+getAirline("T'way Air").slug // 'trinity-airways'
+getAssetPath('tway-air', 'logo') // 'soaring-symbols/assets/trinity-airways/logo.svg'
+getAssetPath('TW', 'logo', { since: 2010 }) // the T'way Air logo
 ```
 
 When an airline merges into another, is refounded, or moves into or out of a group's brand, the old one stays in the catalog under its own slug with `defunct: true`, the year in `ceased`, its marks, and `successor` set to the airline that carried on. That airline lists the old entries in `predecessors`. A code they share finds the active airline.
