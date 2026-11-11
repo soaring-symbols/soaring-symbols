@@ -27,6 +27,7 @@ This is the one roadmap for the collection and every integration around it, incl
 - [x] Raycast extension
 - [x] Image endpoint on the website, to load a mark by IATA or ICAO code, with monochrome marks in a chosen color and PNG for apps that can't render SVG, such as [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png)
 - [x] Logo history: older marks of an airline that kept its name, in `assets/<slug>/history/<year>/` and the published `history` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
+- [x] Renames and mergers: a renamed airline takes its new name's slug and keeps the old ones working (`previous_names`, `previous_slugs`, files copied to the old slug); a merged or refounded airline stays defunct with a `successor`, listed in the new one's `predecessors` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
 
 ### Not planned

@@ -22,8 +22,9 @@ import {
     getAirlineAssets,
     getAirlineHistory,
     getAssetDirs,
+    toSlug,
 } from '../utils/index.js'
-import { publishCatalog } from '../utils/catalog.js'
+import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
@@ -37,6 +38,7 @@ import {
     ruleTitle,
 } from './lint/rule-structure.js'
 import {
+    carriedOn,
     extractInfobox,
     firstYear,
     infoboxParams,
@@ -134,6 +136,17 @@ for (const [format, api] of [
                         assert.ok(!found.defunct, label)
                     }
                 }
+            })
+
+            it('finds a renamed airline by its former slug and name', () => {
+                const binter = api.getAirline('binter')
+                assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
+                assert.equal(api.getAirline('binter-canarias'), binter)
+                assert.equal(api.getAirline('Binter Canarias'), binter)
+                assert.equal(
+                    api.getAssetPath('binter-canarias', 'logo'),
+                    'soaring-symbols/assets/binter/logo.svg',
+                )
             })
 
             it('returns undefined for unknown or empty queries', () => {
@@ -309,6 +322,127 @@ describe('airlines.json schema', () => {
     })
 })
 
+describe('renames and mergers (successor)', () => {
+    const entry = (name, fields = {}) => ({
+        name,
+        slug: toSlug(name),
+        iata: 'BL',
+        icao: 'PIC',
+        country: 'VN',
+        website: 'https://www.pacificairlines.com',
+        branding: { primary_color: '#0b2a63' },
+        ...fields,
+    })
+    const renamed = (name, successor, ceased) =>
+        entry(name, { defunct: true, ceased, successor })
+
+    it('accepts a defunct airline whose successor shares its codes', () => {
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Jetstar Pacific', 'pacific-airlines', 2020),
+                entry('Pacific Airlines'),
+            ]),
+            [],
+        )
+    })
+
+    it('allows a successor only on a defunct airline', () => {
+        assert.notDeepEqual(
+            validateAirlines([
+                entry('Jetstar Pacific', { successor: 'pacific-airlines' }),
+                entry('Pacific Airlines', { iata: 'XX', icao: 'XXX' }),
+            ]),
+            [],
+        )
+    })
+
+    it('rejects a successor that is missing, itself or a loop', () => {
+        assert.deepEqual(
+            validateAirlines([renamed('Jetstar Pacific', 'nowhere', 2020)]),
+            ['Jetstar Pacific: successor "nowhere" is not another airline'],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Jetstar Pacific', 'jetstar-pacific', 2020),
+            ]),
+            [
+                'Jetstar Pacific: successor "jetstar-pacific" is not another airline',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                renamed('Old Air', 'new-air', 2010),
+                renamed('New Air', 'old-air', 2020),
+            ]),
+            [
+                'Old Air: successor "new-air" leads back to it',
+                'New Air: successor "old-air" leads back to it',
+            ],
+        )
+    })
+
+    it('keeps former names apart from every other airline', () => {
+        const binter = entry('Binter', { previous_names: ['Binter Canarias'] })
+        assert.deepEqual(validateAirlines([binter]), [])
+        // Its former slug is another airline's slug
+        assert.deepEqual(
+            validateAirlines([
+                binter,
+                entry('Binter Canarias', { iata: 'XX', icao: 'XXX' }),
+            ]),
+            [
+                'slug "binter-canarias" is used by more than one airline: Binter, Binter Canarias',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([entry('Binter', { previous_names: ['Binter'] })]),
+            ['Binter: previous_names lists its current name'],
+        )
+        // A former name with the same slug adds no alias
+        const tway = entry("T'way Air", { previous_names: ['Tway Air'] })
+        assert.deepEqual(validateAirlines([tway]), [])
+        assert.equal(
+            publishCatalog(
+                [tway],
+                join(tmpdir(), 'soaring-symbols-no-assets'),
+            )[0].previous_slugs,
+            undefined,
+        )
+    })
+
+    it('publishes the slugs of former names', () => {
+        const [binter] = publishCatalog(
+            [entry('Binter', { previous_names: ['Binter Canarias'] })],
+            join(tmpdir(), 'soaring-symbols-no-assets'),
+        )
+        assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
+        assert.equal(normalizeCatalog([binter])[0].previous_slugs, undefined)
+    })
+
+    it('publishes predecessors on the successor, earliest to cease first', () => {
+        const catalog = publishCatalog(
+            [
+                renamed('B Air', 'c-air', 2020),
+                renamed('A Air', 'c-air', 2010),
+                renamed('Old C Air', 'b-air', 2015),
+                entry('C Air'),
+            ],
+            // No SVGs needed: a missing folder reads as no assets
+            join(tmpdir(), 'soaring-symbols-no-assets'),
+        )
+        const bySlug = (slug) => catalog.find((a) => a.slug === slug)
+        assert.deepEqual(bySlug('c-air').predecessors, ['a-air', 'b-air'])
+        assert.deepEqual(bySlug('b-air').predecessors, ['old-c-air'])
+        assert.equal(bySlug('a-air').predecessors, undefined)
+        // Generated, so the repo copy never keeps it
+        assert.equal(
+            normalizeCatalog(catalog).find((a) => a.slug === 'c-air')
+                .predecessors,
+            undefined,
+        )
+    })
+})
+
 describe('airlines.json assets metadata', () => {
     const assetsDir = new URL('../dist/assets/', import.meta.url)
 
@@ -365,8 +499,32 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
+    it('publishes the current files of a renamed airline at its former slugs', () => {
+        const renamed = cjs.listAirlines().filter((a) => a.previous_slugs)
+        assert.ok(renamed.length > 0)
+        const filesIn = (slug) =>
+            readdirSync(new URL(`${slug}/`, assetsDir), { withFileTypes: true })
+                .filter((entry) => entry.isFile())
+                .map((entry) => entry.name)
+                .sort()
+        for (const a of renamed) {
+            for (const slug of a.previous_slugs) {
+                // The current files only, never history/
+                assert.deepEqual(filesIn(slug), filesIn(a.slug), slug)
+                assert.ok(
+                    !existsSync(new URL(`${slug}/history`, assetsDir)),
+                    slug,
+                )
+            }
+        }
+    })
+
     it('has an airline for every asset directory', () => {
-        const slugs = new Set(cjs.listAirlines().map((a) => a.slug))
+        const slugs = new Set(
+            cjs
+                .listAirlines()
+                .flatMap((a) => [a.slug, ...(a.previous_slugs ?? [])]),
+        )
         const dirs = readdirSync(assetsDir, { withFileTypes: true })
         assert.ok(
             dirs.every((d) => d.isDirectory()),
@@ -538,6 +696,32 @@ describe('wikipedia infobox parsing (sync-data)', () => {
     it('reads the year out of a date template', () => {
         assert.equal(firstYear(params.ceased), 2020)
         assert.equal(firstYear(''), undefined)
+    })
+
+    it("picks the infobox of the name asked for on a renamed airline's page", () => {
+        const renamed = `{{Infobox airline
+| airline = Pacific Airlines
+| callsign = PACIFIC
+}}
+=== Jetstar Pacific ===
+{{Infobox airline
+| airline = Jetstar Pacific Airlines
+| callsign = PACIFIC EXPRESS
+| ceased = {{end date|2020|07|29|df=yes}}<br />{{small|(rebranded to ''Pacific Airlines'')}}
+}}`
+        const callsignOf = (name) =>
+            infoboxParams(extractInfobox(renamed, name)).callsign
+        assert.equal(callsignOf('Pacific Airlines'), 'PACIFIC')
+        assert.equal(callsignOf('Jetstar Pacific'), 'PACIFIC EXPRESS')
+        assert.equal(callsignOf('Someone Else'), 'PACIFIC')
+        assert.equal(callsignOf(), 'PACIFIC')
+
+        const { ceased } = infoboxParams(
+            extractInfobox(renamed, 'Jetstar Pacific'),
+        )
+        assert.equal(firstYear(ceased), 2020)
+        assert.equal(carriedOn(ceased), 'rebranded to Pacific Airlines')
+        assert.equal(carriedOn(params.ceased), undefined)
     })
 
     it('returns nothing for a page without an airline infobox', () => {

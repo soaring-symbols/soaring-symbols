@@ -3,7 +3,7 @@
 // the SVG tooling doesn't load Ajv.
 import { readFileSync } from 'fs'
 import Ajv2020 from 'ajv/dist/2020.js'
-import { toSlug } from './index.js'
+import { formerSlugs, toSlug } from './index.js'
 
 const schema = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
@@ -73,31 +73,58 @@ const findWrongSlugs = (airlines) =>
         )
 
 // Slugs name the asset folders and what `parent` and `marks` point at, so no
-// two airlines may share one, defunct or not
+// two airlines may share one, defunct or not. The slugs of former names count
+// too, since the package keeps them working: a link to assets/<old slug>/
+// must lead to one airline.
 const findDuplicateSlugs = (airlines) => {
     const seen = new Map()
 
-    return airlines.flatMap((a) => {
-        const first = seen.get(a.slug)
-        if (!first) {
-            seen.set(a.slug, a)
+    return airlines.flatMap((a) =>
+        [a.slug, ...formerSlugs(a)].flatMap((slug) => {
+            const first = seen.get(slug)
+            if (!first) {
+                seen.set(slug, a)
 
-            return []
-        }
+                return []
+            }
 
-        return [
-            `slug "${a.slug}" is used by more than one airline: ${first.name}, ${a.name}`,
-        ]
-    })
+            return [
+                `slug "${slug}" is used by more than one airline: ${first.name}, ${a.name}`,
+            ]
+        }),
+    )
 }
 
-// `parent` and `marks` must name another airline in the catalog, and `marks`
-// must point at one with SVGs of its own (no chains)
+// A former name is not the current one
+const findCurrentPreviousNames = (airlines) =>
+    airlines
+        .filter((a) => a.previous_names?.includes(a.name))
+        .map((a) => `${a.name}: previous_names lists its current name`)
+
+// `parent`, `marks` and `successor` must name another airline in the
+// catalog, `marks` one with SVGs of its own (no chains), and following
+// `successor` must end at an airline without one (no loops)
 const findBrokenReferences = (airlines) => {
     const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
+    // A chain longer than the catalog must loop; a loop that doesn't pass
+    // through `a` is reported by its own members
+    const findLoop = (a) => {
+        let next = bySlug.get(a.successor)
+        for (let i = 0; next && i < airlines.length; i++) {
+            if (next === a) {
+                return [
+                    `${a.name}: successor "${a.successor}" leads back to it`,
+                ]
+            }
+            next = bySlug.get(next.successor)
+        }
+
+        return []
+    }
+
     return airlines.flatMap((a) =>
-        ['parent', 'marks'].flatMap((field) => {
+        ['parent', 'marks', 'successor'].flatMap((field) => {
             const slug = a[field]
             if (slug === undefined) return []
             const target = bySlug.get(slug)
@@ -109,6 +136,7 @@ const findBrokenReferences = (airlines) => {
                     `${a.name}: marks "${slug}" uses the marks of "${target.marks}"; point at that airline instead`,
                 ]
             }
+            if (field === 'successor') return findLoop(a)
 
             return []
         }),
@@ -132,6 +160,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
     return [
         ...findWrongSlugs(airlines),
         ...findDuplicateSlugs(airlines),
+        ...findCurrentPreviousNames(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),
     ]

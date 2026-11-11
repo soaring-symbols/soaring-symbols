@@ -43,11 +43,22 @@ export interface Airline {
     /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
     readonly country: string
     readonly slug: string
+    /**
+     * Names the airline flew under before `name`, oldest first (e.g.
+     * ["Binter Canarias"] for Binter). getAirline() finds it by them.
+     */
+    readonly previous_names?: readonly string[]
+    /**
+     * The slugs of `previous_names` that differ from `slug`. getAirline()
+     * finds the airline by them, and the package also ships its current files
+     * at assets/<previous slug>/.
+     */
+    readonly previous_slugs?: readonly string[]
     readonly website?: string
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
     readonly alliance?: string
-    /** Slug of the airline that owns this one (e.g. "airasia"). */
+    /** Slug of the airline group this one is a subsidiary of (e.g. "airasia"). */
     readonly parent?: string
     /**
      * Slug of the airline whose marks this one uses (e.g. "airasia"). Its
@@ -61,6 +72,17 @@ export interface Airline {
     readonly defunct?: boolean
     /** Year a defunct airline ceased operations. */
     readonly ceased?: number
+    /**
+     * Slug of the airline that carried on this defunct one after a merger, a
+     * refounding, or a move into or out of a group's brand (e.g. "air-india"
+     * for Vistara).
+     */
+    readonly successor?: string
+    /**
+     * Slugs of the defunct airlines whose `successor` is this one, the
+     * earliest to cease first; absent when there are none.
+     */
+    readonly predecessors?: readonly string[]
     /**
      * The SVGs were vectorized by hand.
      * @deprecated Removed in 0.3; nothing reads it.
