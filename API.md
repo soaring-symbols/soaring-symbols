@@ -144,7 +144,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `successor`      | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)). |
 | `predecessors`   | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                         |
 | `vectorized`     | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                                     |
-| `branding`       | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                                    |
+| `branding`       | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.          |
 | `assets`         | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                         |
 | `history`        | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                       |
 
@@ -172,23 +172,30 @@ assets/<slug>/
 
 ### History
 
-An airline that changed its logo but kept its name may list its older marks in `history`, oldest first. Each entry was used from its `since` year until the next entry's `since`, and the last one until the current marks in `assets`. Airlines that borrow another airline's marks (`marks`) have no history.
+An airline that changed its logo may list its older marks in `history`, oldest first, each used from `since` until `until`. The current marks in `assets` came in the year in `branding.since`, when the last older mark ended. Airlines that borrow another airline's marks (`marks`) have no history.
 
-| Field    | Type     | Description                                                                        |
-| :------- | :------- | :--------------------------------------------------------------------------------- |
-| `since`  | `number` | Year the mark was introduced; also the name of its folder.                         |
-| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`. |
+| Field    | Type     | Description                                                                                                           |
+| :------- | :------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `since`  | `number` | Year the mark was introduced; also the name of its folder.                                                            |
+| `until`  | `number` | Year the next mark replaced it.                                                                                       |
+| `name`   | `string` | The airline's name on the mark: its current name, or a former one (`previous_names`) for a mark used before a rename. |
+| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`.                                    |
 
 ```json
+"branding": { "primary_color": "#686058", "since": 2026 },
 "history": [
     {
-        "since": 2025,
+        "since": 2010,
+        "until": 2026,
+        "name": "T'way Air",
         "assets": {
-            "logo": { "color": true, "mono": true, "colors": ["#ca1c2a", "#f1c217"] }
+            "logo": { "color": true, "mono": true, "colors": ["#d22c25", "#82ab42"] }
         }
     }
 ]
 ```
+
+`until` and `name` are in releases after 0.2.4; read them as optional if you also support older ones.
 
 The files sit next to the current ones, under `history/<since>/`, and `getAssetPath(airline, type, { since })` returns their path:
 

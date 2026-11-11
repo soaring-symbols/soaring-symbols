@@ -149,8 +149,27 @@ const getAssetDirs = (slug, assetsDir = 'assets') => [
 const getAirlineHistory = (slug, assetsDir = 'assets') =>
     getHistoryYears(slug, assetsDir).map((year) => ({
         since: Number(year),
+        name: getMarkName(join(assetsDir, slug, HISTORY_DIR, year)),
         assets: getAirlineAssets(join(slug, HISTORY_DIR, year), assetsDir),
     }))
+
+// The airline name on a set of marks: the <title> of its first SVG, which
+// for an older mark may be a name the airline flew under before
+const getMarkName = (dir) => {
+    const file = readdirSync(dir)
+        .filter((f) => f.endsWith('.svg'))
+        .sort()[0]
+    const title = file
+        ? readFileSync(join(dir, file), 'utf8').match(/<title>([^<]*)<\/title>/)
+        : null
+
+    return title?.[1]
+        .replace(/&apos;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+}
 
 // What is wrong with an airline's history folders, as readable messages:
 // a folder that isn't a year up to this one, a file other than the asset

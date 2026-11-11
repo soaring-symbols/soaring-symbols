@@ -69,7 +69,8 @@ const getPredecessors = (airlines) => {
 }
 
 // The catalog as the package ships it: every entry also gets the `assets`
-// found in `assetsDir`, the `history` of its older marks when it has any,
+// found in `assetsDir`, the `history` of its older marks when it has any
+// (each with the years it was used and the name on it),
 // `previous_slugs` when a former name had another slug, and `predecessors`
 // when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names, which the
@@ -84,9 +85,17 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
             assetsDir,
         )
 
-        const history = airline.marks
+        // Each older mark was used until the next one, the last until the
+        // current marks (branding.since, which validation requires then)
+        const marks = airline.marks
             ? []
             : getAirlineHistory(airline.slug, assetsDir)
+        const history = marks.map(({ since, name, assets }, i) => {
+            // Left out when branding.since is missing, which validation reports
+            const until = marks[i + 1]?.since ?? airline.branding?.since
+
+            return { since, ...(until && { until }), name, assets }
+        })
 
         const predecessors = predecessorsOf.get(airline.slug)
         const previousSlugs = formerSlugs(airline)

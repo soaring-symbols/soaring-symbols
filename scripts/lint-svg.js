@@ -27,11 +27,14 @@ const SCOPED =
 // ---------------------
 
 // Airline names from the catalog, keyed by asset folder (slug)
+const catalog = JSON.parse(readFileSync('airlines.json', 'utf8'))
 const catalogNames = new Map(
-    JSON.parse(readFileSync('airlines.json', 'utf8')).map((a) => [
-        a.slug ?? toSlug(a.name),
-        a.name,
-    ]),
+    catalog.map((a) => [a.slug ?? toSlug(a.name), a.name]),
+)
+// The names a renamed airline flew under before, by slug: an older mark in
+// history/ may be titled with the name it was used under
+const formerNames = new Map(
+    catalog.map((a) => [a.slug ?? toSlug(a.name), a.previous_names ?? []]),
 )
 
 // The airline folder an SVG belongs to: assets/<slug>/logo.svg and
@@ -76,6 +79,10 @@ const lintSvgFile = (filePath) => {
         isIcon,
         airlineName: getAirlineName(filePath),
         isCatalogName: catalogNames.has(getSlugOf(filePath)),
+        // Only an older mark may keep a former name as its title
+        formerNames: /[\\/]history[\\/]/.test(relative(ASSETS_DIR, filePath))
+            ? (formerNames.get(getSlugOf(filePath)) ?? [])
+            : [],
         mergePaths: MERGE_PATHS,
         issues: [],
         // Reported only; never trigger a rewrite in --fix mode

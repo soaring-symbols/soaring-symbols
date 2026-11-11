@@ -182,6 +182,10 @@
             "properties": {
                 "primary_color": { "$ref": "#/$defs/hexColor" },
                 "tagline": { "type": "string", "minLength": 1 },
+                "since": {
+                    "description": "Year the current marks were introduced. Required when the airline has older marks in history/, whose last one was used until this year.",
+                    "$ref": "#/$defs/year"
+                },
                 "guidelines": {
                     "$ref": "#/$defs/url",
                     "description": "Link to the airline's brand guidelines."
@@ -199,17 +203,25 @@
             }
         },
         "history": {
-            "description": "The marks an airline used before its current ones, oldest first. Each was used from `since` until the next entry's `since`, the last one until the current marks; its files are at assets/<slug>/history/<since>/.",
+            "description": "The marks an airline used before its current ones, oldest first, each from `since` until `until`; its files are at assets/<slug>/history/<since>/.",
             "type": "array",
             "minItems": 1,
             "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["since", "assets"],
+                "required": ["since", "name", "assets"],
                 "properties": {
                     "since": {
                         "description": "Year the mark was introduced, also its folder name.",
                         "$ref": "#/$defs/year"
+                    },
+                    "until": {
+                        "description": "Year the next mark replaced it: the next entry's `since`, or the airline's `branding.since` for the last one.",
+                        "$ref": "#/$defs/year"
+                    },
+                    "name": {
+                        "description": "The airline's name on this mark (its SVG title): the current name, or a former one for a mark used before a rename.",
+                        "$ref": "#/$defs/name"
                     },
                     "assets": { "$ref": "#/$defs/assets" }
                 }
