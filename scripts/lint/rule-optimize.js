@@ -56,7 +56,7 @@ export function ruleOptimize(source, svgElement, { issues, warnings }) {
         return source
     }
     issues.push(
-        `Format: Optimized with svgo.config.mjs for ${found.join(', ')}.`,
+        `Format: Optimized with svgo.config.mjs for ${found.join(', ')} (experimental: compare it with the original).`,
     )
 
     return optimized
