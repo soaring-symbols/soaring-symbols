@@ -87,12 +87,12 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
 
         // Each older mark was used until the next one, the last until the
         // current marks (branding.since, which validation requires then)
-        const marks = airline.marks
+        const older = airline.marks
             ? []
             : getAirlineHistory(airline.slug, assetsDir)
-        const history = marks.map(({ since, name, assets }, i) => {
+        const history = older.map(({ since, name, assets }, i) => {
             // Left out when branding.since is missing, which validation reports
-            const until = marks[i + 1]?.since ?? airline.branding?.since
+            const until = older[i + 1]?.since ?? airline.branding?.since
 
             return { since, ...(until && { until }), name, assets }
         })

@@ -163,9 +163,8 @@ const getMarkName = (dir) => {
         ? readFileSync(join(dir, file), 'utf8').match(/<title>([^<]*)<\/title>/)
         : null
 
+    // The reverse of escapeXml in scripts/build.js
     return title?.[1]
-        .replace(/&apos;/g, "'")
-        .replace(/&quot;/g, '"')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&amp;/g, '&')

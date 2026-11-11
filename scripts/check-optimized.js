@@ -17,9 +17,7 @@
 // the limit (#54). Exits with 1 when a file needs optimizing.
 import { readFileSync } from 'fs'
 import { selectSvgs } from './lint/changed.js'
-import { optimize } from 'svgo'
-import svgoConfig from '../svgo.config.mjs'
-import { PRECISIONS } from './lint/optimize.js'
+import { optimizeAt, precisionOf } from './lint/optimize.js'
 
 const { files } = selectSvgs(process.argv.slice(2))
 
@@ -32,28 +30,13 @@ if (!files.length) {
 // precision. SVGOMG's output stays under 7%; unoptimized exports lose 15-40%.
 const MAX_SAVING = 0.1
 
-// The precision a file is written with: its longest decimals, kept within
-// the three to five decimals `npm run optimize` writes
-const precisionOf = (svg) =>
-    Math.min(
-        PRECISIONS.at(-1),
-        Math.max(
-            PRECISIONS[0],
-            ...(svg.match(/\.\d+/g) ?? []).map((n) => n.length - 1),
-        ),
-    )
-
 // GitHub Actions turns ::error lines into annotations on the pull request
 const inCI = Boolean(process.env.GITHUB_ACTIONS)
 
 const unoptimized = files
     .map((file) => {
         const svg = readFileSync(file, 'utf8')
-        const optimized = optimize(svg, {
-            ...svgoConfig,
-            floatPrecision: precisionOf(svg),
-            path: file,
-        }).data
+        const optimized = optimizeAt(svg, precisionOf(svg), file)
 
         return { file, saving: 1 - optimized.length / svg.length }
     })

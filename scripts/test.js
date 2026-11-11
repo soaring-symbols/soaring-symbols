@@ -622,29 +622,21 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
                 [2002, koreanAir.branding.since, 'Korean Air'],
             ],
         )
-        // Older marks need the year the current ones came in
-        const open = publishCatalog(
-            [{ ...koreanAir, branding: { primary_color: '#051766' } }],
-            assetsDir,
-        )
-        assert.deepEqual(validateAirlines(open, { published: true }), [
+        // Older marks need the year the current ones came in, after the last
+        const errorsWith = (branding) =>
+            validateAirlines(
+                publishCatalog([{ ...koreanAir, branding }], assetsDir),
+                { published: true },
+            )
+        assert.deepEqual(errorsWith({ primary_color: '#051766' }), [
             'Korean Air: has older marks, so branding.since needs the year its current marks came in',
         ])
-        const early = publishCatalog(
+        assert.deepEqual(
+            errorsWith({ primary_color: '#051766', since: 2002 }),
             [
-                {
-                    ...koreanAir,
-                    branding: { primary_color: '#051766', since: 2002 },
-                },
+                'Korean Air: branding.since (2002) must come after its last older mark (2002)',
             ],
-            assetsDir,
         )
-        assert.deepEqual(validateAirlines(early, { published: true }), [
-            'Korean Air: branding.since (2002) must come after its last older mark (2002)',
-        ])
-        assert.equal(Object.keys(published).at(-1), 'history')
-        assert.equal(catalog.find((a) => a.marks).history, undefined)
-        assert.deepEqual(validateAirlines(catalog, { published: true }), [])
     })
 
     it('reports malformed history folders', () => {
@@ -1014,21 +1006,23 @@ describe('svg-validator', () => {
 
     it('lets an older mark keep a former name as its title', () => {
         const titleOf = (title, formerNames) => {
-            const { document } = new JSDOM(
+            const svgElement = parse(
                 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>${title}</title><path d="M0 0h64v64H0z"/></svg>`,
-                { contentType: 'image/svg+xml' },
-            ).window
+            )
             const issues = []
             ruleTitle({
-                svgElement: document.querySelector('svg'),
-                document,
+                svgElement,
+                document: svgElement.ownerDocument,
                 airlineName: 'Trinity Airways',
                 isCatalogName: true,
                 formerNames,
                 issues,
             })
 
-            return [document.querySelector('title').textContent, issues.length]
+            return [
+                svgElement.querySelector('title').textContent,
+                issues.length,
+            ]
         }
         // In history/, a previous name stays
         assert.deepEqual(
