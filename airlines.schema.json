@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `previous_slugs` to renamed ones and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks and `predecessors` when it carried on a defunct airline.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, `previous_slugs` when a former name had another slug and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -85,6 +85,20 @@
                     "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
                     "$ref": "#/$defs/slug"
                 },
+                "previous_names": {
+                    "description": "Names the airline flew under before `name`, oldest first, e.g. [\"Binter Canarias\"] for Binter. Its slug follows the current name; the build keeps every former name's slug working (see `previous_slugs`).",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/name" }
+                },
+                "previous_slugs": {
+                    "description": "Added by the build: the slugs of `previous_names` that differ from `slug`. getAirline() finds the airline by them, and the package also ships its current files under assets/<previous slug>/. Only in the published catalog.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/slug" }
+                },
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
                 "callsign": {
@@ -135,7 +149,7 @@
                     "$ref": "#/$defs/year"
                 },
                 "successor": {
-                    "description": "Slug of the airline that carried on this defunct one, after a rename or a merger, e.g. \"air-india\" for Vistara. The defunct entry keeps its own slug and SVGs.",
+                    "description": "Slug of the airline that carried on this defunct one after a merger, a refounding, or a move into or out of a group's brand, e.g. \"air-india\" for Vistara. A plain rename keeps the entry and lists the old name in `previous_names` instead.",
                     "$ref": "#/$defs/slug"
                 },
                 "predecessors": {

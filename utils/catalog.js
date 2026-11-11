@@ -1,11 +1,13 @@
 // The two shapes of the airline catalog. The repo keeps only the fields people
 // write, `slug` included (normalizeCatalog); the build adds `assets` and
-// `history`, which come from the SVGs on disk, and `predecessors`, the
-// reverse of `successor`, to the copy it publishes (publishCatalog).
+// `history`, which come from the SVGs on disk, `previous_slugs`, the slugs of
+// former names, and `predecessors`, the reverse of `successor`, to the copy
+// it publishes (publishCatalog).
 // Keeping generated fields out of the repo means a pull request that adds an
 // airline only touches its own entry.
 import sortBy from 'lodash.sortby'
 import {
+    formerSlugs,
     getAirlineAssets,
     getAirlineHistory,
     toFullHex,
@@ -14,7 +16,7 @@ import {
 import { airlineFields } from './schema.js'
 
 // Fields only the published catalog has
-const GENERATED_FIELDS = ['assets', 'history', 'predecessors']
+const GENERATED_FIELDS = ['previous_slugs', 'assets', 'history', 'predecessors']
 
 // A copy of the object with its keys in the given order; unknown keys go
 // last so the schema check can report them
@@ -68,7 +70,8 @@ const getPredecessors = (airlines) => {
 
 // The catalog as the package ships it: every entry also gets the `assets`
 // found in `assetsDir`, the `history` of its older marks when it has any,
-// and `predecessors` when it carried on a defunct airline. An airline with
+// `previous_slugs` when a former name had another slug, and `predecessors`
+// when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names, which the
 // build copies to its own slug, and no history.
 const publishCatalog = (airlines, assetsDir = 'assets') => {
@@ -86,10 +89,12 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
             : getAirlineHistory(airline.slug, assetsDir)
 
         const predecessors = predecessorsOf.get(airline.slug)
+        const previousSlugs = formerSlugs(airline)
 
         return orderKeys(
             {
                 ...airline,
+                ...(previousSlugs.length && { previous_slugs: previousSlugs }),
                 ...(predecessors && { predecessors }),
                 assets,
                 ...(history.length && { history }),

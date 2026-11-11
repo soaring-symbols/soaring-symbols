@@ -1,7 +1,7 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
 // report (or apply) what changed: IATA/ICAO codes, callsign, hubs, and
 // whether the airline ceased operations. A rename or merger is only
-// reported, since its new name needs an entry of its own.
+// reported: a person renames the entry or sets its successor.
 //
 //   node scripts/sync-data.js                     report only
 //   node scripts/sync-data.js --write             apply, then npm run generate
@@ -120,19 +120,26 @@ for (const airline of airlines) {
         }
     }
 
-    const ceased = firstYear(params.ceased)
+    // A "ceased" that says it was rebranded or renamed is the same airline
+    // under a new name, renamed in place by hand; a merger leaves it defunct,
+    // and so does a move out of a group's brand, which already has a successor
+    const ending = carriedOn(params.ceased)
+    const renamed =
+        !airline.successor && /^(rebranded|renamed)/i.test(ending ?? '')
+    const ceased = renamed ? undefined : firstYear(params.ceased)
     if (ceased) {
         if (!airline.defunct) propose('defunct', true)
         if (airline.ceased !== ceased) propose('ceased', ceased)
     } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
     }
-    // A rename or merger needs the new name as an entry of its own, which
-    // only a person can add
-    const ending = carriedOn(params.ceased)
-    if (ending && !airline.successor) {
+    if (renamed) {
         note(
-            `Wikipedia says it ceased "${ending}"; add the airline that carried on and set successor (see "Renames and mergers" in CONTRIBUTING.md)`,
+            `Wikipedia says it was "${ending}"; rename it in place with previous_names (see "Renames and mergers" in CONTRIBUTING.md)`,
+        )
+    } else if (ending && !airline.successor) {
+        note(
+            `Wikipedia says it ceased "${ending}"; set successor to the airline that carried on (see "Renames and mergers" in CONTRIBUTING.md)`,
         )
     }
 

@@ -16,6 +16,16 @@ const toSlug = (name) => {
     })
 }
 
+// The slugs an airline's former names (`previous_names`) had, apart from its
+// current one: the build keeps each working as an alias
+const formerSlugs = (airline) => [
+    ...new Set(
+        (airline.previous_names ?? [])
+            .map(toSlug)
+            .filter((slug) => slug !== airline.slug),
+    ),
+]
+
 // Hex colors an SVG paints with: fill, stroke and gradient stops, as
 // attributes or inside style, so gradient marks are not mistaken for
 // single-color ones
@@ -191,6 +201,7 @@ export {
     findHistoryProblems,
     assetTypes,
     toSlug,
+    formerSlugs,
     toFullHex,
     getAirlineAssets,
     writeDerivedMonos,

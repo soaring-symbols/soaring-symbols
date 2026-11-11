@@ -138,6 +138,17 @@ for (const [format, api] of [
                 }
             })
 
+            it('finds a renamed airline by its former slug and name', () => {
+                const binter = api.getAirline('binter')
+                assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
+                assert.equal(api.getAirline('binter-canarias'), binter)
+                assert.equal(api.getAirline('Binter Canarias'), binter)
+                assert.equal(
+                    api.getAssetPath('binter-canarias', 'logo'),
+                    'soaring-symbols/assets/binter/logo.svg',
+                )
+            })
+
             it('returns undefined for unknown or empty queries', () => {
                 for (const query of ['ZZZZ', '', '   ', undefined, null, 42]) {
                     assert.equal(getAirline(query), undefined, String(query))
@@ -370,6 +381,44 @@ describe('renames and mergers (successor)', () => {
         )
     })
 
+    it('keeps former names apart from every other airline', () => {
+        const binter = entry('Binter', { previous_names: ['Binter Canarias'] })
+        assert.deepEqual(validateAirlines([binter]), [])
+        // Its former slug is another airline's slug
+        assert.deepEqual(
+            validateAirlines([
+                binter,
+                entry('Binter Canarias', { iata: 'XX', icao: 'XXX' }),
+            ]),
+            [
+                'slug "binter-canarias" is used by more than one airline: Binter, Binter Canarias',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([entry('Binter', { previous_names: ['Binter'] })]),
+            ['Binter: previous_names lists its current name'],
+        )
+        // A former name with the same slug adds no alias
+        const tway = entry("T'way Air", { previous_names: ['Tway Air'] })
+        assert.deepEqual(validateAirlines([tway]), [])
+        assert.equal(
+            publishCatalog(
+                [tway],
+                join(tmpdir(), 'soaring-symbols-no-assets'),
+            )[0].previous_slugs,
+            undefined,
+        )
+    })
+
+    it('publishes the slugs of former names', () => {
+        const [binter] = publishCatalog(
+            [entry('Binter', { previous_names: ['Binter Canarias'] })],
+            join(tmpdir(), 'soaring-symbols-no-assets'),
+        )
+        assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
+        assert.equal(normalizeCatalog([binter])[0].previous_slugs, undefined)
+    })
+
     it('publishes predecessors on the successor, earliest to cease first', () => {
         const catalog = publishCatalog(
             [
@@ -450,8 +499,32 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
+    it('publishes the current files of a renamed airline at its former slugs', () => {
+        const renamed = cjs.listAirlines().filter((a) => a.previous_slugs)
+        assert.ok(renamed.length > 0)
+        const filesIn = (slug) =>
+            readdirSync(new URL(`${slug}/`, assetsDir), { withFileTypes: true })
+                .filter((entry) => entry.isFile())
+                .map((entry) => entry.name)
+                .sort()
+        for (const a of renamed) {
+            for (const slug of a.previous_slugs) {
+                // The current files only, never history/
+                assert.deepEqual(filesIn(slug), filesIn(a.slug), slug)
+                assert.ok(
+                    !existsSync(new URL(`${slug}/history`, assetsDir)),
+                    slug,
+                )
+            }
+        }
+    })
+
     it('has an airline for every asset directory', () => {
-        const slugs = new Set(cjs.listAirlines().map((a) => a.slug))
+        const slugs = new Set(
+            cjs
+                .listAirlines()
+                .flatMap((a) => [a.slug, ...(a.previous_slugs ?? [])]),
+        )
         const dirs = readdirSync(assetsDir, { withFileTypes: true })
         assert.ok(
             dirs.every((d) => d.isDirectory()),

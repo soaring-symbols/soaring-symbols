@@ -36,6 +36,17 @@ for (const airline of airlines) {
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
 }
+// A renamed airline is also found by the slugs and names it had before, which
+// no other airline may use
+for (const airline of airlines) {
+    for (const slug of airline.previous_slugs ?? []) {
+        if (!bySlug.has(slug)) bySlug.set(slug, airline)
+    }
+    for (const name of airline.previous_names ?? []) {
+        const key = name.toLowerCase()
+        if (!byName.has(key)) byName.set(key, airline)
+    }
+}
 
 /**
  * All airlines, sorted by name. The array is a fresh copy; the airline
@@ -48,7 +59,8 @@ function listAirlines() {
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
  * tried in that order. A code shared with a defunct airline finds the
- * active one.
+ * active one. A renamed airline is also found by its former slugs and names,
+ * and returned with its current slug.
  */
 function getAirline(query) {
     if (typeof query !== 'string' || !query.trim()) return undefined

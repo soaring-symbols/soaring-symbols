@@ -43,6 +43,17 @@ export interface Airline {
     /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
     readonly country: string
     readonly slug: string
+    /**
+     * Names the airline flew under before `name`, oldest first (e.g.
+     * ["Binter Canarias"] for Binter). getAirline() finds it by them.
+     */
+    readonly previous_names?: readonly string[]
+    /**
+     * The slugs of `previous_names` that differ from `slug`. getAirline()
+     * finds the airline by them, and the package also ships its current files
+     * at assets/<previous slug>/.
+     */
+    readonly previous_slugs?: readonly string[]
     readonly website?: string
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
@@ -62,8 +73,9 @@ export interface Airline {
     /** Year a defunct airline ceased operations. */
     readonly ceased?: number
     /**
-     * Slug of the airline that carried on this defunct one after a rename or
-     * a merger (e.g. "air-india" for Vistara).
+     * Slug of the airline that carried on this defunct one after a merger, a
+     * refounding, or a move into or out of a group's brand (e.g. "air-india"
+     * for Vistara).
      */
     readonly successor?: string
     /**

@@ -35,7 +35,7 @@ async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
     // The repo keeps only hand-written fields; the published catalog adds
-    // `assets` and `history`. It ships minified: consumers (bundlers, jsDelivr)
+    // the generated ones (utils/catalog.js). It ships minified: consumers (bundlers, jsDelivr)
     // only parse it
     const catalog = publishCatalog(
         JSON.parse(await fs.readFile('./airlines.json', 'utf-8')),
@@ -79,12 +79,35 @@ async function copyFiles() {
             writeDerivedMonos(dir, path.join(distDir, 'assets'))
         }
     }
-    // After the monos, so airlines sharing marks get those too
+    // After the monos, so airlines sharing marks get those too, and after
+    // those, so a former slug gets whatever its airline ships
     await copySharedMarks(catalog)
+    await copyFormerSlugs(catalog)
 }
 
 const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Copy an airline's current files (never history/) from dist/assets/<from>/
+// to dist/assets/<to>/, titled with the airline's name
+async function copyCurrentMarks(from, to, name) {
+    const src = path.join(distDir, 'assets', from)
+    const dest = path.join(distDir, 'assets', to)
+    await fs.mkdir(dest, { recursive: true })
+    const files = (await fs.readdir(src, { withFileTypes: true }))
+        .filter((entry) => entry.isFile())
+        .map((entry) => entry.name)
+    for (const file of files) {
+        const svg = await fs.readFile(path.join(src, file), 'utf-8')
+        await fs.writeFile(
+            path.join(dest, file),
+            svg.replace(
+                /<title>[^<]*<\/title>/,
+                `<title>${escapeXml(name)}</title>`,
+            ),
+        )
+    }
+}
 
 // Airlines with `marks` use another airline's SVGs. Copy those files to their
 // own slug in dist (never in the repo), titled with their own name, so every
@@ -92,21 +115,16 @@ const escapeXml = (text) =>
 // marks are shared, never the history/ folder.
 async function copySharedMarks(airlines) {
     for (const airline of airlines.filter((a) => a.marks)) {
-        const src = path.join(distDir, 'assets', airline.marks)
-        const dest = path.join(distDir, 'assets', airline.slug)
-        await fs.mkdir(dest, { recursive: true })
-        const files = (await fs.readdir(src, { withFileTypes: true }))
-            .filter((entry) => entry.isFile())
-            .map((entry) => entry.name)
-        for (const file of files) {
-            const svg = await fs.readFile(path.join(src, file), 'utf-8')
-            await fs.writeFile(
-                path.join(dest, file),
-                svg.replace(
-                    /<title>[^<]*<\/title>/,
-                    `<title>${escapeXml(airline.name)}</title>`,
-                ),
-            )
+        await copyCurrentMarks(airline.marks, airline.slug, airline.name)
+    }
+}
+
+// A renamed airline's slug follows its new name. Links to the old slug keep
+// working: its current files are also published at each previous slug
+async function copyFormerSlugs(airlines) {
+    for (const airline of airlines) {
+        for (const slug of airline.previous_slugs ?? []) {
+            await copyCurrentMarks(airline.slug, slug, airline.name)
         }
     }
 }

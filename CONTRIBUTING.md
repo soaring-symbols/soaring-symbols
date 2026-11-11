@@ -18,8 +18,8 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name is the airline's `slug` in `airlines.json`: its name slugified, in lowercase with hyphens (e.g., `assets/vietnam-airlines/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
-  - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
-  - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
+    - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
+    - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
 
 **Correct Structure Example:**
 
@@ -53,7 +53,7 @@ assets/
 - **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's **current** name (`lint-svg.js --fix` writes it). Single-color marks get their `-mono.svg` from the build, as in `assets/<slug>/`.
 - **Nothing to add to `airlines.json`:** the build reads the folders and publishes them as the airline's `history`. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files, or has no color file.
 - **Never move the current files into `history/` without new ones:** `assets/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
-- **When the name changes too**, this is not the place: a new name is a new airline entry (see [Renames and mergers](#renames-and-mergers)).
+- **When the name changes too**, rename the airline first (see [Renames and mergers](#renames-and-mergers)); its old marks then go in the new slug's `history/`.
 - Say in the pull request where each old mark came from, as for any SVG.
 
 ### 2. SVG Specifications
@@ -74,8 +74,8 @@ assets/
 
 - **ViewBox Dimensions**:
 
-  - **Logos** should use a `viewBox` of `0 0 64 64`.
-  - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
+    - **Logos** should use a `viewBox` of `0 0 64 64`.
+    - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
@@ -89,10 +89,10 @@ assets/
 
 - **Accessibility Attributes**: To ensure accessibility, all SVGs must include the following attributes and elements:
 
-  - `role="img"`
-  - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
-  - `xmlns="http://www.w3.org/2000/svg"`
-  - A `<title>Airline Name</title>` element providing a text description.
+    - `role="img"`
+    - `viewBox="0 0 64 64"` or `viewBox="0 0 24 24"`
+    - `xmlns="http://www.w3.org/2000/svg"`
+    - A `<title>Airline Name</title>` element providing a text description.
 
 > [\!WARNING]
 > **Note on SVG Integrity:**
@@ -112,25 +112,26 @@ IATA and ICAO codes must be unique among active airlines. A defunct airline may 
 
 #### Information to Add Manually
 
-| Field Name     | Required | Description                                                                                   |
-| :------------- | :------: | :-------------------------------------------------------------------------------------------- |
-| `name`         |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**        |
-| `slug`         |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.           |
-| `iata`         |   Yes    | The airline's two-character IATA code.                                                        |
-| `icao`         |   Yes    | The airline's three-character ICAO code.                                                      |
-| `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
-| `website`      |   Yes    | The official website of the airline.                                                          |
-| `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
-| `flag_carrier` |    No    | `true` or `false`.                                                                            |
-| `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
-| `parent`       |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                        |
-| `marks`        |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).        |
-| `hubs`         |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.        |
-| `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
-| `defunct`      |    No    | `true` if the airline has ceased operations.                                                  |
-| `ceased`       |    No    | Year a defunct airline ceased operations; requires `defunct`.                                 |
-| `successor`    |    No    | Slug of the airline that carried on a defunct one after a rename or merger; needs `defunct`.  |
-| `branding`     |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |
+| Field Name       | Required | Description                                                                                   |
+| :--------------- | :------: | :-------------------------------------------------------------------------------------------- |
+| `name`           |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**        |
+| `slug`           |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.           |
+| `previous_names` |    No    | Names it flew under before, oldest first (see [Renames and mergers](#renames-and-mergers)).   |
+| `iata`           |   Yes    | The airline's two-character IATA code.                                                        |
+| `icao`           |   Yes    | The airline's three-character ICAO code.                                                      |
+| `country`        |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).          |
+| `website`        |   Yes    | The official website of the airline.                                                          |
+| `callsign`       |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                      |
+| `flag_carrier`   |    No    | `true` or `false`.                                                                            |
+| `alliance`       |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".       |
+| `parent`         |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                        |
+| `marks`          |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).        |
+| `hubs`           |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.        |
+| `founded`        |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                           |
+| `defunct`        |    No    | `true` if the airline has ceased operations.                                                  |
+| `ceased`         |    No    | Year a defunct airline ceased operations; requires `defunct`.                                 |
+| `successor`      |    No    | Slug of the airline that carried on a defunct one (a merger, refounding or brand move).       |
+| `branding`       |   Yes    | An object containing brand-specific details like `primary_color`, as six-digit lowercase hex. |
 
 #### Generated Asset Metadata
 
@@ -142,7 +143,7 @@ In the published package (`dist/airlines.json`), each airline also has an `asset
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`) and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
+Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), `previous_slugs` (the slugs of `previous_names`) and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
 
 ### 4. Pull Requests
 
@@ -171,15 +172,30 @@ A subsidiary needs SVGs only when its logo differs:
 
 #### Renames and mergers
 
-Each entry is one name, and its slug never changes, so links to `assets/<slug>/` and stored slugs keep working. Three rules cover a new name:
+Each entry is one airline, not one brand: a new name or logo for the same airline changes its entry, and only a different airline gets a new one.
 
-1. **New name:** keep the old entry with its SVGs and add `"defunct": true`, `"ceased": <year of the change>` and `"successor": "<new slug>"`. Add the new name as a new entry. Even a small change, such as dropping "Airlines", is a new name, since the slug follows the name.
-2. **Back to an earlier name:** use that name's existing entry again. Its old marks move to `history/<year introduced>/`, and the entry in between points its `successor` at it.
-3. **Same logo under the new name**, or a logo borrowed from another airline: no folder, `"marks": "<slug with the SVGs>"`.
+**A new name** (Binter Canarias became Binter in 2014; T'way Air became Trinity Airways):
 
-`founded` and `ceased` give the years the airline flew under that name. Codes can stay the same on every entry: a code shared with an active airline finds the active one.
+1. Change `name` and add the old one to `previous_names`, oldest first.
+2. Let `npm run generate` give it the slug of the new name, and rename its folder to match (`git mv assets/<old slug> assets/<new slug>`), along with any `parent`, `marks` or `successor` that points at the old slug.
+3. If the logo changed too, put the new SVGs in the folder and the old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)).
 
-Pacific Airlines, for example, flew as Jetstar Pacific, part of the Jetstar group with its logo, from 2008 to 2020, then went back to its own name under Vietnam Airlines:
+```json
+{
+    "name": "Binter",
+    "slug": "binter",
+    "previous_names": ["Binter Canarias"],
+    ...
+}
+```
+
+Nothing breaks, so it ships as a patch release: the build publishes the slugs of the old names as `previous_slugs` and copies the airline's current files to `assets/<old slug>/` in the package, so links to the old slug keep working, and `getAirline()` finds the airline by an old slug or name. An old slug can't be another airline's, and `npm run generate` stops if it is.
+
+**A different airline** gets a new entry, and the old one becomes `"defunct": true` with `"ceased": <year>` and `"successor": "<new slug>"`. That is the case when:
+
+- it merged into another airline (Vistara into `air-india`); several airlines can share one successor;
+- the company was refounded under a new name (Swissair and SWISS);
+- it moved into or out of a group's brand, so its `parent` and `marks` changed with the name: Pacific Airlines flew as Jetstar Pacific, with the Jetstar logo, from 2008 to 2020, then went back to its own name under Vietnam Airlines.
 
 ```json
 {
@@ -212,22 +228,20 @@ Pacific Airlines, for example, flew as Jetstar Pacific, part of the Jetstar grou
 }
 ```
 
-Jetstar Pacific has no folder, since it flew the Jetstar logo. Pacific Airlines' logo from before 2008, once someone draws it, goes in `assets/pacific-airlines/history/<year introduced>/`.
-
-A merger works like rule 1: the absorbed airline becomes defunct with `successor` set to the airline it joined (e.g. Vistara → `air-india`), and several airlines may share one successor. Following `successor` must end at an airline without one. The build lists the old entries in the successor's `predecessors`, so the link is written once, and it all ships as a patch release, since no file moves.
+`founded` and `ceased` give the years each entry flew. Codes can stay the same on both: a code shared with an active airline finds the active one. Following `successor` must end at an airline without one, and the build lists the old entries in the successor's `predecessors`, so the link is written once.
 
 #### When an airline changes
 
-| What changed                         | What to do                                                                                                         |
-| :----------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| The logo, not the name               | New SVGs in `assets/<slug>/`, old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)). |
-| The name                             | Old entry defunct with `successor`, new entry for the new name ([Renames and mergers](#renames-and-mergers)).      |
-| Back to an earlier name              | Reuse that name's entry, old marks in `history/`, `successor` of the name in between pointing at it.               |
-| Merged into another airline          | The absorbed airline defunct with `successor` set to the one it joined.                                            |
-| Shut down                            | `defunct` and `ceased`, keeping the entry and its SVGs.                                                            |
-| A code, website, hub or color        | Edit the entry; `npm run sync:data` suggests code and hub changes from Wikipedia.                                  |
-| Becomes another airline's subsidiary | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).      |
-| A name an unrelated airline used     | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                       |
+| What changed                              | What to do                                                                                                         |
+| :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| The logo, not the name                    | New SVGs in `assets/<slug>/`, old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)). |
+| The name, with or without the logo        | Rename in place with `previous_names` and the new slug ([Renames and mergers](#renames-and-mergers)).              |
+| Moves into or out of a group's brand      | New entry; the old one defunct with `successor`.                                                                   |
+| Merged into another airline, or refounded | The old airline defunct with `successor` set to the one that carried on.                                           |
+| Shut down                                 | `defunct` and `ceased`, keeping the entry and its SVGs.                                                            |
+| A code, website, hub, alliance or color   | Edit the entry; `npm run sync:data` suggests code and hub changes from Wikipedia.                                  |
+| Becomes another airline's subsidiary      | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).      |
+| A name an unrelated airline used (Pan Am) | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                       |
 
 ### Example JSON Data
 
