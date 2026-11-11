@@ -309,6 +309,9 @@
     {
         "name": "Air Serbia",
         "slug": "air-serbia",
+        "previous_names": [
+            "Jat Airways"
+        ],
         "iata": "JU",
         "icao": "ASL",
         "callsign": "AIR SERBIA",
@@ -476,6 +479,7 @@
         "country": "KR",
         "website": "https://flyasiana.com",
         "alliance": "Star Alliance",
+        "parent": "korean-air",
         "hubs": [
             "GMP",
             "ICN"
@@ -542,6 +546,9 @@
     {
         "name": "Avianca Costa Rica",
         "slug": "avianca-costa-rica",
+        "previous_names": [
+            "LACSA"
+        ],
         "iata": "LR",
         "icao": "LRC",
         "callsign": "LACSA",
@@ -561,6 +568,9 @@
     {
         "name": "Avianca Ecuador",
         "slug": "avianca-ecuador",
+        "previous_names": [
+            "AeroGal"
+        ],
         "iata": "2K",
         "icao": "GLG",
         "callsign": "GALAPAGOS",
@@ -579,6 +589,9 @@
     {
         "name": "Avianca El Salvador",
         "slug": "avianca-el-salvador",
+        "previous_names": [
+            "TACA International Airlines"
+        ],
         "iata": "TA",
         "icao": "TAI",
         "country": "SV",
@@ -991,6 +1004,9 @@
     {
         "name": "Fiji Airways",
         "slug": "fiji-airways",
+        "previous_names": [
+            "Air Pacific"
+        ],
         "iata": "FJ",
         "icao": "FJI",
         "callsign": "FIJI",
@@ -1032,6 +1048,7 @@
         "callsign": "FIREFLY",
         "country": "MY",
         "website": "https://www.fireflyz.com.my",
+        "parent": "malaysia-airlines",
         "hubs": [
             "SZB",
             "PEN"
@@ -1079,6 +1096,9 @@
     {
         "name": "flynas",
         "slug": "flynas",
+        "previous_names": [
+            "Nas Air"
+        ],
         "iata": "XY",
         "icao": "KNE",
         "callsign": "FLYNAS",
@@ -1185,6 +1205,7 @@
         "callsign": "HONGKONG SHUTTLE",
         "country": "HK",
         "website": "https://www.hkexpress.com",
+        "parent": "cathay-pacific",
         "hubs": [
             "HKG"
         ],
@@ -1331,6 +1352,7 @@
         "callsign": "JETSTAR",
         "country": "AU",
         "website": "https://www.jetstar.com",
+        "parent": "qantas",
         "founded": 2003,
         "branding": {
             "primary_color": "#ff5111"
@@ -1474,6 +1496,9 @@
     {
         "name": "LATAM Airlines Brasil",
         "slug": "latam-airlines-brasil",
+        "previous_names": [
+            "TAM Linhas Aéreas"
+        ],
         "iata": "JJ",
         "icao": "TAM",
         "callsign": "TAM",
@@ -1495,6 +1520,9 @@
     {
         "name": "LATAM Airlines Colombia",
         "slug": "latam-airlines-colombia",
+        "previous_names": [
+            "LAN Colombia"
+        ],
         "iata": "4C",
         "icao": "ARE",
         "callsign": "LAN COLOMBIA",
@@ -1513,6 +1541,9 @@
     {
         "name": "LATAM Airlines Ecuador",
         "slug": "latam-airlines-ecuador",
+        "previous_names": [
+            "LAN Ecuador"
+        ],
         "iata": "XL",
         "icao": "LNE",
         "callsign": "AEROLANE",
@@ -1532,6 +1563,10 @@
     {
         "name": "LATAM Airlines Paraguay",
         "slug": "latam-airlines-paraguay",
+        "previous_names": [
+            "Líneas Aéreas Paraguayas",
+            "TAM Paraguay"
+        ],
         "iata": "PZ",
         "icao": "LAP",
         "callsign": "PARAGUAYA",
@@ -1550,6 +1585,9 @@
     {
         "name": "LATAM Airlines Perú",
         "slug": "latam-airlines-peru",
+        "previous_names": [
+            "LAN Perú"
+        ],
         "iata": "LP",
         "icao": "LPE",
         "callsign": "LAN PERÚ",
@@ -1639,6 +1677,9 @@
     {
         "name": "Malaysia Airlines",
         "slug": "malaysia-airlines",
+        "previous_names": [
+            "Malaysian Airline System"
+        ],
         "iata": "MH",
         "icao": "MAS",
         "callsign": "MALAYSIAN",
@@ -1657,6 +1698,11 @@
     {
         "name": "Myanmar National Airlines",
         "slug": "myanmar-national-airlines",
+        "previous_names": [
+            "Union of Burma Airways",
+            "Burma Airways",
+            "Myanma Airways"
+        ],
         "iata": "UB",
         "icao": "UBA",
         "callsign": "UNIONAIR",
@@ -1741,6 +1787,7 @@
         "callsign": "AIR PEACH",
         "country": "JP",
         "website": "https://www.flypeach.com",
+        "parent": "all-nippon-airways",
         "founded": 2011,
         "branding": {
             "primary_color": "#9b308c"
@@ -1901,6 +1948,9 @@
     {
         "name": "SAS Connect",
         "slug": "sas-connect",
+        "previous_names": [
+            "SAS Ireland"
+        ],
         "iata": "SL",
         "icao": "SZS",
         "callsign": "SPINNAKER",
@@ -1916,6 +1966,9 @@
     {
         "name": "Saudia",
         "slug": "saudia",
+        "previous_names": [
+            "Saudi Arabian Airlines"
+        ],
         "iata": "SV",
         "icao": "SVA",
         "callsign": "SAUDIA",
@@ -1960,6 +2013,7 @@
         "country": "SG",
         "website": "https://www.flyscoot.com",
         "alliance": "Value Alliance",
+        "parent": "singapore-airlines",
         "hubs": [
             "SIN"
         ],
@@ -2342,6 +2396,9 @@
     {
         "name": "Virgin Australia",
         "slug": "virgin-australia",
+        "previous_names": [
+            "Virgin Blue"
+        ],
         "iata": "VA",
         "icao": "VOZ",
         "callsign": "VELOCITY",
@@ -2360,6 +2417,9 @@
     {
         "name": "Viva",
         "slug": "viva",
+        "previous_names": [
+            "Viva Aerobus"
+        ],
         "iata": "VB",
         "icao": "VIV",
         "callsign": "VIVA",
@@ -2497,6 +2557,7 @@
         "country": "CN",
         "website": "https://www.xiamenair.com",
         "alliance": "SkyTeam",
+        "parent": "china-southern-airlines",
         "hubs": [
             "FOC",
             "XMN"

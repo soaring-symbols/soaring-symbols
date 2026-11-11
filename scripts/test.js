@@ -509,9 +509,16 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
-    it('publishes the current files of a renamed airline at its former slugs', () => {
+    it('publishes the current files of a renamed airline at its published former slugs', () => {
         const renamed = cjs.listAirlines().filter((a) => a.previous_slugs)
         assert.ok(renamed.length > 0)
+        const published = new Set(
+            JSON.parse(
+                readFileSync(
+                    new URL('../published-slugs.json', import.meta.url),
+                ),
+            ),
+        )
         const filesIn = (slug) =>
             readdirSync(new URL(`${slug}/`, assetsDir), { withFileTypes: true })
                 .filter((entry) => entry.isFile())
@@ -519,6 +526,12 @@ describe('airlines.json assets metadata', () => {
                 .sort()
         for (const a of renamed) {
             for (const slug of a.previous_slugs) {
+                // A former name that was never a slug in a release has no
+                // links to keep, so no copy (Air Pacific for Fiji Airways)
+                if (!published.has(slug)) {
+                    assert.ok(!existsSync(new URL(slug, assetsDir)), slug)
+                    continue
+                }
                 // The current files only, never history/
                 assert.deepEqual(filesIn(slug), filesIn(a.slug), slug)
                 assert.ok(

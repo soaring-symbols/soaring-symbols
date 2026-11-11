@@ -209,7 +209,9 @@ On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline
 
 ### Renames and mergers
 
-Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old names in `previous_names`. The old slugs stay valid: `previous_slugs` lists them, `getAirline()` finds the airline by them or by an old name, and the package also ships the airline's current files at `assets/<old slug>/`, so links and stored slugs keep working. Its older logos are in [`history`](#history).
+Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old names in `previous_names`. The old slugs stay valid: `previous_slugs` lists them, and `getAirline()` finds the airline by them or by an old name. When an old slug was in a release, the package also ships the airline's files at `assets/<old slug>/`, so links to it keep working.
+
+An old slug follows the airline, as a redirect would: its files are the airline's **current** marks under its current name, so `assets/tway-air/logo.svg` shows Trinity Airways' logo once it is renamed. The logo it had then is in [`history`](#history) (`assets/trinity-airways/history/2010/logo.svg`). To keep a file exactly as it was, link an exact release (`soaring-symbols@0.2.4/dist/assets/tway-air/logo.svg`), which never changes.
 
 ```js
 // Trinity Airways flew as Hansung Airlines, then T'way Air until 2026

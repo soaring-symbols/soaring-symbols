@@ -198,7 +198,7 @@ assets/trinity-airways/
         └── logo.svg
 ```
 
-Nothing breaks, so it ships as a patch release: the build publishes the slugs of the old names as `previous_slugs` and copies the airline's current files to `assets/<old slug>/` in the package, so links to the old slug keep working, and `getAirline()` finds the airline by an old slug or name. An old slug can't be another airline's, and `npm run generate` stops if it is.
+Nothing breaks, so it ships as a patch release: the build publishes the slugs of the old names as `previous_slugs`, and for each one a release has shipped (`published-slugs.json`) it copies the airline's current files to `assets/<old slug>/` in the package, so links to the old slug keep working, and `getAirline()` finds the airline by an old slug or name. An old slug can't be another airline's, and `npm run generate` stops if it is.
 
 **A different airline** gets a new entry, and the old one becomes `"defunct": true` with `"ceased": <year>` and `"successor": "<new slug>"`. That is the case when:
 

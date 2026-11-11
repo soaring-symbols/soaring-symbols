@@ -8,12 +8,16 @@
 // and assets, fixes, additions) and minor for breaking API or data changes.
 // Every release goes to the `latest` dist-tag; prereleases are not used.
 import { spawnSync } from 'child_process'
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { parseArgs } from 'util'
 
 const BRANCH = 'main'
 const REMOTE = 'origin'
-const RELEASE_FILES = ['package.json', 'package-lock.json']
+const RELEASE_FILES = [
+    'package.json',
+    'package-lock.json',
+    'published-slugs.json',
+]
 
 const { values, positionals } = parseArgs({
     allowPositionals: true,
@@ -130,6 +134,17 @@ if (!run('npm', ['publish', '--tag', 'latest'], { allowFail: true })) {
     restoreReleaseFiles()
     fail('npm publish failed; the version bump was reverted.')
 }
+
+// --- Record the slugs this release shipped, so a later rename keeps their
+// links working (scripts/build.js copies files only to published slugs) ---
+const shipped = JSON.parse(readFileSync('dist/airlines.json', 'utf8')).map(
+    (airline) => airline.slug,
+)
+const known = JSON.parse(readFileSync('published-slugs.json', 'utf8'))
+writeFileSync(
+    'published-slugs.json',
+    `${JSON.stringify([...new Set([...known, ...shipped])].sort(), null, 4)}\n`,
+)
 
 // --- Commit the bump (not pushed) ---
 step('Committing the version bump')
