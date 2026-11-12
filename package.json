@@ -33,6 +33,10 @@
         "default": "./dist/svg-validator.cjs"
       }
     },
+    "./svg-fixer": {
+      "types": "./dist/svg-fixer.d.ts",
+      "import": "./dist/svg-fixer.js"
+    },
     "./package.json": "./package.json",
     "./assets/*": "./dist/assets/*"
   },
@@ -87,13 +91,23 @@
       "eslint --fix"
     ]
   },
+  "peerDependencies": {
+    "@resvg/resvg-wasm": "2.6.2"
+  },
+  "peerDependenciesMeta": {
+    "@resvg/resvg-wasm": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@resvg/resvg-js": "^2.6.2",
+    "@resvg/resvg-wasm": "2.6.2",
     "@types/jsdom": "^27.0.0",
     "ajv": "^8.20.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",

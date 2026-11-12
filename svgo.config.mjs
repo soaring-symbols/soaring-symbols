@@ -11,6 +11,9 @@
 // - keeps paths separate, since mergePaths visibly shifts some logos
 // - writes hex colors in full (#000000, not #000 or black), as lint-svg expects
 // - orders attributes the way lint-svg expects (role, viewBox, xmlns, fill, d)
+// - inlines a <style> rule into every element it matches, not only into one
+//   (design tools share a class such as .cls-1 between many paths), before
+//   the <style> is dropped
 // - drops width/height, raster images, off-canvas paths, <style> and scripts
 const EDITOR_NS = /inkscape\.org|sodipodi\.sourceforge\.net/
 const EDITOR_PREFIX = /^(ns\d+|sodipodi|inkscape)$/
@@ -120,6 +123,7 @@ export default {
             params: {
                 overrides: {
                     removeUnknownsAndDefaults: { keepRoleAttr: true },
+                    inlineStyles: { onlyMatchedOnce: false },
                     mergePaths: false,
                     convertColors: { shorthex: false, shortname: false },
                 },

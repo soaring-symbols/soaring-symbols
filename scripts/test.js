@@ -691,6 +691,14 @@ describe('package exports', () => {
             assert.ok(existsSync(`${base}.d.cts`), `${entry} .d.cts`)
         }
     })
+
+    it('ships the browser fixer as ESM with its declarations', () => {
+        const base = require
+            .resolve('soaring-symbols/package.json')
+            .replace(/package\.json$/, 'dist/svg-fixer')
+        assert.ok(existsSync(`${base}.js`))
+        assert.ok(existsSync(`${base}.d.ts`))
+    })
 })
 
 describe('wikipedia infobox parsing (sync-data)', () => {
@@ -1239,5 +1247,112 @@ describe('svg-validator', () => {
             ).pass
         assert.equal(fill('icon.svg'), true)
         assert.equal(fill('icon-mono.svg'), false)
+    })
+})
+
+describe('svg-fixer', () => {
+    // The browser build runs here on jsdom's DOMParser and resvg-wasm, and
+    // must fix a file exactly as lint-svg.js does with jsdom and resvg-js
+    const { window } = new JSDOM('')
+    const parse = (source) =>
+        new window.DOMParser().parseFromString(source, 'image/svg+xml')
+    let browser
+    let cli
+
+    before(async () => {
+        globalThis.DOMParser = window.DOMParser
+        browser = await import('../dist/svg-fixer.js')
+        cli = await import('./lint/fix.js')
+        await browser.initSvgFixer(
+            readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')),
+        )
+    })
+    after(() => {
+        delete globalThis.DOMParser
+    })
+
+    const both = (source, options) => {
+        const { type = 'logo', ...rest } = options
+
+        return [
+            browser.fixSvg(source, options),
+            cli.fixSvg(source, { ...rest, isIcon: type !== 'logo', parse }),
+        ]
+    }
+
+    const NS = 'xmlns="http://www.w3.org/2000/svg"'
+    const BROKEN = [
+        [
+            'a prolog, width and height, no title, editor data, rgb()',
+            `<?xml version="1.0"?><svg ${NS} xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="24" height="24" viewBox="0 0 24 24" inkscape:version="1.3"><path fill="rgb(255,0,0)" d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', airlineName: 'Test Air' },
+        ],
+        [
+            'a <style> and a transform',
+            `<svg role="img" viewBox="0 0 64 64" ${NS}><title>Test Air</title><style>.a{fill:#123456}</style><g transform="translate(0 2)"><path class="a" d="M0 0h64v60H0z"/></g></svg>`,
+            { type: 'logo' },
+        ],
+        [
+            'a <style> class shared by several paths, as design tools export',
+            `<svg viewBox="0 0 64 64" ${NS}><title>Test Air</title><style>.cls-1{fill:rgb(195,11,18)}</style><g transform="translate(0 2)"><path class="cls-1" d="M0 0h32v60H0z"/><path class="cls-1" d="M32 0h32v60H32z"/></g></svg>`,
+            { type: 'logo' },
+        ],
+        [
+            'nested groups, long decimals and paths to merge',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><g fill="#ff0000"><g><path d="M0 0h12.123456v24H0z"/><path d="M12.123456 0H24v24H12.123456z"/></g></g></svg>`,
+            { type: 'icon', mergePaths: true },
+        ],
+        [
+            'a title out of place, with another name',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><path d="M0 0h24v24H0z"/><title>Old Name</title></svg>`,
+            { type: 'icon', airlineName: 'Test Air', isCatalogName: true },
+        ],
+        [
+            'a -mono.svg with its own color',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="#000000" d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon-mono.svg' },
+        ],
+    ]
+
+    for (const [name, source, options] of BROKEN) {
+        it(`fixes ${name} as lint-svg.js --fix does`, () => {
+            const [fromBrowser, fromCli] = both(source, options)
+            assert.equal(fromBrowser.fixed, true)
+            assert.deepEqual(fromBrowser, fromCli)
+            // What --fix leaves is clean
+            const again = browser.fixSvg(fromBrowser.content, options)
+            assert.equal(again.fixed, false, again.issues.join('; '))
+        })
+    }
+
+    it('leaves every asset as lint-svg.js does', () => {
+        const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+        const differences = []
+        const dirs = readdirSync(assetsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        for (const dir of dirs) {
+            for (const folder of getAssetDirs(dir, assetsDir)) {
+                for (const file of readdirSync(`${assetsDir}/${folder}`)) {
+                    if (!file.endsWith('.svg')) continue
+                    const path = `assets/${folder}/${file}`
+                    if (EXCLUDE_FILES.includes(path)) continue
+                    const source = readFileSync(
+                        `${assetsDir}/${folder}/${file}`,
+                        'utf8',
+                    )
+                    const [fromBrowser, fromCli] = both(source, {
+                        fileName: file,
+                        type: /icon|tail/.test(file) ? 'icon' : 'logo',
+                    })
+                    try {
+                        assert.deepEqual(fromBrowser, fromCli)
+                    } catch {
+                        differences.push(path)
+                    }
+                }
+            }
+        }
+        assert.deepEqual(differences, [])
     })
 })

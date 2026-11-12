@@ -87,6 +87,26 @@ For a URL in the browser, link the file from jsDelivr with the airline's `slug`;
 const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
 ```
 
+### Fixing an SVG in the browser
+
+`soaring-symbols/svg-fixer` fixes an SVG's text as `node scripts/lint-svg.js --fix` would, for a page that checks contributions (the website's validate page uses it). It is ESM only and runs SVGO and resvg, so it is a few hundred kilobytes: load it when it is needed. It renders with [`@resvg/resvg-wasm`](https://www.npmjs.com/package/@resvg/resvg-wasm) 2.6.2, an optional peer dependency to install alongside it, whose WebAssembly is loaded once with `initSvgFixer`.
+
+```js
+import { initSvgFixer, fixSvg } from 'soaring-symbols/svg-fixer'
+import wasmUrl from '@resvg/resvg-wasm/index_bg.wasm?url' // Vite
+
+await initSvgFixer(fetch(wasmUrl))
+
+const { content, fixed, issues, warnings } = fixSvg(svgText, {
+    fileName: 'logo-mono.svg', // tells a -mono.svg apart
+    type: 'logo', // or 'icon' (tails too)
+    airlineName: 'Vietnam Airlines', // what <title> should hold
+    isCatalogName: true, // rename a different title to it
+})
+```
+
+`content` is the fixed SVG, or the text unchanged when `fixed` is false. `issues` lists what was wrong, as `lint-svg.js` reports it; geometry problems are reported but left for an editor. `warnings` never fail `lint-svg.js --check`. Pass `mergePaths: true` to also join neighbouring paths of one color, as `--merge-paths` does (experimental).
+
 ## Data Models
 
 ### Airline
