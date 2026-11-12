@@ -1,5 +1,5 @@
 // --fix steps for the structure warnings that used to need an editor:
-// flattening nested groups and merging the paths of a single-color SVG.
+// flattening nested groups and merging neighbouring paths of the same color.
 // Both work on a copy of the SVG and are kept only when the copy renders
 // like the original (rendersAlike), so a merge that would punch a hole where
 // shapes overlap, or a flattening that changes how a clip or an opacity
@@ -85,26 +85,39 @@ export function absoluteStart(d) {
     return `M${x}${y.startsWith('-') ? '' : ' '}${y}${linetos ? 'l' : ''}${rest}`
 }
 
-// Every attribute but `d` and the inherited paint, which a single-color SVG
-// resolves to the same values on every shape
+// The paint attributes a shape inherits from its groups and the <svg>
+const PAINT = ['fill', 'fill-rule', 'fill-opacity']
+
+// The value a shape draws with: its own, or the nearest ancestor's
+const resolve = (el, name) => {
+    for (let node = el; node; node = node.parentElement) {
+        if (node.hasAttribute(name))
+            return node.getAttribute(name).trim().toLowerCase()
+        if (node.tagName.toLowerCase() === 'svg') break
+    }
+
+    return ''
+}
+
+// Two shapes that draw alike: the same resolved paint, wherever it is set
+// (on the shape or inherited), and the same other attributes but `d`
 const sameAttrs = (a, b) => {
     const own = (el) =>
         [...el.attributes]
-            .filter(
-                ({ name }) =>
-                    name !== 'd' &&
-                    !['fill', 'fill-rule', 'fill-opacity'].includes(name),
-            )
+            .filter(({ name }) => name !== 'd' && !PAINT.includes(name))
             .map(({ name, value }) => `${name}=${value}`)
             .sort()
             .join(' ')
+    const paint = (el) => PAINT.map((name) => resolve(el, name)).join('|')
 
-    return own(a) === own(b)
+    return own(a) === own(b) && paint(a) === paint(b)
 }
 
-// Joins each <path> into the <path> right before it. Only for a
-// single-color SVG, where every shape has the same paint; shapes other than
-// <path> are left for the editor.
+// Joins each <path> into the <path> right before it when both draw in the
+// same paint: every shape of a single-color SVG, or a run of same-colored
+// shapes in a multi-color one. Only neighbours merge, so which color is
+// drawn on top stays the same; shapes other than <path> are left for the
+// editor.
 export function mergePaths(svg) {
     for (const path of [...svg.querySelectorAll('path')]) {
         if (path.closest('defs, clipPath, mask')) continue

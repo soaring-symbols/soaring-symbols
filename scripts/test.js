@@ -1121,6 +1121,41 @@ describe('svg-validator', () => {
         assert.equal(paths.length, 2)
     })
 
+    it('merges runs of one color in a multi-color svg', () => {
+        const { issues, warnings, paths } = fixStructure(
+            '<path fill="#ff0000" d="M2 2h4v4H2z"/><path fill="#ff0000" d="M8 2h4v4H8z"/><path fill="#0000ff" d="M2 8h4v4H2z"/><path fill="#0000ff" d="M8 8h4v4H8z"/>',
+        )
+        assert.equal(issues.length, 1)
+        assert.deepEqual(warnings, [])
+        assert.deepEqual(
+            paths.map((p) => [p.getAttribute('fill'), p.getAttribute('d')]),
+            [
+                ['#ff0000', 'M2 2h4v4H2zM8 2h4v4H8z'],
+                ['#0000ff', 'M2 8h4v4H2zM8 8h4v4H8z'],
+            ],
+        )
+    })
+
+    it('keeps apart shapes of one color with another color between them', () => {
+        // Merging the two red squares would draw one of them under the blue
+        const { issues, warnings, paths } = fixStructure(
+            '<path fill="#ff0000" d="M2 2h4v4H2z"/><path fill="#0000ff" d="M4 4h4v4H4z"/><path fill="#ff0000" d="M6 6h4v4H6z"/>',
+        )
+        assert.deepEqual(issues, [])
+        assert.deepEqual(warnings, [])
+        assert.equal(paths.length, 3)
+    })
+
+    it('merges a shape that inherits the color it sets on another', () => {
+        // The root fill is #111111, so both squares draw in it
+        const { issues, paths } = fixStructure(
+            '<path d="M2 2h4v4H2z"/><path fill="#111111" d="M8 8h4v4H8z"/><path fill="#ff0000" d="M14 14h4v4h-4z"/>',
+        )
+        assert.equal(issues.length, 1)
+        assert.equal(paths.length, 2)
+        assert.equal(paths[1].getAttribute('fill'), '#ff0000')
+    })
+
     it('leaves paths whose merge would leave a hole', () => {
         // Opposite winding: as one path the inner square is cut out
         const { issues, warnings, paths } = fixStructure(
