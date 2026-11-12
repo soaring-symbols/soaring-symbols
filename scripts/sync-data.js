@@ -70,7 +70,7 @@ const summaryPath = args.includes('--summary')
 const airlinesPath = new URL('../airlines.json', import.meta.url)
 const ALLIANCES = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
-).$defs.airline.properties.alliance.enum
+).$defs.alliance.enum
 const airlines = JSON.parse(readFileSync(airlinesPath, 'utf8'))
 const titleOf = (airline) => PAGE_TITLES[airline.name] ?? airline.name
 

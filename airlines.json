@@ -27,6 +27,13 @@
         "country": "IE",
         "flag_carrier": true,
         "website": "https://www.aerlingus.com",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2000,
+                "until": 2007
+            }
+        ],
         "hubs": [
             "DUB"
         ],
@@ -581,7 +588,6 @@
         "country": "CR",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
-        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -606,7 +612,6 @@
         ],
         "country": "EC",
         "website": "https://www.avianca.com",
-        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -636,7 +641,6 @@
         "country": "SV",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
-        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -853,6 +857,13 @@
         "country": "CN",
         "flag_carrier": false,
         "website": "https://www.csair.com",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2007,
+                "until": 2018
+            }
+        ],
         "hubs": [
             "PKX",
             "CAN",
@@ -886,6 +897,13 @@
         "flag_carrier": true,
         "website": "https://www.copaair.com",
         "alliance": "Star Alliance",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2007,
+                "until": 2012
+            }
+        ],
         "hubs": [
             "PTY"
         ],
@@ -1373,6 +1391,13 @@
         "flag_carrier": true,
         "website": "https://www.ita-airways.com",
         "alliance": "Star Alliance",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2021,
+                "until": 2025
+            }
+        ],
         "hubs": [
             "FCO"
         ],
@@ -1578,6 +1603,13 @@
         "callsign": "LAN CHILE",
         "country": "CL",
         "website": "https://www.latamairlines.com",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2000,
+                "until": 2020
+            }
+        ],
         "founded": 2012,
         "branding": {
             "primary_color": "#1b0088"
@@ -1605,6 +1637,18 @@
         ],
         "country": "BR",
         "website": "https://www.latam.com",
+        "alliance_history": [
+            {
+                "alliance": "Star Alliance",
+                "since": 2010,
+                "until": 2014
+            },
+            {
+                "alliance": "oneworld",
+                "since": 2014,
+                "until": 2020
+            }
+        ],
         "parent": "latam-airlines",
         "marks": "latam-airlines",
         "hubs": [
@@ -2113,7 +2157,6 @@
         ],
         "country": "IE",
         "website": "https://www.flysas.com",
-        "alliance": "SkyTeam",
         "parent": "scandinavian-airlines",
         "marks": "scandinavian-airlines",
         "founded": 2017,
@@ -2155,6 +2198,13 @@
         "flag_carrier": true,
         "website": "https://www.flysas.com",
         "alliance": "SkyTeam",
+        "alliance_history": [
+            {
+                "alliance": "Star Alliance",
+                "since": 1997,
+                "until": 2024
+            }
+        ],
         "hubs": [
             "CPH",
             "OSL",

@@ -160,31 +160,32 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 }
 ```
 
-| Field            | Type        | Description                                                                                                                                   |
-| :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`           | `string`    | Full airline name.                                                                                                                            |
-| `slug`           | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`. Follows the current name.                              |
-| `iata`           | `string`    | 2-character IATA code.                                                                                                                        |
-| `icao`           | `string`    | 3-letter ICAO code.                                                                                                                           |
-| `callsign`       | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                          |
-| `former`         | `object[]?` | The names and codes the airline used before, oldest first (see [Renames and mergers](#renames-and-mergers)). No key when there are none.      |
-| `previous_names` | `string[]?` | **Deprecated**, removed in 0.4: the names in `former`.                                                                                        |
-| `previous_slugs` | `string[]?` | **Deprecated**, removed in 0.4: the `slug`s in `former`.                                                                                      |
-| `country`        | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                                 |
-| `website`        | `string?`   | Official website.                                                                                                                             |
-| `flag_carrier`   | `boolean?`  | `true` for a national flag carrier.                                                                                                           |
-| `alliance`       | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                               |
-| `parent`         | `string?`   | Slug of the airline group this one is a subsidiary of, e.g. `"airasia"` for Thai AirAsia; filter on it to list a group's airlines.            |
-| `marks`          | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes.          |
-| `hubs`           | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.                  |
-| `founded`        | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                         |
-| `defunct`        | `boolean?`  | `true` if the airline has ceased operations.                                                                                                  |
-| `ceased`         | `number?`   | Year a defunct airline ceased operations.                                                                                                     |
-| `successor`      | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)). |
-| `predecessors`   | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                         |
-| `branding`       | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.          |
-| `assets`         | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                         |
-| `history`        | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                       |
+| Field              | Type        | Description                                                                                                                                                                                                   |
+| :----------------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`             | `string`    | Full airline name.                                                                                                                                                                                            |
+| `slug`             | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`. Follows the current name.                                                                                              |
+| `iata`             | `string`    | 2-character IATA code.                                                                                                                                                                                        |
+| `icao`             | `string`    | 3-letter ICAO code.                                                                                                                                                                                           |
+| `callsign`         | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                                                                                          |
+| `former`           | `object[]?` | The names and codes the airline used before, oldest first (see [Renames and mergers](#renames-and-mergers)). No key when there are none.                                                                      |
+| `previous_names`   | `string[]?` | **Deprecated**, removed in 0.4: the names in `former`.                                                                                                                                                        |
+| `previous_slugs`   | `string[]?` | **Deprecated**, removed in 0.4: the `slug`s in `former`.                                                                                                                                                      |
+| `country`          | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                                                                                                 |
+| `website`          | `string?`   | Official website.                                                                                                                                                                                             |
+| `flag_carrier`     | `boolean?`  | `true` for a national flag carrier.                                                                                                                                                                           |
+| `alliance`         | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`: the alliance it is a member of now, or was when it ceased. An affiliate flying under another member's membership has none.                                    |
+| `alliance_history` | `object[]?` | Alliances it was a member of before, oldest first: `{ alliance, since?, until }`, e.g. `{ "alliance": "Star Alliance", "since": 1997, "until": 2024 }` for Scandinavian Airlines. No key when there are none. |
+| `parent`           | `string?`   | Slug of the airline group this one is a subsidiary of, e.g. `"airasia"` for Thai AirAsia; filter on it to list a group's airlines.                                                                            |
+| `marks`            | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes.                                                                          |
+| `hubs`             | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.                                                                                  |
+| `founded`          | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                                                                                         |
+| `defunct`          | `boolean?`  | `true` if the airline has ceased operations.                                                                                                                                                                  |
+| `ceased`           | `number?`   | Year a defunct airline ceased operations.                                                                                                                                                                     |
+| `successor`        | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)).                                                                 |
+| `predecessors`     | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                                                                                         |
+| `branding`         | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.                                                                          |
+| `assets`           | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                                                                                         |
+| `history`          | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                                                                                       |
 
 ### AssetInfo
 

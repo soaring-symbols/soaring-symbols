@@ -64,6 +64,15 @@ export interface FormerIdentity {
     readonly until: number
 }
 
+/** An alliance an airline was a member of, in `alliance_history`. */
+export interface AllianceMembership {
+    readonly alliance: string
+    /** Year the airline joined the alliance, when known. */
+    readonly since?: number
+    /** Year the airline left the alliance. */
+    readonly until: number
+}
+
 export interface Airline {
     readonly name: string
     /** 2-character IATA code (e.g. "VN"). */
@@ -96,8 +105,14 @@ export interface Airline {
     readonly previous_slugs?: readonly string[]
     readonly website?: string
     readonly flag_carrier?: boolean
-    /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
+    /**
+     * The alliance it is a member of now, or was when it ceased, e.g.
+     * "oneworld", "SkyTeam", "Star Alliance". An affiliate flying under
+     * another member's membership has none.
+     */
     readonly alliance?: string
+    /** Alliances it was a member of before, oldest first. */
+    readonly alliance_history?: readonly AllianceMembership[]
     /** Slug of the airline group this one is a subsidiary of (e.g. "airasia"). */
     readonly parent?: string
     /**

@@ -496,6 +496,43 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
+    it('checks alliance_history is oldest first and joined before it was left', () => {
+        const sas = (history) =>
+            entry('Scandinavian Airlines', {
+                alliance: 'SkyTeam',
+                alliance_history: history,
+            })
+        assert.deepEqual(
+            validateAirlines([
+                sas([{ alliance: 'Star Alliance', since: 1997, until: 2024 }]),
+            ]),
+            [],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                sas([
+                    { alliance: 'oneworld', since: 2025, until: 2024 },
+                    { alliance: 'Star Alliance', until: 2010 },
+                ]),
+            ]),
+            [
+                'Scandinavian Airlines: alliance_history has oneworld joined in 2025, after it left in 2024',
+                'Scandinavian Airlines: alliance_history must be oldest first (2010 comes after 2024)',
+            ],
+        )
+        // Each item needs a known alliance and the year it ended
+        for (const item of [
+            { alliance: 'Star Alliance' },
+            { alliance: 'Skyteam', until: 2018 },
+        ]) {
+            assert.notDeepEqual(
+                validateAirlines([sas([item])]),
+                [],
+                JSON.stringify(item),
+            )
+        }
+    })
+
     it('publishes former slugs and the deprecated previous_names and previous_slugs', () => {
         const [serbia] = publishCatalog(
             [
@@ -902,9 +939,10 @@ describe('wikipedia infobox parsing (sync-data)', () => {
         assert.equal(carriedOn(params.ceased), undefined)
     })
 
-    it('reads the alliance an airline flies in, affiliates included', () => {
+    it('reads the alliance an airline is a member of', () => {
         const names = ['oneworld', 'SkyTeam', 'Star Alliance']
-        assert.equal(allianceOf('[[SkyTeam]] (affiliate)', names), 'SkyTeam')
+        assert.equal(allianceOf('[[SkyTeam]]', names), 'SkyTeam')
+        assert.equal(allianceOf('[[SkyTeam]] (affiliate)', names), undefined)
         assert.equal(
             allianceOf('[[Star Alliance]] (connecting partner)', names),
             undefined,

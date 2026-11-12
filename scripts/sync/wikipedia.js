@@ -168,13 +168,18 @@ export function carriedOn(value) {
         .trim()
 }
 
-// The first of `names` a value mentions, e.g. 'SkyTeam' in "[[SkyTeam]]
-// (affiliate)": an affiliate flies in the alliance; a connecting partner
-// (Juneyao Air in Star Alliance) does not, nor does an airline that left,
-// "Oneworld (affiliate; 2007–2020)" or "formerly SkyTeam"
+// The first of `names` a value mentions, e.g. 'SkyTeam' in "[[SkyTeam]]",
+// for a member only: an affiliate ("SkyTeam (affiliate)") flies under its
+// parent's membership and a connecting partner (Juneyao Air in Star
+// Alliance) isn't one, nor is an airline that left, "Oneworld (2012–2017)"
+// or "formerly SkyTeam"
 export function allianceOf(value = '', names = []) {
     const text = stripMarkup(value).toLowerCase()
-    if (/connecting partner|formerly|\b\d{4}\s*[–-]\s*\d{4}\b/.test(text)) {
+    if (
+        /affiliate|connecting partner|formerly|\b\d{4}\s*[–-]\s*\d{4}\b/.test(
+            text,
+        )
+    ) {
         return undefined
     }
     const found = names
