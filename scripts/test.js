@@ -1373,7 +1373,7 @@ describe('svg-fixer', () => {
         // The same drawing is right as the monochrome version, told by its
         // name or by the mono option, and the check says it has no color
         assert.equal(fill('logo-mono.svg').pass, true)
-        assert.equal(fill('logo.svg').noColor, true)
+        assert.equal(fill('logo.svg').fixable, 'fillColor')
         const asMono = validate(parse(source).documentElement, 'logo', null, {
             fileName: 'logo.svg',
             mono: true,
@@ -1385,6 +1385,41 @@ describe('svg-fixer', () => {
                 .errorCount,
             0,
         )
+    })
+
+    it('fixes every failing check it marks fixable', () => {
+        const checks = (svgText, options) =>
+            validate(parse(svgText).documentElement, options.type, null, {
+                fileName: options.fileName ?? '',
+                source: svgText,
+            })
+        for (const [name, source, options] of BROKEN) {
+            const given = (fixable) =>
+                fixable === true || options[fixable] !== undefined
+            const expected = checks(source, options)
+                .filter((check) => !check.pass && given(check.fixable))
+                .map((check) => check.label)
+            const after = checks(
+                browser.fixSvg(source, options).content,
+                options,
+            )
+            const left = after
+                .filter(
+                    (check) => expected.includes(check.label) && !check.pass,
+                )
+                .map((check) => check.label)
+            assert.deepEqual(left, [], name)
+        }
+        // Geometry is never fixed: measured on a box that misses the edges
+        const geometry = validate(
+            parse(
+                `<svg role="img" viewBox="0 0 24 24" ${NS}><title>X</title></svg>`,
+            ).documentElement,
+            'icon',
+            { x: 2, y: 2, width: 4, height: 4 },
+        ).filter((check) => check.group === 'Geometry')
+        assert.ok(geometry.some((check) => !check.pass))
+        assert.ok(geometry.every((check) => check.fixable === false))
     })
 
     it('leaves every asset as lint-svg.js does', () => {

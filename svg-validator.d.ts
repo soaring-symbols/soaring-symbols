@@ -6,8 +6,8 @@ export interface SvgValidation {
     level: 'error' | 'warning'
     pass: boolean
     detail: string
-    /** Fill placement only: a color file with no color of its own (drawn in `currentColor` or default black), which `fixSvg` fixes given a `fillColor`. */
-    noColor?: boolean
+    /** What `lint-svg.js --fix` (and `fixSvg` from `soaring-symbols/svg-fixer`) does about a failure: `true`, it fixes it, where its render check allows; the name of a `fixSvg` option, it does once that option is given (`'mergePaths'` for One path per color, `'fillColor'` for a color file with no color of its own); `false`, it is left for an editor (geometry, strokes that paint). */
+    fixable: boolean | 'mergePaths' | 'fillColor'
 }
 
 export interface SvgValidationOptions {
