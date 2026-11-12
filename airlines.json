@@ -600,12 +600,17 @@
     {
         "name": "Avianca El Salvador",
         "slug": "avianca-el-salvador",
-        "iata": "TA",
+        "iata": "AV",
         "icao": "TAI",
+        "callsign": "TACA",
         "former": [
             {
                 "name": "TACA International Airlines",
                 "until": 2013
+            },
+            {
+                "iata": "TA",
+                "until": 2024
             }
         ],
         "country": "SV",
