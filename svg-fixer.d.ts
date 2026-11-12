@@ -7,13 +7,13 @@ export interface SvgFixOptions {
     fileName?: string
     /** The name `<title>` should hold. Defaults to the current title; needed when the file has none. */
     airlineName?: string
-    /** `airlineName` comes from the catalog, so a different title is renamed to it. Otherwise a title is only moved, never renamed. */
+    /** `airlineName` comes from the catalog: rename a different title to it. Otherwise a title is only moved, never renamed. */
     isCatalogName?: boolean
     /** Names an older mark may keep as its title (the airline's `previous_names`). */
     formerNames?: string[]
     /** Also join neighbouring paths of one color, as `lint-svg.js --fix --merge-paths` does. Experimental. */
     mergePaths?: boolean
-    /** A color file with no color of its own (drawn in `currentColor` or default black) is filled with this hex color (`#rrggbb`); without it, such a file is reported and left as it is. Ignored for a `-mono.svg`. */
+    /** A `#rrggbb` color to fill a color file that has none of its own (only `currentColor` or default black); without it, such a file is reported and left alone. Ignored when `mono`. */
     fillColor?: string
 }
 
@@ -22,7 +22,7 @@ export interface SvgFixResult {
     content: string
     /** Whether `content` differs from the source. */
     fixed: boolean
-    /** What was wrong, as `lint-svg.js` reports it: fixed where a rule could, the rest (such as geometry) left for an editor. */
+    /** What was wrong, as `lint-svg.js` reports it, including what no rule fixes (such as geometry). */
     issues: string[]
     /** Advice that never fails `lint-svg.js --check`. */
     warnings: string[]

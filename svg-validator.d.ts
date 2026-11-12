@@ -6,7 +6,7 @@ export interface SvgValidation {
     level: 'error' | 'warning'
     pass: boolean
     detail: string
-    /** What `lint-svg.js --fix` (and `fixSvg` from `soaring-symbols/svg-fixer`) does about a failure: `true`, it fixes it, where its render check allows; the name of a `fixSvg` option, it does once that option is given (`'mergePaths'` for One path per color, `'fillColor'` for a color file with no color of its own); `false`, it is left for an editor (geometry, strokes that paint). */
+    /** What `lint-svg.js --fix` (and `fixSvg`) does about a failure: `true` fixes it when the render check allows; an option name fixes it once that `fixSvg` option is given; `false` leaves it for an editor (geometry, painted strokes). */
     fixable: boolean | 'mergePaths' | 'fillColor'
 }
 
