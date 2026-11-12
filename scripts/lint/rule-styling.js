@@ -91,7 +91,9 @@ export function ruleFillPlacement({ svgElement, isMono, fillColor, issues }) {
     if (noColor) {
         if (!isFullHex(fillColor)) {
             issues.push(
-                'Fill: A color SVG needs its own hex color. If this is the monochrome version, name it <type>-mono.svg and draw it in currentColor.',
+                fillColor
+                    ? `Fill: The color to fill it with, "${fillColor}", is not six-digit hex (#rrggbb).`
+                    : 'Fill: A color SVG needs its own hex color. If this is the monochrome version, name it <type>-mono.svg and draw it in currentColor.',
             )
 
             return

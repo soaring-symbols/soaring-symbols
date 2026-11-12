@@ -18,14 +18,15 @@ import { isMonoFile } from './validators.js'
 // - mono: the monochrome version, drawn in currentColor; defaults to
 //   whether fileName ends in -mono.svg
 // - fileName: the file's name, for that default
-// - airlineName: the name <title> should hold; defaults to the current
-//   title, and is needed when the file has none
+// - airlineName: the name <title> should hold; when missing or empty, the
+//   current title, so it is needed when the file has none
 // - isCatalogName: the name comes from the catalog, so a different title is
 //   renamed to it (otherwise a title is only moved, never renamed)
 // - formerNames: names an older mark may keep as its title
 // - mergePaths: also join neighbouring paths of one color (experimental)
 // - fillColor: the hex color (#rrggbb) to draw a color file in when it has
-//   none of its own (drawn in currentColor or default black)
+//   none of its own (drawn in currentColor or default black); any other
+//   value is reported and the file left alone
 export function fixSvg(
     source,
     {
@@ -58,8 +59,9 @@ export function fixSvg(
         document,
         isIcon: type !== 'logo',
         isMono: mono,
+        // An empty name (no airline picked yet) keeps the current title
         airlineName:
-            airlineName ?? svgElement.querySelector('title')?.textContent ?? '',
+            airlineName || svgElement.querySelector('title')?.textContent || '',
         isCatalogName,
         formerNames,
         mergePaths,
@@ -86,13 +88,14 @@ export function fixSvg(
             ? svgElement.outerHTML
             : source
 
-    // Phase 2: String rules; their message only stands in for the DOM rules'
-    // when those changed nothing
+    // Phase 2: String rules. When SVGO or the DOM rules rewrote the file,
+    // its serialization is theirs and the string rules' messages would only
+    // describe that; otherwise each change is reported.
+    const rewritten = content !== source
     for (const rule of STRING_RULES) {
         const result = rule(content, ctx)
         if (result.changed) {
-            if (content === source && result.message)
-                ctx.issues.push(result.message)
+            if (!rewritten && result.message) ctx.issues.push(result.message)
             content = result.content
         }
     }

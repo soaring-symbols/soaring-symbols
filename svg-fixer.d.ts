@@ -5,7 +5,7 @@ export interface SvgFixOptions {
     mono?: boolean
     /** The file name, for the `mono` default. */
     fileName?: string
-    /** The name `<title>` should hold. Defaults to the current title; needed when the file has none. */
+    /** The name `<title>` should hold. When missing or empty, the current title; needed when the file has none. */
     airlineName?: string
     /** `airlineName` comes from the catalog: rename a different title to it. Otherwise a title is only moved, never renamed. */
     isCatalogName?: boolean
@@ -13,7 +13,7 @@ export interface SvgFixOptions {
     formerNames?: string[]
     /** Also join neighbouring paths of one color, as `lint-svg.js --fix --merge-paths` does. Experimental. */
     mergePaths?: boolean
-    /** A `#rrggbb` color to fill a color file that has none of its own (only `currentColor` or default black); without it, such a file is reported and left alone. Ignored when `mono`. */
+    /** A `#rrggbb` color to fill a color file that has none of its own (only `currentColor` or default black); without it, or with any other value, such a file is reported and left alone. Ignored when `mono`. */
     fillColor?: string
 }
 
