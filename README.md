@@ -17,18 +17,18 @@ Browse the collection, open a page for any airline to download its marks, and ch
 
 ## Roadmap
 
-This is the one roadmap for the collection and every integration around it, including the ones built in other repositories (the API on the website, the Raycast extension). Plans that only concern the website itself, such as its pages and tooling, are tracked in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+This is the one roadmap for the collection and every integration around it, including those built in other repositories (the website's API, the Raycast extension, the Figma plugin). Plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
-- [x] npm package
-- [x] A `branding.primary_color` for every airline
+- [x] npm package, with a `branding.primary_color` for every airline
 - [x] jsDelivr and unpkg CDNs
-- [x] Website with a browsable catalog, a page per airline and an SVG validator
-- [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
+- [x] Website with a browsable catalog, a page per airline, and an SVG validator that also fixes files in the browser (`soaring-symbols/svg-validator`, `soaring-symbols/svg-fixer`)
+- [x] JSON and image API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN) and [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png), with monochrome marks in any color and PNG for apps that can't render SVG
 - [x] Raycast extension
-- [x] Image endpoint on the website, to load a mark by IATA or ICAO code, with monochrome marks in a chosen color and PNG for apps that can't render SVG, such as [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png)
-- [x] Logo history: older marks of an airline that kept its name, in `assets/<slug>/history/<year>/` and the published `history` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
-- [x] Renames and mergers: a renamed airline takes its new name's slug and keeps the old ones working (`previous_names`, `previous_slugs`, files copied to an old slug a release has shipped); a merged or refounded airline stays defunct with a `successor`, listed in the new one's `predecessors` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
+- [x] Logo history: an airline's older marks, in `assets/<slug>/history/<year>/` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
+- [x] Renames and mergers: old slugs keep working after a rename, and a merged airline points to its `successor` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
+- [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's official reversed version where it has one, and a white version of single-color marks
+- [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
 
 ### Not planned
 
