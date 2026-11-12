@@ -11,6 +11,8 @@ export interface SvgFixOptions {
     formerNames?: string[]
     /** Also join neighbouring paths of one color, as `lint-svg.js --fix --merge-paths` does. Experimental. */
     mergePaths?: boolean
+    /** A color file with no color of its own (drawn in `currentColor` or default black) is filled with this hex color (`#rrggbb`); without it, such a file is reported and left as it is. Ignored for a `-mono.svg`. */
+    fillColor?: string
 }
 
 export interface SvgFixResult {

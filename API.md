@@ -105,7 +105,7 @@ const { content, fixed, issues, warnings } = fixSvg(svgText, {
 })
 ```
 
-`content` is the fixed SVG, or the text unchanged when `fixed` is false. `issues` lists what was wrong, as `lint-svg.js` reports it; geometry problems are reported but left for an editor. `warnings` never fail `lint-svg.js --check`. Pass `mergePaths: true` to also join neighbouring paths of one color, as `--merge-paths` does (experimental).
+`content` is the fixed SVG, or the text unchanged when `fixed` is false. `issues` lists what was wrong, as `lint-svg.js` reports it; geometry problems are reported but left for an editor. `warnings` never fail `lint-svg.js --check`. Pass `mergePaths: true` to also join neighbouring paths of one color, as `--merge-paths` does (experimental). A color file with no color of its own (drawn in `currentColor` or default black) is reported and left alone, since only you know its color; pass `fillColor: '#c30b12'` to draw it in that color.
 
 ## Data Models
 

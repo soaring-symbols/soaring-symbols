@@ -21,6 +21,8 @@ import { ruleOptimize } from './rule-optimize.js'
 //   renamed to it (otherwise a title is only moved, never renamed)
 // - formerNames: names an older mark may keep as its title
 // - mergePaths: also join neighbouring paths of one color (experimental)
+// - fillColor: the hex color (#rrggbb, lowercase) to draw a color file in
+//   when it has none of its own (drawn in currentColor or default black)
 export function fixSvg(
     source,
     {
@@ -31,6 +33,7 @@ export function fixSvg(
         isCatalogName = false,
         formerNames,
         mergePaths = false,
+        fillColor,
     },
 ) {
     let document = parse(source)
@@ -56,6 +59,7 @@ export function fixSvg(
         isCatalogName,
         formerNames,
         mergePaths,
+        fillColor: fillColor?.toLowerCase(),
         issues: [],
         // Reported only; never trigger a rewrite
         warnings: [],

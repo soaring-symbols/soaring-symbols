@@ -1311,6 +1311,11 @@ describe('svg-fixer', () => {
             { type: 'icon', airlineName: 'Test Air', isCatalogName: true },
         ],
         [
+            'a color file in currentColor, given its color',
+            `<svg role="img" viewBox="0 0 64 64" ${NS} fill="currentColor"><title>Test Air</title><path fill="currentColor" d="M0 0h32v64H0z"/><path d="M32 0h32v64H32z"/></svg>`,
+            { type: 'logo', fileName: 'logo.svg', fillColor: '#C30B12' },
+        ],
+        [
             'a -mono.svg in currentcolor, spelled in lowercase',
             `<svg role="img" viewBox="0 0 24 24" ${NS} fill="currentcolor"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
             { type: 'icon', fileName: 'icon-mono.svg' },
