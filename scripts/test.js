@@ -1258,11 +1258,14 @@ describe('svg-fixer', () => {
         new window.DOMParser().parseFromString(source, 'image/svg+xml')
     let browser
     let cli
+    let validate
 
     before(async () => {
         globalThis.DOMParser = window.DOMParser
         browser = await import('../dist/svg-fixer.js')
         cli = await import('./lint/fix.js')
+        ;({ runSvgValidations: validate } =
+            await import('../dist/svg-validator.js'))
         await browser.initSvgFixer(
             readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')),
         )
@@ -1308,6 +1311,16 @@ describe('svg-fixer', () => {
             { type: 'icon', airlineName: 'Test Air', isCatalogName: true },
         ],
         [
+            'a -mono.svg in currentcolor, spelled in lowercase',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="currentcolor"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon-mono.svg' },
+        ],
+        [
+            'a root fill in uppercase hex',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#C30B12"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon.svg' },
+        ],
+        [
             'a -mono.svg with its own color',
             `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="#000000" d="M0 0h24v24H0z"/></svg>`,
             { type: 'icon', fileName: 'icon-mono.svg' },
@@ -1319,11 +1332,46 @@ describe('svg-fixer', () => {
             const [fromBrowser, fromCli] = both(source, options)
             assert.equal(fromBrowser.fixed, true)
             assert.deepEqual(fromBrowser, fromCli)
-            // What --fix leaves is clean
+            // What --fix leaves is clean, to the fixer and to the validator
             const again = browser.fixSvg(fromBrowser.content, options)
             assert.equal(again.fixed, false, again.issues.join('; '))
+            const failing = validate(
+                parse(fromBrowser.content).documentElement,
+                options.type,
+                null,
+                {
+                    fileName: options.fileName ?? '',
+                    source: fromBrowser.content,
+                },
+            ).filter(
+                (check) =>
+                    check.level === 'error' &&
+                    !check.pass &&
+                    check.group !== 'Geometry',
+            )
+            assert.deepEqual(failing, [])
         })
     }
+
+    it('reports a color file drawn in currentColor, which it cannot fix', () => {
+        const source = `<svg role="img" viewBox="0 0 64 64" ${NS} fill="currentColor"><title>Test Air</title><path d="M0 0h64v64H0z"/></svg>`
+        const [fromBrowser, fromCli] = both(source, {
+            type: 'logo',
+            fileName: 'logo.svg',
+        })
+        assert.deepEqual(fromBrowser, fromCli)
+        assert.equal(fromBrowser.fixed, false)
+        assert.match(fromBrowser.issues.join(), /needs its own hex color/)
+        const fill = (fileName) =>
+            validate(parse(source).documentElement, 'logo', null, {
+                fileName,
+                source,
+            }).find((check) => check.label === 'Fill placement')
+        assert.equal(fill('logo.svg').pass, false)
+        assert.match(fill('logo.svg').detail, /no color of its own/)
+        // The same drawing is right as the monochrome version
+        assert.equal(fill('logo-mono.svg').pass, true)
+    })
 
     it('leaves every asset as lint-svg.js does', () => {
         const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))

@@ -445,6 +445,7 @@ export function validateFillPlacement(svg, isMono = false) {
         rootOk: true,
         redundant: [],
         inheriting: [],
+        noColor: false,
         ...rest,
     })
 
@@ -494,10 +495,21 @@ export function validateFillPlacement(svg, isMono = false) {
         return result(true, 'one gradient fill', {})
     }
 
-    const rootFill = isMono ? 'currentColor' : [...colors][0] || 'currentColor'
-    const rootOk = isMono
-        ? existing === rootFill
-        : existing?.toLowerCase() === rootFill
+    // A color file without a color of its own (drawn in currentColor, or
+    // in nothing but the default black) is a mono file under the wrong name,
+    // or lost its brand color: neither can be fixed without knowing which
+    if (!isMono && colors.size === 0) {
+        return result(
+            false,
+            'no color of its own: draw it in its hex color, or name it -mono.svg if it is the monochrome version',
+            { noColor: true },
+        )
+    }
+
+    const rootFill = isMono ? 'currentColor' : [...colors][0]
+    // Exactly as written in the repo: lowercase hex, `currentColor` in camel
+    // case. Any other spelling (#C30B12, currentcolor) is rewritten by --fix.
+    const rootOk = existing === rootFill
     const redundant = withFill.filter((el) => el !== svg)
     const problems = [
         !rootOk && `root <svg> should have fill="${rootFill}"`,

@@ -88,9 +88,13 @@ export function fixSvg(
     // Phase 3: Geometry, measured on the fixed content (reports only)
     ruleGeometry(content, ctx)
 
+    // A rule that only reports (geometry, a missing color) still counts as an
+    // issue; the file is fixed only when its text actually changed
+    const changed = fixed && content !== source
+
     return {
-        content: fixed ? content : source,
-        fixed,
+        content: changed ? content : source,
+        fixed: changed,
         issues: ctx.issues,
         warnings: ctx.warnings,
         errorCount: ctx.issues.length,

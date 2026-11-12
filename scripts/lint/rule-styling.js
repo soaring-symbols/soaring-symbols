@@ -81,9 +81,18 @@ export function ruleNoStrokes({ svgElement, issues }) {
 //       own. Non-hex fills (reported by ruleHexColors) are left alone:
 //       moving those around would lose them.
 export function ruleFillPlacement({ filePath, svgElement, issues }) {
-    const { skipped, rootFill, rootOk, redundant, inheriting } =
+    const { skipped, noColor, rootFill, rootOk, redundant, inheriting } =
         validateFillPlacement(svgElement, isMonoFile(filePath))
     if (skipped) return
+    // Not fixable: only an editor knows the brand color, or that the file
+    // is the monochrome version
+    if (noColor) {
+        issues.push(
+            'Fill: A color SVG needs its own hex color. If this is the monochrome version, name it <type>-mono.svg and draw it in currentColor.',
+        )
+
+        return
+    }
 
     if (!rootOk && rootFill === null) {
         issues.push(
