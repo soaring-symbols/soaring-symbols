@@ -1,7 +1,8 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
 // report (or apply) what changed: IATA/ICAO codes, callsign, hubs, the year
-// it was founded, and whether the airline ceased operations. A rename or merger is only
-// reported: a person renames the entry or sets its successor.
+// it was founded, names it flew under before, and whether the airline ceased
+// operations. A rename or merger is only reported: a person renames the
+// entry or sets its successor.
 //
 //   node scripts/sync-data.js                     report only
 //   node scripts/sync-data.js --write             apply, then npm run generate
@@ -19,6 +20,7 @@ import {
     fetchAirportCodes,
     fetchPages,
     firstYear,
+    formerNames,
     infoboxParams,
     linkTargets,
     listItems,
@@ -42,9 +44,20 @@ const PAGE_TITLES = {
 
 // Wikipedia values reviewed and rejected, so they stop coming back, e.g.
 // { 'Some Airline': { icao: 'XYZ' } }. A different value is reported again.
+// `former` lists names from the "(as ...)" notes that aren't the airline's
+// own: a company name, a description, or the ancestor of a split.
 const IGNORE = {
-    // The year ModiLuft, the company SpiceJet grew out of, was founded
-    SpiceJet: { founded: 1994 },
+    Aeroméxico: { former: ['Aeronaves de México S.A. de C.V.'] },
+    'American Airlines': { former: ['a union of more than 80 airlines'] },
+    // Malaysia-Singapore Airlines split in two in 1972: neither carried on
+    // the name alone
+    'Malaysia Airlines': { former: ['Malayan Airways'] },
+    'Peach Aviation': { former: ['A&F Aviation'] },
+    'Singapore Airlines': { former: ['Malayan Airways'] },
+    // ModiLuft, the company SpiceJet grew out of, and the year it was founded
+    SpiceJet: { founded: 1994, former: ['ModiLuft'] },
+    // A trucking company before it flew as Charter One Airlines
+    'Spirit Airlines': { former: ['Clippert Trucking Company'] },
 }
 
 const args = process.argv.slice(2)
@@ -151,6 +164,46 @@ for (const airline of airlines) {
     }
 
     if (changes.length) proposals.push({ airline, changes })
+
+    // Names it flew under before, from the "(as ...)" notes of its founding
+    // dates. One a later name replaced, in a given year, goes in former, on
+    // its own so a clash with another airline holds back only it; one with
+    // nothing after it is left to a person, who knows when it stopped.
+    // A name already in former counts in a shorter or longer form too:
+    // "TACA" for "TACA International Airlines"
+    const lower = (name) => name.toLowerCase()
+    const listed = (airline.former ?? [])
+        .map((item) => item.name)
+        .filter(Boolean)
+        .map(lower)
+    const known = (name) =>
+        name === lower(airline.name) ||
+        listed.some((other) => other.includes(name) || name.includes(other))
+    const rejected = new Set((ignored.former ?? []).map(lower))
+    const found = formerNames(params, airline.name).filter(
+        ({ name }) => !known(lower(name)) && !rejected.has(lower(name)),
+    )
+    const dated = found.filter((item) => item.until)
+    if (dated.length) {
+        proposals.push({
+            airline,
+            changes: [
+                {
+                    field: 'former',
+                    to: dated,
+                    // Oldest first, as CONTRIBUTING.md asks
+                    value: [...(airline.former ?? []), ...dated].sort(
+                        (a, b) => a.until - b.until,
+                    ),
+                },
+            ],
+        })
+    }
+    for (const { name, since } of found.filter((item) => !item.until)) {
+        note(
+            `Wikipedia says it flew as "${name}" from ${since}, with no later name to end it; add it to former with the year it stopped if it is a former name, or to IGNORE if not`,
+        )
+    }
 }
 
 // Accept an airline's changes only if the data stays valid with them (a code
@@ -159,9 +212,11 @@ const apply = (list, { airline, changes }) =>
     list.map((a) => {
         if (a.name !== airline.name) return a
         const patched = { ...a }
-        for (const { field, to } of changes) {
-            if (to === undefined) delete patched[field]
-            else patched[field] = to
+        for (const change of changes) {
+            // A change may show less than it writes (the names it adds)
+            const to = 'value' in change ? change.value : change.to
+            if (to === undefined) delete patched[change.field]
+            else patched[change.field] = to
         }
 
         return patched
@@ -181,8 +236,15 @@ for (const entry of proposals) {
 }
 
 // Report
-const show = (value) =>
-    value === undefined ? '–' : Array.isArray(value) ? value.join(' ') : value
+const show = (value) => {
+    if (value === undefined) return '–'
+    if (!Array.isArray(value)) return value
+
+    // Hubs as codes, former names with the year each stopped
+    return typeof value[0] === 'object'
+        ? value.map(({ name, until }) => `${name} (until ${until})`).join(', ')
+        : value.join(' ')
+}
 const link = (airline) => `[${airline.name}](${pageUrl(titleOf(airline))})`
 const md = []
 if (accepted.length) {

@@ -42,9 +42,11 @@ import {
     carriedOn,
     extractInfobox,
     firstYear,
+    formerNames,
     infoboxParams,
     linkTargets,
     listItems,
+    namedDates,
 } from './sync/wikipedia.js'
 
 const require = createRequire(import.meta.url)
@@ -897,6 +899,45 @@ describe('wikipedia infobox parsing (sync-data)', () => {
         assert.equal(firstYear(ceased), 2020)
         assert.equal(carriedOn(ceased), 'rebranded to Pacific Airlines')
         assert.equal(carriedOn(params.ceased), undefined)
+    })
+
+    it('reads the names an airline flew under from its founding dates', () => {
+        const founded =
+            "{{start date and age|1968}} (as ''[[Sahakol Air]]'')<ref>x</ref>"
+        assert.deepEqual(namedDates(founded), [
+            { year: 1968, name: 'Sahakol Air' },
+        ])
+        assert.deepEqual(namedDates('1956'), [])
+
+        // A later name ends the one before it; the current name is left out
+        assert.deepEqual(
+            formerNames(
+                {
+                    founded,
+                    commenced:
+                        "{{ubl|{{start date|1968}} (as ''Sahakol Air'')|{{start date|1989}} (as Bangkok Airways)}}",
+                },
+                'Bangkok Airways',
+            ),
+            [{ name: 'Sahakol Air', until: 1989 }],
+        )
+        // The latest name is the current one, however it is spelled
+        assert.deepEqual(
+            formerNames(
+                {
+                    founded: '1998 (as LAN Perú)',
+                    commenced: '2016 (as LATAM Perú)',
+                },
+                'LATAM Airlines Perú',
+            ),
+            [{ name: 'LAN Perú', until: 2016 }],
+        )
+        // Nothing after it: only the year it started
+        assert.deepEqual(
+            formerNames({ founded: '1932 (as Tata Airlines)' }, 'Air India'),
+            [{ name: 'Tata Airlines', since: 1932 }],
+        )
+        assert.deepEqual(formerNames({}, 'Example Air'), [])
     })
 
     it('returns nothing for a page without an airline infobox', () => {
