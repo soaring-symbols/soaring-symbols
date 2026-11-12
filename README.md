@@ -21,7 +21,7 @@ This is the one roadmap for the collection and every integration around it, incl
 
 - [x] npm package
 - [x] A `branding.primary_color` for every airline
-- [x] jsDelivr CDN
+- [x] jsDelivr and unpkg CDNs
 - [x] Website with a browsable catalog, a page per airline and an SVG validator
 - [x] JSON API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN)
 - [x] Raycast extension
@@ -32,8 +32,8 @@ This is the one roadmap for the collection and every integration around it, incl
 
 ### Not planned
 
-- Iconify icon set: Iconify declined to add the collection, as airline logos are too niche for its users ([iconify/icon-sets#223](https://github.com/iconify/icon-sets/issues/223)). A self-published Iconify JSON would miss what makes Iconify useful (its API, search and auto-installed `@iconify-json` packages), so the SVGs from npm or jsDelivr remain the way to use the marks.
-- Swift and Android packages: bundled marks go stale until the app ships an update, and Android needs every SVG converted to a VectorDrawable. Native apps can load the marks by URL instead, from jsDelivr or the image endpoint. We'll reconsider if someone asks for a package.
+- Iconify icon set: Iconify declined to add the collection, as airline logos are too niche for its users ([iconify/icon-sets#223](https://github.com/iconify/icon-sets/issues/223)). A self-published Iconify JSON would miss what makes Iconify useful (its API, search and auto-installed `@iconify-json` packages), so the SVGs from npm or a CDN remain the way to use the marks.
+- Swift and Android packages: bundled marks go stale until the app ships an update, and Android needs every SVG converted to a VectorDrawable. Native apps can load the marks by URL instead, from jsDelivr, unpkg or the image endpoint. We'll reconsider if someone asks for a package.
 
 ## Installation
 
@@ -57,17 +57,21 @@ bun add soaring-symbols
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------- |
 | [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 />                   | [anhthang]                           |
 | [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
+| [unpkg CDN](https://app.unpkg.com/soaring-symbols) <img src="https://cdn.simpleicons.org/unpkg/000/000000" alt="unpkg" align=left width=24 height=24 />                         | [unpkg](https://unpkg.com)           |
 | [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />  | [anhthang]                           |
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). See the [ecosystem page on the website](https://soaringsymbols.org/ecosystem#raycast) for how to use each one.
 
 ### CDN
 
-Link any mark straight from the npm package through jsDelivr, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`; every airline's page on [soaringsymbols.org](https://soaringsymbols.org) shows it); swap `logo` for `icon` or `tail` to get the other marks.
+Link any mark straight from the npm package through jsDelivr or unpkg, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`; every airline's page on [soaringsymbols.org](https://soaringsymbols.org) shows it); swap `logo` for `icon` or `tail` to get the other marks.
 
 ```text
 https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg
+https://unpkg.com/soaring-symbols/dist/assets/<slug>/logo.svg
 ```
+
+Both serve any release: add a release line (`soaring-symbols@0.3`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.3.1`) to keep the files as they are. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect for a few minutes only.
 
 ## Usage
 

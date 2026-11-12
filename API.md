@@ -81,10 +81,17 @@ const svg = readFileSync(require.resolve(getAssetPath('VN', 'logo')), 'utf8')
 import logoUrl from 'soaring-symbols/assets/vietnam-airlines/logo.svg'
 ```
 
-For a URL in the browser, link the file from jsDelivr with the airline's `slug`; you don't need the package installed:
+For a URL in the browser, link the file from jsDelivr or unpkg with the airline's `slug`; you don't need the package installed:
 
 ```js
 const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
+const unpkgUrl = `https://unpkg.com/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
+```
+
+Without a bundler, a page can import the library itself from unpkg as an ES module. Name `dist/index.js`: the bare `https://unpkg.com/soaring-symbols` serves the CommonJS build.
+
+```js
+import { getAirline } from 'https://unpkg.com/soaring-symbols@0.3/dist/index.js'
 ```
 
 ### Fixing an SVG in the browser
@@ -103,6 +110,14 @@ const { content, fixed, issues, warnings } = fixSvg(svgText, {
     airlineName: 'Vietnam Airlines', // what <title> should hold
     isCatalogName: true, // rename a different title to it
 })
+```
+
+Without a bundler, import it from unpkg with `?module`, which turns its `@resvg/resvg-wasm` import into an unpkg URL for the pinned version:
+
+```js
+import { initSvgFixer, fixSvg } from 'https://unpkg.com/soaring-symbols@0.3/dist/svg-fixer.js?module'
+
+await initSvgFixer(fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm'))
 ```
 
 `content` is the fixed SVG, or the unchanged text when `fixed` is false. `issues` lists what was wrong as `lint-svg.js` reports it, including geometry it leaves for an editor; `warnings` never fail `--check`. Two more options:
@@ -227,7 +242,7 @@ assets/<slug>/history/<since>/
 └── logo.svg
 ```
 
-On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`.
+On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`, and the same path after `https://unpkg.com/soaring-symbols/` on unpkg.
 
 ### Renames and mergers
 
