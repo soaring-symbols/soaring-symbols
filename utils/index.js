@@ -16,11 +16,16 @@ const toSlug = (name) => {
     })
 }
 
-// The slugs an airline's former names (`previous_names`) had, apart from its
-// current one: the build keeps each working as an alias
+// The names an airline flew under before, oldest first: the items of
+// `former` that have one
+const formerNames = (airline) =>
+    (airline.former ?? []).flatMap(({ name }) => (name ? [name] : []))
+
+// The slugs an airline's former names had, apart from its current one: the
+// build keeps each working as an alias
 const formerSlugs = (airline) => [
     ...new Set(
-        (airline.previous_names ?? [])
+        formerNames(airline)
             .map(toSlug)
             .filter((slug) => slug !== airline.slug),
     ),
@@ -219,6 +224,7 @@ export {
     findHistoryProblems,
     assetTypes,
     toSlug,
+    formerNames,
     formerSlugs,
     toFullHex,
     getAirlineAssets,

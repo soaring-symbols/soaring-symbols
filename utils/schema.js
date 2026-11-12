@@ -42,7 +42,14 @@ const formatSchemaError = (airlines, error) => {
 
 // IATA and ICAO codes must be unique among airlines still flying. A defunct
 // airline may share its code with the airline the code was reassigned to;
-// getAirline() then finds the active one.
+// getAirline() then finds the active one. A brand that flies under its
+// parent's codes (Hawaiian Airlines under Alaska Airlines) may share them
+// with that parent, which getAirline() finds.
+const sharesParentCode = (list) =>
+    list.some((parent) =>
+        list.every((a) => a === parent || a.parent === parent.slug),
+    )
+
 const findDuplicateCodes = (airlines) => {
     const active = airlines.filter((a) => !a.defunct)
 
@@ -55,7 +62,7 @@ const findDuplicateCodes = (airlines) => {
         }
 
         return [...owners]
-            .filter(([, list]) => list.length > 1)
+            .filter(([, list]) => list.length > 1 && !sharesParentCode(list))
             .map(
                 ([code, list]) =>
                     `${field.toUpperCase()} ${code} is used by more than one active airline: ${list.map((a) => a.name).join(', ')}`,
@@ -116,11 +123,21 @@ const findOpenHistory = (airlines) =>
                   ]
         })
 
-// A former name is not the current one
-const findCurrentPreviousNames = (airlines) =>
-    airlines
-        .filter((a) => a.previous_names?.includes(a.name))
-        .map((a) => `${a.name}: previous_names lists its current name`)
+// `former` lists what the airline used before, oldest first: never its
+// current name or codes, and each item ends no earlier than the one before
+const findFormerProblems = (airlines) =>
+    airlines.flatMap((a) =>
+        (a.former ?? []).flatMap((item, i, former) => [
+            ...['name', 'iata', 'icao', 'callsign']
+                .filter((field) => item[field] && item[field] === a[field])
+                .map((field) => `${a.name}: former lists its current ${field}`),
+            ...(i > 0 && item.until < former[i - 1].until
+                ? [
+                      `${a.name}: former must be oldest first (${item.until} comes after ${former[i - 1].until})`,
+                  ]
+                : []),
+        ]),
+    )
 
 // `parent`, `marks` and `successor` must name another airline in the
 // catalog, `marks` one with SVGs of its own (no chains), and following
@@ -181,7 +198,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
     return [
         ...findWrongSlugs(airlines),
         ...findDuplicateSlugs(airlines),
-        ...findCurrentPreviousNames(airlines),
+        ...findFormerProblems(airlines),
         ...findOpenHistory(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),

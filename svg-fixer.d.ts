@@ -9,7 +9,7 @@ export interface SvgFixOptions {
     airlineName?: string
     /** `airlineName` comes from the catalog: rename a different title to it. Otherwise a title is only moved, never renamed. */
     isCatalogName?: boolean
-    /** Names an older mark may keep as its title (the airline's `previous_names`). */
+    /** Names an older mark may keep as its title (the names in the airline's `former`). */
     formerNames?: string[]
     /** Also join neighbouring paths of one color, as `lint-svg.js --fix --merge-paths` does. Experimental. */
     mergePaths?: boolean

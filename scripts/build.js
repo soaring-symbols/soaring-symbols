@@ -131,8 +131,8 @@ async function copyFormerSlugs(airlines) {
         JSON.parse(await fs.readFile('./published-slugs.json', 'utf-8')),
     )
     for (const airline of airlines) {
-        for (const slug of airline.previous_slugs ?? []) {
-            if (published.has(slug)) {
+        for (const { slug } of airline.former ?? []) {
+            if (slug && published.has(slug)) {
                 await copyCurrentMarks(airline.slug, slug, airline.name)
             }
         }

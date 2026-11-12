@@ -25,9 +25,9 @@ const skyTeam = all.filter((airline) => airline.alliance === 'SkyTeam')
 
 ### `getAirline(query)`
 
-Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name.
+Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name, and last against the codes it used before (`former`).
 
-Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. A renamed airline is also found by its former names and slugs (`previous_names`, `previous_slugs`), and one that merged into another stays in the catalog with a `successor` (see [Renames and mergers](#renames-and-mergers)).
+Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. A brand that flies under its parent's codes (Hawaiian Airlines under Alaska Airlines) shares them with its `parent`, and the code finds the parent. A renamed airline is also found by its former names and slugs, and an airline whose codes changed by its former codes when no airline has them now (`former`), and one that merged into another stays in the catalog with a `successor` (see [Renames and mergers](#renames-and-mergers)).
 
 - **Argument:** `query` (string)
 - **Returns:** `Airline`, or `undefined` if nothing matches.
@@ -164,11 +164,12 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`           | `string`    | Full airline name.                                                                                                                            |
 | `slug`           | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`. Follows the current name.                              |
-| `previous_names` | `string[]?` | Names the airline flew under before, oldest first. `getAirline()` finds it by them.                                                           |
-| `previous_slugs` | `string[]?` | Slugs of `previous_names` that differ from `slug`. `getAirline()` finds it by them, and its current files are also at `assets/<old slug>/`.   |
 | `iata`           | `string`    | 2-character IATA code.                                                                                                                        |
 | `icao`           | `string`    | 3-letter ICAO code.                                                                                                                           |
 | `callsign`       | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                          |
+| `former`         | `object[]?` | The names and codes the airline used before, oldest first (see [Renames and mergers](#renames-and-mergers)). No key when there are none.      |
+| `previous_names` | `string[]?` | **Deprecated**, removed in 0.4: the names in `former`.                                                                                        |
+| `previous_slugs` | `string[]?` | **Deprecated**, removed in 0.4: the `slug`s in `former`.                                                                                      |
 | `country`        | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                                 |
 | `website`        | `string?`   | Official website.                                                                                                                             |
 | `flag_carrier`   | `boolean?`  | `true` for a national flag carrier.                                                                                                           |
@@ -246,16 +247,36 @@ On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline
 
 ### Renames and mergers
 
-Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old names in `previous_names`. The old slugs stay valid: `previous_slugs` lists them, and `getAirline()` finds the airline by them or by an old name. When an old slug was in a release, the package also ships the airline's files at `assets/<old slug>/`, so links to it keep working.
+Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old name in `former`. When its codes change, with the name or without it, `former` lists the old ones. Each item of `former` holds what the airline used before and the year it stopped:
+
+| Field      | Type      | Description                                                                               |
+| :--------- | :-------- | :---------------------------------------------------------------------------------------- |
+| `name`     | `string?` | A name it flew under before.                                                              |
+| `slug`     | `string?` | The slug of that name, when it differs from the airline's. `getAirline()` finds it by it. |
+| `iata`     | `string?` | An IATA code it used before.                                                              |
+| `icao`     | `string?` | An ICAO code it used before.                                                              |
+| `callsign` | `string?` | A callsign it used before.                                                                |
+| `until`    | `number`  | Year it stopped using them.                                                               |
+
+An item has at least one of `name`, `iata`, `icao` and `callsign`, and only what changed then. The old slugs stay valid: `getAirline()` finds the airline by them or by an old name, and by an old code when no airline holds it now. When an old slug was in a release, the package also ships the airline's files at `assets/<old slug>/`, so links to it keep working.
 
 An old slug follows the airline, as a redirect would: its files are the airline's **current** marks under its current name, so `assets/tway-air/logo.svg` shows Trinity Airways' logo once it is renamed. The logo it had then is in [`history`](#history) (`assets/trinity-airways/history/2010/logo.svg`). To keep a file exactly as it was, link an exact release (`soaring-symbols@0.2.4/dist/assets/tway-air/logo.svg`), which never changes.
 
 ```js
 // Trinity Airways flew as Hansung Airlines, then T'way Air until 2026
-getAirline('tway-air') // { slug: 'trinity-airways', previous_names: ['Hansung Airlines', "T'way Air"], previous_slugs: ['hansung-airlines', 'tway-air'], ... }
+getAirline('tway-air').former
+// [{ name: 'Hansung Airlines', slug: 'hansung-airlines', until: 2010 },
+//  { name: "T'way Air", slug: 'tway-air', until: 2026 }]
 getAirline("T'way Air").slug // 'trinity-airways'
 getAssetPath('tway-air', 'logo') // 'soaring-symbols/assets/trinity-airways/logo.svg'
 getAssetPath('TW', 'logo', { since: 2010 }) // the T'way Air logo
+
+// Air Serbia flew as Jat Airways, ICAO JAT, until 2013
+getAirline('JAT').slug // 'air-serbia'
+
+// Hawaiian Airlines flies under Alaska Airlines' codes since 2026
+getAirline('AS').slug // 'alaska-airlines'
+getAirline('HA').slug // 'hawaiian-airlines', by its former code
 ```
 
 When an airline merges into another, is refounded, or moves into or out of a group's brand, the old one stays in the catalog under its own slug with `defunct: true`, the year in `ceased`, its marks, and `successor` set to the airline that carried on. That airline lists the old entries in `predecessors`. A code they share finds the active airline.
@@ -270,6 +291,15 @@ getAirline('pacific-airlines').predecessors // ['jetstar-pacific']
 const current = (airline) =>
     airline.successor ? current(getAirline(airline.successor)) : airline
 ```
+
+## `former` in 0.3.2
+
+0.3.2 adds `former`, which holds an airline's former names together with its former codes. `previous_names` and `previous_slugs` stay in 0.3 with the same values, and are removed in 0.4:
+
+| Up to 0.3.1              | From 0.3.2                                              |
+| :----------------------- | :------------------------------------------------------ |
+| `airline.previous_names` | `airline.former.flatMap((f) => f.name ? [f.name] : [])` |
+| `airline.previous_slugs` | `airline.former.flatMap((f) => f.slug ? [f.slug] : [])` |
 
 ## Changes in 0.3
 
