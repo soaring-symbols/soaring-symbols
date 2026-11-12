@@ -7,10 +7,17 @@ const r = (n) => Math.round(n * 1000) / 1000
 // Top-level constants are inlined by the build like the functions; only
 // functions may be exported (see scripts/build.js)
 const HEX = /^#(?:[0-9A-F]{3}){1,2}$/i
+// A color as the repo writes it: six lowercase hex digits
+const FULL_HEX = /^#[0-9a-f]{6}$/
 // A fill painted with a gradient or pattern
 const GRADIENT = /^url\(#[^)]+\)$/i
 // Paint keywords that are not colors to check or move
 const PAINT_KEYWORDS = /^(none|currentColor|transparent|inherit)$/i
+
+// Whether a value is a color as the repo writes it (FULL_HEX)
+export function isFullHex(value) {
+    return FULL_HEX.test(value ?? '')
+}
 
 // Whether a file is a monochrome variant, drawn in currentColor
 export function isMonoFile(name) {
@@ -445,6 +452,7 @@ export function validateFillPlacement(svg, isMono = false) {
         rootOk: true,
         redundant: [],
         inheriting: [],
+        noColor: false,
         ...rest,
     })
 
@@ -494,10 +502,21 @@ export function validateFillPlacement(svg, isMono = false) {
         return result(true, 'one gradient fill', {})
     }
 
-    const rootFill = isMono ? 'currentColor' : [...colors][0] || 'currentColor'
-    const rootOk = isMono
-        ? existing === rootFill
-        : existing?.toLowerCase() === rootFill
+    // A color file without a color of its own (drawn in currentColor, or
+    // in nothing but the default black) is a mono file under the wrong name,
+    // or lost its brand color: neither can be fixed without knowing which
+    if (!isMono && colors.size === 0) {
+        return result(
+            false,
+            'no color of its own: draw it in its hex color, or name it -mono.svg if it is the monochrome version',
+            { noColor: true },
+        )
+    }
+
+    const rootFill = isMono ? 'currentColor' : [...colors][0]
+    // Exactly as written in the repo: lowercase hex, `currentColor` in camel
+    // case. Any other spelling (#C30B12, currentcolor) is rewritten by --fix.
+    const rootOk = existing === rootFill
     const redundant = withFill.filter((el) => el !== svg)
     const problems = [
         !rootOk && `root <svg> should have fill="${rootFill}"`,

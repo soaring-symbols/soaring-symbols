@@ -691,6 +691,14 @@ describe('package exports', () => {
             assert.ok(existsSync(`${base}.d.cts`), `${entry} .d.cts`)
         }
     })
+
+    it('ships the browser fixer as ESM with its declarations', () => {
+        const base = require
+            .resolve('soaring-symbols/package.json')
+            .replace(/package\.json$/, 'dist/svg-fixer')
+        assert.ok(existsSync(`${base}.js`))
+        assert.ok(existsSync(`${base}.d.ts`))
+    })
 })
 
 describe('wikipedia infobox parsing (sync-data)', () => {
@@ -1073,7 +1081,7 @@ describe('svg-validator', () => {
             '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title><path fill="url(#a)" d="M1 1"/><path d="M2 2"/></svg>',
         )
         const issues = []
-        ruleFillPlacement({ filePath: 'icon.svg', svgElement: svg, issues })
+        ruleFillPlacement({ isMono: false, svgElement: svg, issues })
         assert.equal(issues.length, 1)
         assert.equal(svg.getAttribute('fill'), null)
         assert.deepEqual(
@@ -1274,5 +1282,209 @@ describe('svg-validator', () => {
             ).pass
         assert.equal(fill('icon.svg'), true)
         assert.equal(fill('icon-mono.svg'), false)
+    })
+})
+
+describe('svg-fixer', () => {
+    // The browser build runs here on jsdom's DOMParser and resvg-wasm, and
+    // must fix a file exactly as lint-svg.js does with jsdom and resvg-js
+    const { window } = new JSDOM('')
+    const parse = (source) =>
+        new window.DOMParser().parseFromString(source, 'image/svg+xml')
+    let browser
+    let cli
+    let validate
+
+    before(async () => {
+        globalThis.DOMParser = window.DOMParser
+        browser = await import('../dist/svg-fixer.js')
+        cli = await import('./lint/fix.js')
+        ;({ runSvgValidations: validate } =
+            await import('../dist/svg-validator.js'))
+        await browser.initSvgFixer(
+            readFileSync(require.resolve('@resvg/resvg-wasm/index_bg.wasm')),
+        )
+    })
+    after(() => {
+        delete globalThis.DOMParser
+    })
+
+    const both = (source, options) => [
+        browser.fixSvg(source, options),
+        cli.fixSvg(source, { ...options, parse }),
+    ]
+
+    const NS = 'xmlns="http://www.w3.org/2000/svg"'
+    const BROKEN = [
+        [
+            'a prolog, width and height, no title, editor data, rgb()',
+            `<?xml version="1.0"?><svg ${NS} xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="24" height="24" viewBox="0 0 24 24" inkscape:version="1.3"><path fill="rgb(255,0,0)" d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', airlineName: 'Test Air' },
+        ],
+        [
+            'a <style> and a transform',
+            `<svg role="img" viewBox="0 0 64 64" ${NS}><title>Test Air</title><style>.a{fill:#123456}</style><g transform="translate(0 2)"><path class="a" d="M0 0h64v60H0z"/></g></svg>`,
+            { type: 'logo' },
+        ],
+        [
+            'a <style> class shared by several paths, as design tools export',
+            `<svg viewBox="0 0 64 64" ${NS}><title>Test Air</title><style>.cls-1{fill:rgb(195,11,18)}</style><g transform="translate(0 2)"><path class="cls-1" d="M0 0h32v60H0z"/><path class="cls-1" d="M32 0h32v60H32z"/></g></svg>`,
+            { type: 'logo' },
+        ],
+        [
+            'nested groups, long decimals and paths to merge',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><g fill="#ff0000"><g><path d="M0 0h12.123456v24H0z"/><path d="M12.123456 0H24v24H12.123456z"/></g></g></svg>`,
+            { type: 'icon', mergePaths: true },
+        ],
+        [
+            'a title out of place, with another name',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><path d="M0 0h24v24H0z"/><title>Old Name</title></svg>`,
+            { type: 'icon', airlineName: 'Test Air', isCatalogName: true },
+        ],
+        [
+            'a color file in currentColor, given its color',
+            `<svg role="img" viewBox="0 0 64 64" ${NS} fill="currentColor"><title>Test Air</title><path fill="currentColor" d="M0 0h32v64H0z"/><path d="M32 0h32v64H32z"/></svg>`,
+            { type: 'logo', fileName: 'logo.svg', fillColor: '#C30B12' },
+        ],
+        [
+            'a -mono.svg in currentcolor, spelled in lowercase',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="currentcolor"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon-mono.svg' },
+        ],
+        [
+            'a root fill in uppercase hex',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#C30B12"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon.svg' },
+        ],
+        [
+            'a -mono.svg with its own color',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="#000000" d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon-mono.svg' },
+        ],
+    ]
+
+    for (const [name, source, options] of BROKEN) {
+        it(`fixes ${name} as lint-svg.js --fix does`, () => {
+            const [fromBrowser, fromCli] = both(source, options)
+            assert.equal(fromBrowser.fixed, true)
+            assert.deepEqual(fromBrowser, fromCli)
+            // What --fix leaves is clean, to the fixer and to the validator
+            const again = browser.fixSvg(fromBrowser.content, options)
+            assert.equal(again.fixed, false, again.issues.join('; '))
+            const failing = validate(
+                parse(fromBrowser.content).documentElement,
+                options.type,
+                null,
+                {
+                    fileName: options.fileName ?? '',
+                    source: fromBrowser.content,
+                },
+            ).filter(
+                (check) =>
+                    check.level === 'error' &&
+                    !check.pass &&
+                    check.group !== 'Geometry',
+            )
+            assert.deepEqual(failing, [])
+        })
+    }
+
+    it('reports a color file drawn in currentColor, which it cannot fix', () => {
+        const source = `<svg role="img" viewBox="0 0 64 64" ${NS} fill="currentColor"><title>Test Air</title><path d="M0 0h64v64H0z"/></svg>`
+        const [fromBrowser, fromCli] = both(source, {
+            type: 'logo',
+            fileName: 'logo.svg',
+        })
+        assert.deepEqual(fromBrowser, fromCli)
+        assert.equal(fromBrowser.fixed, false)
+        assert.match(fromBrowser.issues.join(), /needs its own hex color/)
+        const fill = (fileName) =>
+            validate(parse(source).documentElement, 'logo', null, {
+                fileName,
+                source,
+            }).find((check) => check.label === 'Fill placement')
+        assert.equal(fill('logo.svg').pass, false)
+        assert.match(fill('logo.svg').detail, /no color of its own/)
+        // The same drawing is right as the monochrome version, told by its
+        // name or by the mono option, and the check says it has no color
+        assert.equal(fill('logo-mono.svg').pass, true)
+        assert.equal(fill('logo.svg').fixable, 'fillColor')
+        const asMono = validate(parse(source).documentElement, 'logo', null, {
+            fileName: 'logo.svg',
+            mono: true,
+            source,
+        }).find((check) => check.label === 'Fill placement')
+        assert.equal(asMono.pass, true)
+        assert.equal(
+            browser.fixSvg(source, { fileName: 'logo.svg', mono: true })
+                .errorCount,
+            0,
+        )
+    })
+
+    it('fixes every failing check it marks fixable', () => {
+        const checks = (svgText, options) =>
+            validate(parse(svgText).documentElement, options.type, null, {
+                fileName: options.fileName ?? '',
+                source: svgText,
+            })
+        for (const [name, source, options] of BROKEN) {
+            const given = (fixable) =>
+                fixable === true || options[fixable] !== undefined
+            const expected = checks(source, options)
+                .filter((check) => !check.pass && given(check.fixable))
+                .map((check) => check.label)
+            const after = checks(
+                browser.fixSvg(source, options).content,
+                options,
+            )
+            const left = after
+                .filter(
+                    (check) => expected.includes(check.label) && !check.pass,
+                )
+                .map((check) => check.label)
+            assert.deepEqual(left, [], name)
+        }
+        // Geometry is never fixed: measured on a box that misses the edges
+        const geometry = validate(
+            parse(
+                `<svg role="img" viewBox="0 0 24 24" ${NS}><title>X</title></svg>`,
+            ).documentElement,
+            'icon',
+            { x: 2, y: 2, width: 4, height: 4 },
+        ).filter((check) => check.group === 'Geometry')
+        assert.ok(geometry.some((check) => !check.pass))
+        assert.ok(geometry.every((check) => check.fixable === false))
+    })
+
+    it('leaves every asset as lint-svg.js does', () => {
+        const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+        const differences = []
+        const dirs = readdirSync(assetsDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        for (const dir of dirs) {
+            for (const folder of getAssetDirs(dir, assetsDir)) {
+                for (const file of readdirSync(`${assetsDir}/${folder}`)) {
+                    if (!file.endsWith('.svg')) continue
+                    const path = `assets/${folder}/${file}`
+                    if (EXCLUDE_FILES.includes(path)) continue
+                    const source = readFileSync(
+                        `${assetsDir}/${folder}/${file}`,
+                        'utf8',
+                    )
+                    const [fromBrowser, fromCli] = both(source, {
+                        fileName: file,
+                        type: /icon|tail/.test(file) ? 'icon' : 'logo',
+                    })
+                    try {
+                        assert.deepEqual(fromBrowser, fromCli)
+                    } catch {
+                        differences.push(path)
+                    }
+                }
+            }
+        }
+        assert.deepEqual(differences, [])
     })
 })

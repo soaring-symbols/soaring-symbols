@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import { build as esbuild } from 'esbuild'
 import { getAssetDirs, writeDerivedMonos } from '../utils/index.js'
 import { publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
@@ -58,6 +59,7 @@ async function copyFiles() {
         { src: './index.d.ts', dest: 'index.d.cts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.ts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.cts' },
+        { src: './svg-fixer.d.ts', dest: 'svg-fixer.d.ts' },
     ]
 
     const dirsToCopy = [{ src: './assets', dest: 'assets' }]
@@ -194,10 +196,33 @@ async function buildChecker() {
     await fs.writeFile(path.join(distDir, 'svg-validator.cjs'), bundledCJS)
 }
 
+// SVG Fixer: `lint-svg.js --fix` for the browser, ESM only. Unlike the
+// validator it needs the lint rules, SVGO and resvg, so esbuild bundles it:
+// SVGO's browser build in place of its Node one, and @resvg/resvg-wasm (left
+// to the consumer, a peer dependency) in place of the native @resvg/resvg-js.
+async function buildFixer() {
+    await esbuild({
+        entryPoints: ['./svg-fixer.js'],
+        outfile: path.join(distDir, 'svg-fixer.js'),
+        bundle: true,
+        format: 'esm',
+        platform: 'browser',
+        target: 'es2022',
+        external: ['@resvg/resvg-wasm'],
+        alias: {
+            '@resvg/resvg-js': './scripts/lint/resvg-browser.js',
+            svgo: 'svgo/browser',
+        },
+        minify: true,
+        legalComments: 'none',
+        logLevel: 'warning',
+    })
+}
+
 // Run all builds
 async function build() {
     await copyFiles() // First copy all required files
-    await Promise.all([buildESM(), buildCJS(), buildChecker()])
+    await Promise.all([buildESM(), buildCJS(), buildChecker(), buildFixer()])
 }
 
 build().catch((err) => {

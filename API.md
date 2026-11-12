@@ -87,6 +87,29 @@ For a URL in the browser, link the file from jsDelivr with the airline's `slug`;
 const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
 ```
 
+### Fixing an SVG in the browser
+
+`soaring-symbols/svg-fixer` runs `node scripts/lint-svg.js --fix` on an SVG's text in the browser; the website's validate page uses it. It is ESM only and bundles SVGO and resvg (a few hundred kilobytes), so import it when needed. Install its optional peer dependency [`@resvg/resvg-wasm`](https://www.npmjs.com/package/@resvg/resvg-wasm) 2.6.2 and load its WebAssembly once with `initSvgFixer`.
+
+```js
+import { initSvgFixer, fixSvg } from 'soaring-symbols/svg-fixer'
+import wasmUrl from '@resvg/resvg-wasm/index_bg.wasm?url' // Vite
+
+await initSvgFixer(fetch(wasmUrl))
+
+const { content, fixed, issues, warnings } = fixSvg(svgText, {
+    type: 'logo', // or 'icon' or 'tail'
+    mono: true, // the -mono.svg (defaults to fileName ending in -mono.svg)
+    airlineName: 'Vietnam Airlines', // what <title> should hold
+    isCatalogName: true, // rename a different title to it
+})
+```
+
+`content` is the fixed SVG, or the unchanged text when `fixed` is false. `issues` lists what was wrong as `lint-svg.js` reports it, including geometry it leaves for an editor; `warnings` never fail `--check`. Two more options:
+
+- `mergePaths: true` also joins neighbouring paths of one color, like `--merge-paths` (experimental).
+- `fillColor: '#c30b12'` fills a color file that has no color of its own (only `currentColor` or default black). Without it, such a file is reported and left alone.
+
 ## Data Models
 
 ### Airline
