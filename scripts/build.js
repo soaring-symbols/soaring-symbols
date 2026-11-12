@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import { build as esbuild } from 'esbuild'
 import { getAssetDirs, writeDerivedMonos } from '../utils/index.js'
 import { publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
@@ -35,7 +36,7 @@ async function copyFiles() {
     await fs.mkdir(distDir, { recursive: true })
 
     // The repo keeps only hand-written fields; the published catalog adds
-    // `assets` and `history`. It ships minified: consumers (bundlers, jsDelivr)
+    // the generated ones (utils/catalog.js). It ships minified: consumers (bundlers, jsDelivr)
     // only parse it
     const catalog = publishCatalog(
         JSON.parse(await fs.readFile('./airlines.json', 'utf-8')),
@@ -58,6 +59,7 @@ async function copyFiles() {
         { src: './index.d.ts', dest: 'index.d.cts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.ts' },
         { src: './svg-validator.d.ts', dest: 'svg-validator.d.cts' },
+        { src: './svg-fixer.d.ts', dest: 'svg-fixer.d.ts' },
     ]
 
     const dirsToCopy = [{ src: './assets', dest: 'assets' }]
@@ -79,12 +81,35 @@ async function copyFiles() {
             writeDerivedMonos(dir, path.join(distDir, 'assets'))
         }
     }
-    // After the monos, so airlines sharing marks get those too
+    // After the monos, so airlines sharing marks get those too, and after
+    // those, so a former slug gets whatever its airline ships
     await copySharedMarks(catalog)
+    await copyFormerSlugs(catalog)
 }
 
 const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Copy an airline's current files (never history/) from dist/assets/<from>/
+// to dist/assets/<to>/, titled with the airline's name
+async function copyCurrentMarks(from, to, name) {
+    const src = path.join(distDir, 'assets', from)
+    const dest = path.join(distDir, 'assets', to)
+    await fs.mkdir(dest, { recursive: true })
+    const files = (await fs.readdir(src, { withFileTypes: true }))
+        .filter((entry) => entry.isFile())
+        .map((entry) => entry.name)
+    for (const file of files) {
+        const svg = await fs.readFile(path.join(src, file), 'utf-8')
+        await fs.writeFile(
+            path.join(dest, file),
+            svg.replace(
+                /<title>[^<]*<\/title>/,
+                `<title>${escapeXml(name)}</title>`,
+            ),
+        )
+    }
+}
 
 // Airlines with `marks` use another airline's SVGs. Copy those files to their
 // own slug in dist (never in the repo), titled with their own name, so every
@@ -92,21 +117,24 @@ const escapeXml = (text) =>
 // marks are shared, never the history/ folder.
 async function copySharedMarks(airlines) {
     for (const airline of airlines.filter((a) => a.marks)) {
-        const src = path.join(distDir, 'assets', airline.marks)
-        const dest = path.join(distDir, 'assets', airline.slug)
-        await fs.mkdir(dest, { recursive: true })
-        const files = (await fs.readdir(src, { withFileTypes: true }))
-            .filter((entry) => entry.isFile())
-            .map((entry) => entry.name)
-        for (const file of files) {
-            const svg = await fs.readFile(path.join(src, file), 'utf-8')
-            await fs.writeFile(
-                path.join(dest, file),
-                svg.replace(
-                    /<title>[^<]*<\/title>/,
-                    `<title>${escapeXml(airline.name)}</title>`,
-                ),
-            )
+        await copyCurrentMarks(airline.marks, airline.slug, airline.name)
+    }
+}
+
+// A renamed airline's slug follows its new name. Links to an old slug keep
+// working: when a release shipped that slug (published-slugs.json), the
+// airline's current files are also published there. A former name that was
+// never a slug in the package (Air Pacific for Fiji Airways) has no links to
+// keep, so it gets no copy; getAirline() still finds it.
+async function copyFormerSlugs(airlines) {
+    const published = new Set(
+        JSON.parse(await fs.readFile('./published-slugs.json', 'utf-8')),
+    )
+    for (const airline of airlines) {
+        for (const slug of airline.previous_slugs ?? []) {
+            if (published.has(slug)) {
+                await copyCurrentMarks(airline.slug, slug, airline.name)
+            }
         }
     }
 }
@@ -168,10 +196,33 @@ async function buildChecker() {
     await fs.writeFile(path.join(distDir, 'svg-validator.cjs'), bundledCJS)
 }
 
+// SVG Fixer: `lint-svg.js --fix` for the browser, ESM only. Unlike the
+// validator it needs the lint rules, SVGO and resvg, so esbuild bundles it:
+// SVGO's browser build in place of its Node one, and @resvg/resvg-wasm (left
+// to the consumer, a peer dependency) in place of the native @resvg/resvg-js.
+async function buildFixer() {
+    await esbuild({
+        entryPoints: ['./svg-fixer.js'],
+        outfile: path.join(distDir, 'svg-fixer.js'),
+        bundle: true,
+        format: 'esm',
+        platform: 'browser',
+        target: 'es2022',
+        external: ['@resvg/resvg-wasm'],
+        alias: {
+            '@resvg/resvg-js': './scripts/lint/resvg-browser.js',
+            svgo: 'svgo/browser',
+        },
+        minify: true,
+        legalComments: 'none',
+        logLevel: 'warning',
+    })
+}
+
 // Run all builds
 async function build() {
     await copyFiles() // First copy all required files
-    await Promise.all([buildESM(), buildCJS(), buildChecker()])
+    await Promise.all([buildESM(), buildCJS(), buildChecker(), buildFixer()])
 }
 
 build().catch((err) => {

@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, and `history` to those with older marks (see $defs/published); leave both out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `previous_slugs` to renamed ones and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, and `history` when it has older marks.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, `previous_slugs` when a former name had another slug and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -70,6 +70,10 @@
                 "ceased": {
                     "required": ["defunct"],
                     "properties": { "defunct": { "const": true } }
+                },
+                "successor": {
+                    "required": ["defunct"],
+                    "properties": { "defunct": { "const": true } }
                 }
             },
             "properties": {
@@ -80,6 +84,20 @@
                 "slug": {
                     "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
                     "$ref": "#/$defs/slug"
+                },
+                "previous_names": {
+                    "description": "Names the airline flew under before `name`, oldest first, e.g. [\"Hansung Airlines\", \"T'way Air\"] for Trinity Airways. Its slug follows the current name; the build keeps every former name's slug working (see `previous_slugs`).",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/name" }
+                },
+                "previous_slugs": {
+                    "description": "Added by the build: the slugs of `previous_names` that differ from `slug`. getAirline() finds the airline by them, and the package also ships its current files under assets/<previous slug>/. Only in the published catalog.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/slug" }
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
@@ -104,7 +122,7 @@
                     ]
                 },
                 "parent": {
-                    "description": "Slug of the airline in this catalog that owns this one, e.g. \"airasia\" for Thai AirAsia.",
+                    "description": "Slug of the airline group in this catalog that this one is a subsidiary of: the airline that owns it, or whose network it flies in, e.g. \"airasia\" for Thai AirAsia or \"jetstar\" for Jetstar Japan.",
                     "$ref": "#/$defs/slug"
                 },
                 "marks": {
@@ -130,10 +148,16 @@
                     "description": "Year a defunct airline ceased operations.",
                     "$ref": "#/$defs/year"
                 },
-                "vectorized": {
-                    "description": "Deprecated: removed in 0.3. The SVGs were vectorized by hand; a pull request's description records each SVG's source instead.",
-                    "deprecated": true,
-                    "type": "boolean"
+                "successor": {
+                    "description": "Slug of the airline that carried on this defunct one after a merger, a refounding, or a move into or out of a group's brand, e.g. \"air-india\" for Vistara. A plain rename keeps the entry and lists the old name in `previous_names` instead.",
+                    "$ref": "#/$defs/slug"
+                },
+                "predecessors": {
+                    "description": "Added by the build: slugs of the defunct airlines whose `successor` is this one, oldest first; only in the published catalog.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/slug" }
                 },
                 "branding": { "$ref": "#/$defs/branding" },
                 "assets": {
@@ -153,6 +177,10 @@
             "properties": {
                 "primary_color": { "$ref": "#/$defs/hexColor" },
                 "tagline": { "type": "string", "minLength": 1 },
+                "since": {
+                    "description": "Year the current marks were introduced. Required when the airline has older marks in history/, whose last one was used until this year.",
+                    "$ref": "#/$defs/year"
+                },
                 "guidelines": {
                     "$ref": "#/$defs/url",
                     "description": "Link to the airline's brand guidelines."
@@ -170,17 +198,25 @@
             }
         },
         "history": {
-            "description": "The marks an airline used before its current ones, oldest first. Each was used from `since` until the next entry's `since`, the last one until the current marks; its files are at assets/<slug>/history/<since>/.",
+            "description": "The marks an airline used before its current ones, oldest first, each from `since` until `until`; its files are at assets/<slug>/history/<since>/.",
             "type": "array",
             "minItems": 1,
             "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["since", "assets"],
+                "required": ["since", "name", "assets"],
                 "properties": {
                     "since": {
                         "description": "Year the mark was introduced, also its folder name.",
                         "$ref": "#/$defs/year"
+                    },
+                    "until": {
+                        "description": "Year the next mark replaced it: the next entry's `since`, or the airline's `branding.since` for the last one.",
+                        "$ref": "#/$defs/year"
+                    },
+                    "name": {
+                        "description": "The airline's name on this mark (its SVG title): the current name, or a former one for a mark used before a rename.",
+                        "$ref": "#/$defs/name"
                     },
                     "assets": { "$ref": "#/$defs/assets" }
                 }

@@ -27,7 +27,7 @@ const skyTeam = all.filter((airline) => airline.alliance === 'SkyTeam')
 
 Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name.
 
-Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name.
+Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. A renamed airline is also found by its former names and slugs (`previous_names`, `previous_slugs`), and one that merged into another stays in the catalog with a `successor` (see [Renames and mergers](#renames-and-mergers)).
 
 - **Argument:** `query` (string)
 - **Returns:** `Airline`, or `undefined` if nothing matches.
@@ -47,10 +47,10 @@ getAirline('XX') // undefined
 Returns the package path of one SVG file, ready to pass to `require.resolve`, `import.meta.resolve` or your bundler.
 
 - **Arguments:**
-    - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
-    - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
-    - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
-    - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
+  - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
+  - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
+  - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
+  - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
 - **Returns:** `string`, or `undefined` if the airline is unknown, it has no older mark from `since`, or that file does not exist.
 
 ```js
@@ -59,7 +59,7 @@ getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-ai
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
 
 // An older mark, once the airline has one in its history
-getAssetPath('KE', 'logo', { since: 1984 }) // 'soaring-symbols/assets/korean-air/history/1984/logo.svg'
+getAssetPath('9G', 'logo', { since: 2025 }) // 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'
 ```
 
 #### Using the path
@@ -86,6 +86,29 @@ For a URL in the browser, link the file from jsDelivr with the airline's `slug`;
 ```js
 const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
 ```
+
+### Fixing an SVG in the browser
+
+`soaring-symbols/svg-fixer` runs `node scripts/lint-svg.js --fix` on an SVG's text in the browser; the website's validate page uses it. It is ESM only and bundles SVGO and resvg (a few hundred kilobytes), so import it when needed. Install its optional peer dependency [`@resvg/resvg-wasm`](https://www.npmjs.com/package/@resvg/resvg-wasm) 2.6.2 and load its WebAssembly once with `initSvgFixer`.
+
+```js
+import { initSvgFixer, fixSvg } from 'soaring-symbols/svg-fixer'
+import wasmUrl from '@resvg/resvg-wasm/index_bg.wasm?url' // Vite
+
+await initSvgFixer(fetch(wasmUrl))
+
+const { content, fixed, issues, warnings } = fixSvg(svgText, {
+    type: 'logo', // or 'icon' or 'tail'
+    mono: true, // the -mono.svg (defaults to fileName ending in -mono.svg)
+    airlineName: 'Vietnam Airlines', // what <title> should hold
+    isCatalogName: true, // rename a different title to it
+})
+```
+
+`content` is the fixed SVG, or the unchanged text when `fixed` is false. `issues` lists what was wrong as `lint-svg.js` reports it, including geometry it leaves for an editor; `warnings` never fail `--check`. Two more options:
+
+- `mergePaths: true` also joins neighbouring paths of one color, like `--merge-paths` (experimental).
+- `fillColor: '#c30b12'` fills a color file that has no color of its own (only `currentColor` or default black). Without it, such a file is reported and left alone.
 
 ## Data Models
 
@@ -122,27 +145,30 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 }
 ```
 
-| Field          | Type        | Description                                                                                                                          |
-| :------------- | :---------- | :----------------------------------------------------------------------------------------------------------------------------------- |
-| `name`         | `string`    | Full airline name.                                                                                                                   |
-| `slug`         | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`.                                               |
-| `iata`         | `string`    | 2-character IATA code.                                                                                                               |
-| `icao`         | `string`    | 3-letter ICAO code.                                                                                                                  |
-| `callsign`     | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                 |
-| `country`      | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                        |
-| `website`      | `string?`   | Official website.                                                                                                                    |
-| `flag_carrier` | `boolean?`  | `true` for a national flag carrier.                                                                                                  |
-| `alliance`     | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                      |
-| `parent`       | `string?`   | Slug of the airline that owns this one, e.g. `"airasia"` for Thai AirAsia.                                                           |
-| `marks`        | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes. |
-| `hubs`         | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.         |
-| `founded`      | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                |
-| `defunct`      | `boolean?`  | `true` if the airline has ceased operations.                                                                                         |
-| `ceased`       | `number?`   | Year a defunct airline ceased operations.                                                                                            |
-| `vectorized`   | `boolean?`  | **Deprecated**, removed in 0.3. `true` if the SVG was vectorized by hand.                                                            |
-| `branding`     | `object?`   | `primary_color`, `tagline` and `guidelines` (link to the brand guidelines), each optional.                                           |
-| `assets`       | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                |
-| `history`      | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.              |
+| Field            | Type        | Description                                                                                                                                   |
+| :--------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`           | `string`    | Full airline name.                                                                                                                            |
+| `slug`           | `string`    | URL-friendly name, also the asset folder name; the same in the repo's `airlines.json`. Follows the current name.                              |
+| `previous_names` | `string[]?` | Names the airline flew under before, oldest first. `getAirline()` finds it by them.                                                           |
+| `previous_slugs` | `string[]?` | Slugs of `previous_names` that differ from `slug`. `getAirline()` finds it by them, and its current files are also at `assets/<old slug>/`.   |
+| `iata`           | `string`    | 2-character IATA code.                                                                                                                        |
+| `icao`           | `string`    | 3-letter ICAO code.                                                                                                                           |
+| `callsign`       | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                          |
+| `country`        | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                                 |
+| `website`        | `string?`   | Official website.                                                                                                                             |
+| `flag_carrier`   | `boolean?`  | `true` for a national flag carrier.                                                                                                           |
+| `alliance`       | `string?`   | `"oneworld"`, `"SkyTeam"` or `"Star Alliance"`.                                                                                               |
+| `parent`         | `string?`   | Slug of the airline group this one is a subsidiary of, e.g. `"airasia"` for Thai AirAsia; filter on it to list a group's airlines.            |
+| `marks`          | `string?`   | Slug of the airline whose logos this one uses. The files are still published under this airline's own slug, so nothing else changes.          |
+| `hubs`           | `string[]?` | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Low-cost carriers often have bases rather than hubs, and none listed.                  |
+| `founded`        | `number?`   | Year founded, counting from the predecessor its history starts with (e.g. 1956 for Vietnam Airlines).                                         |
+| `defunct`        | `boolean?`  | `true` if the airline has ceased operations.                                                                                                  |
+| `ceased`         | `number?`   | Year a defunct airline ceased operations.                                                                                                     |
+| `successor`      | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)). |
+| `predecessors`   | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                         |
+| `branding`       | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.          |
+| `assets`         | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                         |
+| `history`        | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                       |
 
 ### AssetInfo
 
@@ -168,24 +194,30 @@ assets/<slug>/
 
 ### History
 
-An airline that changed its logo but kept its name may list its older marks in `history`, oldest first. Each entry was used from its `since` year until the next entry's `since`, and the last one until the current marks in `assets`. Airlines that borrow another airline's marks (`marks`) have no history.
+An airline that changed its logo may list its older marks in `history`, oldest first, each used from `since` until `until`. The current marks in `assets` came in the year in `branding.since`, when the last older mark ended. Airlines that borrow another airline's marks (`marks`) have no history.
 
-| Field    | Type     | Description                                                                        |
-| :------- | :------- | :--------------------------------------------------------------------------------- |
-| `since`  | `number` | Year the mark was introduced; also the name of its folder.                         |
-| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`. |
+| Field    | Type     | Description                                                                                                           |
+| :------- | :------- | :-------------------------------------------------------------------------------------------------------------------- |
+| `since`  | `number` | Year the mark was introduced; also the name of its folder.                                                            |
+| `until`  | `number` | Year the next mark replaced it.                                                                                       |
+| `name`   | `string` | The airline's name on the mark: its current name, or a former one (`previous_names`) for a mark used before a rename. |
+| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`.                                    |
 
 ```json
+"branding": { "primary_color": "#686058", "since": 2026 },
 "history": [
     {
-        "since": 1984,
+        "since": 2010,
+        "until": 2026,
+        "name": "T'way Air",
         "assets": {
-            "icon": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] },
-            "logo": { "color": true, "mono": false, "colors": ["#00256c", "#c60c30"] }
+            "logo": { "color": true, "mono": true, "colors": ["#d22c25", "#82ab42"] }
         }
     }
 ]
 ```
+
+`until` and `name` are in releases after 0.2.4; read them as optional if you also support older ones.
 
 The files sit next to the current ones, under `history/<since>/`, and `getAssetPath(airline, type, { since })` returns their path:
 
@@ -196,6 +228,40 @@ assets/<slug>/history/<since>/
 ```
 
 On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`.
+
+### Renames and mergers
+
+Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old names in `previous_names`. The old slugs stay valid: `previous_slugs` lists them, and `getAirline()` finds the airline by them or by an old name. When an old slug was in a release, the package also ships the airline's files at `assets/<old slug>/`, so links to it keep working.
+
+An old slug follows the airline, as a redirect would: its files are the airline's **current** marks under its current name, so `assets/tway-air/logo.svg` shows Trinity Airways' logo once it is renamed. The logo it had then is in [`history`](#history) (`assets/trinity-airways/history/2010/logo.svg`). To keep a file exactly as it was, link an exact release (`soaring-symbols@0.2.4/dist/assets/tway-air/logo.svg`), which never changes.
+
+```js
+// Trinity Airways flew as Hansung Airlines, then T'way Air until 2026
+getAirline('tway-air') // { slug: 'trinity-airways', previous_names: ['Hansung Airlines', "T'way Air"], previous_slugs: ['hansung-airlines', 'tway-air'], ... }
+getAirline("T'way Air").slug // 'trinity-airways'
+getAssetPath('tway-air', 'logo') // 'soaring-symbols/assets/trinity-airways/logo.svg'
+getAssetPath('TW', 'logo', { since: 2010 }) // the T'way Air logo
+```
+
+When an airline merges into another, is refounded, or moves into or out of a group's brand, the old one stays in the catalog under its own slug with `defunct: true`, the year in `ceased`, its marks, and `successor` set to the airline that carried on. That airline lists the old entries in `predecessors`. A code they share finds the active airline.
+
+```js
+// Pacific Airlines flew as Jetstar Pacific, in the Jetstar group, from 2008 to 2020
+getAirline('Jetstar Pacific') // { slug: 'jetstar-pacific', defunct: true, ceased: 2020, successor: 'pacific-airlines', ... }
+getAirline('BL') // Pacific Airlines, the active one
+getAirline('pacific-airlines').predecessors // ['jetstar-pacific']
+
+// The airline flying today, after any merger or move
+const current = (airline) =>
+    airline.successor ? current(getAirline(airline.successor)) : airline
+```
+
+## Changes in 0.3
+
+0.3 removes what 0.2 had marked for removal and fixes a name, so code written for 0.2 may need two changes:
+
+- **`vectorized` is gone.** It said an airline's SVGs were vectorized by hand. Nothing in the package read it; each SVG's source is recorded in its pull request instead.
+- **Binter is Binter Canarias**, the name its website uses, with the slug `binter-canarias`. The old `binter` slug and its `assets/binter/` files are gone; `getAirline('NT')` and `getAirline('IBB')` find it either way.
 
 ## Subsidiaries in 0.2.2
 

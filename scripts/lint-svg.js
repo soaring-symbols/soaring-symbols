@@ -1,12 +1,10 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
-import { getAssetDirs, toSlug } from '../utils/index.js'
+import { HISTORY_DIR, getAssetDirs, toSlug } from '../utils/index.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
-import { DOM_RULES, STRING_RULES } from './lint/rules.js'
-import { ruleGeometry } from './lint/rule-geometry.js'
-import { ruleOptimize } from './lint/rule-optimize.js'
+import { fixSvg } from './lint/fix.js'
 
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
@@ -26,11 +24,11 @@ const SCOPED =
 
 // ---------------------
 
-// Airline names from the catalog, keyed by asset folder (slug)
-const catalogNames = new Map(
+// Catalog entries, keyed by asset folder (slug)
+const catalog = new Map(
     JSON.parse(readFileSync('airlines.json', 'utf8')).map((a) => [
         a.slug ?? toSlug(a.name),
-        a.name,
+        a,
     ]),
 )
 
@@ -42,7 +40,7 @@ const getSlugOf = (filePath) => relative(ASSETS_DIR, filePath).split(/[\\/]/)[0]
 // so prefer the catalog and fall back to the folder for airlines not added yet
 const getAirlineName = (filePath) => {
     const dirName = getSlugOf(filePath)
-    if (catalogNames.has(dirName)) return catalogNames.get(dirName)
+    if (catalog.has(dirName)) return catalog.get(dirName).name
 
     return dirName
         .split('-')
@@ -50,71 +48,30 @@ const getAirlineName = (filePath) => {
         .join(' ')
 }
 
+const parse = (source) =>
+    new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
+
 const lintSvgFile = (filePath) => {
-    const originalContent = readFileSync(filePath, 'utf8')
-    const parse = (source) =>
-        new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
-    let document = parse(originalContent)
-    let svgElement = document.querySelector('svg')
-
-    if (!svgElement) {
-        return {
-            issues: ['Invalid SVG: Missing <svg> element.'],
-            errorCount: 1,
-            fixedContent: null,
-        }
-    }
-
-    const isIcon =
-        basename(filePath).includes('icon') ||
-        basename(filePath).includes('tail')
-
-    const ctx = {
-        filePath,
-        svgElement,
-        document,
-        isIcon,
+    const [slug, folder] = relative(ASSETS_DIR, filePath).split(/[\\/]/)
+    const airline = catalog.get(slug)
+    const inHistory = folder === HISTORY_DIR
+    const name = basename(filePath)
+    const result = fixSvg(readFileSync(filePath, 'utf8'), {
+        parse,
+        fileName: filePath,
+        type: ['icon', 'tail'].find((kind) => name.includes(kind)) ?? 'logo',
         airlineName: getAirlineName(filePath),
-        isCatalogName: catalogNames.has(getSlugOf(filePath)),
+        isCatalogName: Boolean(airline),
+        // Only an older mark (assets/<slug>/history/<year>/) may keep a
+        // former name as its title
+        formerNames: inHistory ? airline?.previous_names : undefined,
         mergePaths: MERGE_PATHS,
-        issues: [],
-        // Reported only; never trigger a rewrite in --fix mode
-        warnings: [],
-    }
-
-    // Phase 0: SVGO, for the problems only it fixes; the rules lint its result
-    const source = ruleOptimize(originalContent, svgElement, ctx)
-    if (source !== originalContent) {
-        document = parse(source)
-        svgElement = document.querySelector('svg')
-        Object.assign(ctx, { document, svgElement })
-    }
-
-    // Phase 1: DOM rules
-    for (const rule of DOM_RULES) rule(ctx)
-
-    let fixedContent =
-        ctx.issues.length > 0 ? svgElement.outerHTML : originalContent
-    let hasStructuralFixes = ctx.issues.length > 0
-
-    // Phase 2: String rules
-    for (const rule of STRING_RULES) {
-        const result = rule(fixedContent, ctx)
-        if (result.changed) {
-            if (!hasStructuralFixes && result.message)
-                ctx.issues.push(result.message)
-            fixedContent = result.content
-            hasStructuralFixes = true
-        }
-    }
-
-    // Phase 3: Geometry, measured on the fixed content (reports only)
-    ruleGeometry(fixedContent, ctx)
+    })
 
     return {
-        issues: [...ctx.issues, ...ctx.warnings],
-        errorCount: ctx.issues.length,
-        fixedContent: hasStructuralFixes ? fixedContent : null,
+        issues: [...result.issues, ...result.warnings],
+        errorCount: result.errorCount,
+        fixedContent: result.fixed ? result.content : null,
     }
 }
 

@@ -1,7 +1,7 @@
 // Purge jsDelivr's cache of the files a release changed, so links to the
-// release line (soaring-symbols@0.2/...) and to the bare package
+// release line (soaring-symbols@0.3/...) and to the bare package
 // (soaring-symbols/...) serve them right away instead of after up to 12
-// hours. Exact-release links (soaring-symbols@0.2.4/...) never need it.
+// hours. Exact-release links (soaring-symbols@0.3.0/...) never need it.
 //
 // `npm run release` runs it after publishing. To run it again by hand, from
 // a checkout whose dist/ matches the published release:

@@ -60,12 +60,31 @@ const stripComments = (text) =>
         .replace(/<ref[^>/]*\/>/gi, '')
         .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, '')
 
-// The "{{Infobox airline ...}}" block of a page, or '' when there is none
-export function extractInfobox(wikitext) {
-    const start = wikitext.search(/\{\{\s*Infobox airline/i)
-    if (start < 0) return ''
+// The "{{Infobox airline ...}}" block of a page, or '' when there is none.
+// A page about an airline that was renamed may hold one infobox per name
+// (Pacific Airlines also has Jetstar Pacific's): given `name`, the one whose
+// `airline` is that name, or starts with it ("Jetstar Pacific Airlines"),
+// otherwise the first.
+export function extractInfobox(wikitext, name) {
+    const infoboxes = []
+    const pattern = /\{\{\s*Infobox airline/gi
+    for (let match; (match = pattern.exec(wikitext));) {
+        const end = closingIndex(wikitext, match.index)
+        infoboxes.push(wikitext.slice(match.index, end))
+        pattern.lastIndex = end
+    }
+    if (!name) return infoboxes[0] ?? ''
 
-    return wikitext.slice(start, closingIndex(wikitext, start))
+    const wanted = name.trim().toLowerCase()
+    const names = infoboxes.map(
+        (infobox) =>
+            listItems(infoboxParams(infobox).airline)[0]?.toLowerCase() ?? '',
+    )
+    const exact = names.indexOf(wanted)
+    const index =
+        exact >= 0 ? exact : names.findIndex((n) => n.startsWith(wanted))
+
+    return infoboxes[Math.max(index, 0)] ?? ''
 }
 
 // Infobox parameters as { lowercased name: raw value }
@@ -137,6 +156,16 @@ export function linkTargets(value = '') {
     return [...stripComments(value).matchAll(/\[\[([^\]|#]+)/g)].map((match) =>
         match[1].trim().replace(/_/g, ' '),
     )
+}
+
+// How a "ceased" value says the airline carried on under another name, e.g.
+// "rebranded to Pacific Airlines" or "merged into Air India", if it does
+export function carriedOn(value) {
+    return stripMarkup(value)
+        .match(
+            /\b(?:rebranded|renamed|merged|integrated|absorbed)\b[^\n()]*/i,
+        )?.[0]
+        .trim()
 }
 
 // The first four-digit year in a value, e.g. a "ceased" date

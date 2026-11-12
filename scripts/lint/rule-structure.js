@@ -8,7 +8,8 @@ import { applyIfAlike, flattenGroups, mergePaths } from './fix-structure.js'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
-// RULE: <title> must exist, be the first child and match the airline name.
+// RULE: <title> must exist, be the first child and match the airline name
+// (an older mark in history/ may keep one of its previous_names).
 // It is created in the SVG namespace: document.createElement() would give it
 // no namespace, which serializes as <title xmlns="">.
 export function ruleTitle({
@@ -16,6 +17,7 @@ export function ruleTitle({
     document,
     airlineName,
     isCatalogName,
+    formerNames = [],
     issues,
 }) {
     let titleElement = svgElement.querySelector('title')
@@ -38,9 +40,13 @@ export function ruleTitle({
         svgElement.prepend(titleElement)
     }
 
-    if (isCatalogName && titleElement.textContent !== airlineName) {
+    // An older mark keeps the name it was used under, when that is one of
+    // the airline's previous_names; anything else gets the current name
+    const allowed = [airlineName, ...formerNames]
+    if (isCatalogName && !allowed.includes(titleElement.textContent)) {
+        const expected = allowed.map((name) => `"${name}"`).join(' or ')
         issues.push(
-            `Accessibility: <title> should be "${airlineName}", not "${titleElement.textContent}".`,
+            `Accessibility: <title> should be ${expected}, not "${titleElement.textContent}".`,
         )
         titleElement.textContent = airlineName
     }
@@ -95,10 +101,10 @@ export function ruleNoNestedGroups({ svgElement, issues, warnings }) {
 // RULE (warning): each color should be drawn in one <path>, so a
 // single-color SVG has one shape and a multi-color one a shape per color
 // (where shapes of the same color are drawn one after another). Merging is
-// experimental: only `--fix --merge-paths` joins the neighbouring <path>s of
-// a single-color SVG, when the result renders the same (fix-structure.js),
-// and the result still needs a look. Without the flag the warning says
-// whether it would. Multi-color SVGs are left for the editor.
+// experimental: only `--fix --merge-paths` joins neighbouring <path>s of the
+// same color, in single- and multi-color SVGs alike, when the result renders
+// the same (fix-structure.js), and the result still needs a look. Without
+// the flag the warning says whether it would.
 export function ruleOnePathPerColor({
     svgElement,
     mergePaths: merge,
@@ -107,18 +113,15 @@ export function ruleOnePathPerColor({
 }) {
     let result = validateOnePathPerColor(svgElement)
     if (result.pass) return
-    let outcome = 'unchanged'
-    if (result.colors === 1) {
-        outcome = applyIfAlike(svgElement, mergePaths, { apply: merge })
-        if (merge && outcome === 'fixed') {
-            const { count } = result
-            result = validateOnePathPerColor(svgElement)
-            issues.push(
-                `Structure: Merged ${count} shapes into ${result.count} (experimental, check the result).`,
-            )
-            if (result.pass) return
-            outcome = 'unchanged'
-        }
+    let outcome = applyIfAlike(svgElement, mergePaths, { apply: merge })
+    if (merge && outcome === 'fixed') {
+        const { count } = result
+        result = validateOnePathPerColor(svgElement)
+        issues.push(
+            `Structure: Merged ${count} shapes into ${result.count} (experimental, check the result).`,
+        )
+        if (result.pass) return
+        outcome = 'unchanged'
     }
     const hint = {
         fixed: ' (`--fix --merge-paths` can merge them, experimental: check the result)',
@@ -130,6 +133,6 @@ export function ruleOnePathPerColor({
     warnings.push(
         colors === 1
             ? `Structure: Single-color SVG should use one <path>, found ${count} shapes${hint}.`
-            : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>.`,
+            : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>${hint}.`,
     )
 }

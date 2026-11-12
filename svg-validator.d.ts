@@ -6,10 +6,14 @@ export interface SvgValidation {
     level: 'error' | 'warning'
     pass: boolean
     detail: string
+    /** What `lint-svg.js --fix` (and `fixSvg`) does about a failure: `true` fixes it when the render check allows; an option name fixes it once that `fixSvg` option is given; `false` leaves it for an editor (geometry, painted strokes). */
+    fixable: boolean | 'mergePaths' | 'fillColor'
 }
 
 export interface SvgValidationOptions {
-    /** The file name, so a `-mono.svg` is expected to use `fill="currentColor"`. */
+    /** The monochrome version, held to `fill="currentColor"`. Defaults to whether `fileName` ends in `-mono.svg`. */
+    mono?: boolean
+    /** The file name, for the `mono` default. */
     fileName?: string
     /** The file's text: adds the check for anything before `<svg>`, and the attribute order is read from it rather than the parsed element. */
     source?: string | null

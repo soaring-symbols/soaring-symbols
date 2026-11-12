@@ -1,6 +1,7 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
 // report (or apply) what changed: IATA/ICAO codes, callsign, hubs, and
-// whether the airline ceased operations.
+// whether the airline ceased operations. A rename or merger is only
+// reported: a person renames the entry or sets its successor.
 //
 //   node scripts/sync-data.js                     report only
 //   node scripts/sync-data.js --write             apply, then npm run generate
@@ -13,6 +14,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isValidField, validateAirlines } from '../utils/schema.js'
 import {
+    carriedOn,
     extractInfobox,
     fetchAirportCodes,
     fetchPages,
@@ -27,7 +29,6 @@ import {
 // page, another topic)
 const PAGE_TITLES = {
     Azul: 'Azul Brazilian Airlines',
-    Binter: 'Binter Canarias',
     Condor: 'Condor (airline)',
     Emirates: 'Emirates (airline)',
     Firefly: 'Firefly (airline)',
@@ -60,7 +61,7 @@ console.log(`Fetching ${airlines.length} Wikipedia pages...`)
 const pages = await fetchPages(airlines.map(titleOf))
 const paramsByName = Object.fromEntries(
     airlines.map((a) => {
-        const params = infoboxParams(extractInfobox(pages[titleOf(a)]))
+        const params = infoboxParams(extractInfobox(pages[titleOf(a)], a.name))
         // Some infoboxes use the singular name
         params.hubs ??= params.hub
 
@@ -118,12 +119,27 @@ for (const airline of airlines) {
         }
     }
 
-    const ceased = firstYear(params.ceased)
+    // A "ceased" that says it was rebranded or renamed is the same airline
+    // under a new name, renamed in place by hand; a merger leaves it defunct,
+    // and so does a move out of a group's brand, which already has a successor
+    const ending = carriedOn(params.ceased)
+    const renamed =
+        !airline.successor && /^(rebranded|renamed)/i.test(ending ?? '')
+    const ceased = renamed ? undefined : firstYear(params.ceased)
     if (ceased) {
         if (!airline.defunct) propose('defunct', true)
         if (airline.ceased !== ceased) propose('ceased', ceased)
     } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
+    }
+    if (renamed) {
+        note(
+            `Wikipedia says it was "${ending}"; rename it in place with previous_names (see "Renames and mergers" in CONTRIBUTING.md)`,
+        )
+    } else if (ending && !airline.successor) {
+        note(
+            `Wikipedia says it ceased "${ending}"; set successor to the airline that carried on (see "Renames and mergers" in CONTRIBUTING.md)`,
+        )
     }
 
     if (changes.length) proposals.push({ airline, changes })

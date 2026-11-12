@@ -23,6 +23,17 @@ export type AssetMap = Readonly<Partial<Record<AssetType, AssetInfo>>>
 export interface HistoricalMarks {
     /** Year the mark was introduced (e.g. 1984). */
     readonly since: number
+    /**
+     * Year the next mark replaced it (e.g. 2025). Missing in releases before
+     * it was added.
+     */
+    readonly until?: number
+    /**
+     * The airline's name on the mark: the current one, or a former one for a
+     * mark used before a rename (e.g. "T'way Air"). Missing in releases
+     * before it was added.
+     */
+    readonly name?: string
     readonly assets: AssetMap
 }
 
@@ -30,6 +41,8 @@ export interface AirlineBranding {
     readonly primary_color?: string
     readonly tagline?: string
     readonly guidelines?: string
+    /** Year the current marks were introduced; set when it has `history`. */
+    readonly since?: number
 }
 
 export interface Airline {
@@ -43,11 +56,23 @@ export interface Airline {
     /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
     readonly country: string
     readonly slug: string
+    /**
+     * Names the airline flew under before `name`, oldest first (e.g.
+     * ["Hansung Airlines", "T'way Air"] for Trinity Airways). getAirline()
+     * finds it by them.
+     */
+    readonly previous_names?: readonly string[]
+    /**
+     * The slugs of `previous_names` that differ from `slug`. getAirline()
+     * finds the airline by them, and the package also ships its current files
+     * at assets/<previous slug>/.
+     */
+    readonly previous_slugs?: readonly string[]
     readonly website?: string
     readonly flag_carrier?: boolean
     /** e.g. "oneworld", "SkyTeam", "Star Alliance". */
     readonly alliance?: string
-    /** Slug of the airline that owns this one (e.g. "airasia"). */
+    /** Slug of the airline group this one is a subsidiary of (e.g. "airasia"). */
     readonly parent?: string
     /**
      * Slug of the airline whose marks this one uses (e.g. "airasia"). Its
@@ -62,10 +87,16 @@ export interface Airline {
     /** Year a defunct airline ceased operations. */
     readonly ceased?: number
     /**
-     * The SVGs were vectorized by hand.
-     * @deprecated Removed in 0.3; nothing reads it.
+     * Slug of the airline that carried on this defunct one after a merger, a
+     * refounding, or a move into or out of a group's brand (e.g. "air-india"
+     * for Vistara).
      */
-    readonly vectorized?: boolean
+    readonly successor?: string
+    /**
+     * Slugs of the defunct airlines whose `successor` is this one, the
+     * earliest to cease first; absent when there are none.
+     */
+    readonly predecessors?: readonly string[]
     readonly branding?: AirlineBranding
     readonly assets: AssetMap
     /**
