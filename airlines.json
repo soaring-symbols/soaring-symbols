@@ -485,6 +485,9 @@
             "ICN"
         ],
         "founded": 1988,
+        "defunct": true,
+        "ceased": 2026,
+        "successor": "korean-air",
         "branding": {
             "primary_color": "#4a4f54",
             "guidelines": "https://flyasiana.com/C/VN/EN/contents/ci"
