@@ -618,6 +618,9 @@
         "website": "https://www.avianca.com",
         "parent": "avianca",
         "marks": "avianca",
+        "hubs": [
+            "SAL"
+        ],
         "founded": 1931,
         "branding": {
             "primary_color": "#ff0000"
@@ -1016,6 +1019,7 @@
         "hubs": [
             "DZA"
         ],
+        "founded": 2013,
         "branding": {
             "primary_color": "#e1251b"
         }
@@ -1094,6 +1098,7 @@
             "MAN",
             "EXT"
         ],
+        "founded": 1979,
         "defunct": true,
         "ceased": 2020,
         "branding": {
@@ -1364,6 +1369,7 @@
         "callsign": "CHANNEX",
         "country": "GB",
         "website": "https://www.jet2.com",
+        "founded": 2003,
         "branding": {
             "primary_color": "#d71920"
         }
@@ -2018,11 +2024,15 @@
         "slug": "sas-connect",
         "iata": "SL",
         "icao": "SZS",
-        "callsign": "SPINNAKER",
+        "callsign": "SCANDINAVIAN",
         "former": [
             {
                 "name": "SAS Ireland",
                 "until": 2021
+            },
+            {
+                "callsign": "SPINNAKER",
+                "until": 2026
             }
         ],
         "country": "IE",
@@ -2345,6 +2355,7 @@
         "callsign": "TRANSAVIA",
         "country": "NL",
         "website": "https://www.transavia.com",
+        "founded": 1966,
         "branding": {
             "primary_color": "#00d66c"
         }
@@ -2531,6 +2542,7 @@
         ],
         "country": "MX",
         "website": "https://www.vivaaerobus.com",
+        "founded": 2006,
         "branding": {
             "primary_color": "#00ae44"
         }

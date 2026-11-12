@@ -1,6 +1,6 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
-// report (or apply) what changed: IATA/ICAO codes, callsign, hubs, and
-// whether the airline ceased operations. A rename or merger is only
+// report (or apply) what changed: IATA/ICAO codes, callsign, hubs, the year
+// it was founded, and whether the airline ceased operations. A rename or merger is only
 // reported: a person renames the entry or sets its successor.
 //
 //   node scripts/sync-data.js                     report only
@@ -42,7 +42,10 @@ const PAGE_TITLES = {
 
 // Wikipedia values reviewed and rejected, so they stop coming back, e.g.
 // { 'Some Airline': { icao: 'XYZ' } }. A different value is reported again.
-const IGNORE = {}
+const IGNORE = {
+    // The year ModiLuft, the company SpiceJet grew out of, was founded
+    SpiceJet: { founded: 1994 },
+}
 
 const args = process.argv.slice(2)
 const write = args.includes('--write')
@@ -132,6 +135,11 @@ for (const airline of airlines) {
     } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
     }
+    // The first date in the infobox: when it was founded, or else when it
+    // started flying
+    const founded = firstYear(params.founded) ?? firstYear(params.commenced)
+    if (founded && founded !== airline.founded) propose('founded', founded)
+
     if (renamed) {
         note(
             `Wikipedia says it was "${ending}"; rename it in place, listing the old name in former (see "Renames and mergers" in CONTRIBUTING.md)`,
