@@ -18,14 +18,18 @@ import {
     validateGeometry,
 } from './scripts/lint/validators.js'
 
-// The same checks as `scripts/lint-svg.js`, in the browser. `fileName` tells
-// a -mono.svg apart (its fill is currentColor); `source`, the file's text,
+// The same checks as `scripts/lint-svg.js`, in the browser. `mono` holds the
+// file to the monochrome rules (its fill is currentColor), and defaults to
+// whether `fileName` ends in -mono.svg; `source`, the file's text,
 // adds the check that needs it (nothing before <svg>) and is what the
 // attribute order is read from, falling back to the parsed element as the
 // CLI does.
 export function runSvgValidations(svg, type, bbox = null, options = {}) {
-    const { fileName = '', source = null } = options
-    const isMono = isMonoFile(fileName)
+    const {
+        fileName = '',
+        source = null,
+        mono = isMonoFile(fileName),
+    } = options
     const row = (group, label, result, level = 'error') => ({
         group,
         label,
@@ -33,6 +37,7 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         pass: result.pass,
         detail: result.detail,
     })
+    const fill = validateFillPlacement(svg, mono)
 
     return [
         row(
@@ -68,7 +73,9 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         ),
         row('Style', 'No styles', validateNoStyles(svg)),
         row('Style', 'Hex colors', validateHexColors(svg)),
-        row('Style', 'Fill placement', validateFillPlacement(svg, isMono)),
+        // noColor: a color file with no color of its own, which a fill color
+        // given to the fixer (fillColor) can fix
+        { ...row('Style', 'Fill placement', fill), noColor: fill.noColor },
         row('Style', 'No strokes', validateNoStrokes(svg)),
         ...validateGeometry(type, bbox).map((check) => ({
             group: 'Geometry',

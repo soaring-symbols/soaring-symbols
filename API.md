@@ -98,8 +98,8 @@ import wasmUrl from '@resvg/resvg-wasm/index_bg.wasm?url' // Vite
 await initSvgFixer(fetch(wasmUrl))
 
 const { content, fixed, issues, warnings } = fixSvg(svgText, {
-    fileName: 'logo-mono.svg', // tells a -mono.svg apart
-    type: 'logo', // or 'icon' (tails too)
+    type: 'logo', // or 'icon' or 'tail'
+    mono: true, // the -mono.svg (defaults to fileName ending in -mono.svg)
     airlineName: 'Vietnam Airlines', // what <title> should hold
     isCatalogName: true, // rename a different title to it
 })

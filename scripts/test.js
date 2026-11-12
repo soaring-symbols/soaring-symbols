@@ -1081,7 +1081,7 @@ describe('svg-validator', () => {
             '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#111111"><title>X</title><path fill="url(#a)" d="M1 1"/><path d="M2 2"/></svg>',
         )
         const issues = []
-        ruleFillPlacement({ filePath: 'icon.svg', svgElement: svg, issues })
+        ruleFillPlacement({ isMono: false, svgElement: svg, issues })
         assert.equal(issues.length, 1)
         assert.equal(svg.getAttribute('fill'), null)
         assert.deepEqual(
@@ -1274,14 +1274,10 @@ describe('svg-fixer', () => {
         delete globalThis.DOMParser
     })
 
-    const both = (source, options) => {
-        const { type = 'logo', ...rest } = options
-
-        return [
-            browser.fixSvg(source, options),
-            cli.fixSvg(source, { ...rest, isIcon: type !== 'logo', parse }),
-        ]
-    }
+    const both = (source, options) => [
+        browser.fixSvg(source, options),
+        cli.fixSvg(source, { ...options, parse }),
+    ]
 
     const NS = 'xmlns="http://www.w3.org/2000/svg"'
     const BROKEN = [
@@ -1374,8 +1370,21 @@ describe('svg-fixer', () => {
             }).find((check) => check.label === 'Fill placement')
         assert.equal(fill('logo.svg').pass, false)
         assert.match(fill('logo.svg').detail, /no color of its own/)
-        // The same drawing is right as the monochrome version
+        // The same drawing is right as the monochrome version, told by its
+        // name or by the mono option, and the check says it has no color
         assert.equal(fill('logo-mono.svg').pass, true)
+        assert.equal(fill('logo.svg').noColor, true)
+        const asMono = validate(parse(source).documentElement, 'logo', null, {
+            fileName: 'logo.svg',
+            mono: true,
+            source,
+        }).find((check) => check.label === 'Fill placement')
+        assert.equal(asMono.pass, true)
+        assert.equal(
+            browser.fixSvg(source, { fileName: 'logo.svg', mono: true })
+                .errorCount,
+            0,
+        )
     })
 
     it('leaves every asset as lint-svg.js does', () => {

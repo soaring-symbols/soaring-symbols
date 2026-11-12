@@ -1,8 +1,10 @@
 export interface SvgFixOptions {
-    /** The file name, so a `-mono.svg` is expected to use `fill="currentColor"`. */
+    /** `'logo'` (64×64), or `'icon'` or `'tail'` (24×24). Defaults to `'logo'`. */
+    type?: 'logo' | 'icon' | 'tail'
+    /** The monochrome version, held to `fill="currentColor"`. Defaults to whether `fileName` ends in `-mono.svg`. */
+    mono?: boolean
+    /** The file name, for the `mono` default. */
     fileName?: string
-    /** `'logo'` (64×64) or `'icon'` (24×24, tails included). Defaults to `'logo'`. */
-    type?: 'logo' | 'icon'
     /** The name `<title>` should hold. Defaults to the current title; needed when the file has none. */
     airlineName?: string
     /** `airlineName` comes from the catalog, so a different title is renamed to it. Otherwise a title is only moved, never renamed. */

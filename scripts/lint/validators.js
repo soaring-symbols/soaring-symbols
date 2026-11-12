@@ -13,6 +13,11 @@ const GRADIENT = /^url\(#[^)]+\)$/i
 const PAINT_KEYWORDS = /^(none|currentColor|transparent|inherit)$/i
 
 // Whether a file is a monochrome variant, drawn in currentColor
+// A color as the repo writes it: six lowercase hex digits
+export function isFullHex(value) {
+    return /^#[0-9a-f]{6}$/.test(value ?? '')
+}
+
 export function isMonoFile(name) {
     return name.toLowerCase().endsWith('-mono.svg')
 }

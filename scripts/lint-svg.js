@@ -59,7 +59,7 @@ const lintSvgFile = (filePath) => {
     const result = fixSvg(readFileSync(filePath, 'utf8'), {
         parse,
         fileName: filePath,
-        isIcon: name.includes('icon') || name.includes('tail'),
+        type: ['icon', 'tail'].find((kind) => name.includes(kind)) ?? 'logo',
         airlineName: getAirlineName(filePath),
         isCatalogName: Boolean(airline),
         // Only an older mark (assets/<slug>/history/<year>/) may keep a

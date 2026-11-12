@@ -24,11 +24,9 @@ export function initSvgFixer(wasm) {
 }
 
 // Fixes one SVG's text as `lint-svg.js --fix` would; see scripts/lint/fix.js
-// for the options and the result. `fileName` tells a -mono.svg apart, and
-// `type` is 'logo' or 'icon' (tails are checked as icons).
+// for the options and the result.
 export function fixSvg(source, options = {}) {
-    const { type = 'logo', ...rest } = options
     const parse = (svg) => new DOMParser().parseFromString(svg, 'image/svg+xml')
 
-    return fixWith(source, { ...rest, isIcon: type !== 'logo', parse })
+    return fixWith(source, { ...options, parse })
 }

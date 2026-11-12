@@ -6,10 +6,14 @@ export interface SvgValidation {
     level: 'error' | 'warning'
     pass: boolean
     detail: string
+    /** Fill placement only: a color file with no color of its own (drawn in `currentColor` or default black), which `fixSvg` fixes given a `fillColor`. */
+    noColor?: boolean
 }
 
 export interface SvgValidationOptions {
-    /** The file name, so a `-mono.svg` is expected to use `fill="currentColor"`. */
+    /** The monochrome version, held to `fill="currentColor"`. Defaults to whether `fileName` ends in `-mono.svg`. */
+    mono?: boolean
+    /** The file name, for the `mono` default. */
     fileName?: string
     /** The file's text: adds the check for anything before `<svg>`, and the attribute order is read from it rather than the parsed element. */
     source?: string | null
