@@ -7,6 +7,8 @@ const byIata = new Map()
 const byIcao = new Map()
 const bySlug = new Map()
 const byName = new Map()
+const byFormerIata = new Map()
+const byFormerIcao = new Map()
 
 const deepFreeze = (value) => {
     if (value && typeof value === 'object') {
@@ -19,12 +21,18 @@ const deepFreeze = (value) => {
 
 // Codes of airlines that ceased operations get reassigned, so a code can
 // belong to one active airline and any number of defunct ones. The active
-// airline wins; among defunct ones, the first by name does.
+// airline wins; among defunct ones, the first by name does. A brand that
+// flies under its parent's codes (Hawaiian Airlines under Alaska Airlines)
+// shares them with the parent, which wins.
 const setCode = (map, code, airline) => {
     if (!code) return
     const key = code.toUpperCase()
     const current = map.get(key)
-    if (!current || (current.defunct && !airline.defunct)) {
+    if (
+        !current ||
+        (current.defunct && !airline.defunct) ||
+        (!airline.defunct && current.parent === airline.slug)
+    ) {
         map.set(key, airline)
     }
 }
@@ -37,14 +45,16 @@ for (const airline of airlines) {
     byName.set(airline.name.toLowerCase(), airline)
 }
 // A renamed airline is also found by the slugs and names it had before, which
-// no other airline may use
+// no other airline may use, and by its former codes, which another airline
+// may hold now
 for (const airline of airlines) {
-    for (const slug of airline.previous_slugs ?? []) {
-        if (!bySlug.has(slug)) bySlug.set(slug, airline)
-    }
-    for (const name of airline.previous_names ?? []) {
-        const key = name.toLowerCase()
-        if (!byName.has(key)) byName.set(key, airline)
+    for (const { name, slug, iata, icao } of airline.former ?? []) {
+        if (slug && !bySlug.has(slug)) bySlug.set(slug, airline)
+        if (name && !byName.has(name.toLowerCase())) {
+            byName.set(name.toLowerCase(), airline)
+        }
+        setCode(byFormerIata, iata, airline)
+        setCode(byFormerIcao, icao, airline)
     }
 }
 
@@ -59,8 +69,10 @@ function listAirlines() {
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
  * tried in that order. A code shared with a defunct airline finds the
- * active one. A renamed airline is also found by its former slugs and names,
- * and returned with its current slug.
+ * active one, and a code a brand shares with its parent finds the parent. A
+ * renamed airline is also found by its former slugs and names, and returned
+ * with its current slug; a former code (`former`) finds it only when no
+ * airline has that code now.
  */
 function getAirline(query) {
     if (typeof query !== 'string' || !query.trim()) return undefined
@@ -72,7 +84,9 @@ function getAirline(query) {
         byIata.get(upper) ||
         byIcao.get(upper) ||
         bySlug.get(lower) ||
-        byName.get(lower)
+        byName.get(lower) ||
+        byFormerIata.get(upper) ||
+        byFormerIcao.get(upper)
     )
 }
 

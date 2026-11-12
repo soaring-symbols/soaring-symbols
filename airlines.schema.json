@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `previous_slugs` to renamed ones and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `slug` to each name in `former` with another slug, the deprecated `previous_names` and `previous_slugs` to renamed ones and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, `previous_slugs` when a former name had another slug and `predecessors` when it carried on a defunct airline.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `former` with another slug, the deprecated `previous_names` and `previous_slugs` when it was renamed, and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -25,6 +25,11 @@
             "description": "Three-letter ICAO airline code, e.g. \"HVN\".",
             "type": "string",
             "pattern": "^[A-Z]{3}$"
+        },
+        "callsign": {
+            "description": "ICAO radiotelephony callsign in uppercase, accented letters included, e.g. \"VIET NAM AIRLINES\" or \"LAN PERÚ\".",
+            "type": "string",
+            "pattern": "^[\\p{Lu}0-9]+([ '.-][\\p{Lu}0-9]+)*$"
         },
         "country": {
             "description": "ISO 3166-1 alpha-2 code (or an ISO 3166-2 subdivision such as \"GB-SCT\"); several are comma-separated without spaces, e.g. \"DK,NO,SE\".",
@@ -53,6 +58,35 @@
             "type": "string",
             "minLength": 1,
             "pattern": "^\\S(.*\\S)?$"
+        },
+        "former": {
+            "description": "A name or codes the airline used before: at least one of `name`, `iata`, `icao` and `callsign`, and the year it stopped using them.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["until"],
+            "anyOf": [
+                { "required": ["name"] },
+                { "required": ["iata"] },
+                { "required": ["icao"] },
+                { "required": ["callsign"] }
+            ],
+            "properties": {
+                "name": {
+                    "$ref": "#/$defs/name",
+                    "description": "A name the airline flew under before."
+                },
+                "slug": {
+                    "$ref": "#/$defs/slug",
+                    "description": "Added by the build when the name's slug differs from the airline's: getAirline() finds the airline by it. Only in the published catalog."
+                },
+                "iata": { "$ref": "#/$defs/iata" },
+                "icao": { "$ref": "#/$defs/icao" },
+                "callsign": { "$ref": "#/$defs/callsign" },
+                "until": {
+                    "$ref": "#/$defs/year",
+                    "description": "Year the airline stopped using this name or these codes."
+                }
+            }
         },
         "airline": {
             "type": "object",
@@ -86,14 +120,16 @@
                     "$ref": "#/$defs/slug"
                 },
                 "previous_names": {
-                    "description": "Names the airline flew under before `name`, oldest first, e.g. [\"Hansung Airlines\", \"T'way Air\"] for Trinity Airways. Its slug follows the current name; the build keeps every former name's slug working (see `previous_slugs`).",
+                    "description": "Deprecated, to be removed in 0.4: read the names in `former`. Added by the build: the names in `former`, oldest first. Only in the published catalog.",
+                    "deprecated": true,
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
                     "items": { "$ref": "#/$defs/name" }
                 },
                 "previous_slugs": {
-                    "description": "Added by the build: the slugs of `previous_names` that differ from `slug`. getAirline() finds the airline by them, and the package also ships its current files under assets/<previous slug>/. Only in the published catalog.",
+                    "description": "Deprecated, to be removed in 0.4: read `former[].slug`. Added by the build: the slugs of the names in `former` that differ from `slug`. getAirline() finds the airline by them, and the package also ships its current files under assets/<previous slug>/. Only in the published catalog.",
+                    "deprecated": true,
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
@@ -101,10 +137,12 @@
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "icao": { "$ref": "#/$defs/icao" },
-                "callsign": {
-                    "description": "ICAO radiotelephony callsign in uppercase, accented letters included, e.g. \"VIET NAM AIRLINES\" or \"LAN PERÚ\".",
-                    "type": "string",
-                    "pattern": "^[\\p{Lu}0-9]+([ '.-][\\p{Lu}0-9]+)*$"
+                "callsign": { "$ref": "#/$defs/callsign" },
+                "former": {
+                    "description": "The names and codes the airline used before its current ones, oldest first, each with the year it stopped using them, e.g. [{ \"name\": \"Jat Airways\", \"icao\": \"JAT\", \"callsign\": \"JAT\", \"until\": 2013 }] for Air Serbia. Each item lists only what changed then. getAirline() finds the airline by its former names and slugs, and by its former codes when no airline has them now.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/former" }
                 },
                 "country": { "$ref": "#/$defs/country" },
                 "flag_carrier": { "type": "boolean" },
@@ -149,7 +187,7 @@
                     "$ref": "#/$defs/year"
                 },
                 "successor": {
-                    "description": "Slug of the airline that carried on this defunct one after a merger, a refounding, or a move into or out of a group's brand, e.g. \"air-india\" for Vistara. A plain rename keeps the entry and lists the old name in `previous_names` instead.",
+                    "description": "Slug of the airline that carried on this defunct one after a merger, a refounding, or a move into or out of a group's brand, e.g. \"air-india\" for Vistara. A plain rename keeps the entry and lists the old name in `former` instead.",
                     "$ref": "#/$defs/slug"
                 },
                 "predecessors": {

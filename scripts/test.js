@@ -127,20 +127,30 @@ for (const [format, api] of [
                         assert.equal(getAirline(key), a, `${a.name} by ${key}`)
                     }
                     // A defunct airline's code may have been reassigned, and
-                    // then finds the active airline that holds it now
+                    // then finds the active airline that holds it now; a
+                    // brand flying under its parent's codes finds the parent
                     for (const field of ['iata', 'icao']) {
                         const found = getAirline(a[field])
                         const label = `${a.name} by ${a[field]}`
                         if (found === a) continue
-                        assert.ok(a.defunct, label)
                         assert.equal(found[field], a[field], label)
                         assert.ok(!found.defunct, label)
+                        assert.ok(a.defunct || a.parent === found.slug, label)
                     }
                 }
             })
 
             it('finds a renamed airline by its former slug and name', () => {
                 const trinity = api.getAirline('trinity-airways')
+                assert.deepEqual(
+                    trinity.former.map((f) => f.slug),
+                    ['hansung-airlines', 'tway-air'],
+                )
+                // Deprecated, kept for readers of 0.3
+                assert.deepEqual(trinity.previous_names, [
+                    'Hansung Airlines',
+                    "T'way Air",
+                ])
                 assert.deepEqual(trinity.previous_slugs, [
                     'hansung-airlines',
                     'tway-air',
@@ -157,6 +167,41 @@ for (const [format, api] of [
                     api.getAssetPath('tway-air', 'logo', { since: 2010 }),
                     'soaring-symbols/assets/trinity-airways/history/2010/logo.svg',
                 )
+            })
+
+            it('finds an airline by its former codes when no airline has them now', () => {
+                const serbia = getAirline('air-serbia')
+                assert.equal(getAirline('JAT'), serbia)
+                assert.equal(getAirline('jat'), serbia)
+                // Every former code finds an airline that has it now, or
+                // else the airline that had it
+                for (const a of listAirlines()) {
+                    for (const item of a.former ?? []) {
+                        for (const field of ['iata', 'icao']) {
+                            const code = item[field]
+                            if (!code) continue
+                            const holder = listAirlines().find(
+                                (b) => b[field] === code,
+                            )
+                            const found = getAirline(code)
+                            const label = `${a.name} by former ${code}`
+                            if (holder) assert.equal(found[field], code, label)
+                            else assert.equal(found, a, label)
+                        }
+                    }
+                }
+            })
+
+            it('finds the parent by a code a brand flies under', () => {
+                const hawaiian = getAirline('hawaiian-airlines')
+                const alaska = getAirline('alaska-airlines')
+                assert.equal(hawaiian.parent, alaska.slug)
+                assert.equal(hawaiian.iata, alaska.iata)
+                assert.equal(getAirline(hawaiian.iata), alaska)
+                assert.equal(getAirline(hawaiian.icao), alaska)
+                // Its own former codes still find it
+                assert.equal(getAirline('HA'), hawaiian)
+                assert.equal(getAirline('HAL'), hawaiian)
             })
 
             it('returns undefined for unknown or empty queries', () => {
@@ -391,8 +436,13 @@ describe('renames and mergers (successor)', () => {
         )
     })
 
+    const noAssets = join(tmpdir(), 'soaring-symbols-no-assets')
+    const formerly = (name, former) => entry(name, { former })
+
     it('keeps former names apart from every other airline', () => {
-        const binter = entry('Binter', { previous_names: ['Binter Canarias'] })
+        const binter = formerly('Binter', [
+            { name: 'Binter Canarias', until: 2018 },
+        ])
         assert.deepEqual(validateAirlines([binter]), [])
         // Its former slug is another airline's slug
         assert.deepEqual(
@@ -404,29 +454,97 @@ describe('renames and mergers (successor)', () => {
                 'slug "binter-canarias" is used by more than one airline: Binter, Binter Canarias',
             ],
         )
-        assert.deepEqual(
-            validateAirlines([entry('Binter', { previous_names: ['Binter'] })]),
-            ['Binter: previous_names lists its current name'],
-        )
         // A former name with the same slug adds no alias
-        const tway = entry("T'way Air", { previous_names: ['Tway Air'] })
+        const tway = formerly("T'way Air", [{ name: 'Tway Air', until: 2010 }])
         assert.deepEqual(validateAirlines([tway]), [])
-        assert.equal(
-            publishCatalog(
-                [tway],
-                join(tmpdir(), 'soaring-symbols-no-assets'),
-            )[0].previous_slugs,
-            undefined,
+        const [published] = publishCatalog([tway], noAssets)
+        assert.equal(published.former[0].slug, undefined)
+        assert.equal(published.previous_slugs, undefined)
+    })
+
+    it('rejects former items that are current, unordered or empty', () => {
+        assert.deepEqual(
+            validateAirlines([
+                formerly('Binter', [
+                    { name: 'Binter', iata: 'BL', until: 2018 },
+                ]),
+            ]),
+            [
+                'Binter: former lists its current name',
+                'Binter: former lists its current iata',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                formerly('Air Serbia', [
+                    { name: 'Jat Airways', until: 2013 },
+                    { name: 'Yugoslav Airlines', until: 2003 },
+                ]),
+            ]),
+            ['Air Serbia: former must be oldest first (2003 comes after 2013)'],
+        )
+        // Each item needs a name or a code, and the year it ended
+        for (const item of [{ until: 2013 }, { name: 'Jat Airways' }]) {
+            assert.notDeepEqual(
+                validateAirlines([formerly('Air Serbia', [item])]),
+                [],
+                JSON.stringify(item),
+            )
+        }
+    })
+
+    it('publishes former slugs and the deprecated previous_names and previous_slugs', () => {
+        const [serbia] = publishCatalog(
+            [
+                formerly('Air Serbia', [
+                    { name: 'Jat Airways', icao: 'JAT', until: 2013 },
+                    { callsign: 'SERBIA', until: 2014 },
+                ]),
+            ],
+            noAssets,
+        )
+        assert.deepEqual(serbia.former, [
+            {
+                name: 'Jat Airways',
+                slug: 'jat-airways',
+                icao: 'JAT',
+                until: 2013,
+            },
+            { callsign: 'SERBIA', until: 2014 },
+        ])
+        assert.deepEqual(serbia.previous_names, ['Jat Airways'])
+        assert.deepEqual(serbia.previous_slugs, ['jat-airways'])
+        assert.deepEqual(validateAirlines([serbia], { published: true }), [])
+        // The repo copy keeps none of them
+        const [source] = normalizeCatalog([serbia])
+        assert.equal(source.previous_names, undefined)
+        assert.equal(source.previous_slugs, undefined)
+        assert.equal(source.former[0].slug, undefined)
+    })
+
+    it('refuses previous_names that former does not list', () => {
+        assert.throws(
+            () =>
+                normalizeCatalog([
+                    entry('Air Serbia', { previous_names: ['Jat Airways'] }),
+                ]),
+            /Air Serbia: move previous_names "Jat Airways" into former/,
         )
     })
 
-    it('publishes the slugs of former names', () => {
-        const [binter] = publishCatalog(
-            [entry('Binter', { previous_names: ['Binter Canarias'] })],
-            join(tmpdir(), 'soaring-symbols-no-assets'),
-        )
-        assert.deepEqual(binter.previous_slugs, ['binter-canarias'])
-        assert.equal(normalizeCatalog([binter])[0].previous_slugs, undefined)
+    it('lets a brand share codes with its parent only', () => {
+        const alaska = entry('Alaska Airlines', { iata: 'AS', icao: 'ASA' })
+        const hawaiian = entry('Hawaiian Airlines', {
+            iata: 'AS',
+            icao: 'ASA',
+            parent: 'alaska-airlines',
+        })
+        assert.deepEqual(validateAirlines([alaska, hawaiian]), [])
+        const { parent, ...unrelated } = hawaiian
+        assert.deepEqual(validateAirlines([alaska, unrelated]), [
+            'IATA AS is used by more than one active airline: Alaska Airlines, Hawaiian Airlines',
+            'ICAO ASA is used by more than one active airline: Alaska Airlines, Hawaiian Airlines',
+        ])
     })
 
     it('publishes predecessors on the successor, earliest to cease first', () => {
@@ -510,7 +628,9 @@ describe('airlines.json assets metadata', () => {
     })
 
     it('publishes the current files of a renamed airline at its published former slugs', () => {
-        const renamed = cjs.listAirlines().filter((a) => a.previous_slugs)
+        const slugsOf = (a) =>
+            (a.former ?? []).flatMap(({ slug }) => (slug ? [slug] : []))
+        const renamed = cjs.listAirlines().filter((a) => slugsOf(a).length)
         assert.ok(renamed.length > 0)
         const published = new Set(
             JSON.parse(
@@ -525,7 +645,7 @@ describe('airlines.json assets metadata', () => {
                 .map((entry) => entry.name)
                 .sort()
         for (const a of renamed) {
-            for (const slug of a.previous_slugs) {
+            for (const slug of slugsOf(a)) {
                 // A former name that was never a slug in a release has no
                 // links to keep, so no copy (Air Pacific for Fiji Airways)
                 if (!published.has(slug)) {
@@ -546,7 +666,10 @@ describe('airlines.json assets metadata', () => {
         const slugs = new Set(
             cjs
                 .listAirlines()
-                .flatMap((a) => [a.slug, ...(a.previous_slugs ?? [])]),
+                .flatMap((a) => [
+                    a.slug,
+                    ...(a.former ?? []).map(({ slug }) => slug),
+                ]),
         )
         const dirs = readdirSync(assetsDir, { withFileTypes: true })
         assert.ok(

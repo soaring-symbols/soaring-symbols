@@ -134,7 +134,7 @@ for (const airline of airlines) {
     }
     if (renamed) {
         note(
-            `Wikipedia says it was "${ending}"; rename it in place with previous_names (see "Renames and mergers" in CONTRIBUTING.md)`,
+            `Wikipedia says it was "${ending}"; rename it in place, listing the old name in former (see "Renames and mergers" in CONTRIBUTING.md)`,
         )
     } else if (ending && !airline.successor) {
         note(

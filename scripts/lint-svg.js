@@ -1,7 +1,12 @@
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
-import { HISTORY_DIR, getAssetDirs, toSlug } from '../utils/index.js'
+import {
+    HISTORY_DIR,
+    formerNames,
+    getAssetDirs,
+    toSlug,
+} from '../utils/index.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { fixSvg } from './lint/fix.js'
@@ -64,7 +69,7 @@ const lintSvgFile = (filePath) => {
         isCatalogName: Boolean(airline),
         // Only an older mark (assets/<slug>/history/<year>/) may keep a
         // former name as its title
-        formerNames: inHistory ? airline?.previous_names : undefined,
+        formerNames: inHistory && airline ? formerNames(airline) : undefined,
         mergePaths: MERGE_PATHS,
     })
 

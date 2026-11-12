@@ -45,6 +45,25 @@ export interface AirlineBranding {
     readonly since?: number
 }
 
+/**
+ * A name or codes an airline used before, and the year it stopped using
+ * them. Holds only what changed then: at least one of `name`, `iata`, `icao`
+ * and `callsign`.
+ */
+export interface FormerIdentity {
+    readonly name?: string
+    /**
+     * The slug of `name`, when it differs from the airline's: getAirline()
+     * finds the airline by it.
+     */
+    readonly slug?: string
+    readonly iata?: string
+    readonly icao?: string
+    readonly callsign?: string
+    /** Year the airline stopped using this name or these codes. */
+    readonly until: number
+}
+
 export interface Airline {
     readonly name: string
     /** 2-character IATA code (e.g. "VN"). */
@@ -57,15 +76,22 @@ export interface Airline {
     readonly country: string
     readonly slug: string
     /**
-     * Names the airline flew under before `name`, oldest first (e.g.
-     * ["Hansung Airlines", "T'way Air"] for Trinity Airways). getAirline()
-     * finds it by them.
+     * The names and codes the airline used before its current ones, oldest
+     * first (e.g. Jat Airways, ICAO JAT, until 2013 for Air Serbia).
+     * getAirline() finds the airline by its former names and slugs, and by
+     * its former codes when no airline has them now.
+     */
+    readonly former?: readonly FormerIdentity[]
+    /**
+     * Names the airline flew under before `name`, oldest first.
+     * @deprecated Read the names in `former`; removed in 0.4.
      */
     readonly previous_names?: readonly string[]
     /**
-     * The slugs of `previous_names` that differ from `slug`. getAirline()
-     * finds the airline by them, and the package also ships its current files
-     * at assets/<previous slug>/.
+     * The slugs of former names that differ from `slug`; the package also
+     * ships the airline's current files at assets/<previous slug>/ for those
+     * a release has shipped.
+     * @deprecated Read `former[].slug`; removed in 0.4.
      */
     readonly previous_slugs?: readonly string[]
     readonly website?: string
@@ -119,8 +145,10 @@ export interface AssetPathOptions {
 export function listAirlines(): Airline[]
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
- * tried in that order. A code shared with a defunct airline finds the
- * active one.
+ * tried in that order, then by a former IATA or ICAO code. A code shared
+ * with a defunct airline finds the active one, and a code a brand shares
+ * with its parent finds the parent. Former names and slugs find the airline
+ * as current ones do; a former code only when no airline has it now.
  */
 export function getAirline(query: string): Airline | undefined
 export function getAssetPath(

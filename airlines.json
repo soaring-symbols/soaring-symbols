@@ -309,12 +309,17 @@
     {
         "name": "Air Serbia",
         "slug": "air-serbia",
-        "previous_names": [
-            "Jat Airways"
-        ],
         "iata": "JU",
         "icao": "ASL",
         "callsign": "AIR SERBIA",
+        "former": [
+            {
+                "name": "Jat Airways",
+                "icao": "JAT",
+                "callsign": "JAT",
+                "until": 2013
+            }
+        ],
         "country": "RS",
         "flag_carrier": true,
         "website": "https://www.airserbia.com",
@@ -546,12 +551,15 @@
     {
         "name": "Avianca Costa Rica",
         "slug": "avianca-costa-rica",
-        "previous_names": [
-            "LACSA"
-        ],
         "iata": "LR",
         "icao": "LRC",
         "callsign": "LACSA",
+        "former": [
+            {
+                "name": "LACSA",
+                "until": 2013
+            }
+        ],
         "country": "CR",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
@@ -568,12 +576,15 @@
     {
         "name": "Avianca Ecuador",
         "slug": "avianca-ecuador",
-        "previous_names": [
-            "AeroGal"
-        ],
         "iata": "2K",
         "icao": "GLG",
         "callsign": "GALAPAGOS",
+        "former": [
+            {
+                "name": "AeroGal",
+                "until": 2014
+            }
+        ],
         "country": "EC",
         "website": "https://www.avianca.com",
         "parent": "avianca",
@@ -589,11 +600,19 @@
     {
         "name": "Avianca El Salvador",
         "slug": "avianca-el-salvador",
-        "previous_names": [
-            "TACA International Airlines"
-        ],
-        "iata": "TA",
+        "iata": "AV",
         "icao": "TAI",
+        "callsign": "TACA",
+        "former": [
+            {
+                "name": "TACA International Airlines",
+                "until": 2013
+            },
+            {
+                "iata": "TA",
+                "until": 2024
+            }
+        ],
         "country": "SV",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
@@ -1004,12 +1023,16 @@
     {
         "name": "Fiji Airways",
         "slug": "fiji-airways",
-        "previous_names": [
-            "Air Pacific"
-        ],
         "iata": "FJ",
         "icao": "FJI",
         "callsign": "FIJI",
+        "former": [
+            {
+                "name": "Air Pacific",
+                "callsign": "PACIFIC",
+                "until": 2013
+            }
+        ],
         "country": "FJ",
         "flag_carrier": true,
         "website": "https://www.fijiairways.com",
@@ -1096,12 +1119,15 @@
     {
         "name": "flynas",
         "slug": "flynas",
-        "previous_names": [
-            "Nas Air"
-        ],
         "iata": "XY",
         "icao": "KNE",
         "callsign": "FLYNAS",
+        "former": [
+            {
+                "name": "Nas Air",
+                "until": 2013
+            }
+        ],
         "country": "SA",
         "website": "https://www.flynas.com",
         "founded": 2007,
@@ -1182,12 +1208,24 @@
     {
         "name": "Hawaiian Airlines",
         "slug": "hawaiian-airlines",
-        "iata": "HA",
-        "icao": "HAL",
-        "callsign": "HAWAIIAN",
+        "iata": "AS",
+        "icao": "ASA",
+        "callsign": "ALASKA",
+        "former": [
+            {
+                "icao": "HAL",
+                "callsign": "HAWAIIAN",
+                "until": 2025
+            },
+            {
+                "iata": "HA",
+                "until": 2026
+            }
+        ],
         "country": "US",
         "website": "https://www.hawaiianairlines.com",
         "alliance": "oneworld",
+        "parent": "alaska-airlines",
         "hubs": [
             "HNL",
             "OGG"
@@ -1496,12 +1534,15 @@
     {
         "name": "LATAM Airlines Brasil",
         "slug": "latam-airlines-brasil",
-        "previous_names": [
-            "TAM Linhas Aéreas"
-        ],
         "iata": "JJ",
         "icao": "TAM",
         "callsign": "TAM",
+        "former": [
+            {
+                "name": "TAM Linhas Aéreas",
+                "until": 2016
+            }
+        ],
         "country": "BR",
         "website": "https://www.latam.com",
         "parent": "latam-airlines",
@@ -1520,12 +1561,15 @@
     {
         "name": "LATAM Airlines Colombia",
         "slug": "latam-airlines-colombia",
-        "previous_names": [
-            "LAN Colombia"
-        ],
         "iata": "4C",
         "icao": "ARE",
         "callsign": "LAN COLOMBIA",
+        "former": [
+            {
+                "name": "LAN Colombia",
+                "until": 2016
+            }
+        ],
         "country": "CO",
         "website": "https://www.latam.com/es_co",
         "parent": "latam-airlines",
@@ -1541,12 +1585,15 @@
     {
         "name": "LATAM Airlines Ecuador",
         "slug": "latam-airlines-ecuador",
-        "previous_names": [
-            "LAN Ecuador"
-        ],
         "iata": "XL",
         "icao": "LNE",
         "callsign": "AEROLANE",
+        "former": [
+            {
+                "name": "LAN Ecuador",
+                "until": 2016
+            }
+        ],
         "country": "EC",
         "website": "https://www.latamairlines.com",
         "parent": "latam-airlines",
@@ -1563,13 +1610,19 @@
     {
         "name": "LATAM Airlines Paraguay",
         "slug": "latam-airlines-paraguay",
-        "previous_names": [
-            "Líneas Aéreas Paraguayas",
-            "TAM Paraguay"
-        ],
         "iata": "PZ",
         "icao": "LAP",
         "callsign": "PARAGUAYA",
+        "former": [
+            {
+                "name": "Líneas Aéreas Paraguayas",
+                "until": 1996
+            },
+            {
+                "name": "TAM Paraguay",
+                "until": 2016
+            }
+        ],
         "country": "PY",
         "website": "https://www.latam.com/es_py",
         "parent": "latam-airlines",
@@ -1585,12 +1638,15 @@
     {
         "name": "LATAM Airlines Perú",
         "slug": "latam-airlines-peru",
-        "previous_names": [
-            "LAN Perú"
-        ],
         "iata": "LP",
         "icao": "LPE",
         "callsign": "LAN PERÚ",
+        "former": [
+            {
+                "name": "LAN Perú",
+                "until": 2016
+            }
+        ],
         "country": "PE",
         "website": "https://www.latam.com",
         "parent": "latam-airlines",
@@ -1677,12 +1733,15 @@
     {
         "name": "Malaysia Airlines",
         "slug": "malaysia-airlines",
-        "previous_names": [
-            "Malaysian Airline System"
-        ],
         "iata": "MH",
         "icao": "MAS",
         "callsign": "MALAYSIAN",
+        "former": [
+            {
+                "name": "Malaysian Airline System",
+                "until": 1987
+            }
+        ],
         "country": "MY",
         "flag_carrier": true,
         "website": "https://www.malaysiaairlines.com",
@@ -1698,14 +1757,23 @@
     {
         "name": "Myanmar National Airlines",
         "slug": "myanmar-national-airlines",
-        "previous_names": [
-            "Union of Burma Airways",
-            "Burma Airways",
-            "Myanma Airways"
-        ],
         "iata": "UB",
         "icao": "UBA",
         "callsign": "UNIONAIR",
+        "former": [
+            {
+                "name": "Union of Burma Airways",
+                "until": 1972
+            },
+            {
+                "name": "Burma Airways",
+                "until": 1989
+            },
+            {
+                "name": "Myanma Airways",
+                "until": 2014
+            }
+        ],
         "country": "MM",
         "flag_carrier": true,
         "website": "https://www.flymna.com",
@@ -1948,12 +2016,15 @@
     {
         "name": "SAS Connect",
         "slug": "sas-connect",
-        "previous_names": [
-            "SAS Ireland"
-        ],
         "iata": "SL",
         "icao": "SZS",
         "callsign": "SPINNAKER",
+        "former": [
+            {
+                "name": "SAS Ireland",
+                "until": 2021
+            }
+        ],
         "country": "IE",
         "website": "https://www.flysas.com",
         "parent": "scandinavian-airlines",
@@ -1966,12 +2037,15 @@
     {
         "name": "Saudia",
         "slug": "saudia",
-        "previous_names": [
-            "Saudi Arabian Airlines"
-        ],
         "iata": "SV",
         "icao": "SVA",
         "callsign": "SAUDIA",
+        "former": [
+            {
+                "name": "Saudi Arabian Airlines",
+                "until": 2012
+            }
+        ],
         "country": "SA",
         "flag_carrier": true,
         "website": "https://www.saudia.com",
@@ -2278,13 +2352,20 @@
     {
         "name": "Trinity Airways",
         "slug": "trinity-airways",
-        "previous_names": [
-            "Hansung Airlines",
-            "T'way Air"
-        ],
         "iata": "TW",
         "icao": "TWB",
         "callsign": "SONOROUS",
+        "former": [
+            {
+                "name": "Hansung Airlines",
+                "until": 2010
+            },
+            {
+                "name": "T'way Air",
+                "callsign": "TEEWAY",
+                "until": 2026
+            }
+        ],
         "country": "KR",
         "website": "https://www.trinityairways.com",
         "hubs": [
@@ -2411,12 +2492,19 @@
     {
         "name": "Virgin Australia",
         "slug": "virgin-australia",
-        "previous_names": [
-            "Virgin Blue"
-        ],
         "iata": "VA",
         "icao": "VOZ",
         "callsign": "VELOCITY",
+        "former": [
+            {
+                "name": "Virgin Blue",
+                "until": 2011
+            },
+            {
+                "iata": "DJ",
+                "until": 2013
+            }
+        ],
         "country": "AU",
         "website": "https://www.virginaustralia.com",
         "hubs": [
@@ -2432,12 +2520,15 @@
     {
         "name": "Viva",
         "slug": "viva",
-        "previous_names": [
-            "Viva Aerobus"
-        ],
         "iata": "VB",
         "icao": "VIV",
         "callsign": "VIVA",
+        "former": [
+            {
+                "name": "Viva Aerobus",
+                "until": 2024
+            }
+        ],
         "country": "MX",
         "website": "https://www.vivaaerobus.com",
         "branding": {
