@@ -39,6 +39,7 @@ import {
     ruleTitle,
 } from './lint/rule-structure.js'
 import {
+    allianceOf,
     carriedOn,
     extractInfobox,
     firstYear,
@@ -899,6 +900,20 @@ describe('wikipedia infobox parsing (sync-data)', () => {
         assert.equal(firstYear(ceased), 2020)
         assert.equal(carriedOn(ceased), 'rebranded to Pacific Airlines')
         assert.equal(carriedOn(params.ceased), undefined)
+    })
+
+    it('reads the alliance an airline flies in, affiliates included', () => {
+        const names = ['oneworld', 'SkyTeam', 'Star Alliance']
+        assert.equal(allianceOf('[[SkyTeam]] (affiliate)', names), 'SkyTeam')
+        assert.equal(
+            allianceOf('[[Star Alliance]] (connecting partner)', names),
+            undefined,
+        )
+        assert.equal(
+            allianceOf('[[Oneworld]] (affiliate; 2007–2020)', names),
+            undefined,
+        )
+        assert.equal(allianceOf('', names), undefined)
     })
 
     it('reads the names an airline flew under from its founding dates', () => {

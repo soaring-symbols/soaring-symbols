@@ -581,6 +581,7 @@
         "country": "CR",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
+        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -605,6 +606,7 @@
         ],
         "country": "EC",
         "website": "https://www.avianca.com",
+        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -634,6 +636,7 @@
         "country": "SV",
         "flag_carrier": true,
         "website": "https://www.avianca.com",
+        "alliance": "Star Alliance",
         "parent": "avianca",
         "marks": "avianca",
         "hubs": [
@@ -1539,6 +1542,7 @@
         "country": "KR",
         "flag_carrier": true,
         "website": "https://www.koreanair.com",
+        "alliance": "SkyTeam",
         "hubs": [
             "GMP",
             "ICN"
@@ -2052,7 +2056,7 @@
         "country": "MA",
         "flag_carrier": true,
         "website": "https://www.royalairmaroc.com",
-        "alliance": "SkyTeam",
+        "alliance": "oneworld",
         "hubs": [
             "CMN",
             "TNG"
@@ -2109,6 +2113,7 @@
         ],
         "country": "IE",
         "website": "https://www.flysas.com",
+        "alliance": "SkyTeam",
         "parent": "scandinavian-airlines",
         "marks": "scandinavian-airlines",
         "founded": 2017,
@@ -2149,7 +2154,7 @@
         "country": "DK,NO,SE",
         "flag_carrier": true,
         "website": "https://www.flysas.com",
-        "alliance": "Star Alliance",
+        "alliance": "SkyTeam",
         "hubs": [
             "CPH",
             "OSL",

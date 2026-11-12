@@ -258,7 +258,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 | Merged into another airline, or refounded       | The old airline defunct with `successor` set to the one that carried on.                                           |
 | Shut down                                       | `defunct` and `ceased`, keeping the entry and its SVGs.                                                            |
 | A code or callsign                              | Edit the entry and add the old one to `former`; `npm run sync:data` suggests code changes from Wikipedia.          |
-| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub changes from Wikipedia.                                           |
+| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub and alliance changes from Wikipedia.                              |
 | Flies under its parent's codes, keeps its brand | Take the parent's codes, set `parent`, and add its own old codes to `former` (Hawaiian Airlines).                  |
 | Becomes another airline's subsidiary            | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).      |
 | A name an unrelated airline used (Pan Am)       | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                       |

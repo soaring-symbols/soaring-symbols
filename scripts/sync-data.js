@@ -1,7 +1,7 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
-// report (or apply) what changed: IATA/ICAO codes, callsign, hubs, the year
-// it was founded, names it flew under before, and whether the airline ceased
-// operations. A rename or merger is only reported: a person renames the
+// report (or apply) what changed: IATA/ICAO codes, callsign, hubs, alliance,
+// the year it was founded, names it flew under before, and whether the
+// airline ceased operations. A rename or merger is only reported: a person renames the
 // entry or sets its successor.
 //
 //   node scripts/sync-data.js                     report only
@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isValidField, validateAirlines } from '../utils/schema.js'
 import {
+    allianceOf,
     carriedOn,
     extractInfobox,
     fetchAirportCodes,
@@ -67,6 +68,9 @@ const summaryPath = args.includes('--summary')
     : undefined
 
 const airlinesPath = new URL('../airlines.json', import.meta.url)
+const ALLIANCES = JSON.parse(
+    readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
+).$defs.airline.properties.alliance.enum
 const airlines = JSON.parse(readFileSync(airlinesPath, 'utf8'))
 const titleOf = (airline) => PAGE_TITLES[airline.name] ?? airline.name
 
@@ -148,6 +152,10 @@ for (const airline of airlines) {
     } else if (airline.defunct && !airline.ceased) {
         note('defunct, but Wikipedia gives no year it ceased')
     }
+    // An infobox without an alliance says nothing: it is often left empty
+    const alliance = allianceOf(params.alliance, ALLIANCES)
+    if (alliance && alliance !== airline.alliance) propose('alliance', alliance)
+
     // The first date in the infobox: when it was founded, or else when it
     // started flying
     const founded = firstYear(params.founded) ?? firstYear(params.commenced)

@@ -33,7 +33,7 @@ Node ≥ 20 is required (`index.js` uses JSON import attributes). Dependencies a
 - `npm run generate`: delete committed `-mono.svg` of single-color assets, re-sort `airlines.json`, fill in missing slugs and drop the generated `previous_names`, `previous_slugs`, `former[].slug`, `assets`, `history` and `predecessors`, check each slug has its folder and well-formed `history/` year folders, delete a stray `AIRLINES.md`, validate the catalog as it would be published.
 - `npm run build`: `lint:svg` + `generate` (via `prebuild`), then build `dist/` (ESM, CJS, validator bundle, fixer bundle, assets plus derived `-mono.svg` and shared marks).
 - `npm test`: build, then run `scripts/test.js` (`node:test`) against the ESM and CJS builds in `dist/`.
-- `npm run sync:data`: compare `iata`, `icao`, `callsign`, `hubs`, `founded` and `defunct`/`ceased` with each airline's English Wikipedia infobox, add to `former` the names its founding dates say it flew under ("1968 (as Sahakol Air)") when a later name dates their end, and print the differences; `-- --write` applies them and runs `generate`. Needs network.
+- `npm run sync:data`: compare `iata`, `icao`, `callsign`, `hubs`, `alliance`, `founded` and `defunct`/`ceased` with each airline's English Wikipedia infobox, add to `former` the names its founding dates say it flew under ("1968 (as Sahakol Air)") when a later name dates their end, and print the differences; `-- --write` applies them and runs `generate`. Needs network.
 - `npm run release`: cut a release (see below).
 
 ## Adding or updating an airline

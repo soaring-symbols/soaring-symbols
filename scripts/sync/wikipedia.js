@@ -168,6 +168,23 @@ export function carriedOn(value) {
         .trim()
 }
 
+// The first of `names` a value mentions, e.g. 'SkyTeam' in "[[SkyTeam]]
+// (affiliate)": an affiliate flies in the alliance; a connecting partner
+// (Juneyao Air in Star Alliance) does not, nor does an airline that left,
+// "Oneworld (affiliate; 2007–2020)" or "formerly SkyTeam"
+export function allianceOf(value = '', names = []) {
+    const text = stripMarkup(value).toLowerCase()
+    if (/connecting partner|formerly|\b\d{4}\s*[–-]\s*\d{4}\b/.test(text)) {
+        return undefined
+    }
+    const found = names
+        .map((name) => ({ name, at: text.indexOf(name.toLowerCase()) }))
+        .filter(({ at }) => at >= 0)
+        .sort((a, b) => a.at - b.at)
+
+    return found[0]?.name
+}
+
 // The first four-digit year in a value, e.g. a "ceased" date
 export function firstYear(value = '') {
     const match = stripComments(value).match(/\b(1[89]\d\d|20\d\d)\b/)
