@@ -1545,6 +1545,24 @@
         }
     },
     {
+        "name": "Jin Air",
+        "slug": "jin-air",
+        "iata": "LJ",
+        "icao": "JNA",
+        "callsign": "JIN AIR",
+        "country": "KR",
+        "website": "https://www.jinair.com",
+        "parent": "korean-air",
+        "hubs": [
+            "GMP",
+            "ICN"
+        ],
+        "founded": 2008,
+        "branding": {
+            "primary_color": "#d3e92e"
+        }
+    },
+    {
         "name": "Juneyao Air",
         "slug": "juneyao-air",
         "iata": "HO",
