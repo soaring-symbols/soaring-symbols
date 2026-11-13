@@ -162,7 +162,7 @@ To lint and fix only your own SVGs, try the experimental `node scripts/lint-svg.
 
 A subsidiary is an airline entry of its own, with its own codes, country and website, plus `parent` set to the slug of the airline group it is a subsidiary of. Listing an airline's subsidiaries means finding the entries whose `parent` is its slug. `parent` holds one airline, even when several own a share, so pick it this way:
 
-- **Flies under a group's brand** (its name or logo, as Jetstar Japan, Thai AirAsia or LATAM Airlines Brasil do): that group, even when another shareholder owns more. Jetstar Japan is `jetstar`, although Japan Airlines holds 50% and Qantas a third.
+- **Flies under a group's brand** (its name or logo, as Jetstar Japan or Thai AirAsia do): that group, even when another shareholder owns more. Jetstar Japan is `jetstar`, although Japan Airlines holds 50% and Qantas a third. When the group is a holding company rather than an airline in the catalog, none: LATAM Airlines Brasil and LATAM Chile are sisters under LATAM Airlines Group, so neither is the other's `parent`, and they share the brand through `marks`.
 - **A brand of its own:** its largest shareholder that is an airline in the catalog, e.g. `vietnam-airlines` for Pacific Airlines or `air-china` for Shenzhen Airlines. None, no `parent`.
 - **Each name is an entry:** when a subsidiary leaves a group's brand, its new name is a new entry with its own `parent` (see [Renames and mergers](#renames-and-mergers)). Jetstar Pacific stays under `jetstar`, and Pacific Airlines, its name since 2020, is under `vietnam-airlines`.
 

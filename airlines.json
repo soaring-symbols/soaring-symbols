@@ -1609,7 +1609,6 @@
         ],
         "country": "AR",
         "website": "https://www.latam.com",
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "AEP"
@@ -1655,7 +1654,6 @@
                 "until": 2020
             }
         ],
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "BSB",
@@ -1686,7 +1684,6 @@
         ],
         "country": "CO",
         "website": "https://www.latam.com/es_co",
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "BOG"
@@ -1710,7 +1707,6 @@
         ],
         "country": "EC",
         "website": "https://www.latamairlines.com",
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "GYE",
@@ -1739,7 +1735,6 @@
         ],
         "country": "PY",
         "website": "https://www.latam.com/es_py",
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "ASU"
@@ -1763,7 +1758,6 @@
         ],
         "country": "PE",
         "website": "https://www.latam.com",
-        "parent": "latam-chile",
         "marks": "latam-chile",
         "hubs": [
             "LIM"
