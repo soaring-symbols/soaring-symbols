@@ -1,0 +1,44 @@
+# Publish a GitHub release for each pushed v* tag, with the tag's message as
+# its notes. `npm run release` writes that message (scripts/release-notes.js),
+# so pushing the tag it creates is all a release needs; the notes can still be
+# edited on GitHub afterwards. A tag that already has a release is left alone.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      # checkout fetches a pushed tag without its message, so fetch the
+      # annotated tag itself
+      - name: Read the tag's notes
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
+          if [ "$(git cat-file -t "$TAG")" != tag ]; then
+            echo "::error::$TAG is not an annotated tag, so it has no notes. Tag the release commit with npm run release."
+            exit 1
+          fi
+          git tag --list --format='%(contents:body)' "$TAG" > "$RUNNER_TEMP/notes.md"
+          cat "$RUNNER_TEMP/notes.md"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "$TAG already has a release."
+            exit 0
+          fi
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"

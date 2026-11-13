@@ -28,6 +28,7 @@ import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { selectSvgs } from './lint/changed.js'
+import { groupCommits, renderNotes, REPO_URL } from './release-notes.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
@@ -1070,6 +1071,71 @@ describe('lint file selection (lint-svg --changed)', () => {
         const { base, listed } = selectSvgs(['--changed', '--base', 'HEAD'])
         assert.equal(base, 'HEAD')
         assert.equal(listed, false)
+    })
+})
+
+describe('release notes (release-notes.js)', () => {
+    const commit = (subject, files = ['scripts/build.js'], body = '') => ({
+        subject,
+        body,
+        files,
+    })
+
+    it('groups commits by type and leaves out the rest', () => {
+        const groups = groupCommits([
+            commit('feat!: replace getAssets with getAssetPath (#44)'),
+            commit('feat: add Juneyao Air (#20)', [
+                'airlines.json',
+                'assets/juneyao-air/logo.svg',
+            ]),
+            commit('fix: drop the hubs', ['airlines.json', 'airports.json']),
+            commit('chore(data): sync airline data from wikipedia (#45)', [
+                'airlines.json',
+            ]),
+            commit('feat(lint): add a no-strokes rule'),
+            commit('fix(svgo): keep black fills when optimizing'),
+            commit(
+                'refactor: drop the old field',
+                ['index.js'],
+                'BREAKING CHANGE: gone',
+            ),
+            commit('docs: tidy the roadmap', ['README.md']),
+            commit('chore(release): v0.3.3', ['package.json']),
+            commit('ci: run on tags'),
+            commit('not a conventional commit'),
+        ])
+        assert.deepEqual(groups, {
+            breaking: [
+                'Replace getAssets with getAssetPath (#44)',
+                'Drop the old field',
+            ],
+            airlines: [
+                'Add Juneyao Air (#20)',
+                'Drop the hubs',
+                'Sync airline data from wikipedia (#45)',
+            ],
+            features: ['Add a no-strokes rule'],
+            fixes: ['Keep black fills when optimizing'],
+        })
+    })
+
+    it('renders the non-empty sections and a compare link', () => {
+        const notes = renderNotes(
+            groupCommits([commit('feat: add SpiceJet', ['airlines.json'])]),
+            { from: 'v0.3.0', version: '0.3.1' },
+        )
+        assert.equal(
+            notes,
+            `### Airlines\n\n- Add SpiceJet\n\n**Full Changelog**: <${REPO_URL}/compare/v0.3.0...v0.3.1>\n`,
+        )
+    })
+
+    it('says so when nothing user-facing changed', () => {
+        const notes = renderNotes(groupCommits([commit('docs: fix a typo')]), {
+            version: '1.0.0',
+        })
+        assert.match(notes, /^Maintenance release/)
+        assert.match(notes, /\/commits\/v1\.0\.0>\n$/)
     })
 })
 
