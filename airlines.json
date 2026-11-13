@@ -1601,6 +1601,20 @@
         "iata": "LA",
         "icao": "LAN",
         "callsign": "LAN CHILE",
+        "former": [
+            {
+                "name": "Línea Aeropostal Santiago-Arica",
+                "until": 1932
+            },
+            {
+                "name": "Línea Aerea Nacional",
+                "until": 2004
+            },
+            {
+                "name": "LAN Airlines",
+                "until": 2016
+            }
+        ],
         "country": "CL",
         "website": "https://www.latamairlines.com",
         "alliance_history": [
@@ -1610,7 +1624,10 @@
                 "until": 2020
             }
         ],
-        "founded": 2012,
+        "hubs": [
+            "SCL"
+        ],
+        "founded": 1929,
         "branding": {
             "primary_color": "#1b0088"
         }
