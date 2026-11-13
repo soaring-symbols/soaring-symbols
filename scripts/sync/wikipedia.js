@@ -168,11 +168,94 @@ export function carriedOn(value) {
         .trim()
 }
 
+// The first of `names` a value mentions, e.g. 'SkyTeam' in "[[SkyTeam]]",
+// for a member only: an affiliate ("SkyTeam (affiliate)") flies under its
+// parent's membership and a connecting partner (Juneyao Air in Star
+// Alliance) isn't one, nor is an airline that left, "Oneworld (2012–2017)"
+// or "formerly SkyTeam"
+export function allianceOf(value = '', names = []) {
+    const text = stripMarkup(value).toLowerCase()
+    if (
+        /affiliate|connecting partner|formerly|\b\d{4}\s*[–-]\s*\d{4}\b/.test(
+            text,
+        )
+    ) {
+        return undefined
+    }
+    const found = names
+        .map((name) => ({ name, at: text.indexOf(name.toLowerCase()) }))
+        .filter(({ at }) => at >= 0)
+        .sort((a, b) => a.at - b.at)
+
+    return found[0]?.name
+}
+
 // The first four-digit year in a value, e.g. a "ceased" date
 export function firstYear(value = '') {
     const match = stripComments(value).match(/\b(1[89]\d\d|20\d\d)\b/)
 
     return match ? Number(match[1]) : undefined
+}
+
+// Every "<date> (as Name)" in a value, in order, e.g. "1968 (as Sahakol
+// Air)" in a "founded": the year before the note, when there is one, and
+// the name without links or italics
+export function namedDates(value = '') {
+    const text = stripComments(value)
+    const dates = []
+    const pattern = /\(\s*as\s+([^()]+?)\s*\)/gi
+    let last = 0
+    for (let match; (match = pattern.exec(text));) {
+        const years = [
+            ...text
+                .slice(last, match.index)
+                .matchAll(/\b(1[89]\d\d|20\d\d)\b/g),
+        ]
+        const name = match[1]
+            .replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, '$1')
+            .replace(/'{2,}/g, '')
+            .trim()
+        if (name)
+            dates.push({ year: Number(years.at(-1)?.[1]) || undefined, name })
+        last = match.index + match[0].length
+    }
+
+    return dates
+}
+
+// The names an airline flew under before `current`, from the "(as ...)"
+// notes of its "founded" and "commenced" dates, oldest first. Each name a
+// later one replaced gets `until`, the later one's year. The latest name is
+// the current one, however the infobox spells it ("LATAM Brasil"), unless it
+// is the only one: "founded 1932 (as Tata Airlines)" says the airline once
+// had that name, but not until when, so it gets `since` instead.
+export function formerNames(params, current) {
+    const seen = new Map()
+    for (const { year, name } of [
+        ...namedDates(params.founded),
+        ...namedDates(params.commenced),
+    ]) {
+        const key = name.toLowerCase()
+        if (year && !(seen.get(key)?.year <= year))
+            seen.set(key, { year, name })
+    }
+    const chain = [...seen.values()].sort((a, b) => a.year - b.year)
+
+    if (chain.length === 1) {
+        const [{ year, name }] = chain
+
+        return name.toLowerCase() === current.toLowerCase()
+            ? []
+            : [{ name, since: year }]
+    }
+
+    return chain
+        .slice(0, -1)
+        .flatMap(({ name }, i) =>
+            name.toLowerCase() === current.toLowerCase()
+                ? []
+                : [{ name, until: chain[i + 1].year }],
+        )
 }
 
 // GET a MediaWiki API, retrying with backoff when rate limited

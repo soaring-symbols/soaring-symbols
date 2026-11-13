@@ -39,12 +39,15 @@ import {
     ruleTitle,
 } from './lint/rule-structure.js'
 import {
+    allianceOf,
     carriedOn,
     extractInfobox,
     firstYear,
+    formerNames,
     infoboxParams,
     linkTargets,
     listItems,
+    namedDates,
 } from './sync/wikipedia.js'
 
 const require = createRequire(import.meta.url)
@@ -493,6 +496,43 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
+    it('checks alliance_history is oldest first and joined before it was left', () => {
+        const sas = (history) =>
+            entry('Scandinavian Airlines', {
+                alliance: 'SkyTeam',
+                alliance_history: history,
+            })
+        assert.deepEqual(
+            validateAirlines([
+                sas([{ alliance: 'Star Alliance', since: 1997, until: 2024 }]),
+            ]),
+            [],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                sas([
+                    { alliance: 'oneworld', since: 2025, until: 2024 },
+                    { alliance: 'Star Alliance', until: 2010 },
+                ]),
+            ]),
+            [
+                'Scandinavian Airlines: alliance_history has oneworld joined in 2025, after it left in 2024',
+                'Scandinavian Airlines: alliance_history must be oldest first (2010 comes after 2024)',
+            ],
+        )
+        // Each item needs a known alliance and the year it ended
+        for (const item of [
+            { alliance: 'Star Alliance' },
+            { alliance: 'Skyteam', until: 2018 },
+        ]) {
+            assert.notDeepEqual(
+                validateAirlines([sas([item])]),
+                [],
+                JSON.stringify(item),
+            )
+        }
+    })
+
     it('publishes former slugs and the deprecated previous_names and previous_slugs', () => {
         const [serbia] = publishCatalog(
             [
@@ -897,6 +937,60 @@ describe('wikipedia infobox parsing (sync-data)', () => {
         assert.equal(firstYear(ceased), 2020)
         assert.equal(carriedOn(ceased), 'rebranded to Pacific Airlines')
         assert.equal(carriedOn(params.ceased), undefined)
+    })
+
+    it('reads the alliance an airline is a member of', () => {
+        const names = ['oneworld', 'SkyTeam', 'Star Alliance']
+        assert.equal(allianceOf('[[SkyTeam]]', names), 'SkyTeam')
+        assert.equal(allianceOf('[[SkyTeam]] (affiliate)', names), undefined)
+        assert.equal(
+            allianceOf('[[Star Alliance]] (connecting partner)', names),
+            undefined,
+        )
+        assert.equal(
+            allianceOf('[[Oneworld]] (affiliate; 2007–2020)', names),
+            undefined,
+        )
+        assert.equal(allianceOf('', names), undefined)
+    })
+
+    it('reads the names an airline flew under from its founding dates', () => {
+        const founded =
+            "{{start date and age|1968}} (as ''[[Sahakol Air]]'')<ref>x</ref>"
+        assert.deepEqual(namedDates(founded), [
+            { year: 1968, name: 'Sahakol Air' },
+        ])
+        assert.deepEqual(namedDates('1956'), [])
+
+        // A later name ends the one before it; the current name is left out
+        assert.deepEqual(
+            formerNames(
+                {
+                    founded,
+                    commenced:
+                        "{{ubl|{{start date|1968}} (as ''Sahakol Air'')|{{start date|1989}} (as Bangkok Airways)}}",
+                },
+                'Bangkok Airways',
+            ),
+            [{ name: 'Sahakol Air', until: 1989 }],
+        )
+        // The latest name is the current one, however it is spelled
+        assert.deepEqual(
+            formerNames(
+                {
+                    founded: '1998 (as LAN Perú)',
+                    commenced: '2016 (as LATAM Perú)',
+                },
+                'LATAM Airlines Perú',
+            ),
+            [{ name: 'LAN Perú', until: 2016 }],
+        )
+        // Nothing after it: only the year it started
+        assert.deepEqual(
+            formerNames({ founded: '1932 (as Tata Airlines)' }, 'Air India'),
+            [{ name: 'Tata Airlines', since: 1932 }],
+        )
+        assert.deepEqual(formerNames({}, 'Example Air'), [])
     })
 
     it('returns nothing for a page without an airline infobox', () => {

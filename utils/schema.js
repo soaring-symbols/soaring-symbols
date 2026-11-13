@@ -139,6 +139,24 @@ const findFormerProblems = (airlines) =>
         ]),
     )
 
+// `alliance_history` lists the alliances the airline left, oldest first,
+// each joined no later than it was left
+const findAllianceHistoryProblems = (airlines) =>
+    airlines.flatMap((a) =>
+        (a.alliance_history ?? []).flatMap((item, i, history) => [
+            ...(item.since > item.until
+                ? [
+                      `${a.name}: alliance_history has ${item.alliance} joined in ${item.since}, after it left in ${item.until}`,
+                  ]
+                : []),
+            ...(i > 0 && item.until < history[i - 1].until
+                ? [
+                      `${a.name}: alliance_history must be oldest first (${item.until} comes after ${history[i - 1].until})`,
+                  ]
+                : []),
+        ]),
+    )
+
 // `parent`, `marks` and `successor` must name another airline in the
 // catalog, `marks` one with SVGs of its own (no chains), and following
 // `successor` must end at an airline without one (no loops)
@@ -199,6 +217,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findWrongSlugs(airlines),
         ...findDuplicateSlugs(airlines),
         ...findFormerProblems(airlines),
+        ...findAllianceHistoryProblems(airlines),
         ...findOpenHistory(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),

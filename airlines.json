@@ -27,6 +27,13 @@
         "country": "IE",
         "flag_carrier": true,
         "website": "https://www.aerlingus.com",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2000,
+                "until": 2007
+            }
+        ],
         "hubs": [
             "DUB"
         ],
@@ -167,6 +174,12 @@
         "iata": "AC",
         "icao": "ACA",
         "callsign": "AIR CANADA",
+        "former": [
+            {
+                "name": "Trans-Canada Air Lines",
+                "until": 1965
+            }
+        ],
         "country": "CA",
         "flag_carrier": true,
         "website": "https://www.aircanada.com",
@@ -292,6 +305,12 @@
         "iata": "NZ",
         "icao": "ANZ",
         "callsign": "NEW ZEALAND",
+        "former": [
+            {
+                "name": "Tasman Empire Airways Limited",
+                "until": 1965
+            }
+        ],
         "country": "NZ",
         "flag_carrier": true,
         "website": "https://www.airnewzealand.co.nz",
@@ -437,6 +456,12 @@
         "iata": "NH",
         "icao": "ANA",
         "callsign": "ALL NIPPON",
+        "former": [
+            {
+                "name": "Japan Helicopter and Aeroplane",
+                "until": 1957
+            }
+        ],
         "country": "JP",
         "website": "https://www.ana.co.jp",
         "alliance": "Star Alliance",
@@ -618,6 +643,9 @@
         "website": "https://www.avianca.com",
         "parent": "avianca",
         "marks": "avianca",
+        "hubs": [
+            "SAL"
+        ],
         "founded": 1931,
         "branding": {
             "primary_color": "#ff0000"
@@ -679,6 +707,12 @@
         "iata": "PG",
         "icao": "BKP",
         "callsign": "BANGKOK AIR",
+        "former": [
+            {
+                "name": "Sahakol Air",
+                "until": 1989
+            }
+        ],
         "country": "TH",
         "website": "https://www.bangkokair.com",
         "hubs": [
@@ -823,6 +857,13 @@
         "country": "CN",
         "flag_carrier": false,
         "website": "https://www.csair.com",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2007,
+                "until": 2018
+            }
+        ],
         "hubs": [
             "PKX",
             "CAN",
@@ -856,6 +897,13 @@
         "flag_carrier": true,
         "website": "https://www.copaair.com",
         "alliance": "Star Alliance",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2007,
+                "until": 2012
+            }
+        ],
         "hubs": [
             "PTY"
         ],
@@ -1016,6 +1064,7 @@
         "hubs": [
             "DZA"
         ],
+        "founded": 2013,
         "branding": {
             "primary_color": "#e1251b"
         }
@@ -1094,6 +1143,7 @@
             "MAN",
             "EXT"
         ],
+        "founded": 1979,
         "defunct": true,
         "ceased": 2020,
         "branding": {
@@ -1154,6 +1204,12 @@
         "iata": "GA",
         "icao": "GIA",
         "callsign": "INDONESIA",
+        "former": [
+            {
+                "name": "Indonesian Airways",
+                "until": 1949
+            }
+        ],
         "country": "ID",
         "flag_carrier": true,
         "website": "https://www.garuda-indonesia.com",
@@ -1310,6 +1366,12 @@
         "iata": "QZ",
         "icao": "AWQ",
         "callsign": "WAGON AIR",
+        "former": [
+            {
+                "name": "Awair",
+                "until": 2005
+            }
+        ],
         "country": "ID",
         "website": "https://www.airasia.com",
         "parent": "airasia",
@@ -1329,6 +1391,13 @@
         "flag_carrier": true,
         "website": "https://www.ita-airways.com",
         "alliance": "Star Alliance",
+        "alliance_history": [
+            {
+                "alliance": "SkyTeam",
+                "since": 2021,
+                "until": 2025
+            }
+        ],
         "hubs": [
             "FCO"
         ],
@@ -1364,6 +1433,7 @@
         "callsign": "CHANNEX",
         "country": "GB",
         "website": "https://www.jet2.com",
+        "founded": 2003,
         "branding": {
             "primary_color": "#d71920"
         }
@@ -1488,9 +1558,16 @@
         "iata": "KE",
         "icao": "KAL",
         "callsign": "KOREAN AIR",
+        "former": [
+            {
+                "name": "Korean Air Lines",
+                "until": 1984
+            }
+        ],
         "country": "KR",
         "flag_carrier": true,
         "website": "https://www.koreanair.com",
+        "alliance": "SkyTeam",
         "hubs": [
             "GMP",
             "ICN"
@@ -1526,6 +1603,13 @@
         "callsign": "LAN CHILE",
         "country": "CL",
         "website": "https://www.latamairlines.com",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2000,
+                "until": 2020
+            }
+        ],
         "founded": 2012,
         "branding": {
             "primary_color": "#1b0088"
@@ -1539,12 +1623,32 @@
         "callsign": "TAM",
         "former": [
             {
+                "name": "TAM – Táxi Aéreo Marília",
+                "until": 1975
+            },
+            {
+                "name": "TAM – Transportes Aéreos Marília",
+                "until": 2000
+            },
+            {
                 "name": "TAM Linhas Aéreas",
                 "until": 2016
             }
         ],
         "country": "BR",
         "website": "https://www.latam.com",
+        "alliance_history": [
+            {
+                "alliance": "Star Alliance",
+                "since": 2010,
+                "until": 2014
+            },
+            {
+                "alliance": "oneworld",
+                "since": 2014,
+                "until": 2020
+            }
+        ],
         "parent": "latam-airlines",
         "marks": "latam-airlines",
         "hubs": [
@@ -1565,6 +1669,10 @@
         "icao": "ARE",
         "callsign": "LAN COLOMBIA",
         "former": [
+            {
+                "name": "AIRES",
+                "until": 2011
+            },
             {
                 "name": "LAN Colombia",
                 "until": 2016
@@ -1619,7 +1727,7 @@
                 "until": 1996
             },
             {
-                "name": "TAM Paraguay",
+                "name": "TAM Mercosur",
                 "until": 2016
             }
         ],
@@ -1804,6 +1912,12 @@
         "iata": "WY",
         "icao": "OMA",
         "callsign": "OMAN AIR",
+        "former": [
+            {
+                "name": "Gulf Aviation",
+                "until": 1993
+            }
+        ],
         "country": "OM",
         "flag_carrier": true,
         "website": "https://www.omanair.com",
@@ -1837,6 +1951,12 @@
         "iata": "ZP",
         "icao": "AZP",
         "callsign": "GUARANI",
+        "former": [
+            {
+                "name": "Amaszonas Paraguay",
+                "until": 2018
+            }
+        ],
         "country": "PY",
         "website": "https://www.paranair.com",
         "hubs": [
@@ -1898,6 +2018,12 @@
         "iata": "Z2",
         "icao": "APG",
         "callsign": "COOL RED",
+        "former": [
+            {
+                "name": "AirAsia Philippines",
+                "until": 2015
+            }
+        ],
         "country": "PH",
         "website": "https://www.airasia.com",
         "parent": "airasia",
@@ -1974,7 +2100,7 @@
         "country": "MA",
         "flag_carrier": true,
         "website": "https://www.royalairmaroc.com",
-        "alliance": "SkyTeam",
+        "alliance": "oneworld",
         "hubs": [
             "CMN",
             "TNG"
@@ -2018,11 +2144,15 @@
         "slug": "sas-connect",
         "iata": "SL",
         "icao": "SZS",
-        "callsign": "SPINNAKER",
+        "callsign": "SCANDINAVIAN",
         "former": [
             {
                 "name": "SAS Ireland",
                 "until": 2021
+            },
+            {
+                "callsign": "SPINNAKER",
+                "until": 2026
             }
         ],
         "country": "IE",
@@ -2067,7 +2197,14 @@
         "country": "DK,NO,SE",
         "flag_carrier": true,
         "website": "https://www.flysas.com",
-        "alliance": "Star Alliance",
+        "alliance": "SkyTeam",
+        "alliance_history": [
+            {
+                "alliance": "Star Alliance",
+                "since": 1997,
+                "until": 2024
+            }
+        ],
         "hubs": [
             "CPH",
             "OSL",
@@ -2175,6 +2312,12 @@
         "iata": "WN",
         "icao": "SWA",
         "callsign": "SOUTHWEST",
+        "former": [
+            {
+                "name": "Air Southwest",
+                "until": 1971
+            }
+        ],
         "country": "US",
         "website": "https://www.southwest.com",
         "founded": 1967,
@@ -2204,6 +2347,12 @@
         "iata": "NK",
         "icao": "NKS",
         "callsign": "SPIRIT WINGS",
+        "former": [
+            {
+                "name": "Charter One Airlines",
+                "until": 1992
+            }
+        ],
         "country": "US",
         "website": "https://www.spirit.com",
         "founded": 1964,
@@ -2291,6 +2440,12 @@
         "iata": "RO",
         "icao": "ROT",
         "callsign": "TAROM",
+        "former": [
+            {
+                "name": "CFRNA",
+                "until": 1954
+            }
+        ],
         "country": "RO",
         "flag_carrier": true,
         "website": "https://www.tarom.ro",
@@ -2345,6 +2500,7 @@
         "callsign": "TRANSAVIA",
         "country": "NL",
         "website": "https://www.transavia.com",
+        "founded": 1966,
         "branding": {
             "primary_color": "#00d66c"
         }
@@ -2531,6 +2687,7 @@
         ],
         "country": "MX",
         "website": "https://www.vivaaerobus.com",
+        "founded": 2006,
         "branding": {
             "primary_color": "#00ae44"
         }

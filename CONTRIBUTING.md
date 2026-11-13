@@ -113,26 +113,27 @@ IATA and ICAO codes must be unique among active airlines, with two exceptions. A
 
 #### Information to Add Manually
 
-| Field Name     | Required | Description                                                                                                                    |
-| :------------- | :------: | :----------------------------------------------------------------------------------------------------------------------------- |
-| `name`         |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**                                         |
-| `slug`         |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.                                            |
-| `iata`         |   Yes    | The airline's two-character IATA code.                                                                                         |
-| `icao`         |   Yes    | The airline's three-character ICAO code.                                                                                       |
-| `country`      |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).                                           |
-| `website`      |   Yes    | The official website of the airline.                                                                                           |
-| `callsign`     |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                                                       |
-| `former`       |    No    | Names and codes it used before, oldest first, each with the year it stopped (see [Renames and mergers](#renames-and-mergers)). |
-| `flag_carrier` |    No    | `true` or `false`.                                                                                                             |
-| `alliance`     |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance".                                        |
-| `parent`       |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                                                         |
-| `marks`        |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).                                         |
-| `hubs`         |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.                                         |
-| `founded`      |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                                                            |
-| `defunct`      |    No    | `true` if the airline has ceased operations.                                                                                   |
-| `ceased`       |    No    | Year a defunct airline ceased operations; requires `defunct`.                                                                  |
-| `successor`    |    No    | Slug of the airline that carried on a defunct one (a merger, refounding or brand move).                                        |
-| `branding`     |   Yes    | `primary_color` (six-digit lowercase hex), and optionally `tagline`, `guidelines` and `since`.                                 |
+| Field Name         | Required | Description                                                                                                                                                                                                        |
+| :----------------- | :------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`             |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**                                                                                                                             |
+| `slug`             |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.                                                                                                                                |
+| `iata`             |   Yes    | The airline's two-character IATA code.                                                                                                                                                                             |
+| `icao`             |   Yes    | The airline's three-character ICAO code.                                                                                                                                                                           |
+| `country`          |   Yes    | The airline's country of origin, using [ISO country codes](https://countrycode.org).                                                                                                                               |
+| `website`          |   Yes    | The official website of the airline.                                                                                                                                                                               |
+| `callsign`         |    No    | The ICAO radiotelephony callsign in uppercase, e.g. "VIET NAM AIRLINES".                                                                                                                                           |
+| `former`           |    No    | Names and codes it used before, oldest first, each with the year it stopped (see [Renames and mergers](#renames-and-mergers)).                                                                                     |
+| `flag_carrier`     |    No    | `true` or `false`.                                                                                                                                                                                                 |
+| `alliance`         |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance", when the airline is a member itself: an affiliate flying under its parent's membership has none.                           |
+| `alliance_history` |    No    | Alliances it was a member of before its current one, oldest first, each with the year it left (`until`) and, when known, joined (`since`), e.g. `[{ "alliance": "Star Alliance", "since": 1997, "until": 2024 }]`. |
+| `parent`           |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                                                                                                                                             |
+| `marks`            |    No    | Slug of the airline whose SVGs this one uses, when it has none of its own (see below).                                                                                                                             |
+| `hubs`             |    No    | IATA codes of its hub airports, e.g. `["HAN", "SGN"]`. Not a low-cost carrier's bases.                                                                                                                             |
+| `founded`          |    No    | Year founded, as the first date in the airline's Wikipedia infobox.                                                                                                                                                |
+| `defunct`          |    No    | `true` if the airline has ceased operations.                                                                                                                                                                       |
+| `ceased`           |    No    | Year a defunct airline ceased operations; requires `defunct`.                                                                                                                                                      |
+| `successor`        |    No    | Slug of the airline that carried on a defunct one (a merger, refounding or brand move).                                                                                                                            |
+| `branding`         |   Yes    | `primary_color` (six-digit lowercase hex), and optionally `tagline`, `guidelines` and `since`.                                                                                                                     |
 
 #### Generated Asset Metadata
 
@@ -258,7 +259,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 | Merged into another airline, or refounded       | The old airline defunct with `successor` set to the one that carried on.                                           |
 | Shut down                                       | `defunct` and `ceased`, keeping the entry and its SVGs.                                                            |
 | A code or callsign                              | Edit the entry and add the old one to `former`; `npm run sync:data` suggests code changes from Wikipedia.          |
-| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub changes from Wikipedia.                                           |
+| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub and alliance changes from Wikipedia.                              |
 | Flies under its parent's codes, keeps its brand | Take the parent's codes, set `parent`, and add its own old codes to `former` (Hawaiian Airlines).                  |
 | Becomes another airline's subsidiary            | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).      |
 | A name an unrelated airline used (Pan Am)       | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                       |

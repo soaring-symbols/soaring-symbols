@@ -16,6 +16,33 @@
                 ]
             }
         },
+        "alliance": {
+            "description": "An airline alliance; an airline counts as in one when it is a member itself, not an affiliate flying under another member's membership.",
+            "enum": [
+                "oneworld",
+                "SkyTeam",
+                "Star Alliance",
+                "Value Alliance",
+                "Vanilla Alliance"
+            ]
+        },
+        "allianceMembership": {
+            "description": "An alliance the airline was a member of: the year it joined, when known, and the year it left.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["alliance", "until"],
+            "properties": {
+                "alliance": { "$ref": "#/$defs/alliance" },
+                "since": {
+                    "$ref": "#/$defs/year",
+                    "description": "Year the airline joined the alliance."
+                },
+                "until": {
+                    "$ref": "#/$defs/year",
+                    "description": "Year the airline left the alliance."
+                }
+            }
+        },
         "iata": {
             "description": "Two-character IATA airline code, e.g. \"VN\".",
             "type": "string",
@@ -151,13 +178,14 @@
                     "description": "Official website of the airline."
                 },
                 "alliance": {
-                    "enum": [
-                        "oneworld",
-                        "SkyTeam",
-                        "Star Alliance",
-                        "Value Alliance",
-                        "Vanilla Alliance"
-                    ]
+                    "$ref": "#/$defs/alliance",
+                    "description": "The alliance the airline is a member of now, or was when it ceased."
+                },
+                "alliance_history": {
+                    "description": "Alliances the airline was a member of before its current one, oldest first, e.g. [{ \"alliance\": \"Star Alliance\", \"since\": 1997, \"until\": 2024 }] for Scandinavian Airlines.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/allianceMembership" }
                 },
                 "parent": {
                     "description": "Slug of the airline group in this catalog that this one is a subsidiary of: the airline that owns it, or whose network it flies in, e.g. \"airasia\" for Thai AirAsia or \"jetstar\" for Jetstar Japan.",
