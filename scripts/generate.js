@@ -2,7 +2,9 @@
 // entry's keys, fill in a missing slug, drop the fields only the build adds,
 // validate the catalog as it would be published, check every slug has its
 // asset folder and well-formed history folders, and delete committed
-// -mono.svg files the build derives.
+// -mono.svg files the build derives. airports.json gets the same: sorted,
+// trimmed to the hubs the catalog lists, and checked that each has its
+// coordinates.
 import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs'
 import {
     findHistoryProblems,
@@ -10,6 +12,7 @@ import {
     removeDerivedMonos,
 } from '../utils/index.js'
 import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
+import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { validateAirlines } from '../utils/schema.js'
 
 const airlines = normalizeCatalog(
@@ -26,6 +29,16 @@ if (problems.length) {
     problems.forEach((problem) => console.error(`  - ${problem}`))
     process.exit(1)
 }
+
+const airports = JSON.parse(readFileSync('airports.json', 'utf8'))
+const airportProblems = findAirportProblems(airports, airlines)
+if (airportProblems.length) {
+    console.error('❌ airports.json is missing or has wrong coordinates:')
+    airportProblems.forEach((problem) => console.error(`  - ${problem}`))
+    process.exit(1)
+}
+const tidyAirports = normalizeAirports(airports, airlines)
+const unused = Object.keys(airports).filter((code) => !tidyAirports[code])
 
 const removedMonos = []
 
@@ -57,6 +70,12 @@ for (const { name, slug, marks } of airlines) {
 }
 
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))
+writeFileSync('airports.json', JSON.stringify(tidyAirports, null, 4))
+if (unused.length) {
+    console.log(
+        `✅ Removed ${unused.join(', ')} from airports.json; no airline lists it as a hub`,
+    )
+}
 
 // AIRLINES.md was generated until the website took over its job; a pull
 // request rebased from before then may bring it back
@@ -70,4 +89,4 @@ if (removedMonos.length) {
         `✅ Removed ${removedMonos.length} -mono.svg file(s) the build derives from single-color assets`,
     )
 }
-console.log('✅ airlines.json is sorted and valid')
+console.log('✅ airlines.json and airports.json are sorted and valid')

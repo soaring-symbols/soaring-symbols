@@ -4,6 +4,7 @@ import { build as esbuild } from 'esbuild'
 import { getAssetDirs, writeDerivedMonos } from '../utils/index.js'
 import { publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
+import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 
 const inputFile = './index.js'
 const distDir = './dist'
@@ -50,6 +51,19 @@ async function copyFiles() {
     await fs.writeFile(
         path.join(distDir, 'airlines.json'),
         JSON.stringify(catalog),
+    )
+
+    // Where each hub is, for maps and globes: minified like the catalog
+    const airports = JSON.parse(await fs.readFile('./airports.json', 'utf-8'))
+    const airportProblems = findAirportProblems(airports, catalog)
+    if (airportProblems.length) {
+        throw new Error(
+            `airports.json is missing or has wrong coordinates:\n  - ${airportProblems.join('\n  - ')}`,
+        )
+    }
+    await fs.writeFile(
+        path.join(distDir, 'airports.json'),
+        JSON.stringify(normalizeAirports(airports, catalog)),
     )
 
     const filesToCopy = [

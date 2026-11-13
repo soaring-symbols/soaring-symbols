@@ -1,8 +1,9 @@
 // Compare airlines.json with each airline's English Wikipedia infobox and
 // report (or apply) what changed: IATA/ICAO codes, callsign, hubs, alliance,
 // the year it was founded, names it flew under before, and whether the
-// airline ceased operations. A rename or merger is only reported: a person renames the
-// entry or sets its successor.
+// airline ceased operations. A rename or merger is only reported: a person
+// renames the entry or sets its successor. Hubs new to airports.json get
+// their coordinates from Wikidata.
 //
 //   node scripts/sync-data.js                     report only
 //   node scripts/sync-data.js --write             apply, then npm run generate
@@ -14,11 +15,12 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { isValidField, validateAirlines } from '../utils/schema.js'
+import { hubCodes } from '../utils/airports.js'
 import {
     allianceOf,
     carriedOn,
     extractInfobox,
-    fetchAirportCodes,
+    fetchAirports,
     fetchPages,
     firstYear,
     formerNames,
@@ -69,6 +71,8 @@ const summaryPath = args.includes('--summary')
     : undefined
 
 const airlinesPath = new URL('../airlines.json', import.meta.url)
+const airportsPath = new URL('../airports.json', import.meta.url)
+const airports = JSON.parse(readFileSync(airportsPath, 'utf8'))
 const ALLIANCES = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
 ).$defs.alliance.enum
@@ -93,7 +97,19 @@ const hubTitles = Object.values(paramsByName).flatMap((p) =>
     linkTargets(p.hubs),
 )
 console.log(`Resolving ${new Set(hubTitles).size} hub airports...`)
-const airportCodes = await fetchAirportCodes(hubTitles)
+const airportByTitle = await fetchAirports(hubTitles)
+const airportCodes = Object.fromEntries(
+    Object.entries(airportByTitle).map(([title, airport]) => [
+        title,
+        airport?.iata,
+    ]),
+)
+// Coordinates by IATA code, for hubs new to airports.json
+const placeByCode = Object.fromEntries(
+    Object.values(airportByTitle)
+        .filter((airport) => airport?.iata && airport.lat !== undefined)
+        .map(({ iata, lat, lon }) => [iata, { lat, lon }]),
+)
 
 const proposals = [] // { airline, changes: [{ field, from, to }] }
 const notes = [] // { airline, message }: needs a human
@@ -244,6 +260,12 @@ for (const entry of proposals) {
     }
 }
 
+// Hubs the catalog lists once these changes are in, without coordinates
+// yet: from Wikidata when it has them, else left to a person
+const newHubs = hubCodes(result).filter((code) => !airports[code])
+const placed = newHubs.filter((code) => placeByCode[code])
+const unplaced = newHubs.filter((code) => !placeByCode[code])
+
 // Report
 const show = (value) => {
     if (value === undefined) return '–'
@@ -271,7 +293,20 @@ if (accepted.length) {
         '',
     )
 }
-if (held.length || notes.length) {
+if (placed.length) {
+    md.push(
+        '### Hub coordinates',
+        '',
+        '| Hub | Latitude | Longitude |',
+        '| :-- | --: | --: |',
+        ...placed.map(
+            (code) =>
+                `| ${code} | ${placeByCode[code].lat} | ${placeByCode[code].lon} |`,
+        ),
+        '',
+    )
+}
+if (held.length || notes.length || unplaced.length) {
     md.push('### Needs a manual look', '')
     for (const { airline, changes: list, problems } of held) {
         const what = list
@@ -287,6 +322,11 @@ if (held.length || notes.length) {
     for (const { airline, message } of notes) {
         md.push(`- ${link(airline)}: ${message}`)
     }
+    for (const code of unplaced) {
+        md.push(
+            `- ${code}: a hub without coordinates on Wikidata; add its \`lat\` and \`lon\` to airports.json by hand`,
+        )
+    }
     md.push('')
 }
 if (!md.length) md.push('Everything matches Wikipedia.', '')
@@ -296,13 +336,16 @@ md.push(
 const report = md.join('\n') + '\n'
 
 console.log(
-    `\n${accepted.length} airline(s) changed, ${held.length} held back, ${notes.length} note(s)\n`,
+    `\n${accepted.length} airline(s) changed, ${placed.length} hub(s) placed, ${held.length} held back, ${notes.length + unplaced.length} note(s)\n`,
 )
 console.log(report)
 if (summaryPath) writeFileSync(summaryPath, report)
 
-if (write && accepted.length) {
+if (write && (accepted.length || placed.length)) {
     writeFileSync(airlinesPath, JSON.stringify(result, null, 4))
+    for (const code of placed) airports[code] = placeByCode[code]
+    // generate.js sorts it, and fails on a hub still without coordinates
+    writeFileSync(airportsPath, JSON.stringify(airports, null, 4))
     // Re-sort, order keys and validate exactly like a manual edit
     execFileSync('node', ['scripts/generate.js'], {
         cwd: fileURLToPath(new URL('..', import.meta.url)),

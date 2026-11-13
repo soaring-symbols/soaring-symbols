@@ -331,9 +331,11 @@ export const fetchPages = (titles) =>
         20,
     )
 
-// IATA airport code (Wikidata P238) of each airport page title, or
-// undefined when it can't be found
-export async function fetchAirportCodes(titles) {
+// The airports behind hub page titles, from Wikidata: each title's IATA code
+// (P238) and coordinates (P625, rounded to two decimals, about a kilometre),
+// e.g. { 'Noi Bai International Airport': { iata: 'HAN', lat: 21.22,
+// lon: 105.81 } }; undefined for a page Wikidata has no item for
+export async function fetchAirports(titles) {
     const unique = [...new Set(titles)]
     const itemByTitle = await queryPages(
         unique,
@@ -343,7 +345,8 @@ export async function fetchAirportCodes(titles) {
     )
 
     const items = [...new Set(Object.values(itemByTitle).filter(Boolean))]
-    const codeByItem = {}
+    const airportByItem = {}
+    const round = (n) => Math.round(n * 100) / 100
     for (let i = 0; i < items.length; i += 50) {
         const { entities } = await api('www.wikidata.org', {
             action: 'wbgetentities',
@@ -352,13 +355,34 @@ export async function fetchAirportCodes(titles) {
             formatversion: '1',
         })
         for (const [id, entity] of Object.entries(entities)) {
-            codeByItem[id] =
-                entity.claims?.P238?.[0]?.mainsnak?.datavalue?.value
+            const value = (property) =>
+                entity.claims?.[property]?.[0]?.mainsnak?.datavalue?.value
+            const place = value('P625')
+            airportByItem[id] = {
+                iata: value('P238'),
+                ...(place && {
+                    lat: round(place.latitude),
+                    lon: round(place.longitude),
+                }),
+            }
         }
     }
 
     return Object.fromEntries(
-        unique.map((title) => [title, codeByItem[itemByTitle[title]]]),
+        unique.map((title) => [title, airportByItem[itemByTitle[title]]]),
+    )
+}
+
+// The IATA code of each hub page title, e.g. { 'Noi Bai International
+// Airport': 'HAN' }
+export async function fetchAirportCodes(titles) {
+    const airports = await fetchAirports(titles)
+
+    return Object.fromEntries(
+        Object.entries(airports).map(([title, airport]) => [
+            title,
+            airport?.iata,
+        ]),
     )
 }
 

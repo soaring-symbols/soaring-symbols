@@ -246,6 +246,19 @@ assets/<slug>/history/<since>/
 
 On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`, and the same path after `https://unpkg.com/soaring-symbols/` on unpkg.
 
+### Hub coordinates
+
+`dist/airports.json` holds the latitude and longitude of every hub an airline lists in `hubs`, by IATA code, to place them on a map or a globe. The library doesn't read it; load it from the package or a CDN.
+
+```json
+{
+    "HAN": { "lat": 21.22, "lon": 105.81 },
+    "SGN": { "lat": 10.82, "lon": 106.65 }
+}
+```
+
+Every hub in the catalog has an entry, and only hubs do. The coordinates come from Wikidata, rounded to two decimals (about a kilometre). On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/airports.json`. It is in releases after 0.3.2.
+
 ### Renames and mergers
 
 Each entry is one airline. When an airline is renamed, its entry takes the new name and the slug of that name, and lists the old name in `former`. When its codes change, with the name or without it, `former` lists the old ones. Each item of `former` holds what the airline used before and the year it stopped:
