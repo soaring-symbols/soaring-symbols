@@ -1596,21 +1596,26 @@
         }
     },
     {
-        "name": "LATAM Airlines",
-        "slug": "latam-airlines",
-        "iata": "LA",
-        "icao": "LAN",
-        "callsign": "LAN CHILE",
-        "country": "CL",
-        "website": "https://www.latamairlines.com",
-        "alliance_history": [
+        "name": "LATAM Airlines Argentina",
+        "slug": "latam-airlines-argentina",
+        "iata": "4M",
+        "icao": "DSM",
+        "callsign": "LANAR",
+        "former": [
             {
-                "alliance": "oneworld",
-                "since": 2000,
-                "until": 2020
+                "name": "LAN Argentina",
+                "until": 2016
             }
         ],
-        "founded": 2012,
+        "country": "AR",
+        "website": "https://www.latam.com",
+        "marks": "latam-airlines-chile",
+        "hubs": [
+            "AEP"
+        ],
+        "founded": 2005,
+        "defunct": true,
+        "ceased": 2020,
         "branding": {
             "primary_color": "#1b0088"
         }
@@ -1649,8 +1654,7 @@
                 "until": 2020
             }
         ],
-        "parent": "latam-airlines",
-        "marks": "latam-airlines",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "BSB",
             "FOR",
@@ -1658,6 +1662,47 @@
             "GRU"
         ],
         "founded": 1961,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Chile",
+        "slug": "latam-airlines-chile",
+        "iata": "LA",
+        "icao": "LAN",
+        "callsign": "LAN CHILE",
+        "former": [
+            {
+                "name": "Línea Aeropostal Santiago-Arica",
+                "until": 1932
+            },
+            {
+                "name": "Línea Aerea Nacional",
+                "until": 2004
+            },
+            {
+                "name": "LAN Airlines",
+                "until": 2016
+            },
+            {
+                "name": "LATAM Airlines",
+                "until": 2026
+            }
+        ],
+        "country": "CL",
+        "website": "https://www.latamairlines.com",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2000,
+                "until": 2020
+            }
+        ],
+        "hubs": [
+            "SCL"
+        ],
+        "founded": 1929,
         "branding": {
             "primary_color": "#1b0088"
         }
@@ -1680,8 +1725,7 @@
         ],
         "country": "CO",
         "website": "https://www.latam.com/es_co",
-        "parent": "latam-airlines",
-        "marks": "latam-airlines",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "BOG"
         ],
@@ -1704,8 +1748,7 @@
         ],
         "country": "EC",
         "website": "https://www.latamairlines.com",
-        "parent": "latam-airlines",
-        "marks": "latam-airlines",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "GYE",
             "UIO"
@@ -1733,8 +1776,7 @@
         ],
         "country": "PY",
         "website": "https://www.latam.com/es_py",
-        "parent": "latam-airlines",
-        "marks": "latam-airlines",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "ASU"
         ],
@@ -1757,8 +1799,7 @@
         ],
         "country": "PE",
         "website": "https://www.latam.com",
-        "parent": "latam-airlines",
-        "marks": "latam-airlines",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "LIM"
         ],

@@ -39,6 +39,7 @@ const PAGE_TITLES = {
     Flybe: 'Flybe (1979–2020)',
     GOL: 'Gol Linhas Aéreas',
     Iberia: 'Iberia (airline)',
+    'LATAM Airlines Chile': 'LATAM Chile',
     Level: 'Level (airline)',
     Viva: 'Viva (airline)',
 }
