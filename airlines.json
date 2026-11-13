@@ -1609,7 +1609,7 @@
         ],
         "country": "AR",
         "website": "https://www.latam.com",
-        "marks": "latam-chile",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "AEP"
         ],
@@ -1654,7 +1654,7 @@
                 "until": 2020
             }
         ],
-        "marks": "latam-chile",
+        "marks": "latam-airlines-chile",
         "hubs": [
             "BSB",
             "FOR",
@@ -1667,109 +1667,8 @@
         }
     },
     {
-        "name": "LATAM Airlines Colombia",
-        "slug": "latam-airlines-colombia",
-        "iata": "4C",
-        "icao": "ARE",
-        "callsign": "LAN COLOMBIA",
-        "former": [
-            {
-                "name": "AIRES",
-                "until": 2011
-            },
-            {
-                "name": "LAN Colombia",
-                "until": 2016
-            }
-        ],
-        "country": "CO",
-        "website": "https://www.latam.com/es_co",
-        "marks": "latam-chile",
-        "hubs": [
-            "BOG"
-        ],
-        "founded": 1980,
-        "branding": {
-            "primary_color": "#1b0088"
-        }
-    },
-    {
-        "name": "LATAM Airlines Ecuador",
-        "slug": "latam-airlines-ecuador",
-        "iata": "XL",
-        "icao": "LNE",
-        "callsign": "AEROLANE",
-        "former": [
-            {
-                "name": "LAN Ecuador",
-                "until": 2016
-            }
-        ],
-        "country": "EC",
-        "website": "https://www.latamairlines.com",
-        "marks": "latam-chile",
-        "hubs": [
-            "GYE",
-            "UIO"
-        ],
-        "founded": 2002,
-        "branding": {
-            "primary_color": "#1b0088"
-        }
-    },
-    {
-        "name": "LATAM Airlines Paraguay",
-        "slug": "latam-airlines-paraguay",
-        "iata": "PZ",
-        "icao": "LAP",
-        "callsign": "PARAGUAYA",
-        "former": [
-            {
-                "name": "Líneas Aéreas Paraguayas",
-                "until": 1996
-            },
-            {
-                "name": "TAM Mercosur",
-                "until": 2016
-            }
-        ],
-        "country": "PY",
-        "website": "https://www.latam.com/es_py",
-        "marks": "latam-chile",
-        "hubs": [
-            "ASU"
-        ],
-        "founded": 1962,
-        "branding": {
-            "primary_color": "#1b0088"
-        }
-    },
-    {
-        "name": "LATAM Airlines Perú",
-        "slug": "latam-airlines-peru",
-        "iata": "LP",
-        "icao": "LPE",
-        "callsign": "LAN PERÚ",
-        "former": [
-            {
-                "name": "LAN Perú",
-                "until": 2016
-            }
-        ],
-        "country": "PE",
-        "website": "https://www.latam.com",
-        "marks": "latam-chile",
-        "hubs": [
-            "LIM"
-        ],
-        "founded": 1998,
-        "branding": {
-            "primary_color": "#1b0088"
-        }
-    },
-    {
-        "name": "LATAM Chile",
-        "slug": "latam-chile",
+        "name": "LATAM Airlines Chile",
+        "slug": "latam-airlines-chile",
         "iata": "LA",
         "icao": "LAN",
         "callsign": "LAN CHILE",
@@ -1804,6 +1703,107 @@
             "SCL"
         ],
         "founded": 1929,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Colombia",
+        "slug": "latam-airlines-colombia",
+        "iata": "4C",
+        "icao": "ARE",
+        "callsign": "LAN COLOMBIA",
+        "former": [
+            {
+                "name": "AIRES",
+                "until": 2011
+            },
+            {
+                "name": "LAN Colombia",
+                "until": 2016
+            }
+        ],
+        "country": "CO",
+        "website": "https://www.latam.com/es_co",
+        "marks": "latam-airlines-chile",
+        "hubs": [
+            "BOG"
+        ],
+        "founded": 1980,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Ecuador",
+        "slug": "latam-airlines-ecuador",
+        "iata": "XL",
+        "icao": "LNE",
+        "callsign": "AEROLANE",
+        "former": [
+            {
+                "name": "LAN Ecuador",
+                "until": 2016
+            }
+        ],
+        "country": "EC",
+        "website": "https://www.latamairlines.com",
+        "marks": "latam-airlines-chile",
+        "hubs": [
+            "GYE",
+            "UIO"
+        ],
+        "founded": 2002,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Paraguay",
+        "slug": "latam-airlines-paraguay",
+        "iata": "PZ",
+        "icao": "LAP",
+        "callsign": "PARAGUAYA",
+        "former": [
+            {
+                "name": "Líneas Aéreas Paraguayas",
+                "until": 1996
+            },
+            {
+                "name": "TAM Mercosur",
+                "until": 2016
+            }
+        ],
+        "country": "PY",
+        "website": "https://www.latam.com/es_py",
+        "marks": "latam-airlines-chile",
+        "hubs": [
+            "ASU"
+        ],
+        "founded": 1962,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Airlines Perú",
+        "slug": "latam-airlines-peru",
+        "iata": "LP",
+        "icao": "LPE",
+        "callsign": "LAN PERÚ",
+        "former": [
+            {
+                "name": "LAN Perú",
+                "until": 2016
+            }
+        ],
+        "country": "PE",
+        "website": "https://www.latam.com",
+        "marks": "latam-airlines-chile",
+        "hubs": [
+            "LIM"
+        ],
+        "founded": 1998,
         "branding": {
             "primary_color": "#1b0088"
         }
