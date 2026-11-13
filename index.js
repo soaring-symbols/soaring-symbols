@@ -23,15 +23,21 @@ const deepFreeze = (value) => {
 // belong to one active airline and any number of defunct ones. The active
 // airline wins; among defunct ones, the first by name does. A brand that
 // flies under its parent's codes (Hawaiian Airlines under Alaska Airlines)
-// shares them with the parent, which wins.
-const setCode = (map, code, airline) => {
+// shares them with the parent, which wins. An IATA code IATA gave to two
+// airlines (a controlled duplicate) finds the holder without the asterisk,
+// i.e. without `iata_duplicate`.
+const setCode = (map, code, airline, { iata = false } = {}) => {
     if (!code) return
     const key = code.toUpperCase()
     const current = map.get(key)
     if (
         !current ||
         (current.defunct && !airline.defunct) ||
-        (!airline.defunct && current.parent === airline.slug)
+        (!airline.defunct && current.parent === airline.slug) ||
+        (iata &&
+            !airline.defunct &&
+            current.iata_duplicate &&
+            !airline.iata_duplicate)
     ) {
         map.set(key, airline)
     }
@@ -39,7 +45,7 @@ const setCode = (map, code, airline) => {
 
 for (const airline of airlines) {
     deepFreeze(airline)
-    setCode(byIata, airline.iata, airline)
+    setCode(byIata, airline.iata, airline, { iata: true })
     setCode(byIcao, airline.icao, airline)
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
@@ -69,7 +75,8 @@ function listAirlines() {
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
  * tried in that order. A code shared with a defunct airline finds the
- * active one, and a code a brand shares with its parent finds the parent. A
+ * active one, a code a brand shares with its parent finds the parent, and an
+ * IATA code IATA gave to two airlines finds the one without `iata_duplicate`. A
  * renamed airline is also found by its former slugs and names, and returned
  * with its current slug; a former code (`former`) finds it only when no
  * airline has that code now.

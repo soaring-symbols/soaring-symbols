@@ -77,6 +77,13 @@ export interface Airline {
     readonly name: string
     /** 2-character IATA code (e.g. "VN"). */
     readonly iata: string
+    /**
+     * `true` when IATA gave this airline's code to another airline as well
+     * and marks this holder with an asterisk (e.g. "SL*" for SAS Connect,
+     * whose SL Thai Lion Air also holds). getAirline() finds the other
+     * holder by the code; find this one by its ICAO code, slug or name.
+     */
+    readonly iata_duplicate?: true
     /** 3-letter ICAO code (e.g. "HVN"). */
     readonly icao: string
     /** ICAO radiotelephony callsign, uppercase (e.g. "VIET NAM AIRLINES"). */
