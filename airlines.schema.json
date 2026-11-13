@@ -163,6 +163,10 @@
                     "items": { "$ref": "#/$defs/slug" }
                 },
                 "iata": { "$ref": "#/$defs/iata" },
+                "iata_duplicate": {
+                    "description": "The IATA code is a controlled duplicate: IATA gave the same code to another airline whose services don't overlap, and marks this holder with an asterisk (\"SL*\" for SAS Connect, whose SL Thai Lion Air also holds). Only this holder may share the code with another active airline, and getAirline() finds the other one by it; find this one by the code with the asterisk (\"SL*\"), its ICAO code, slug or name.",
+                    "const": true
+                },
                 "icao": { "$ref": "#/$defs/icao" },
                 "callsign": { "$ref": "#/$defs/callsign" },
                 "former": {

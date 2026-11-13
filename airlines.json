@@ -1902,7 +1902,7 @@
         ],
         "founded": 1999,
         "branding": {
-            "primary_color": "#ed1b2f"
+            "primary_color": "#fb0102"
         }
     },
     {
@@ -2247,6 +2247,7 @@
         "name": "SAS Connect",
         "slug": "sas-connect",
         "iata": "SL",
+        "iata_duplicate": true,
         "icao": "SZS",
         "callsign": "SCANDINAVIAN",
         "former": [
@@ -2594,6 +2595,22 @@
         "branding": {
             "primary_color": "#330066",
             "tagline": "Grace to Growth"
+        }
+    },
+    {
+        "name": "Thai Lion Air",
+        "slug": "thai-lion-air",
+        "iata": "SL",
+        "icao": "TLM",
+        "callsign": "MENTARI",
+        "country": "TH",
+        "website": "https://www.lionairthai.com",
+        "hubs": [
+            "DMK"
+        ],
+        "founded": 2013,
+        "branding": {
+            "primary_color": "#fb0102"
         }
     },
     {

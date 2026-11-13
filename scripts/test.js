@@ -133,14 +133,22 @@ for (const [format, api] of [
                     }
                     // A defunct airline's code may have been reassigned, and
                     // then finds the active airline that holds it now; a
-                    // brand flying under its parent's codes finds the parent
+                    // brand flying under its parent's codes finds the parent,
+                    // and an IATA controlled duplicate the unstarred holder
                     for (const field of ['iata', 'icao']) {
                         const found = getAirline(a[field])
                         const label = `${a.name} by ${a[field]}`
                         if (found === a) continue
                         assert.equal(found[field], a[field], label)
                         assert.ok(!found.defunct, label)
-                        assert.ok(a.defunct || a.parent === found.slug, label)
+                        assert.ok(
+                            a.defunct ||
+                                a.parent === found.slug ||
+                                (field === 'iata' &&
+                                    a.iata_duplicate &&
+                                    !found.iata_duplicate),
+                            label,
+                        )
                     }
                 }
             })
@@ -195,6 +203,20 @@ for (const [format, api] of [
                         }
                     }
                 }
+            })
+
+            it('finds the holder without iata_duplicate by a shared IATA code', () => {
+                const thai = getAirline('thai-lion-air')
+                const sas = getAirline('sas-connect')
+                assert.equal(sas.iata, thai.iata)
+                assert.equal(sas.iata_duplicate, true)
+                assert.equal(getAirline(thai.iata), thai)
+                assert.equal(getAirline(sas.icao), sas)
+                // IATA's own notation finds the starred holder
+                assert.equal(getAirline(`${sas.iata}*`), sas)
+                assert.equal(getAirline(' sl* '), sas)
+                // and only a starred one
+                assert.equal(getAirline('VN*'), undefined)
             })
 
             it('finds the parent by a code a brand flies under', () => {
@@ -634,6 +656,24 @@ describe('renames and mergers (successor)', () => {
         assert.deepEqual(validateAirlines([alaska, unrelated]), [
             'IATA AS is used by more than one active airline: Alaska Airlines, Hawaiian Airlines',
             'ICAO ASA is used by more than one active airline: Alaska Airlines, Hawaiian Airlines',
+        ])
+    })
+
+    it('lets IATA controlled duplicates share a code', () => {
+        const thai = entry('Thai Lion Air', { iata: 'SL', icao: 'TLM' })
+        const sas = entry('SAS Connect', {
+            iata: 'SL',
+            icao: 'SZS',
+            iata_duplicate: true,
+        })
+        assert.deepEqual(validateAirlines([sas, thai]), [])
+        // Only for IATA, and only while one holder has no asterisk
+        const { iata_duplicate, ...unmarked } = sas
+        assert.deepEqual(validateAirlines([unmarked, thai]), [
+            'IATA SL is used by more than one active airline: SAS Connect, Thai Lion Air',
+        ])
+        assert.deepEqual(validateAirlines([sas, { ...thai, icao: 'SZS' }]), [
+            'ICAO SZS is used by more than one active airline: SAS Connect, Thai Lion Air',
         ])
     })
 

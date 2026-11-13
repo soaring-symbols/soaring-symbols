@@ -77,6 +77,14 @@ export interface Airline {
     readonly name: string
     /** 2-character IATA code (e.g. "VN"). */
     readonly iata: string
+    /**
+     * `true` when IATA gave this airline's code to another airline as well
+     * and marks this holder with an asterisk (e.g. "SL*" for SAS Connect,
+     * whose SL Thai Lion Air also holds). getAirline() finds the other
+     * holder by the code; find this one by the code with the asterisk
+     * ("SL*"), its ICAO code, slug or name.
+     */
+    readonly iata_duplicate?: true
     /** 3-letter ICAO code (e.g. "HVN"). */
     readonly icao: string
     /** ICAO radiotelephony callsign, uppercase (e.g. "VIET NAM AIRLINES"). */
@@ -161,8 +169,10 @@ export function listAirlines(): Airline[]
 /**
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
  * tried in that order, then by a former IATA or ICAO code. A code shared
- * with a defunct airline finds the active one, and a code a brand shares
- * with its parent finds the parent. Former names and slugs find the airline
+ * with a defunct airline finds the active one, a code a brand shares with
+ * its parent finds the parent, and an IATA code IATA gave to two airlines
+ * finds the one without `iata_duplicate` and, written with IATA's asterisk
+ * ("SL*"), the one with it. Former names and slugs find the airline
  * as current ones do; a former code only when no airline has it now.
  */
 export function getAirline(query: string): Airline | undefined

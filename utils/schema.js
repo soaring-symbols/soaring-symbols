@@ -44,11 +44,17 @@ const formatSchemaError = (airlines, error) => {
 // airline may share its code with the airline the code was reassigned to;
 // getAirline() then finds the active one. A brand that flies under its
 // parent's codes (Hawaiian Airlines under Alaska Airlines) may share them
-// with that parent, which getAirline() finds.
+// with that parent, which getAirline() finds. IATA may also give one code to
+// two airlines whose services don't overlap, marking all holders but one with
+// an asterisk ("SL*"): those carry `iata_duplicate`, and getAirline() finds
+// the one without it.
 const sharesParentCode = (list) =>
     list.some((parent) =>
         list.every((a) => a === parent || a.parent === parent.slug),
     )
+
+const isControlledDuplicate = (field, list) =>
+    field === 'iata' && list.filter((a) => !a.iata_duplicate).length <= 1
 
 const findDuplicateCodes = (airlines) => {
     const active = airlines.filter((a) => !a.defunct)
@@ -62,7 +68,12 @@ const findDuplicateCodes = (airlines) => {
         }
 
         return [...owners]
-            .filter(([, list]) => list.length > 1 && !sharesParentCode(list))
+            .filter(
+                ([, list]) =>
+                    list.length > 1 &&
+                    !sharesParentCode(list) &&
+                    !isControlledDuplicate(field, list),
+            )
             .map(
                 ([code, list]) =>
                     `${field.toUpperCase()} ${code} is used by more than one active airline: ${list.map((a) => a.name).join(', ')}`,
