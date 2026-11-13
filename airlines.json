@@ -126,9 +126,6 @@
         "callsign": "ARABIA",
         "country": "AE",
         "website": "https://www.airarabia.com",
-        "hubs": [
-            "SHJ"
-        ],
         "founded": 2003,
         "branding": {
             "primary_color": "#ed1b48"
@@ -144,9 +141,6 @@
         "website": "https://www.airarabia.com",
         "parent": "air-arabia",
         "marks": "air-arabia",
-        "hubs": [
-            "AUH"
-        ],
         "founded": 2019,
         "branding": {
             "primary_color": "#ed1b48"
@@ -162,10 +156,6 @@
         "website": "https://www.airarabia.com",
         "parent": "air-arabia",
         "marks": "air-arabia",
-        "hubs": [
-            "ALY",
-            "CAI"
-        ],
         "founded": 2009,
         "branding": {
             "primary_color": "#ed1b48"
@@ -181,9 +171,6 @@
         "website": "https://www.airarabia.com",
         "parent": "air-arabia",
         "marks": "air-arabia",
-        "hubs": [
-            "CMN"
-        ],
         "founded": 2009,
         "branding": {
             "primary_color": "#ed1b48"
