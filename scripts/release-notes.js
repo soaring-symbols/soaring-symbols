@@ -1,7 +1,7 @@
 // Draft a release's notes from the Conventional Commits since the previous
-// tag. `release.js` puts them in the release's annotated tag, and the release
-// workflow (.github/workflows/release.yml) publishes the tag's notes as the
-// GitHub release once the tag is pushed.
+// tag. Nothing publishes the draft: it is the starting point for the notes
+// written by hand on the GitHub release once `npm run release` has tagged it
+// ("Releasing" in AGENTS.md).
 //
 // Usage: node scripts/release-notes.js [--from <ref>] [--to <ref>] [--version <x.y.z>]
 //   --from:    the previous release (default: the latest v* tag before --to)
@@ -11,8 +11,8 @@
 // Commits are grouped by type: breaking changes (`!` or a `BREAKING CHANGE:`
 // footer), airlines (commits that touch only the catalog and the SVGs),
 // features and fixes. Docs, chores, CI, refactors, tests and the release
-// commits are left out; edit the notes before pushing the tag when a commit
-// subject doesn't read well on its own.
+// commits are left out. The draft lists every commit, so a change made and
+// undone within the release still shows up: rewrite it for the net result.
 import { spawnSync } from 'child_process'
 import { readFileSync } from 'fs'
 import { fileURLToPath } from 'url'

@@ -1,8 +1,8 @@
 // Release to npm: test, bump the version in package.json, publish, purge
-// jsDelivr's cache of the changed files, commit the bump and tag it
-// v<version>, with release notes drafted from the commits since the previous
-// tag (scripts/release-notes.js) as the tag's message. Nothing is pushed:
-// pushing the tag makes the release workflow publish the GitHub release.
+// jsDelivr's cache of the changed files, then commit the bump and tag it
+// v<version>. Nothing is pushed: pushing the tag makes the release workflow
+// publish a GitHub release, whose notes are written afterwards (see
+// scripts/release-notes.js and "Releasing" in AGENTS.md).
 //
 // Usage: npm run release -- [bump] [--dry-run]
 //   bump: patch (default), minor, major or an exact version such as 0.2.0.
@@ -11,12 +11,9 @@
 // and assets, fixes, additions) and minor for breaking API or data changes.
 // Every release goes to the `latest` dist-tag; prereleases are not used.
 import { spawnSync } from 'child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs'
-import { tmpdir } from 'os'
-import { join } from 'path'
+import { readFileSync, writeFileSync } from 'fs'
 import { parseArgs } from 'util'
 import { purgeRelease } from './purge-cdn.js'
-import { releaseNotes } from './release-notes.js'
 
 const BRANCH = 'main'
 const REMOTE = 'origin'
@@ -108,14 +105,7 @@ run('git', ['fetch', REMOTE, BRANCH])
 const behind = read('git', ['rev-list', '--count', `HEAD..${REMOTE}/${BRANCH}`])
 if (behind !== '0') fail(`"${BRANCH}" is ${behind} commit(s) behind ${REMOTE}.`)
 
-// The notes cover the commits since the previous release's tag
-const previousTag = `v${currentVersion}`
 run('git', ['fetch', '--tags', REMOTE])
-if (!read('git', ['tag', '--list', previousTag])) {
-    fail(
-        `The previous release has no tag ${previousTag}; tag its release commit first.`,
-    )
-}
 
 if (!dryRun) {
     const user = read('npm', ['whoami'])
@@ -143,15 +133,11 @@ if (read('git', ['tag', '--list', tag])) {
     fail(`Tag ${tag} already exists.`)
 }
 
-const notes = releaseNotes({ from: previousTag, version })
-
 if (dryRun) {
     step('Dry run: showing the package contents')
     run('npm', ['pack', '--dry-run'])
     step('Dry run: files jsDelivr would be purged of')
     await purgeRelease({ version, previous: currentVersion, dryRun: true })
-    step(`Dry run: release notes for ${tag}`)
-    console.log(notes)
     restoreReleaseFiles()
     console.log('\n✅ Dry run finished; no changes were kept.')
     process.exit(0)
@@ -184,25 +170,12 @@ step('Committing the version bump')
 run('git', ['add', ...RELEASE_FILES])
 run('git', ['commit', '-m', `chore(release): ${tag}`])
 
-// --- Tag the release commit, the notes as its message (kept verbatim, since
-// git would otherwise strip the Markdown headings as comments) ---
+// --- Tag the release commit ---
 step(`Tagging ${tag}`)
-const notesDir = mkdtempSync(join(tmpdir(), 'release-notes-'))
-const notesFile = join(notesDir, 'notes.md')
-writeFileSync(notesFile, `${tag}\n\n${notes}`)
-run('git', [
-    'tag',
-    '--annotate',
-    '--cleanup=verbatim',
-    '--file',
-    notesFile,
-    tag,
-])
-rmSync(notesDir, { recursive: true, force: true })
-console.log(`\n${notes}`)
+run('git', ['tag', '--annotate', '--message', tag, tag])
 
 console.log(
-    `\n✅ Published soaring-symbols@${version} and tagged ${tag} with the notes above.` +
+    `\n✅ Published soaring-symbols@${version} and tagged ${tag}.` +
         `\n   Push both with "git push --atomic ${REMOTE} ${BRANCH} ${tag}"; the release workflow` +
-        `\n   then publishes the GitHub release, whose notes can be edited on GitHub.`,
+        `\n   then publishes the GitHub release, ready for its notes.`,
 )
