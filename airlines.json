@@ -126,7 +126,65 @@
         "callsign": "ARABIA",
         "country": "AE",
         "website": "https://www.airarabia.com",
+        "hubs": [
+            "SHJ"
+        ],
         "founded": 2003,
+        "branding": {
+            "primary_color": "#ed1b48"
+        }
+    },
+    {
+        "name": "Air Arabia Abu Dhabi",
+        "slug": "air-arabia-abu-dhabi",
+        "iata": "3L",
+        "icao": "ADY",
+        "callsign": "NAWRAS",
+        "country": "AE",
+        "website": "https://www.airarabia.com",
+        "parent": "air-arabia",
+        "marks": "air-arabia",
+        "hubs": [
+            "AUH"
+        ],
+        "founded": 2019,
+        "branding": {
+            "primary_color": "#ed1b48"
+        }
+    },
+    {
+        "name": "Air Arabia Egypt",
+        "slug": "air-arabia-egypt",
+        "iata": "E5",
+        "icao": "RBG",
+        "callsign": "ARABIA EGYPT",
+        "country": "EG",
+        "website": "https://www.airarabia.com",
+        "parent": "air-arabia",
+        "marks": "air-arabia",
+        "hubs": [
+            "ALY",
+            "CAI"
+        ],
+        "founded": 2009,
+        "branding": {
+            "primary_color": "#ed1b48"
+        }
+    },
+    {
+        "name": "Air Arabia Maroc",
+        "slug": "air-arabia-maroc",
+        "iata": "3O",
+        "icao": "MAC",
+        "callsign": "ARABIA MAROC",
+        "country": "MA",
+        "website": "https://www.airarabia.com",
+        "parent": "air-arabia",
+        "marks": "air-arabia",
+        "hubs": [
+            "CMN"
+        ],
+        "founded": 2009,
         "branding": {
             "primary_color": "#ed1b48"
         }
