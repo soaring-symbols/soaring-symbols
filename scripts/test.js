@@ -26,6 +26,7 @@ import {
 } from '../utils/index.js'
 import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
 import { validateAirlines } from '../utils/schema.js'
+import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
@@ -377,6 +378,54 @@ describe('airlines.json schema', () => {
                 `slug "${slug}" is used by more than one airline: ${first.name}, ${first.name}`,
             ],
         )
+    })
+})
+
+describe('airports.json (hub coordinates)', () => {
+    const read = (file) =>
+        JSON.parse(readFileSync(new URL(`../${file}`, import.meta.url)))
+
+    it('ships coordinates for every hub, and only for hubs', () => {
+        const catalog = read('dist/airlines.json')
+        const shipped = read('dist/airports.json')
+        assert.deepEqual(findAirportProblems(shipped, catalog), [])
+        assert.deepEqual(
+            Object.keys(shipped),
+            [...new Set(catalog.flatMap((a) => a.hubs ?? []))].sort(),
+        )
+    })
+
+    it('reports a hub without coordinates and a malformed entry', () => {
+        const airlines = [
+            { name: 'Example Air', hubs: ['HAN', 'SGN'] },
+            { name: 'Other Air', hubs: ['SGN'] },
+        ]
+        assert.deepEqual(
+            findAirportProblems(
+                { HAN: { lat: 21.22, lon: 105.81 }, SGN: { lat: 95, lon: 0 } },
+                airlines,
+            ),
+            ['SGN needs a lat between -90 and 90'],
+        )
+        assert.deepEqual(
+            findAirportProblems({ HAN: { lat: 21.22, lon: 105.81 } }, airlines),
+            [
+                'SGN is a hub of Example Air, Other Air but has no coordinates; run npm run sync:data -- --write or add it by hand',
+            ],
+        )
+    })
+
+    it('sorts the file and drops airports no airline lists', () => {
+        const tidy = normalizeAirports(
+            {
+                SGN: { lon: 106.65, lat: 10.82 },
+                DAD: { lat: 16.04, lon: 108.2 },
+                HAN: { lat: 21.22, lon: 105.81 },
+            },
+            [{ name: 'Example Air', hubs: ['SGN', 'HAN'] }],
+        )
+        assert.deepEqual(Object.keys(tidy), ['HAN', 'SGN'])
+        assert.deepEqual(Object.keys(tidy.SGN), ['lat', 'lon'])
     })
 })
 

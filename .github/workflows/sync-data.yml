@@ -48,6 +48,7 @@ jobs:
           delete-branch: true
           add-paths: |
             airlines.json
+            airports.json
           commit-message: 'chore(data): sync airline data from wikipedia'
           title: 'chore(data): sync airline data from wikipedia'
           body-path: sync-summary.md
