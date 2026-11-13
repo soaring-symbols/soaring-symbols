@@ -1,0 +1,41 @@
+# Publish a GitHub release for each pushed v* tag (`npm run release` creates
+# the tag; pushing it is up to the maintainer). The release starts with only a
+# compare link to the previous tag: its notes are written afterwards and set
+# with `gh release edit` ("Releasing" in AGENTS.md). A tag that already has a
+# release is left alone, so its notes are never overwritten.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Every tag, to find the previous release
+          fetch-depth: 0
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "$TAG already has a release."
+            exit 0
+          fi
+          if previous=$(git describe --tags --abbrev=0 --match 'v*' "$TAG^" 2> /dev/null); then
+            link="$REPO_URL/compare/$previous...$TAG"
+          else
+            link="$REPO_URL/commits/$TAG"
+          fi
+          printf '**Full Changelog**: <%s>\n' "$link" > "$RUNNER_TEMP/notes.md"
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"

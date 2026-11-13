@@ -1,6 +1,8 @@
 // Release to npm: test, bump the version in package.json, publish, purge
-// jsDelivr's cache of the changed files, then commit the bump. No git tag or
-// GitHub release is created.
+// jsDelivr's cache of the changed files, then commit the bump and tag it
+// v<version>. Nothing is pushed: pushing the tag makes the release workflow
+// publish a GitHub release, whose notes are written afterwards (see
+// scripts/release-notes.js and "Releasing" in AGENTS.md).
 //
 // Usage: npm run release -- [bump] [--dry-run]
 //   bump: patch (default), minor, major or an exact version such as 0.2.0.
@@ -103,6 +105,8 @@ run('git', ['fetch', REMOTE, BRANCH])
 const behind = read('git', ['rev-list', '--count', `HEAD..${REMOTE}/${BRANCH}`])
 if (behind !== '0') fail(`"${BRANCH}" is ${behind} commit(s) behind ${REMOTE}.`)
 
+run('git', ['fetch', '--tags', REMOTE])
+
 if (!dryRun) {
     const user = read('npm', ['whoami'])
     console.log(`Logged in to npm as ${user}`)
@@ -120,7 +124,14 @@ step(`Bumping version from ${currentVersion} (${bump})`)
 run('npm', ['version', bump, '--no-git-tag-version'])
 
 const version = readVersion()
-console.log(`\n  version:   ${version}\n  dist-tag:  latest`)
+const tag = `v${version}`
+console.log(
+    `\n  version:   ${version}\n  dist-tag:  latest\n  tag:       ${tag}`,
+)
+if (read('git', ['tag', '--list', tag])) {
+    restoreReleaseFiles()
+    fail(`Tag ${tag} already exists.`)
+}
 
 if (dryRun) {
     step('Dry run: showing the package contents')
@@ -157,8 +168,14 @@ await purgeRelease({ version, previous: currentVersion })
 // --- Commit the bump (not pushed) ---
 step('Committing the version bump')
 run('git', ['add', ...RELEASE_FILES])
-run('git', ['commit', '-m', `chore(release): v${version}`])
+run('git', ['commit', '-m', `chore(release): ${tag}`])
+
+// --- Tag the release commit ---
+step(`Tagging ${tag}`)
+run('git', ['tag', '--annotate', '--message', tag, tag])
 
 console.log(
-    `\n✅ Published soaring-symbols@${version}. Push the release commit with "git push ${REMOTE} ${BRANCH}".`,
+    `\n✅ Published soaring-symbols@${version} and tagged ${tag}.` +
+        `\n   Push both with "git push --atomic ${REMOTE} ${BRANCH} ${tag}"; the release workflow` +
+        `\n   then publishes the GitHub release, ready for its notes.`,
 )

@@ -251,18 +251,23 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 
 #### When an airline changes
 
-| What changed                                    | What to do                                                                                                         |
-| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| The logo, not the name                          | New SVGs in `assets/<slug>/`, old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)). |
-| The name, with or without the logo              | Rename in place with `former` and the new slug ([Renames and mergers](#renames-and-mergers)).                      |
-| Moves into or out of a group's brand            | New entry; the old one defunct with `successor`.                                                                   |
-| Merged into another airline, or refounded       | The old airline defunct with `successor` set to the one that carried on.                                           |
-| Shut down                                       | `defunct` and `ceased`, keeping the entry and its SVGs.                                                            |
-| A code or callsign                              | Edit the entry and add the old one to `former`; `npm run sync:data` suggests code changes from Wikipedia.          |
-| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub and alliance changes from Wikipedia.                              |
-| Flies under its parent's codes, keeps its brand | Take the parent's codes, set `parent`, and add its own old codes to `former` (Hawaiian Airlines).                  |
-| Becomes another airline's subsidiary            | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).      |
-| A name an unrelated airline used (Pan Am)       | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                       |
+| What changed                                    | What to do                                                                                                          |
+| :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| The logo, not the name                          | New SVGs in `assets/<slug>/`, old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)).  |
+| The name, with or without the logo              | Rename in place with `former` and the new slug ([Renames and mergers](#renames-and-mergers)).                       |
+| Moves into or out of a group's brand            | New entry; the old one defunct with `successor`.                                                                    |
+| Merged into another airline, or refounded       | The old airline defunct with `successor` set to the one that carried on.                                            |
+| Shut down                                       | `defunct` and `ceased`, keeping the entry and its SVGs.                                                             |
+| Should not be in the collection at all          | Open a pull request removing it; it waits for the next minor release ([Removing an airline](#removing-an-airline)). |
+| A code or callsign                              | Edit the entry and add the old one to `former`; `npm run sync:data` suggests code changes from Wikipedia.           |
+| A website, hub, alliance or color               | Edit the entry; `npm run sync:data` suggests hub and alliance changes from Wikipedia.                               |
+| Flies under its parent's codes, keeps its brand | Take the parent's codes, set `parent`, and add its own old codes to `former` (Hawaiian Airlines).                   |
+| Becomes another airline's subsidiary            | Set `parent`, and `marks` if it now flies the parent's logo ([Subsidiaries](#subsidiaries-and-shared-logos)).       |
+| A name an unrelated airline used (Pan Am)       | Not decided yet, since two airlines can't share a slug: ask in an issue or discussion first.                        |
+
+#### Removing an airline
+
+An airline that shut down keeps its entry (see the table above). Removing one, for an entry added by mistake or a duplicate, breaks whoever uses it: `getAirline()` no longer finds it and its files disappear from the release line (`soaring-symbols@0.3/...`). So the pull request stays open, labeled `breaking`, until the next minor release, which gathers such changes; new airlines and fixes keep shipping in the weekly patch releases meanwhile. A takedown request from a trademark owner is the exception and ships in the next patch release.
 
 ### Example JSON Data
 
