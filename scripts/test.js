@@ -212,6 +212,11 @@ for (const [format, api] of [
                 assert.equal(sas.iata_duplicate, true)
                 assert.equal(getAirline(thai.iata), thai)
                 assert.equal(getAirline(sas.icao), sas)
+                // IATA's own notation finds the starred holder
+                assert.equal(getAirline(`${sas.iata}*`), sas)
+                assert.equal(getAirline(' sl* '), sas)
+                // and only a starred one
+                assert.equal(getAirline('VN*'), undefined)
             })
 
             it('finds the parent by a code a brand flies under', () => {

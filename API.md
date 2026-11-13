@@ -27,7 +27,7 @@ const skyTeam = all.filter((airline) => airline.alliance === 'SkyTeam')
 
 Finds one airline. `query` is matched, ignoring case and surrounding whitespace, against the IATA code, then the ICAO code, then the slug, then the full name, and last against the codes it used before (`former`).
 
-Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. A brand that flies under its parent's codes (Hawaiian Airlines under Alaska Airlines) shares them with its `parent`, and the code finds the parent. IATA also gives a code to two airlines whose services don't overlap (a controlled duplicate, e.g. SL for Thai Lion Air and SAS Connect): the code finds the holder without `iata_duplicate`, and the other is found by its ICAO code, slug or name. A renamed airline is also found by its former names and slugs, and an airline whose codes changed by its former codes when no airline has them now (`former`), and one that merged into another stays in the catalog with a `successor` (see [Renames and mergers](#renames-and-mergers)).
+Codes of airlines that ceased operations get reassigned. When a code belongs to both an active airline and a defunct one (`defunct: true`), the code finds the active airline; find the defunct one by its slug or name. A brand that flies under its parent's codes (Hawaiian Airlines under Alaska Airlines) shares them with its `parent`, and the code finds the parent. IATA also gives a code to two airlines whose services don't overlap (a controlled duplicate, e.g. SL for Thai Lion Air and SAS Connect): the code finds the holder without `iata_duplicate`, and the code with IATA's asterisk (`SL*`) finds the one with it, as do its ICAO code, slug and name. A renamed airline is also found by its former names and slugs, and an airline whose codes changed by its former codes when no airline has them now (`former`), and one that merged into another stays in the catalog with a `successor` (see [Renames and mergers](#renames-and-mergers)).
 
 - **Argument:** `query` (string)
 - **Returns:** `Airline`, or `undefined` if nothing matches.
@@ -40,6 +40,10 @@ getAirline('vietnam-airlines')
 getAirline('Vietnam Airlines')
 
 getAirline('XX') // undefined
+
+// SL is an IATA controlled duplicate
+getAirline('SL').slug // 'thai-lion-air'
+getAirline('SL*').slug // 'sas-connect'
 ```
 
 ### `getAssetPath(airline, type, options?)`

@@ -46,6 +46,9 @@ const setCode = (map, code, airline, { iata = false } = {}) => {
 for (const airline of airlines) {
     deepFreeze(airline)
     setCode(byIata, airline.iata, airline, { iata: true })
+    // IATA writes a controlled duplicate with an asterisk ("SL*"), which
+    // finds the starred holder
+    if (airline.iata_duplicate) setCode(byIata, `${airline.iata}*`, airline)
     setCode(byIcao, airline.icao, airline)
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
@@ -76,10 +79,11 @@ function listAirlines() {
  * Find an airline by IATA code, ICAO code, slug or name (case-insensitive),
  * tried in that order. A code shared with a defunct airline finds the
  * active one, a code a brand shares with its parent finds the parent, and an
- * IATA code IATA gave to two airlines finds the one without `iata_duplicate`. A
- * renamed airline is also found by its former slugs and names, and returned
- * with its current slug; a former code (`former`) finds it only when no
- * airline has that code now.
+ * IATA code IATA gave to two airlines finds the one without `iata_duplicate`
+ * and, written with IATA's asterisk ("SL*"), the one with it. A renamed
+ * airline is also found by its former slugs and names, and returned with its
+ * current slug; a former code (`former`) finds it only when no airline has
+ * that code now.
  */
 function getAirline(query) {
     if (typeof query !== 'string' || !query.trim()) return undefined
