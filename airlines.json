@@ -1633,6 +1633,32 @@
         }
     },
     {
+        "name": "LATAM Airlines Argentina",
+        "slug": "latam-airlines-argentina",
+        "iata": "4M",
+        "icao": "DSM",
+        "callsign": "LANAR",
+        "former": [
+            {
+                "name": "LAN Argentina",
+                "until": 2016
+            }
+        ],
+        "country": "AR",
+        "website": "https://www.latam.com",
+        "parent": "latam-airlines",
+        "marks": "latam-airlines",
+        "hubs": [
+            "AEP"
+        ],
+        "founded": 2005,
+        "defunct": true,
+        "ceased": 2020,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
         "name": "LATAM Airlines Brasil",
         "slug": "latam-airlines-brasil",
         "iata": "JJ",
