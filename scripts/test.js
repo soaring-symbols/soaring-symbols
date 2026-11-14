@@ -586,6 +586,26 @@ describe('alliances.json schema', () => {
         assert.notDeepEqual(validateAlliances(source, { published: true }), [])
     })
 
+    it('needs a primary color once an alliance has SVGs', () => {
+        const [first, ...rest] = read('dist/alliances.json')
+        const icon = { color: true, mono: true, colors: ['#1a3576'] }
+        const { branding, ...uncolored } = first
+        assert.deepEqual(
+            validateAlliances([{ ...uncolored, assets: {} }, ...rest], {
+                published: true,
+            }).filter((problem) => problem.startsWith(`${first.name}:`)),
+            [],
+        )
+        assert.deepEqual(
+            validateAlliances([{ ...uncolored, assets: { icon } }, ...rest], {
+                published: true,
+            }).filter((problem) => problem.startsWith(`${first.name}:`)),
+            [
+                `${first.name}: has SVGs in alliances/${first.slug}/, so it needs branding.primary_color`,
+            ],
+        )
+    })
+
     it('needs one entry per alliance airlines can name', () => {
         const [first, ...rest] = read('alliances.json')
         assert.deepEqual(validateAlliances(rest), [

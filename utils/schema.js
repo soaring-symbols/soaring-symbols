@@ -248,10 +248,26 @@ const validateAirlines = (airlines, { published = false } = {}) => {
     ]
 }
 
+// An alliance may wait for its primary color until its SVGs are in the
+// collection, but no longer: like every airline, one with marks has a color.
+// Only the published copy has `assets` to tell.
+const findMissingColors = (alliances) =>
+    alliances
+        .filter(
+            (a) =>
+                Object.keys(a.assets ?? {}).length > 0 &&
+                !a.branding?.primary_color,
+        )
+        .map(
+            (a) =>
+                `${a.name}: has SVGs in alliances/${a.slug}/, so it needs branding.primary_color`,
+        )
+
 // Check an alliances.json array against alliances.schema.json, the repo's
 // copy by default or with `published` the built one, plus what the schema
-// can't express: slugs, one entry per alliance airlines.json may name, and
-// branding.since once there are older marks. Same messages as
+// can't express: slugs, one entry per alliance airlines.json may name,
+// branding.since once there are older marks and branding.primary_color once
+// there are SVGs. Same messages as
 // validateAirlines.
 const validateAlliances = (alliances, { published = false } = {}) => {
     const validate = published
@@ -273,6 +289,7 @@ const validateAlliances = (alliances, { published = false } = {}) => {
             .filter((name, i) => names.indexOf(name) !== i)
             .map((name) => `alliances.json lists ${name} more than once`),
         ...findOpenHistory(alliances),
+        ...findMissingColors(alliances),
     ]
 }
 
