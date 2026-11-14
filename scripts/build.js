@@ -1,9 +1,13 @@
-import { promises as fs } from 'fs'
+import { existsSync, promises as fs } from 'fs'
 import path from 'path'
 import { build as esbuild } from 'esbuild'
-import { getAssetDirs, writeDerivedMonos } from '../utils/index.js'
-import { publishCatalog } from '../utils/catalog.js'
-import { validateAirlines } from '../utils/schema.js'
+import {
+    ALLIANCES_DIR,
+    getAssetDirs,
+    writeDerivedMonos,
+} from '../utils/index.js'
+import { publishAlliances, publishCatalog } from '../utils/catalog.js'
+import { validateAirlines, validateAlliances } from '../utils/schema.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 
 const inputFile = './index.js'
@@ -53,6 +57,22 @@ async function copyFiles() {
         JSON.stringify(catalog),
     )
 
+    // The alliances airlines name in `alliance`, with the `assets` of their
+    // marks in alliances/<slug>/, minified like the airlines
+    const alliances = publishAlliances(
+        JSON.parse(await fs.readFile('./alliances.json', 'utf-8')),
+    )
+    const allianceProblems = validateAlliances(alliances, { published: true })
+    if (allianceProblems.length) {
+        throw new Error(
+            `alliances.json does not match alliances.schema.json:\n  - ${allianceProblems.join('\n  - ')}`,
+        )
+    }
+    await fs.writeFile(
+        path.join(distDir, 'alliances.json'),
+        JSON.stringify(alliances),
+    )
+
     // Where each hub is, for maps and globes: minified like the catalog
     const airports = JSON.parse(await fs.readFile('./airports.json', 'utf-8'))
     const airportProblems = findAirportProblems(airports, catalog)
@@ -76,15 +96,18 @@ async function copyFiles() {
         { src: './svg-fixer.d.ts', dest: 'svg-fixer.d.ts' },
     ]
 
-    const dirsToCopy = [{ src: './assets', dest: 'assets' }]
+    const dirsToCopy = [
+        { src: './assets', dest: 'assets' },
+        { src: `./${ALLIANCES_DIR}`, dest: ALLIANCES_DIR },
+    ]
 
     // Copy individual files
     for (const file of filesToCopy) {
         await fs.copyFile(file.src, path.join(distDir, file.dest))
     }
 
-    // Copy directories
-    for (const dir of dirsToCopy) {
+    // Copy directories (alliances/ only once an alliance has SVGs)
+    for (const dir of dirsToCopy.filter((d) => existsSync(d.src))) {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
@@ -93,6 +116,13 @@ async function copyFiles() {
     for (const airline of catalog.filter((a) => !a.marks)) {
         for (const dir of getAssetDirs(airline.slug)) {
             writeDerivedMonos(dir, path.join(distDir, 'assets'))
+        }
+    }
+    for (const alliance of alliances) {
+        for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
+            if (existsSync(path.join(ALLIANCES_DIR, dir))) {
+                writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
+            }
         }
     }
     // After the monos, so airlines sharing marks get those too, and after
@@ -161,12 +191,13 @@ async function buildESM() {
 }
 
 // Transform the ESM code to CJS format. index.js only imports airlines.json
-// and has a single named export list; fail loudly if anything else is left.
+// and alliances.json and has a single named export list; fail loudly if
+// anything else is left.
 function transformToCJS(content) {
     const out = content
         .replace(
-            /import\s+airlines\s+from\s+['"]\.\/airlines\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/,
-            "const airlines = require('./airlines.json')",
+            /import\s+(airlines|alliances)\s+from\s+['"]\.\/(airlines|alliances)\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/g,
+            "const $1 = require('./$2.json')",
         )
         .replace(/^export\s*{([^}]+)}/m, 'module.exports = {$1}')
     if (/^\s*(import|export)\s/m.test(out)) {

@@ -118,6 +118,29 @@ Without a bundler, a page can import the library itself from unpkg as an ES modu
 import { getAirline } from 'https://unpkg.com/soaring-symbols@0.3/dist/index.js'
 ```
 
+### `listAlliances()`
+
+Returns every alliance an airline may name in `alliance`, sorted by name: an array of [`Alliance`](#alliance) objects. An alliance whose logos aren't in the collection yet is listed too, with empty `assets`. In releases after 0.3.3.
+
+### `getAlliance(query)`
+
+Finds an alliance by its name, as airlines write it in `alliance`, or by its slug, case-insensitive. Returns the [`Alliance`](#alliance), or `undefined`.
+
+```js
+getAlliance('Star Alliance').slug // 'star-alliance'
+getAlliance(getAirline('VN').alliance).name // 'SkyTeam'
+```
+
+### `getAllianceAssetPath(alliance, type, options?)`
+
+Like [`getAssetPath()`](#getassetpathairline-type-options) for an alliance's marks: `alliance` is an `Alliance` or any `query` accepted by `getAlliance()`, `type` is `'icon'` or `'logo'` (an alliance has no tail; any other value throws a `TypeError`), and `options.mono` and `options.since` work the same way.
+
+```js
+getAllianceAssetPath('Star Alliance', 'logo') // 'soaring-symbols/alliances/star-alliance/logo.svg', once it has one
+```
+
+On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/alliances/${alliance.slug}/logo.svg`.
+
 ### Fixing an SVG in the browser
 
 `soaring-symbols/svg-fixer` runs `node scripts/lint-svg.js --fix` on an SVG's text in the browser; the website's validate page uses it. It is ESM only and bundles SVGO and resvg (a few hundred kilobytes), so import it when needed. Install its optional peer dependency [`@resvg/resvg-wasm`](https://www.npmjs.com/package/@resvg/resvg-wasm) 2.6.2 and load its WebAssembly once with `initSvgFixer`.
@@ -283,6 +306,22 @@ On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline
 ```
 
 Every hub in the catalog has an entry, and only hubs do. The coordinates come from Wikidata, rounded to two decimals (about a kilometre). On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/airports.json`. It is in releases after 0.3.2.
+
+### Alliance
+
+`dist/alliances.json`, which `listAlliances()` returns, has one entry per alliance. Its marks are in `alliances/<slug>/`, laid out like an airline's.
+
+| Field      | Type        | Description                                                                                                                        |
+| :--------- | :---------- | :--------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | `string`    | As airlines write it in `alliance`, e.g. `"Star Alliance"`.                                                                        |
+| `slug`     | `string`    | The slugified name, e.g. `"star-alliance"`: the folder of its marks.                                                               |
+| `website`  | `string?`   | Official website.                                                                                                                  |
+| `founded`  | `number?`   | Year founded.                                                                                                                      |
+| `defunct`  | `boolean?`  | The alliance has been dissolved.                                                                                                   |
+| `ceased`   | `number?`   | Year a defunct alliance was dissolved.                                                                                             |
+| `branding` | `object?`   | As for an airline, e.g. `tagline` (the alliance's slogan); `primary_color` is missing only while it has no SVGs in the collection. |
+| `assets`   | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`). Empty until the alliance's logos are in the collection.         |
+| `history`  | `object[]?` | Its older marks, as an airline's [History](#history). No key when there are none.                                                  |
 
 ### Renames and mergers
 

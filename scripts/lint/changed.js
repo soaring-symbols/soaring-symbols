@@ -10,14 +10,23 @@ const git = (...gitArgs) =>
         .split('\n')
         .filter(Boolean)
 
-// SVGs under assets/ added or modified since `ref`, including uncommitted and
-// untracked files
+// SVGs under assets/ and alliances/ added or modified since `ref`, including
+// uncommitted and untracked files
+const SVG_DIRS = ['assets', 'alliances']
+
 export const changedSince = (ref) => {
     const since = git('merge-base', ref, 'HEAD')[0]
 
     return [
-        ...git('diff', '--name-only', '--diff-filter=d', since, '--', 'assets'),
-        ...git('ls-files', '--others', '--exclude-standard', '--', 'assets'),
+        ...git(
+            'diff',
+            '--name-only',
+            '--diff-filter=d',
+            since,
+            '--',
+            ...SVG_DIRS,
+        ),
+        ...git('ls-files', '--others', '--exclude-standard', '--', ...SVG_DIRS),
     ]
 }
 

@@ -136,6 +136,25 @@ IATA and ICAO codes must be unique among active airlines, with three exceptions.
 | `successor`        |    No    | Slug of the airline that carried on a defunct one (a merger, refounding or brand move).                                                                                                                                       |
 | `branding`         |   Yes    | `primary_color` (six-digit lowercase hex), and optionally `tagline`, `guidelines` and `since`.                                                                                                                                |
 
+#### Alliance Marks
+
+Alliance logos live apart from the airlines, in `alliances/<slug>/`, where `<slug>` is the slugified name of the alliance's entry in `alliances.json` (`alliances/star-alliance/`). That file lists every alliance `airlines.json` may name in `alliance`, so an alliance is already there before its SVGs are: add the folder, and fill in its entry.
+
+```plaintext
+alliances/
+└── star-alliance/
+    ├── icon.svg         # the mark alone, viewBox 0 0 24 24
+    ├── logo.svg         # the mark with the name, viewBox 0 0 64 64
+    └── history/         # older marks, as for an airline
+        └── 1997/
+            └── logo.svg
+```
+
+- **The icon first:** alliances show their symbol far more often than a logo with the name, so start with `icon.svg`. Add `logo.svg` only for an official lockup of the symbol and name; an alliance without one is fine, and apps should show the icon when `assets.logo` is missing.
+- **Only `icon` and `logo`**, with a hand-made `-mono.svg` for a multi-color one; an alliance has no tail. `npm run generate` stops on any other file, and on a folder that matches no alliance.
+- **Same rules as airline marks:** the SVG specifications below, `<title>` set to the alliance's name exactly as `alliances.json` writes it (`oneworld`, `SkyTeam`), and older marks in `history/<year>/` with `branding.since` set.
+- **Fields in `alliances.json`:** `name` and `slug` are required; `website`, `founded`, `defunct`, `ceased` and `branding` (as for an airline, with the alliance's slogan as `tagline`; `primary_color` can wait until its SVGs are added: `npm run generate` stops when an alliance has SVGs but no `primary_color`, as it does for any airline) are optional. A new alliance goes into the `alliance` list in `airlines.schema.json` and into `alliances.json` in the same pull request.
+
 #### Generated Asset Metadata
 
 In the published package (`dist/airlines.json`), each airline also has an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):

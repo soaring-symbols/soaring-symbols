@@ -4,16 +4,30 @@
 // asset folder and well-formed history folders, and delete committed
 // -mono.svg files the build derives. airports.json gets the same: sorted,
 // trimmed to the hubs the catalog lists, and checked that each has its
-// coordinates.
-import { existsSync, readFileSync, rmSync, writeFileSync } from 'fs'
+// coordinates. alliances.json and alliances/ get the airlines' treatment too,
+// except that an alliance may have no SVGs yet.
 import {
+    existsSync,
+    readFileSync,
+    readdirSync,
+    rmSync,
+    writeFileSync,
+} from 'fs'
+import {
+    ALLIANCES_DIR,
+    findAllianceFileProblems,
     findHistoryProblems,
     getAssetDirs,
     removeDerivedMonos,
 } from '../utils/index.js'
-import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
+import {
+    normalizeAlliances,
+    normalizeCatalog,
+    publishAlliances,
+    publishCatalog,
+} from '../utils/catalog.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
-import { validateAirlines } from '../utils/schema.js'
+import { validateAirlines, validateAlliances } from '../utils/schema.js'
 
 const airlines = normalizeCatalog(
     JSON.parse(readFileSync('airlines.json', 'utf8')),
@@ -27,6 +41,18 @@ const problems = validateAirlines(publishCatalog(airlines), {
 if (problems.length) {
     console.error('❌ airlines.json does not match airlines.schema.json:')
     problems.forEach((problem) => console.error(`  - ${problem}`))
+    process.exit(1)
+}
+
+const alliances = normalizeAlliances(
+    JSON.parse(readFileSync('alliances.json', 'utf8')),
+)
+const allianceProblems = validateAlliances(publishAlliances(alliances), {
+    published: true,
+})
+if (allianceProblems.length) {
+    console.error('❌ alliances.json does not match alliances.schema.json:')
+    allianceProblems.forEach((problem) => console.error(`  - ${problem}`))
     process.exit(1)
 }
 
@@ -69,7 +95,37 @@ for (const { name, slug, marks } of airlines) {
     }
 }
 
+// An alliance needs no folder until its SVGs come, but a folder needs an
+// alliance
+const allianceSlugs = new Set(alliances.map((a) => a.slug))
+const allianceDirs = existsSync(ALLIANCES_DIR)
+    ? readdirSync(ALLIANCES_DIR, { withFileTypes: true })
+          .filter((d) => d.isDirectory())
+          .map((d) => d.name)
+    : []
+for (const slug of allianceDirs) {
+    if (!allianceSlugs.has(slug)) {
+        console.error(
+            `❌ ${ALLIANCES_DIR}/${slug} matches no alliance in alliances.json; its slug is the slugified name`,
+        )
+        process.exit(1)
+    }
+    const folderProblems = [
+        ...findAllianceFileProblems(slug),
+        ...findHistoryProblems(slug, ALLIANCES_DIR),
+    ]
+    if (folderProblems.length) {
+        console.error(`❌ ${ALLIANCES_DIR}/${slug} has files out of place:`)
+        folderProblems.forEach((problem) => console.error(`  - ${problem}`))
+        process.exit(1)
+    }
+    for (const dir of getAssetDirs(slug, ALLIANCES_DIR)) {
+        removedMonos.push(...removeDerivedMonos(dir, ALLIANCES_DIR))
+    }
+}
+
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))
+writeFileSync('alliances.json', JSON.stringify(alliances, null, 4))
 writeFileSync('airports.json', JSON.stringify(tidyAirports, null, 4))
 if (unused.length) {
     console.log(
@@ -89,4 +145,6 @@ if (removedMonos.length) {
         `✅ Removed ${removedMonos.length} -mono.svg file(s) the build derives from single-color assets`,
     )
 }
-console.log('✅ airlines.json and airports.json are sorted and valid')
+console.log(
+    '✅ airlines.json, alliances.json and airports.json are sorted and valid',
+)

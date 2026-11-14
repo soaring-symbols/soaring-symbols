@@ -1,7 +1,10 @@
 import airlines from './airlines.json' with { type: 'json' }
+import alliances from './alliances.json' with { type: 'json' }
 
 // Same list as utils/index.js, which can't be imported here: it uses fs
 const ASSET_TYPES = ['icon', 'logo', 'tail']
+// An alliance has no tail
+const ALLIANCE_ASSET_TYPES = ['icon', 'logo']
 
 const byIata = new Map()
 const byIcao = new Map()
@@ -81,6 +84,14 @@ for (const airline of airlines) {
     }
 }
 
+// Alliances by slug and by name, both lowercase
+const alliancesByKey = new Map()
+for (const alliance of alliances) {
+    deepFreeze(alliance)
+    alliancesByKey.set(alliance.slug, alliance)
+    alliancesByKey.set(alliance.name.toLowerCase(), alliance)
+}
+
 /**
  * All airlines, sorted by name. The array is a fresh copy; the airline
  * objects are frozen.
@@ -146,17 +157,30 @@ function findAirlines(code, options = {}) {
 }
 
 /**
- * Package path of one asset file, e.g.
- * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
- * of an older mark from the airline's `history`, e.g.
- * 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'.
- * Returns undefined when the airline, that mark or that file does not exist.
+ * All alliances, sorted by name, the ones airlines name in `alliance`
+ * included when they have no SVGs yet (empty `assets`). The array is a fresh
+ * copy; the alliance objects are frozen.
  */
-function getAssetPath(airline, type, options = {}) {
-    const entry = typeof airline === 'string' ? getAirline(airline) : airline
-    if (!ASSET_TYPES.includes(type)) {
+function listAlliances() {
+    return alliances.slice()
+}
+
+/**
+ * Find an alliance by name, as airlines write it in `alliance` (e.g.
+ * "Star Alliance"), or by slug ("star-alliance"), case-insensitive.
+ */
+function getAlliance(query) {
+    if (typeof query !== 'string' || !query.trim()) return undefined
+
+    return alliancesByKey.get(query.trim().toLowerCase())
+}
+
+// The package path of one file of an airline's or alliance's marks, under
+// `root` (assets or alliances), or undefined when there is no such file
+const markPath = (root, types, entry, type, options) => {
+    if (!types.includes(type)) {
         throw new TypeError(
-            `Unknown asset type "${type}", expected one of: ${ASSET_TYPES.join(', ')}`,
+            `Unknown asset type "${type}", expected one of: ${types.join(', ')}`,
         )
     }
     const { since } = options
@@ -170,7 +194,41 @@ function getAssetPath(airline, type, options = {}) {
     const dir =
         since === undefined ? entry.slug : `${entry.slug}/history/${since}`
 
-    return `soaring-symbols/assets/${dir}/${type}${mono ? '-mono' : ''}.svg`
+    return `soaring-symbols/${root}/${dir}/${type}${mono ? '-mono' : ''}.svg`
 }
 
-export { listAirlines, getAirline, findAirlines, getAssetPath }
+/**
+ * Package path of one asset file, e.g.
+ * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
+ * of an older mark from the airline's `history`, e.g.
+ * 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'.
+ * Returns undefined when the airline, that mark or that file does not exist.
+ */
+function getAssetPath(airline, type, options = {}) {
+    const entry = typeof airline === 'string' ? getAirline(airline) : airline
+
+    return markPath('assets', ASSET_TYPES, entry, type, options)
+}
+
+/**
+ * Package path of one file of an alliance's marks, icon or logo, e.g.
+ * 'soaring-symbols/alliances/star-alliance/logo.svg'; `mono` and `since`
+ * work as in getAssetPath(). Returns undefined when the alliance, that mark
+ * or that file does not exist.
+ */
+function getAllianceAssetPath(alliance, type, options = {}) {
+    const entry =
+        typeof alliance === 'string' ? getAlliance(alliance) : alliance
+
+    return markPath('alliances', ALLIANCE_ASSET_TYPES, entry, type, options)
+}
+
+export {
+    listAirlines,
+    getAirline,
+    findAirlines,
+    getAssetPath,
+    listAlliances,
+    getAlliance,
+    getAllianceAssetPath,
+}

@@ -22,7 +22,7 @@ export const REPO_URL = 'https://github.com/soaring-symbols/soaring-symbols'
 
 // Files that make a commit an airline change rather than a tooling one
 const DATA_FILE =
-    /^(airlines\.json|airports\.json|published-slugs\.json|assets\/)/
+    /^(airlines\.json|alliances\.json|airports\.json|published-slugs\.json|assets\/|alliances\/)/
 
 const SUBJECT =
     /^(?<type>\w+)(?:\((?<scope>[^)]*)\))?(?<bang>!)?: (?<summary>.+)$/
