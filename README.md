@@ -5,28 +5,26 @@ This project aims to create a meticulously curated collection of airline logos, 
 > [!IMPORTANT]
 > "Soaring Symbols" provides airline logos/icons in SVG for informational and reference purposes only. We do not claim ownership of any trademarks or copyrighted materials. The logos remain the intellectual property of their respective airlines.
 
-## Project Scope
+## Features
 
-The initial phase will focus on building a core collection of high-quality SVG logos from major airlines. The collection will be expanded progressively to include regional and potentially historical airlines.
-
-The inclusion of monochrome versions will depend on the airline's brand guidelines and the feasibility of converting their original logos to a simple, one-color format.
+- Airline logos, icons and tail designs as SVG, drawn to one set of rules ([CONTRIBUTING.md](CONTRIBUTING.md)), with a monochrome version in `currentColor` for every single-color mark and for many multi-color ones.
+- A catalog of every airline with its IATA and ICAO codes, callsign, country, hubs, alliance, founding year and brand color, and a small JS API to look airlines up by code, slug or name ([API.md](API.md)).
+- Earlier logos, by the year each came in, in `assets/<slug>/history/<year>/` ([Older marks](CONTRIBUTING.md#older-marks-logo-history)).
+- Renames and mergers: an old name or slug still finds the airline and its files, and a merged airline points to its `successor` ([Renames and mergers](CONTRIBUTING.md#renames-and-mergers)).
+- Alliance marks, starting with the oneworld, SkyTeam and Star Alliance icons, in `alliances/<slug>/` ([Alliance marks](CONTRIBUTING.md#alliance-marks)).
+- Hub coordinates in `airports.json`, for maps.
+- The SVG validator and fixer the website's validate page runs, for any browser app (`soaring-symbols/svg-validator`, `soaring-symbols/svg-fixer`).
 
 ## Website
 
-Browse the collection, open a page for any airline to download its marks, and check new SVGs against the contribution guidelines at <https://soaringsymbols.org>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
+Browse the collection, open a page for any airline or alliance to download its marks, and check new SVGs against the contribution guidelines at <https://soaringsymbols.org>. The site's source lives in [soaring-symbols/website](https://github.com/soaring-symbols/website).
+
+The site also serves a JSON and image API, with no key needed: [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN) for an airline's data and links to its marks, [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png) for a mark as SVG or as PNG for apps that can't render SVG, with monochrome marks in any color, [`/api/airlines?code=SL`](https://soaringsymbols.org/api/airlines?code=SL) for every airline holding a code, and the alliances at [`/api/alliances`](https://soaringsymbols.org/api/alliances) and [`/api/alliances/skyteam/icon.png`](https://soaringsymbols.org/api/alliances/skyteam/icon.png). The [ecosystem page](https://soaringsymbols.org/ecosystem) lists every parameter.
 
 ## Roadmap
 
-This is the one roadmap for the collection and every integration around it, including those built in other repositories (the website's API, the Raycast extension, the Figma plugin). Plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+This is the one roadmap for the collection and every integration around it, including those built in other repositories (the website's API, the Raycast extension, the Figma plugin). What already exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
-- [x] npm package, with a `branding.primary_color` for every airline
-- [x] jsDelivr and unpkg CDNs
-- [x] Website with a browsable catalog, a page per airline, and an SVG validator that also fixes files in the browser (`soaring-symbols/svg-validator`, `soaring-symbols/svg-fixer`)
-- [x] JSON and image API on the website, such as [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN) and [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png), with monochrome marks in any color and PNG for apps that can't render SVG
-- [x] Raycast extension
-- [x] Logo history: an airline's older marks, in `assets/<slug>/history/<year>/` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
-- [x] Renames and mergers: old slugs keep working after a rename, and a merged airline points to its `successor` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
-- [x] Alliance marks, starting with the oneworld, SkyTeam and Star Alliance icons, in `alliances/<slug>/`, with `listAlliances()`, `getAlliance()` and `getAllianceAssetPath()` (see [CONTRIBUTING.md](CONTRIBUTING.md#alliance-marks))
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
 - [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's official reversed version where it has one, and a white version of single-color marks
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
