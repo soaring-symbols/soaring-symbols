@@ -1344,6 +1344,13 @@
         "callsign": "HONGKONG SHUTTLE",
         "country": "HK",
         "website": "https://www.hkexpress.com",
+        "alliance_history": [
+            {
+                "alliance": "U-FLY Alliance",
+                "since": 2016,
+                "until": 2019
+            }
+        ],
         "parent": "cathay-pacific",
         "hubs": [
             "HKG"
@@ -2328,7 +2335,13 @@
         "callsign": "SCOOTER",
         "country": "SG",
         "website": "https://www.flyscoot.com",
-        "alliance": "Value Alliance",
+        "alliance_history": [
+            {
+                "alliance": "Value Alliance",
+                "since": 2016,
+                "until": 2023
+            }
+        ],
         "parent": "singapore-airlines",
         "hubs": [
             "SIN"

@@ -18,10 +18,18 @@
         "founded": 1997
     },
     {
+        "name": "U-FLY Alliance",
+        "slug": "u-fly-alliance",
+        "founded": 2016,
+        "defunct": true,
+        "ceased": 2024
+    },
+    {
         "name": "Value Alliance",
         "slug": "value-alliance",
         "founded": 2016,
-        "defunct": true
+        "defunct": true,
+        "ceased": 2023
     },
     {
         "name": "Vanilla Alliance",
