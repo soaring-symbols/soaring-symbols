@@ -24,8 +24,12 @@ import {
     getAssetDirs,
     toSlug,
 } from '../utils/index.js'
-import { normalizeCatalog, publishCatalog } from '../utils/catalog.js'
-import { validateAirlines } from '../utils/schema.js'
+import {
+    normalizeAlliances,
+    normalizeCatalog,
+    publishCatalog,
+} from '../utils/catalog.js'
+import { validateAirlines, validateAlliances } from '../utils/schema.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { selectSvgs } from './lint/changed.js'
 import { groupCommits, renderNotes, REPO_URL } from './release-notes.js'
@@ -64,7 +68,15 @@ for (const [format, api] of [
     ['ESM', esm],
     ['CJS', cjs],
 ]) {
-    const { listAirlines, getAirline, findAirlines, getAssetPath } = api
+    const {
+        listAirlines,
+        getAirline,
+        findAirlines,
+        getAssetPath,
+        listAlliances,
+        getAlliance,
+        getAllianceAssetPath,
+    } = api
 
     describe(`${format} build`, () => {
         it('exports exactly the public API', () => {
@@ -74,8 +86,11 @@ for (const [format, api] of [
             assert.deepEqual(names, [
                 'findAirlines',
                 'getAirline',
+                'getAlliance',
+                'getAllianceAssetPath',
                 'getAssetPath',
                 'listAirlines',
+                'listAlliances',
             ])
         })
 
@@ -392,6 +407,98 @@ for (const [format, api] of [
                 }
             })
         })
+
+        describe('alliances', () => {
+            it('lists every alliance airlines name, sorted by name', () => {
+                const names = listAlliances().map((a) => a.name)
+                assert.deepEqual(
+                    names,
+                    [...names].sort((a, b) =>
+                        a.toLowerCase().localeCompare(b.toLowerCase()),
+                    ),
+                )
+                for (const a of listAirlines()) {
+                    for (const { alliance } of [
+                        a,
+                        ...(a.alliance_history ?? []),
+                    ]) {
+                        if (alliance) assert.ok(getAlliance(alliance), a.name)
+                    }
+                }
+            })
+
+            it('returns frozen alliances with their assets', () => {
+                for (const a of listAlliances()) {
+                    assert.ok(Object.isFrozen(a), a.name)
+                    assert.equal(typeof a.assets, 'object', a.name)
+                }
+            })
+
+            it('finds an alliance by name or slug, case-insensitive', () => {
+                const star = getAlliance('Star Alliance')
+                assert.equal(star.slug, 'star-alliance')
+                assert.equal(getAlliance(' star-alliance '), star)
+                assert.equal(getAlliance('STAR ALLIANCE'), star)
+                assert.equal(getAlliance('SkyTeam').slug, 'skyteam')
+                assert.equal(getAlliance('Unknown'), undefined)
+                assert.equal(getAlliance(''), undefined)
+            })
+
+            it('returns the package path of an alliance file', () => {
+                const alliance = {
+                    slug: 'star-alliance',
+                    assets: {
+                        logo: { color: true, mono: true, colors: ['#000000'] },
+                    },
+                    history: [
+                        {
+                            since: 1997,
+                            assets: {
+                                logo: {
+                                    color: true,
+                                    mono: false,
+                                    colors: ['#000000', '#ffffff'],
+                                },
+                            },
+                        },
+                    ],
+                }
+                assert.equal(
+                    getAllianceAssetPath(alliance, 'logo'),
+                    'soaring-symbols/alliances/star-alliance/logo.svg',
+                )
+                assert.equal(
+                    getAllianceAssetPath(alliance, 'logo', { mono: true }),
+                    'soaring-symbols/alliances/star-alliance/logo-mono.svg',
+                )
+                assert.equal(
+                    getAllianceAssetPath(alliance, 'logo', { since: 1997 }),
+                    'soaring-symbols/alliances/star-alliance/history/1997/logo.svg',
+                )
+                assert.equal(getAllianceAssetPath(alliance, 'icon'), undefined)
+                assert.equal(getAllianceAssetPath('Unknown', 'logo'), undefined)
+                assert.throws(
+                    () => getAllianceAssetPath(alliance, 'tail'),
+                    TypeError,
+                )
+            })
+
+            it('points at files the package ships', () => {
+                for (const a of listAlliances()) {
+                    for (const type of Object.keys(a.assets)) {
+                        for (const mono of [false, true]) {
+                            const path = getAllianceAssetPath(a, type, { mono })
+                            if (path) {
+                                assert.ok(
+                                    existsSync(require.resolve(path)),
+                                    path,
+                                )
+                            }
+                        }
+                    }
+                }
+            })
+        })
     })
 }
 
@@ -447,6 +554,53 @@ describe('airlines.json schema', () => {
             [
                 `slug "${slug}" is used by more than one airline: ${first.name}, ${first.name}`,
             ],
+        )
+    })
+})
+
+describe('alliances.json schema', () => {
+    const read = (file) =>
+        JSON.parse(readFileSync(new URL(`../${file}`, import.meta.url)))
+
+    it('ships a catalog that matches alliances.schema.json', () => {
+        const shipped = read('dist/alliances.json')
+        assert.deepEqual(validateAlliances(shipped, { published: true }), [])
+        for (const a of shipped) {
+            assert.deepEqual(
+                a.assets,
+                getAirlineAssets(
+                    a.slug,
+                    fileURLToPath(
+                        new URL('../dist/alliances/', import.meta.url),
+                    ),
+                ),
+                a.slug,
+            )
+        }
+    })
+
+    it('keeps the repo copy tidy, without assets', () => {
+        const source = read('alliances.json')
+        assert.deepEqual(validateAlliances(source), [])
+        assert.deepEqual(normalizeAlliances(source), source)
+        assert.notDeepEqual(validateAlliances(source, { published: true }), [])
+    })
+
+    it('needs one entry per alliance airlines can name', () => {
+        const [first, ...rest] = read('alliances.json')
+        assert.deepEqual(validateAlliances(rest), [
+            `alliances.json has no entry for ${first.name}`,
+        ])
+        assert.deepEqual(validateAlliances([first, first, ...rest]), [
+            `alliances.json lists ${first.name} more than once`,
+        ])
+        assert.notDeepEqual(
+            validateAlliances([{ name: 'Unknown', slug: 'unknown' }, ...rest]),
+            [],
+        )
+        assert.deepEqual(
+            validateAlliances([{ ...first, slug: 'x' }, ...rest]),
+            [`${first.name}: slug must be "${first.slug}", not "x"`],
         )
     })
 })

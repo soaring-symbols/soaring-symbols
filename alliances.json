@@ -1,0 +1,28 @@
+[
+    {
+        "name": "oneworld",
+        "slug": "oneworld",
+        "website": "https://www.oneworld.com",
+        "founded": 1999
+    },
+    {
+        "name": "SkyTeam",
+        "slug": "skyteam",
+        "website": "https://www.skyteam.com",
+        "founded": 2000
+    },
+    {
+        "name": "Star Alliance",
+        "slug": "star-alliance",
+        "website": "https://www.staralliance.com",
+        "founded": 1997
+    },
+    {
+        "name": "Value Alliance",
+        "slug": "value-alliance"
+    },
+    {
+        "name": "Vanilla Alliance",
+        "slug": "vanilla-alliance"
+    }
+]

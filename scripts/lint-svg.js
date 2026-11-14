@@ -1,7 +1,8 @@
-import { readFileSync, readdirSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'fs'
 import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
 import {
+    ALLIANCES_DIR,
     HISTORY_DIR,
     formerNames,
     getAssetDirs,
@@ -13,6 +14,8 @@ import { fixSvg } from './lint/fix.js'
 
 // --- CONFIGURATION ---
 const ASSETS_DIR = 'assets'
+// Airline marks in assets/<slug>/, alliance marks in alliances/<slug>/
+const ROOTS = [ASSETS_DIR, ALLIANCES_DIR]
 const DRY_RUN = !process.argv.includes('--fix')
 // Exit with 1 when any file has an issue (warnings never fail), for CI
 const CHECK = process.argv.includes('--check')
@@ -29,23 +32,30 @@ const SCOPED =
 
 // ---------------------
 
-// Catalog entries, keyed by asset folder (slug)
-const catalog = new Map(
-    JSON.parse(readFileSync('airlines.json', 'utf8')).map((a) => [
-        a.slug ?? toSlug(a.name),
-        a,
-    ]),
-)
+// Catalog entries of each root, keyed by asset folder (slug)
+const readCatalog = (file) =>
+    new Map(
+        JSON.parse(readFileSync(file, 'utf8')).map((a) => [
+            a.slug ?? toSlug(a.name),
+            a,
+        ]),
+    )
+const catalogs = {
+    [ASSETS_DIR]: readCatalog('airlines.json'),
+    [ALLIANCES_DIR]: readCatalog('alliances.json'),
+}
 
-// The airline folder an SVG belongs to: assets/<slug>/logo.svg and
-// assets/<slug>/history/<year>/logo.svg both give <slug>
-const getSlugOf = (filePath) => relative(ASSETS_DIR, filePath).split(/[\\/]/)[0]
+// The root, folder and subfolder of an SVG: assets/<slug>/logo.svg gives
+// [assets, <slug>, logo.svg], alliances/<slug>/history/<year>/logo.svg
+// [alliances, <slug>, history, ...]
+const splitPath = (filePath) => relative('.', filePath).split(/[\\/]/)
 
 // Folder names only approximate the airline name (e.g. "jet2com" for "Jet2.com"),
 // so prefer the catalog and fall back to the folder for airlines not added yet
 const getAirlineName = (filePath) => {
-    const dirName = getSlugOf(filePath)
-    if (catalog.has(dirName)) return catalog.get(dirName).name
+    const [root, dirName] = splitPath(filePath)
+    const catalog = catalogs[root]
+    if (catalog?.has(dirName)) return catalog.get(dirName).name
 
     return dirName
         .split('-')
@@ -57,8 +67,8 @@ const parse = (source) =>
     new JSDOM(source, { contentType: 'image/svg+xml' }).window.document
 
 const lintSvgFile = (filePath) => {
-    const [slug, folder] = relative(ASSETS_DIR, filePath).split(/[\\/]/)
-    const airline = catalog.get(slug)
+    const [root, slug, folder] = splitPath(filePath)
+    const airline = catalogs[root]?.get(slug)
     const inHistory = folder === HISTORY_DIR
     const name = basename(filePath)
     const result = fixSvg(readFileSync(filePath, 'utf8'), {
@@ -105,21 +115,27 @@ const main = () => {
         )
     }
 
-    // Files grouped by folder (<slug> or <slug>/history/<year>), in folder
-    // order
+    // Files grouped by folder (<slug> or <slug>/history/<year>, alliances
+    // under alliances/), in folder order
     const byDir = new Map()
     const files = selection
-        ? selection.files.filter((f) => f.startsWith(`${ASSETS_DIR}/`))
-        : readdirSync(ASSETS_DIR, { withFileTypes: true })
-              .filter((dirent) => dirent.isDirectory())
-              .flatMap((dirent) => getAssetDirs(dirent.name, ASSETS_DIR))
-              .flatMap((dir) =>
-                  readdirSync(join(ASSETS_DIR, dir))
-                      .filter((f) => f.endsWith('.svg'))
-                      .map((f) => `${ASSETS_DIR}/${dir}/${f}`),
-              )
+        ? selection.files.filter((f) =>
+              ROOTS.some((root) => f.startsWith(`${root}/`)),
+          )
+        : ROOTS.filter((root) => existsSync(root)).flatMap((root) =>
+              readdirSync(root, { withFileTypes: true })
+                  .filter((dirent) => dirent.isDirectory())
+                  .flatMap((dirent) => getAssetDirs(dirent.name, root))
+                  .flatMap((dir) =>
+                      readdirSync(join(root, dir))
+                          .filter((f) => f.endsWith('.svg'))
+                          .map((f) => `${root}/${dir}/${f}`),
+                  ),
+          )
     for (const file of files.sort()) {
-        const dir = relative(ASSETS_DIR, dirname(file))
+        const dir = file.startsWith(`${ASSETS_DIR}/`)
+            ? relative(ASSETS_DIR, dirname(file))
+            : dirname(file)
         if (!byDir.has(dir)) byDir.set(dir, [])
         byDir.get(dir).push(file)
     }

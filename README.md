@@ -27,6 +27,7 @@ This is the one roadmap for the collection and every integration around it, incl
 - [x] Logo history: an airline's older marks, in `assets/<slug>/history/<year>/` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
 - [x] Renames and mergers: old slugs keep working after a rename, and a merged airline points to its `successor` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
+- [ ] Alliance logos (oneworld, SkyTeam, Star Alliance and others) in `alliances/<slug>/`, with `listAlliances()`, `getAlliance()` and `getAllianceAssetPath()` (see [CONTRIBUTING.md](CONTRIBUTING.md#alliance-marks))
 - [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's official reversed version where it has one, and a white version of single-color marks
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
 

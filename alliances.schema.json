@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/soaring-symbols/soaring-symbols/alliances.schema.json",
+    "title": "Soaring Symbols alliances",
+    "description": "The alliance catalog in alliances.json, as kept in the repo: one entry per alliance airlines.json may name in `alliance`, sorted by name. The build adds `assets` to every entry of the copy it publishes and `history` to those with older marks (see $defs/published); leave them out of the repo.",
+    "type": "array",
+    "items": { "$ref": "#/$defs/alliance" },
+    "$defs": {
+        "published": {
+            "description": "The catalog the package ships in dist/alliances.json: every entry also has `assets`, and `history` when it has older marks.",
+            "type": "array",
+            "items": {
+                "allOf": [
+                    { "$ref": "#/$defs/alliance" },
+                    { "type": "object", "required": ["assets"] }
+                ]
+            }
+        },
+        "alliance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "slug"],
+            "dependentSchemas": {
+                "ceased": {
+                    "required": ["defunct"],
+                    "properties": { "defunct": { "const": true } }
+                }
+            },
+            "properties": {
+                "name": {
+                    "$ref": "airlines.schema.json#/$defs/alliance",
+                    "description": "The alliance's name, exactly as airlines.json writes it in `alliance`."
+                },
+                "slug": {
+                    "$ref": "airlines.schema.json#/$defs/slug",
+                    "description": "The slugified name, which names the folder alliances/<slug>/."
+                },
+                "website": {
+                    "$ref": "airlines.schema.json#/$defs/url",
+                    "description": "Official website of the alliance."
+                },
+                "founded": {
+                    "$ref": "airlines.schema.json#/$defs/year",
+                    "description": "Year the alliance was founded."
+                },
+                "defunct": {
+                    "description": "The alliance has been dissolved.",
+                    "type": "boolean"
+                },
+                "ceased": {
+                    "$ref": "airlines.schema.json#/$defs/year",
+                    "description": "Year a defunct alliance was dissolved."
+                },
+                "branding": { "$ref": "airlines.schema.json#/$defs/branding" },
+                "assets": {
+                    "description": "Added by the build from the SVGs in alliances/<slug>/; only in the published catalog. Empty until the alliance has SVGs.",
+                    "$ref": "airlines.schema.json#/$defs/assets"
+                },
+                "history": {
+                    "description": "Added by the build from alliances/<slug>/history/<year>/ when the alliance has older marks; only in the published catalog.",
+                    "$ref": "airlines.schema.json#/$defs/history"
+                }
+            }
+        }
+    }
+}

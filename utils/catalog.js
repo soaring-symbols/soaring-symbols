@@ -8,6 +8,7 @@
 // airline only touches its own entry.
 import sortBy from 'lodash.sortby'
 import {
+    ALLIANCES_DIR,
     formerNames,
     formerSlugs,
     getAirlineAssets,
@@ -15,7 +16,7 @@ import {
     toFullHex,
     toSlug,
 } from './index.js'
-import { airlineFields } from './schema.js'
+import { airlineFields, allianceFields } from './schema.js'
 
 // Fields only the published catalog has
 const GENERATED_FIELDS = [
@@ -110,6 +111,20 @@ const getPredecessors = (airlines) => {
     return predecessors
 }
 
+// The older marks in <assetsDir>/<slug>/history/, oldest first, each used
+// until the next one and the last until the current marks (branding.since,
+// which validation requires then)
+const publishedHistory = (entry, assetsDir) => {
+    const older = getAirlineHistory(entry.slug, assetsDir)
+
+    return older.map(({ since, name, assets }, i) => {
+        // Left out when branding.since is missing, which validation reports
+        const until = older[i + 1]?.since ?? entry.branding?.since
+
+        return { since, ...(until && { until }), name, assets }
+    })
+}
+
 // The catalog as the package ships it: every entry also gets the `assets`
 // found in `assetsDir`, the `history` of its older marks when it has any
 // (each with the years it was used and the name on it),
@@ -128,17 +143,9 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
             assetsDir,
         )
 
-        // Each older mark was used until the next one, the last until the
-        // current marks (branding.since, which validation requires then)
-        const older = airline.marks
+        const history = airline.marks
             ? []
-            : getAirlineHistory(airline.slug, assetsDir)
-        const history = older.map(({ since, name, assets }, i) => {
-            // Left out when branding.since is missing, which validation reports
-            const until = older[i + 1]?.since ?? airline.branding?.since
-
-            return { since, ...(until && { until }), name, assets }
-        })
+            : publishedHistory(airline, assetsDir)
 
         const predecessors = predecessorsOf.get(airline.slug)
         // previous_names and previous_slugs are deprecated, kept for readers
@@ -163,4 +170,43 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
     })
 }
 
-export { normalizeCatalog, publishCatalog }
+// The alliance catalog as the repo keeps it: sorted by name, keys in the
+// schema's order, colors in six-digit lowercase hex, a `slug` from the name
+// where an entry has none yet, and no generated fields
+const normalizeAlliances = (alliances) =>
+    sortBy(alliances, (a) => a.name.toLowerCase()).map((alliance) => {
+        const { assets, history, ...entry } = alliance
+        entry.slug ??= toSlug(entry.name)
+        if (entry.branding?.primary_color) {
+            entry.branding = {
+                ...entry.branding,
+                primary_color: toFullHex(entry.branding.primary_color),
+            }
+        }
+
+        return orderKeys(entry, allianceFields)
+    })
+
+// The alliance catalog as the package ships it: every entry also gets the
+// `assets` found in alliances/<slug>/ (empty until it has SVGs) and the
+// `history` of its older marks when it has any, like an airline's
+const publishAlliances = (alliances, assetsDir = ALLIANCES_DIR) =>
+    normalizeAlliances(alliances).map((alliance) => {
+        const history = publishedHistory(alliance, assetsDir)
+
+        return orderKeys(
+            {
+                ...alliance,
+                assets: getAirlineAssets(alliance.slug, assetsDir),
+                ...(history.length && { history }),
+            },
+            allianceFields,
+        )
+    })
+
+export {
+    normalizeCatalog,
+    publishCatalog,
+    normalizeAlliances,
+    publishAlliances,
+}

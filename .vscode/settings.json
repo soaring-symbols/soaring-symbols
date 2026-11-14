@@ -11,6 +11,10 @@
         {
             "fileMatch": ["/airlines.json"],
             "url": "./airlines.schema.json"
+        },
+        {
+            "fileMatch": ["/alliances.json"],
+            "url": "./alliances.schema.json"
         }
     ]
 }

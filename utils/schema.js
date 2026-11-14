@@ -1,5 +1,5 @@
-// airlines.schema.json, compiled once with Ajv: data validation for
-// generate.js, sync-data.js and the tests. Kept apart from utils/index.js so
+// airlines.schema.json and alliances.schema.json, compiled once with Ajv:
+// data validation for generate.js, sync-data.js and the tests. Kept apart from utils/index.js so
 // the SVG tooling doesn't load Ajv.
 import { readFileSync } from 'fs'
 import Ajv2020 from 'ajv/dist/2020.js'
@@ -14,17 +14,30 @@ const ajv = new Ajv2020({ allErrors: true })
 const validateSource = ajv.compile(schema)
 const validatePublished = ajv.getSchema(`${schema.$id}#/$defs/published`)
 
+// alliances.json refers to airlines.schema.json's definitions, so it is
+// compiled after it
+const allianceSchema = JSON.parse(
+    readFileSync(new URL('../alliances.schema.json', import.meta.url), 'utf8'),
+)
+const validateAlliancesSource = ajv.compile(allianceSchema)
+const validateAlliancesPublished = ajv.getSchema(
+    `${allianceSchema.$id}#/$defs/published`,
+)
+// Every alliance airlines.json may name, which alliances.json must list
+const allianceNames = schema.$defs.alliance.enum
+
 // Field order for airlines.json entries, taken from the schema so the two
 // can't drift apart: generate.js and the build write every entry's keys in
 // this order
 const airlineFields = Object.keys(schema.$defs.airline.properties)
+const allianceFields = Object.keys(allianceSchema.$defs.alliance.properties)
 
 // Whether `value` is valid for one field of an airline entry, by the same
 // schema rules as the whole file
 const isValidField = (field, value) =>
     ajv.getSchema(`${schema.$id}#/$defs/airline/properties/${field}`)(value)
 
-const formatSchemaError = (airlines, error) => {
+const formatSchemaError = (airlines, error, file = 'airlines.json') => {
     const [, index, ...rest] = error.instancePath.split('/')
     const name = airlines[index]?.name ?? `#${index}`
     const where = rest.length ? `/${rest.join('/')}` : ''
@@ -36,7 +49,7 @@ const formatSchemaError = (airlines, error) => {
               : error.message
 
     return index === undefined
-        ? `airlines.json ${detail}`
+        ? `${file} ${detail}`
         : `${name}: ${where || '(entry)'} ${detail}`
 }
 
@@ -235,4 +248,38 @@ const validateAirlines = (airlines, { published = false } = {}) => {
     ]
 }
 
-export { airlineFields, isValidField, validateAirlines }
+// Check an alliances.json array against alliances.schema.json, the repo's
+// copy by default or with `published` the built one, plus what the schema
+// can't express: slugs, one entry per alliance airlines.json may name, and
+// branding.since once there are older marks. Same messages as
+// validateAirlines.
+const validateAlliances = (alliances, { published = false } = {}) => {
+    const validate = published
+        ? validateAlliancesPublished
+        : validateAlliancesSource
+    if (!validate(alliances)) {
+        return validate.errors.map((error) =>
+            formatSchemaError(alliances, error, 'alliances.json'),
+        )
+    }
+    const names = alliances.map((a) => a.name)
+
+    return [
+        ...findWrongSlugs(alliances),
+        ...allianceNames
+            .filter((name) => !names.includes(name))
+            .map((name) => `alliances.json has no entry for ${name}`),
+        ...names
+            .filter((name, i) => names.indexOf(name) !== i)
+            .map((name) => `alliances.json lists ${name} more than once`),
+        ...findOpenHistory(alliances),
+    ]
+}
+
+export {
+    airlineFields,
+    allianceFields,
+    isValidField,
+    validateAirlines,
+    validateAlliances,
+}

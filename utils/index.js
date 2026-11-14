@@ -58,6 +58,24 @@ const toMonoSvg = (svg) =>
 
 const assetTypes = ['icon', 'logo', 'tail']
 
+// Alliance marks live apart from the airlines' assets/, in
+// alliances/<slug>/, with the same file names and history/ folders; an
+// alliance has no tail
+const ALLIANCES_DIR = 'alliances'
+const ALLIANCE_FILE = /^(icon|logo)(-mono)?\.svg$/
+
+// What is wrong with the files of alliances/<slug>/ itself (history/ is
+// checked by findHistoryProblems): anything but icon and logo
+const findAllianceFileProblems = (slug, assetsDir = ALLIANCES_DIR) => {
+    const dir = join(assetsDir, slug)
+    if (!existsSync(dir)) return []
+
+    return readdirSync(dir, { withFileTypes: true })
+        .filter((d) => !d.name.startsWith('.') && d.name !== HISTORY_DIR)
+        .filter((d) => !d.isFile() || !ALLIANCE_FILE.test(d.name))
+        .map((d) => `${dir}/${d.name} is not icon or logo (.svg or -mono.svg)`)
+}
+
 // The <type>.svg / <type>-mono.svg pairs of an airline whose color file is
 // single-color: their mono file is derived from it, never drawn by hand
 const derivedMonoPairs = (slug, assetsDir) =>
@@ -218,6 +236,8 @@ const findHistoryProblems = (slug, assetsDir = 'assets') => {
 }
 
 export {
+    ALLIANCES_DIR,
+    findAllianceFileProblems,
     HISTORY_DIR,
     getAssetDirs,
     getAirlineHistory,

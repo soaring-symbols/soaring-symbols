@@ -155,6 +155,33 @@ export interface Airline {
     readonly history?: readonly HistoricalMarks[]
 }
 
+/** The asset types of an alliance's marks: it has no tail. */
+export type AllianceAssetType = 'icon' | 'logo'
+
+/**
+ * An airline alliance, as airlines name it in `alliance`. Its marks are at
+ * `alliances/<slug>/`.
+ */
+export interface Alliance {
+    /** As airlines write it in `alliance` (e.g. "Star Alliance"). */
+    readonly name: string
+    readonly slug: string
+    readonly website?: string
+    /** Year the alliance was founded. */
+    readonly founded?: number
+    readonly defunct?: boolean
+    /** Year a defunct alliance was dissolved. */
+    readonly ceased?: number
+    readonly branding?: AirlineBranding
+    /** Empty until the alliance has SVGs. */
+    readonly assets: Readonly<Partial<Record<AllianceAssetType, AssetInfo>>>
+    /**
+     * Marks the alliance used before its current ones, oldest first, at
+     * `alliances/<slug>/history/<since>/`; absent when there are none.
+     */
+    readonly history?: readonly HistoricalMarks[]
+}
+
 export interface FindAirlinesOptions {
     /** Also return airlines that held the code before (`former`), after the current holders. */
     former?: boolean
@@ -195,5 +222,21 @@ export function findAirlines(
 export function getAssetPath(
     airline: Airline | string,
     type: AssetType,
+    options?: AssetPathOptions,
+): string | undefined
+/** All alliances, sorted by name, including those without SVGs yet. */
+export function listAlliances(): Alliance[]
+/**
+ * Find an alliance by name, as airlines write it in `alliance` (e.g.
+ * "Star Alliance"), or by slug, case-insensitive.
+ */
+export function getAlliance(query: string): Alliance | undefined
+/**
+ * Package path of one file of an alliance's marks, e.g.
+ * 'soaring-symbols/alliances/star-alliance/logo.svg'.
+ */
+export function getAllianceAssetPath(
+    alliance: Alliance | string,
+    type: AllianceAssetType,
     options?: AssetPathOptions,
 ): string | undefined
