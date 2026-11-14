@@ -155,6 +155,11 @@ export interface Airline {
     readonly history?: readonly HistoricalMarks[]
 }
 
+export interface FindAirlinesOptions {
+    /** Also return airlines that held the code before (`former`), after the current holders. */
+    former?: boolean
+}
+
 export interface AssetPathOptions {
     /** Return the `-mono.svg` variant. */
     mono?: boolean
@@ -176,6 +181,17 @@ export function listAirlines(): Airline[]
  * as current ones do; a former code only when no airline has it now.
  */
 export function getAirline(query: string): Airline | undefined
+/**
+ * Every airline holding an IATA or ICAO code (case-insensitive), where
+ * getAirline() returns one. The airline getAirline() finds by the code comes
+ * first, then the other active ones, then the defunct ones, each by name.
+ * With `former: true`, airlines that held the code before follow in the same
+ * order. Empty when no airline holds the code.
+ */
+export function findAirlines(
+    code: string,
+    options?: FindAirlinesOptions,
+): Airline[]
 export function getAssetPath(
     airline: Airline | string,
     type: AssetType,

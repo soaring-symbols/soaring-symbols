@@ -9,6 +9,16 @@ const bySlug = new Map()
 const byName = new Map()
 const byFormerIata = new Map()
 const byFormerIcao = new Map()
+// Every airline holding a code, current or former, in catalog (name) order
+const holders = new Map()
+const formerHolders = new Map()
+
+const addHolder = (map, code, airline) => {
+    if (!code) return
+    const key = code.toUpperCase()
+    const list = map.get(key) ?? []
+    if (!list.includes(airline)) map.set(key, [...list, airline])
+}
 
 const deepFreeze = (value) => {
     if (value && typeof value === 'object') {
@@ -50,6 +60,8 @@ for (const airline of airlines) {
     // finds the starred holder
     if (airline.iata_duplicate) setCode(byIata, `${airline.iata}*`, airline)
     setCode(byIcao, airline.icao, airline)
+    addHolder(holders, airline.iata, airline)
+    addHolder(holders, airline.icao, airline)
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
 }
@@ -64,6 +76,8 @@ for (const airline of airlines) {
         }
         setCode(byFormerIata, iata, airline)
         setCode(byFormerIcao, icao, airline)
+        addHolder(formerHolders, iata, airline)
+        addHolder(formerHolders, icao, airline)
     }
 }
 
@@ -102,6 +116,36 @@ function getAirline(query) {
 }
 
 /**
+ * Every airline holding an IATA or ICAO code (case-insensitive), where
+ * getAirline() returns one: a code reassigned from a defunct airline, one a
+ * brand shares with its parent, or an IATA controlled duplicate. The airline
+ * getAirline() finds by the code comes first, then the other active ones, then
+ * the defunct ones, each by name. With `former: true`, airlines that held the
+ * code before (`former`) follow, in the same order. Returns a fresh array,
+ * empty when no airline holds the code.
+ */
+function findAirlines(code, options = {}) {
+    if (typeof code !== 'string' || !code.trim()) return []
+    const key = code.trim().toUpperCase()
+    const rank = (list) => {
+        const first = byIata.get(key) || byIcao.get(key)
+
+        return [...list].sort(
+            (a, b) =>
+                (b === first) - (a === first) ||
+                Boolean(a.defunct) - Boolean(b.defunct),
+        )
+    }
+    const current = holders.get(key) ?? []
+    if (!options.former) return rank(current)
+    const former = (formerHolders.get(key) ?? []).filter(
+        (airline) => !current.includes(airline),
+    )
+
+    return [...rank(current), ...rank(former)]
+}
+
+/**
  * Package path of one asset file, e.g.
  * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
  * of an older mark from the airline's `history`, e.g.
@@ -129,4 +173,4 @@ function getAssetPath(airline, type, options = {}) {
     return `soaring-symbols/assets/${dir}/${type}${mono ? '-mono' : ''}.svg`
 }
 
-export { listAirlines, getAirline, getAssetPath }
+export { listAirlines, getAirline, findAirlines, getAssetPath }

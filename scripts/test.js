@@ -64,7 +64,7 @@ for (const [format, api] of [
     ['ESM', esm],
     ['CJS', cjs],
 ]) {
-    const { listAirlines, getAirline, getAssetPath } = api
+    const { listAirlines, getAirline, findAirlines, getAssetPath } = api
 
     describe(`${format} build`, () => {
         it('exports exactly the public API', () => {
@@ -72,6 +72,7 @@ for (const [format, api] of [
                 .filter((key) => key !== 'default' && key !== 'module.exports')
                 .sort()
             assert.deepEqual(names, [
+                'findAirlines',
                 'getAirline',
                 'getAssetPath',
                 'listAirlines',
@@ -108,6 +109,52 @@ for (const [format, api] of [
                     assert.equal(typeof a.assets, 'object', a.name)
                     assert.equal(a.branding?.colors, undefined, a.name)
                 }
+            })
+        })
+
+        describe('findAirlines', () => {
+            const slugs = (code, options) =>
+                findAirlines(code, options).map((a) => a.slug)
+
+            it('lists every holder, getAirline() first', () => {
+                for (const a of listAirlines()) {
+                    for (const code of [a.iata, a.icao]) {
+                        const found = findAirlines(code)
+                        assert.ok(found.includes(a), `${a.name} by ${code}`)
+                        assert.equal(found[0], getAirline(code), code)
+                    }
+                }
+            })
+
+            it('puts active holders before defunct ones', () => {
+                assert.deepEqual(slugs('SL'), ['thai-lion-air', 'sas-connect'])
+                assert.deepEqual(slugs('AS'), [
+                    'alaska-airlines',
+                    'hawaiian-airlines',
+                ])
+                assert.deepEqual(slugs(' bl '), [
+                    'pacific-airlines',
+                    'jetstar-pacific',
+                ])
+                assert.deepEqual(slugs('HVN'), ['vietnam-airlines'])
+            })
+
+            it('adds former holders only when asked', () => {
+                assert.deepEqual(slugs('HA'), [])
+                assert.deepEqual(slugs('HA', { former: true }), [
+                    'hawaiian-airlines',
+                ])
+                // A current holder is not listed twice
+                assert.deepEqual(slugs('AS', { former: true }), slugs('AS'))
+            })
+
+            it('returns a fresh empty array for anything else', () => {
+                for (const query of ['XX', 'SL*', 'vietnam-airlines', '', 42]) {
+                    assert.deepEqual(findAirlines(query), [], String(query))
+                }
+                const list = findAirlines('SL')
+                list.pop()
+                assert.equal(findAirlines('SL').length, 2)
             })
         })
 

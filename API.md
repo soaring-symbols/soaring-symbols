@@ -3,7 +3,7 @@
 This document details the functions exported by the `soaring-symbols` package and the data structures they return. Upgrading from `0.1.0-alpha.14` or earlier? See [Migrating from the old API](#migrating-from-the-old-api).
 
 ```js
-import { listAirlines, getAirline, getAssetPath } from 'soaring-symbols'
+import { listAirlines, getAirline, findAirlines, getAssetPath } from 'soaring-symbols'
 ```
 
 The package works in both ESM (`import`) and CommonJS (`require`). The library itself only reads the bundled `airlines.json`, so it runs in Node, in the browser and in edge runtimes alike.
@@ -44,6 +44,26 @@ getAirline('XX') // undefined
 // SL is an IATA controlled duplicate
 getAirline('SL').slug // 'thai-lion-air'
 getAirline('SL*').slug // 'sas-connect'
+```
+
+### `findAirlines(code, options?)`
+
+Finds every airline holding an IATA or ICAO code, for the cases where `getAirline()` returns one of several: a code reassigned from a defunct airline, a code a brand shares with its parent, and an IATA controlled duplicate. The code is matched ignoring case and surrounding whitespace.
+
+The airline `getAirline()` finds by the code comes first, then the other active airlines, then the defunct ones, each sorted by name.
+
+- **Arguments:**
+  - `code`: an IATA or ICAO code (string)
+  - `options.former` (boolean, default `false`): also return the airlines that held the code before (`former`), after the current holders and in the same order
+- **Returns:** `Airline[]`, a fresh array, empty when no airline holds the code.
+
+```js
+findAirlines('SL').map((a) => a.slug) // ['thai-lion-air', 'sas-connect']
+findAirlines('AS').map((a) => a.slug) // ['alaska-airlines', 'hawaiian-airlines']
+findAirlines('BL').map((a) => a.slug) // ['pacific-airlines', 'jetstar-pacific']
+
+findAirlines('HA') // [], Hawaiian Airlines' former IATA code
+findAirlines('HA', { former: true }).map((a) => a.slug) // ['hawaiian-airlines']
 ```
 
 ### `getAssetPath(airline, type, options?)`
