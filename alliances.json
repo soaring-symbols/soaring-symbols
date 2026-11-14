@@ -19,10 +19,13 @@
     },
     {
         "name": "Value Alliance",
-        "slug": "value-alliance"
+        "slug": "value-alliance",
+        "founded": 2016,
+        "defunct": true
     },
     {
         "name": "Vanilla Alliance",
-        "slug": "vanilla-alliance"
+        "slug": "vanilla-alliance",
+        "founded": 2015
     }
 ]
