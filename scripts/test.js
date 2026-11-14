@@ -221,15 +221,9 @@ for (const [format, api] of [
                     trinity.former.map((f) => f.slug),
                     ['hansung-airlines', 'tway-air'],
                 )
-                // Deprecated, kept for readers of 0.3
-                assert.deepEqual(trinity.previous_names, [
-                    'Hansung Airlines',
-                    "T'way Air",
-                ])
-                assert.deepEqual(trinity.previous_slugs, [
-                    'hansung-airlines',
-                    'tway-air',
-                ])
+                // Removed in 0.4: `former` holds them
+                assert.equal(trinity.previous_names, undefined)
+                assert.equal(trinity.previous_slugs, undefined)
                 assert.equal(api.getAirline('tway-air'), trinity)
                 assert.equal(api.getAirline("T'way Air"), trinity)
                 assert.equal(api.getAirline('TW'), trinity)
@@ -755,7 +749,6 @@ describe('renames and mergers (successor)', () => {
         assert.deepEqual(validateAirlines([tway]), [])
         const [published] = publishCatalog([tway], noAssets)
         assert.equal(published.former[0].slug, undefined)
-        assert.equal(published.previous_slugs, undefined)
     })
 
     it('rejects former items that are current, unordered or empty', () => {
@@ -826,7 +819,7 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
-    it('publishes former slugs and the deprecated previous_names and previous_slugs', () => {
+    it('publishes the slugs of former names', () => {
         const [serbia] = publishCatalog(
             [
                 formerly('Air Serbia', [
@@ -845,23 +838,21 @@ describe('renames and mergers (successor)', () => {
             },
             { callsign: 'SERBIA', until: 2014 },
         ])
-        assert.deepEqual(serbia.previous_names, ['Jat Airways'])
-        assert.deepEqual(serbia.previous_slugs, ['jat-airways'])
         assert.deepEqual(validateAirlines([serbia], { published: true }), [])
         // The repo copy keeps none of them
         const [source] = normalizeCatalog([serbia])
-        assert.equal(source.previous_names, undefined)
-        assert.equal(source.previous_slugs, undefined)
         assert.equal(source.former[0].slug, undefined)
     })
 
-    it('refuses previous_names that former does not list', () => {
-        assert.throws(
-            () =>
-                normalizeCatalog([
-                    entry('Air Serbia', { previous_names: ['Jat Airways'] }),
-                ]),
-            /Air Serbia: move previous_names "Jat Airways" into former/,
+    it('rejects previous_names, removed in 0.4', () => {
+        const [airline] = normalizeCatalog([
+            formerly('Air Serbia', [{ name: 'Jat Airways', until: 2013 }]),
+        ])
+        assert.match(
+            validateAirlines([
+                { ...airline, previous_names: ['Jat Airways'] },
+            ]).join('\n'),
+            /previous_names/,
         )
     })
 

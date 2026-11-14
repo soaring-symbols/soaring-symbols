@@ -99,18 +99,6 @@ export interface Airline {
      * its former codes when no airline has them now.
      */
     readonly former?: readonly FormerIdentity[]
-    /**
-     * Names the airline flew under before `name`, oldest first.
-     * @deprecated Read the names in `former`; removed in 0.4.
-     */
-    readonly previous_names?: readonly string[]
-    /**
-     * The slugs of former names that differ from `slug`; the package also
-     * ships the airline's current files at assets/<previous slug>/ for those
-     * a release has shipped.
-     * @deprecated Read `former[].slug`; removed in 0.4.
-     */
-    readonly previous_slugs?: readonly string[]
     readonly website?: string
     readonly flag_carrier?: boolean
     /**

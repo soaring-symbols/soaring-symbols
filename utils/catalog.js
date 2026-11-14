@@ -1,16 +1,13 @@
 // The two shapes of the airline catalog. The repo keeps only the fields people
 // write, `slug` included (normalizeCatalog); the build adds `assets` and
 // `history`, which come from the SVGs on disk, the slugs of former names
-// (in `former`, and in the deprecated `previous_names`/`previous_slugs`),
-// and `predecessors`, the reverse of `successor`, to the copy it publishes
+// (in `former`), and `predecessors`, the reverse of `successor`, to the copy it publishes
 // (publishCatalog).
 // Keeping generated fields out of the repo means a pull request that adds an
 // airline only touches its own entry.
 import sortBy from 'lodash.sortby'
 import {
     ALLIANCES_DIR,
-    formerNames,
-    formerSlugs,
     getAirlineAssets,
     getAirlineHistory,
     toFullHex,
@@ -19,27 +16,7 @@ import {
 import { airlineFields, allianceFields } from './schema.js'
 
 // Fields only the published catalog has
-const GENERATED_FIELDS = [
-    'previous_names',
-    'previous_slugs',
-    'assets',
-    'history',
-    'predecessors',
-]
-
-// Before `former`, the repo kept former names in `previous_names`, which the
-// build now derives from `former`: refuse one that `former` doesn't list
-// rather than drop it
-const checkPreviousNames = (airline) => {
-    const missing = (airline.previous_names ?? []).filter(
-        (name) => !formerNames(airline).includes(name),
-    )
-    if (missing.length) {
-        throw new Error(
-            `${airline.name}: move previous_names ${missing.map((n) => `"${n}"`).join(', ')} into former, each with the year it ended (see "Renames and mergers" in CONTRIBUTING.md)`,
-        )
-    }
-}
+const GENERATED_FIELDS = ['assets', 'history', 'predecessors']
 
 // The items of `former` without the `slug` the build adds
 const sourceFormer = (former) => former.map(({ slug, ...item }) => item)
@@ -74,7 +51,6 @@ const orderKeys = (object, fields) =>
 // entry has none yet, and no generated fields
 const normalizeCatalog = (airlines) =>
     sortBy(airlines, (a) => a.name.toLowerCase()).map((airline) => {
-        checkPreviousNames(airline)
         const entry = Object.fromEntries(
             Object.entries(airline).filter(
                 ([key]) => !GENERATED_FIELDS.includes(key),
@@ -128,8 +104,8 @@ const publishedHistory = (entry, assetsDir) => {
 // The catalog as the package ships it: every entry also gets the `assets`
 // found in `assetsDir`, the `history` of its older marks when it has any
 // (each with the years it was used and the name on it),
-// the slug of each former name that had another one (in `former` and the
-// deprecated `previous_names`/`previous_slugs`), and `predecessors`
+// the slug of each former name that had another one (in `former`), and
+// `predecessors`
 // when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names, which the
 // build copies to its own slug, and no history.
@@ -148,16 +124,10 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
             : publishedHistory(airline, assetsDir)
 
         const predecessors = predecessorsOf.get(airline.slug)
-        // previous_names and previous_slugs are deprecated, kept for readers
-        // of 0.3 until 0.4: `former` holds the names and their slugs
-        const previousNames = formerNames(airline)
-        const previousSlugs = formerSlugs(airline)
 
         return orderKeys(
             {
                 ...airline,
-                ...(previousNames.length && { previous_names: previousNames }),
-                ...(previousSlugs.length && { previous_slugs: previousSlugs }),
                 ...(Array.isArray(airline.former) && {
                     former: publishedFormer(airline),
                 }),

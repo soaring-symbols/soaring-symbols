@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `slug` to each name in `former` with another slug, the deprecated `previous_names` and `previous_slugs` to renamed ones and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `slug` to each name in `former` with another slug and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `former` with another slug, the deprecated `previous_names` and `previous_slugs` when it was renamed, and `predecessors` when it carried on a defunct airline.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `former` with another slug, and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -146,22 +146,6 @@
                 "slug": {
                     "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
                     "$ref": "#/$defs/slug"
-                },
-                "previous_names": {
-                    "description": "Deprecated, to be removed in 0.4: read the names in `former`. Added by the build: the names in `former`, oldest first. Only in the published catalog.",
-                    "deprecated": true,
-                    "type": "array",
-                    "minItems": 1,
-                    "uniqueItems": true,
-                    "items": { "$ref": "#/$defs/name" }
-                },
-                "previous_slugs": {
-                    "description": "Deprecated, to be removed in 0.4: read `former[].slug`. Added by the build: the slugs of the names in `former` that differ from `slug`. getAirline() finds the airline by them, and the package also ships its current files under assets/<previous slug>/. Only in the published catalog.",
-                    "deprecated": true,
-                    "type": "array",
-                    "minItems": 1,
-                    "uniqueItems": true,
-                    "items": { "$ref": "#/$defs/slug" }
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "iata_duplicate": {

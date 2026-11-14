@@ -165,7 +165,7 @@ In the published package (`dist/airlines.json`), each airline also has an `asset
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), the `slug` of each name in `former`, the deprecated `previous_names` and `previous_slugs` (the names in `former` and their slugs, kept for readers of 0.3 until 0.4) and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
+Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), the `slug` of each name in `former` and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
 
 ### 4. Pull Requests
 

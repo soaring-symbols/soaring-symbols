@@ -216,8 +216,6 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `icao`             | `string`    | 3-letter ICAO code.                                                                                                                                                                                           |
 | `callsign`         | `string?`   | ICAO radiotelephony callsign, uppercase, e.g. `"VIET NAM AIRLINES"`.                                                                                                                                          |
 | `former`           | `object[]?` | The names and codes the airline used before, oldest first (see [Renames and mergers](#renames-and-mergers)). No key when there are none.                                                                      |
-| `previous_names`   | `string[]?` | **Deprecated**, removed in 0.4: the names in `former`.                                                                                                                                                        |
-| `previous_slugs`   | `string[]?` | **Deprecated**, removed in 0.4: the `slug`s in `former`.                                                                                                                                                      |
 | `country`          | `string`    | ISO 3166-1 alpha-2 code; comma-separated when the airline belongs to several.                                                                                                                                 |
 | `website`          | `string?`   | Official website.                                                                                                                                                                                             |
 | `flag_carrier`     | `boolean?`  | `true` for a national flag carrier.                                                                                                                                                                           |
@@ -261,12 +259,12 @@ assets/<slug>/
 
 An airline that changed its logo may list its older marks in `history`, oldest first, each used from `since` until `until`. The current marks in `assets` came in the year in `branding.since`, when the last older mark ended. Airlines that borrow another airline's marks (`marks`) have no history.
 
-| Field    | Type     | Description                                                                                                           |
-| :------- | :------- | :-------------------------------------------------------------------------------------------------------------------- |
-| `since`  | `number` | Year the mark was introduced; also the name of its folder.                                                            |
-| `until`  | `number` | Year the next mark replaced it.                                                                                       |
-| `name`   | `string` | The airline's name on the mark: its current name, or a former one (`previous_names`) for a mark used before a rename. |
-| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`.                                    |
+| Field    | Type     | Description                                                                                                               |
+| :------- | :------- | :------------------------------------------------------------------------------------------------------------------------ |
+| `since`  | `number` | Year the mark was introduced; also the name of its folder.                                                                |
+| `until`  | `number` | Year the next mark replaced it.                                                                                           |
+| `name`   | `string` | The airline's name on the mark: its current name, or a former one (a `name` in `former`) for a mark used before a rename. |
+| `assets` | `object` | One [`AssetInfo`](#assetinfo) per type that mark has, like the airline's `assets`.                                        |
 
 ```json
 "branding": { "primary_color": "#686058", "since": 2026 },
@@ -370,9 +368,15 @@ const current = (airline) =>
     airline.successor ? current(getAirline(airline.successor)) : airline
 ```
 
+## Changes in 0.4
+
+0.4 removes what 0.3 had marked for removal:
+
+- **`previous_names` and `previous_slugs` are gone.** Read the names and their slugs in `former` instead, as the table below shows. `getAirline()` still finds a renamed airline by its former names and slugs, and the files under a former slug are still shipped.
+
 ## `former` in 0.3.2
 
-0.3.2 adds `former`, which holds an airline's former names together with its former codes. `previous_names` and `previous_slugs` stay in 0.3 with the same values, and are removed in 0.4:
+0.3.2 adds `former`, which holds an airline's former names together with its former codes. `previous_names` and `previous_slugs` stayed in 0.3 with the same values, and are removed in 0.4:
 
 | Up to 0.3.1              | From 0.3.2                                              |
 | :----------------------- | :------------------------------------------------------ |
