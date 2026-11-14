@@ -46,13 +46,14 @@ const orderKeys = (object, fields) =>
         ),
     )
 
-// The catalog as the repo keeps it: sorted by name, keys in the schema's
-// order, colors in six-digit lowercase hex, a `slug` from the name where an
-// entry has none yet, and no generated fields
-const normalizeCatalog = (airlines) =>
-    sortBy(airlines, (a) => a.name.toLowerCase()).map((airline) => {
+// A catalog as the repo keeps it, airlines or alliances: sorted by name,
+// keys in the schema's order (`fields`), colors in six-digit lowercase hex,
+// a `slug` from the name where an entry has none yet, and no generated
+// fields
+const normalizeEntries = (entries, fields) =>
+    sortBy(entries, (a) => a.name.toLowerCase()).map((item) => {
         const entry = Object.fromEntries(
-            Object.entries(airline).filter(
+            Object.entries(item).filter(
                 ([key]) => !GENERATED_FIELDS.includes(key),
             ),
         )
@@ -66,8 +67,10 @@ const normalizeCatalog = (airlines) =>
             }
         }
 
-        return orderKeys(entry, airlineFields)
+        return orderKeys(entry, fields)
     })
+
+const normalizeCatalog = (airlines) => normalizeEntries(airlines, airlineFields)
 
 // The slugs of the defunct airlines each airline carried on, by its slug:
 // those whose `successor` names it, the earliest to cease first
@@ -140,22 +143,8 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
     })
 }
 
-// The alliance catalog as the repo keeps it: sorted by name, keys in the
-// schema's order, colors in six-digit lowercase hex, a `slug` from the name
-// where an entry has none yet, and no generated fields
 const normalizeAlliances = (alliances) =>
-    sortBy(alliances, (a) => a.name.toLowerCase()).map((alliance) => {
-        const { assets, history, ...entry } = alliance
-        entry.slug ??= toSlug(entry.name)
-        if (entry.branding?.primary_color) {
-            entry.branding = {
-                ...entry.branding,
-                primary_color: toFullHex(entry.branding.primary_color),
-            }
-        }
-
-        return orderKeys(entry, allianceFields)
-    })
+    normalizeEntries(alliances, allianceFields)
 
 // The alliance catalog as the package ships it: every entry also gets the
 // `assets` found in alliances/<slug>/ (empty until it has SVGs) and the

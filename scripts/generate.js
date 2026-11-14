@@ -14,6 +14,7 @@ import {
     writeFileSync,
 } from 'fs'
 import {
+    ALLIANCE_TYPES,
     ALLIANCES_DIR,
     findAllianceFileProblems,
     findHistoryProblems,
@@ -112,7 +113,7 @@ for (const slug of allianceDirs) {
     }
     const folderProblems = [
         ...findAllianceFileProblems(slug),
-        ...findHistoryProblems(slug, ALLIANCES_DIR),
+        ...findHistoryProblems(slug, ALLIANCES_DIR, ALLIANCE_TYPES),
     ]
     if (folderProblems.length) {
         console.error(`❌ ${ALLIANCES_DIR}/${slug} has files out of place:`)

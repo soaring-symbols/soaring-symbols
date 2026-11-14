@@ -60,20 +60,32 @@ const assetTypes = ['icon', 'logo', 'tail']
 
 // Alliance marks live apart from the airlines' assets/, in
 // alliances/<slug>/, with the same file names and history/ folders; an
-// alliance has no tail
+// alliance has no tail (index.js keeps its own copy of both type lists)
+const ASSETS_DIR = 'assets'
 const ALLIANCES_DIR = 'alliances'
-const ALLIANCE_FILE = /^(icon|logo)(-mono)?\.svg$/
+const ALLIANCE_TYPES = ['icon', 'logo']
+// Every folder of marks, for the tools that walk them all
+const MARK_DIRS = [ASSETS_DIR, ALLIANCES_DIR]
+
+// <type>.svg or <type>-mono.svg for one of the types, and the types as
+// prose: "icon, logo or tail"
+const markFile = (types) => new RegExp(`^(${types.join('|')})(-mono)?\\.svg$`)
+const typeList = (types) =>
+    `${types.slice(0, -1).join(', ')} or ${types.at(-1)}`
 
 // What is wrong with the files of alliances/<slug>/ itself (history/ is
 // checked by findHistoryProblems): anything but icon and logo
 const findAllianceFileProblems = (slug, assetsDir = ALLIANCES_DIR) => {
     const dir = join(assetsDir, slug)
-    if (!existsSync(dir)) return []
+    const file = markFile(ALLIANCE_TYPES)
 
     return readdirSync(dir, { withFileTypes: true })
         .filter((d) => !d.name.startsWith('.') && d.name !== HISTORY_DIR)
-        .filter((d) => !d.isFile() || !ALLIANCE_FILE.test(d.name))
-        .map((d) => `${dir}/${d.name} is not icon or logo (.svg or -mono.svg)`)
+        .filter((d) => !d.isFile() || !file.test(d.name))
+        .map(
+            (d) =>
+                `${dir}/${d.name} is not ${typeList(ALLIANCE_TYPES)} (.svg or -mono.svg)`,
+        )
 }
 
 // The <type>.svg / <type>-mono.svg pairs of an airline whose color file is
@@ -140,7 +152,6 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
 // mark was introduced, with the same file names as the current ones. The
 // current files stay in assets/<slug>/, so nothing that links them changes.
 const HISTORY_DIR = 'history'
-const HISTORY_FILE = /^(icon|logo|tail)(-mono)?\.svg$/
 
 // The asset folders of an airline relative to `assetsDir`: its own, then one
 // per history year, oldest first. writeDerivedMonos and removeDerivedMonos run
@@ -195,11 +206,18 @@ const getMarkName = (dir) => {
 
 // What is wrong with an airline's history folders, as readable messages:
 // a folder that isn't a year up to this one, a file other than the asset
-// files, an empty folder, or a history/ folder holding files itself
-const findHistoryProblems = (slug, assetsDir = 'assets') => {
+// files, an empty folder, or a history/ folder holding files itself.
+// `types` are the marks the folder may hold: an alliance's have no tail.
+const findHistoryProblems = (
+    slug,
+    assetsDir = 'assets',
+    types = assetTypes,
+) => {
     const historyDir = join(assetsDir, slug, HISTORY_DIR)
     if (!existsSync(historyDir)) return []
     const thisYear = new Date().getFullYear()
+    const file = markFile(types)
+    const colorFile = new RegExp(`^(${types.join('|')})\\.svg$`)
 
     return readdirSync(historyDir, { withFileTypes: true })
         .filter((d) => !d.name.startsWith('.'))
@@ -220,23 +238,27 @@ const findHistoryProblems = (slug, assetsDir = 'assets') => {
                 (f) => !f.startsWith('.'),
             )
             const wrong = files
-                .filter((f) => !HISTORY_FILE.test(f))
+                .filter((f) => !file.test(f))
                 .map(
                     (f) =>
-                        `${where}/${f} is not icon, logo or tail (.svg or -mono.svg)`,
+                        `${where}/${f} is not ${typeList(types)} (.svg or -mono.svg)`,
                 )
-            const hasColor = files.some((f) =>
-                /^(icon|logo|tail)\.svg$/.test(f),
-            )
+            const hasColor = files.some((f) => colorFile.test(f))
 
             return hasColor
                 ? wrong
-                : [...wrong, `${where}/ has no icon.svg, logo.svg or tail.svg`]
+                : [
+                      ...wrong,
+                      `${where}/ has no ${typeList(types.map((t) => `${t}.svg`))}`,
+                  ]
         })
 }
 
 export {
+    ALLIANCE_TYPES,
     ALLIANCES_DIR,
+    ASSETS_DIR,
+    MARK_DIRS,
     findAllianceFileProblems,
     HISTORY_DIR,
     getAssetDirs,

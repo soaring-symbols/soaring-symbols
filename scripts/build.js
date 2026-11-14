@@ -118,11 +118,10 @@ async function copyFiles() {
             writeDerivedMonos(dir, path.join(distDir, 'assets'))
         }
     }
+    // An alliance without SVGs yet has no folder, which finds no pair
     for (const alliance of alliances) {
         for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
-            if (existsSync(path.join(ALLIANCES_DIR, dir))) {
-                writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
-            }
+            writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
         }
     }
     // After the monos, so airlines sharing marks get those too, and after
@@ -196,8 +195,8 @@ async function buildESM() {
 function transformToCJS(content) {
     const out = content
         .replace(
-            /import\s+(airlines|alliances)\s+from\s+['"]\.\/(airlines|alliances)\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/g,
-            "const $1 = require('./$2.json')",
+            /import\s+(airlines|alliances)\s+from\s+['"]\.\/\1\.json['"]\s+with\s*{\s*type:\s*['"]json['"]\s*}/g,
+            "const $1 = require('./$1.json')",
         )
         .replace(/^export\s*{([^}]+)}/m, 'module.exports = {$1}')
     if (/^\s*(import|export)\s/m.test(out)) {

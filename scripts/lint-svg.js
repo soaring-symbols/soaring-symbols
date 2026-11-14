@@ -3,7 +3,9 @@ import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
 import {
     ALLIANCES_DIR,
+    ASSETS_DIR,
     HISTORY_DIR,
+    MARK_DIRS,
     formerNames,
     getAssetDirs,
     toSlug,
@@ -13,13 +15,11 @@ import { EXCLUDE_FILES } from './lint/exclude.js'
 import { fixSvg } from './lint/fix.js'
 
 // --- CONFIGURATION ---
-const ASSETS_DIR = 'assets'
-// Airline marks in assets/<slug>/, alliance marks in alliances/<slug>/
-const ROOTS = [ASSETS_DIR, ALLIANCES_DIR]
 const DRY_RUN = !process.argv.includes('--fix')
 // Exit with 1 when any file has an issue (warnings never fail), for CI
 const CHECK = process.argv.includes('--check')
-// Experimental: join the paths of single-color SVGs (see ruleOnePathPerColor)
+// Experimental: join neighbouring paths of the same color, in single- and
+// multi-color SVGs (see ruleOnePathPerColor)
 const MERGE_PATHS = process.argv.includes('--merge-paths')
 // Experimental: lint only the SVGs listed, or with --changed those added or
 // changed since origin/main (or --base <ref>), so a pull request's own files
@@ -120,9 +120,9 @@ const main = () => {
     const byDir = new Map()
     const files = selection
         ? selection.files.filter((f) =>
-              ROOTS.some((root) => f.startsWith(`${root}/`)),
+              MARK_DIRS.some((root) => f.startsWith(`${root}/`)),
           )
-        : ROOTS.filter((root) => existsSync(root)).flatMap((root) =>
+        : MARK_DIRS.filter((root) => existsSync(root)).flatMap((root) =>
               readdirSync(root, { withFileTypes: true })
                   .filter((dirent) => dirent.isDirectory())
                   .flatMap((dirent) => getAssetDirs(dirent.name, root))

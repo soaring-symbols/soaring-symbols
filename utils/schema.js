@@ -1,9 +1,9 @@
 // airlines.schema.json and alliances.schema.json, compiled once with Ajv:
-// data validation for generate.js, sync-data.js and the tests. Kept apart from utils/index.js so
-// the SVG tooling doesn't load Ajv.
+// data validation for generate.js, sync-data.js and the tests. Kept apart
+// from utils/index.js so the SVG tooling doesn't load Ajv.
 import { readFileSync } from 'fs'
 import Ajv2020 from 'ajv/dist/2020.js'
-import { formerSlugs, toSlug } from './index.js'
+import { ALLIANCES_DIR, formerSlugs, toSlug } from './index.js'
 
 const schema = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
@@ -260,15 +260,14 @@ const findMissingColors = (alliances) =>
         )
         .map(
             (a) =>
-                `${a.name}: has SVGs in alliances/${a.slug}/, so it needs branding.primary_color`,
+                `${a.name}: has SVGs in ${ALLIANCES_DIR}/${a.slug}/, so it needs branding.primary_color`,
         )
 
 // Check an alliances.json array against alliances.schema.json, the repo's
 // copy by default or with `published` the built one, plus what the schema
 // can't express: slugs, one entry per alliance airlines.json may name,
 // branding.since once there are older marks and branding.primary_color once
-// there are SVGs. Same messages as
-// validateAirlines.
+// there are SVGs. Same messages as validateAirlines.
 const validateAlliances = (alliances, { published = false } = {}) => {
     const validate = published
         ? validateAlliancesPublished

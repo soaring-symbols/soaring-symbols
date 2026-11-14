@@ -18,6 +18,7 @@ import { JSDOM } from 'jsdom'
 import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
 import {
+    ALLIANCE_TYPES,
     findHistoryProblems,
     getAirlineAssets,
     getAirlineHistory,
@@ -1142,6 +1143,18 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
         has('history/1990/ has no icon.svg')
         has('history/1995/ has no icon.svg')
         assert.equal(problems.length, 6)
+    })
+
+    it('allows no tail in an alliance’s history', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'history-alliance-'))
+        mkdirSync(join(dir, 'x/history/2000'), { recursive: true })
+        writeFileSync(join(dir, 'x/history/2000/tail.svg'), svg('#000000'))
+        const problems = findHistoryProblems('x', dir, ALLIANCE_TYPES)
+        rmSync(dir, { recursive: true, force: true })
+        assert.deepEqual(problems, [
+            `${dir}/x/history/2000/tail.svg is not icon or logo (.svg or -mono.svg)`,
+            `${dir}/x/history/2000/ has no icon.svg or logo.svg`,
+        ])
     })
 })
 

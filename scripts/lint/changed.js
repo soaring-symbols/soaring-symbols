@@ -4,15 +4,15 @@
 import { execFileSync } from 'child_process'
 import { existsSync } from 'fs'
 import { relative, resolve } from 'path'
+import { MARK_DIRS } from '../../utils/index.js'
 
 const git = (...gitArgs) =>
     execFileSync('git', gitArgs, { encoding: 'utf8' })
         .split('\n')
         .filter(Boolean)
 
-// SVGs under assets/ and alliances/ added or modified since `ref`, including
-// uncommitted and untracked files
-const SVG_DIRS = ['assets', 'alliances']
+// SVGs under assets/ and alliances/ (MARK_DIRS) added or modified since
+// `ref`, including uncommitted and untracked files
 
 export const changedSince = (ref) => {
     const since = git('merge-base', ref, 'HEAD')[0]
@@ -24,9 +24,15 @@ export const changedSince = (ref) => {
             '--diff-filter=d',
             since,
             '--',
-            ...SVG_DIRS,
+            ...MARK_DIRS,
         ),
-        ...git('ls-files', '--others', '--exclude-standard', '--', ...SVG_DIRS),
+        ...git(
+            'ls-files',
+            '--others',
+            '--exclude-standard',
+            '--',
+            ...MARK_DIRS,
+        ),
     ]
 }
 
