@@ -51,7 +51,10 @@
                     "$ref": "airlines.schema.json#/$defs/year",
                     "description": "Year a defunct alliance was dissolved."
                 },
-                "branding": { "$ref": "airlines.schema.json#/$defs/branding" },
+                "branding": {
+                    "$ref": "airlines.schema.json#/$defs/brandingFields",
+                    "description": "As an airline's branding, but primary_color may wait until the alliance's marks are in the collection."
+                },
                 "assets": {
                     "description": "Added by the build from the SVGs in alliances/<slug>/; only in the published catalog. Empty until the alliance has SVGs.",
                     "$ref": "airlines.schema.json#/$defs/assets"

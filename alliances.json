@@ -3,33 +3,48 @@
         "name": "oneworld",
         "slug": "oneworld",
         "website": "https://www.oneworld.com",
-        "founded": 1999
+        "founded": 1999,
+        "branding": {
+            "tagline": "Travel Bright"
+        }
     },
     {
         "name": "SkyTeam",
         "slug": "skyteam",
         "website": "https://www.skyteam.com",
-        "founded": 2000
+        "founded": 2000,
+        "branding": {
+            "tagline": "The Priority Is You"
+        }
     },
     {
         "name": "Star Alliance",
         "slug": "star-alliance",
         "website": "https://www.staralliance.com",
-        "founded": 1997
+        "founded": 1997,
+        "branding": {
+            "tagline": "Together. Better. Connected."
+        }
     },
     {
         "name": "U-FLY Alliance",
         "slug": "u-fly-alliance",
         "founded": 2016,
         "defunct": true,
-        "ceased": 2024
+        "ceased": 2024,
+        "branding": {
+            "tagline": "U fly the world"
+        }
     },
     {
         "name": "Value Alliance",
         "slug": "value-alliance",
         "founded": 2016,
         "defunct": true,
-        "ceased": 2023
+        "ceased": 2023,
+        "branding": {
+            "tagline": "Asia Pacific's Best Value Airlines"
+        }
     },
     {
         "name": "Vanilla Alliance",

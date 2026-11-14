@@ -242,9 +242,15 @@
             }
         },
         "branding": {
+            "description": "An airline's branding: always with its primary color.",
+            "type": "object",
+            "$ref": "#/$defs/brandingFields",
+            "required": ["primary_color"]
+        },
+        "brandingFields": {
+            "description": "The branding fields airlines and alliances share; an alliance may leave out primary_color until its marks are in the collection.",
             "type": "object",
             "additionalProperties": false,
-            "required": ["primary_color"],
             "properties": {
                 "primary_color": { "$ref": "#/$defs/hexColor" },
                 "tagline": { "type": "string", "minLength": 1 },

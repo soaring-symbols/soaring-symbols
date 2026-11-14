@@ -311,17 +311,17 @@ Every hub in the catalog has an entry, and only hubs do. The coordinates come fr
 
 `dist/alliances.json`, which `listAlliances()` returns, has one entry per alliance. Its marks are in `alliances/<slug>/`, laid out like an airline's.
 
-| Field      | Type        | Description                                                                                                                |
-| :--------- | :---------- | :------------------------------------------------------------------------------------------------------------------------- |
-| `name`     | `string`    | As airlines write it in `alliance`, e.g. `"Star Alliance"`.                                                                |
-| `slug`     | `string`    | The slugified name, e.g. `"star-alliance"`: the folder of its marks.                                                       |
-| `website`  | `string?`   | Official website.                                                                                                          |
-| `founded`  | `number?`   | Year founded.                                                                                                              |
-| `defunct`  | `boolean?`  | The alliance has been dissolved.                                                                                           |
-| `ceased`   | `number?`   | Year a defunct alliance was dissolved.                                                                                     |
-| `branding` | `object?`   | As for an airline.                                                                                                         |
-| `assets`   | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`). Empty until the alliance's logos are in the collection. |
-| `history`  | `object[]?` | Its older marks, as an airline's [History](#history). No key when there are none.                                          |
+| Field      | Type        | Description                                                                                                                      |
+| :--------- | :---------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | `string`    | As airlines write it in `alliance`, e.g. `"Star Alliance"`.                                                                      |
+| `slug`     | `string`    | The slugified name, e.g. `"star-alliance"`: the folder of its marks.                                                             |
+| `website`  | `string?`   | Official website.                                                                                                                |
+| `founded`  | `number?`   | Year founded.                                                                                                                    |
+| `defunct`  | `boolean?`  | The alliance has been dissolved.                                                                                                 |
+| `ceased`   | `number?`   | Year a defunct alliance was dissolved.                                                                                           |
+| `branding` | `object?`   | As for an airline, e.g. `tagline` (the alliance's slogan); `primary_color` may be missing until its logos are in the collection. |
+| `assets`   | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`). Empty until the alliance's logos are in the collection.       |
+| `history`  | `object[]?` | Its older marks, as an airline's [History](#history). No key when there are none.                                                |
 
 ### Renames and mergers
 

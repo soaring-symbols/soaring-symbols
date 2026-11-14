@@ -152,7 +152,7 @@ alliances/
 
 - **Only `icon` and `logo`**, with a hand-made `-mono.svg` for a multi-color one; an alliance has no tail. `npm run generate` stops on any other file, and on a folder that matches no alliance.
 - **Same rules as airline marks:** the SVG specifications below, `<title>` set to the alliance's name exactly as `alliances.json` writes it (`oneworld`, `SkyTeam`), and older marks in `history/<year>/` with `branding.since` set.
-- **Fields in `alliances.json`:** `name` and `slug` are required; `website`, `founded`, `defunct`, `ceased` and `branding` (as for an airline) are optional. A new alliance goes into the `alliance` list in `airlines.schema.json` and into `alliances.json` in the same pull request.
+- **Fields in `alliances.json`:** `name` and `slug` are required; `website`, `founded`, `defunct`, `ceased` and `branding` (as for an airline, with the alliance's slogan as `tagline`; `primary_color` can wait until its SVGs are added) are optional. A new alliance goes into the `alliance` list in `airlines.schema.json` and into `alliances.json` in the same pull request.
 
 #### Generated Asset Metadata
 
