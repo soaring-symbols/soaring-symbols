@@ -1,8 +1,16 @@
-# Publish a GitHub release for each pushed v* tag (`npm run release` creates
-# the tag; pushing it is up to the maintainer). The release starts with only a
-# compare link to the previous tag: its notes are written afterwards and set
-# with `gh release edit` ("Releasing" in AGENTS.md). A tag that already has a
-# release is left alone, so its notes are never overwritten.
+# For each pushed v* tag (`npm run release` creates the tag; pushing it is up
+# to the maintainer): publish a GitHub release and purge jsDelivr's cache of
+# the files the release changed.
+#
+# The release starts with only a compare link to the previous tag: its notes
+# are written afterwards and set with `gh release edit` ("Releasing" in
+# AGENTS.md). A tag that already has a release is left alone, so its notes are
+# never overwritten.
+#
+# The purge waits for jsDelivr to resolve the release line to the new version,
+# which takes several minutes, so it runs here rather than in `npm run
+# release`. It fails the job when it can't purge; rerun the job, or run
+# `node scripts/purge-cdn.js --since <previous version>` by hand.
 name: Release
 
 on:
@@ -39,3 +47,26 @@ jobs:
           fi
           printf '**Full Changelog**: <%s>\n' "$link" > "$RUNNER_TEMP/notes.md"
           gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+
+  purge-cdn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Every tag, to find the previous release
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Purge the changed files from jsDelivr
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          if ! previous=$(git describe --tags --abbrev=0 --match 'v*' "$TAG^" 2> /dev/null); then
+            echo "No release before $TAG: nothing cached to purge."
+            exit 0
+          fi
+          node scripts/purge-cdn.js --since "${previous#v}" --version "${TAG#v}"

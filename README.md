@@ -78,7 +78,7 @@ Alliance marks sit beside them under `alliances/`, with an icon and, for some, a
 https://cdn.jsdelivr.net/npm/soaring-symbols/dist/alliances/skyteam/icon.svg
 ```
 
-Both serve any release: add a release line (`soaring-symbols@0.3`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.3.1`) to keep the files as they are. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect for a few minutes only.
+Both serve any release: add a release line (`soaring-symbols@0.4`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.4.0`) to keep the files as they are. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect for a few minutes only.
 
 ## Usage
 

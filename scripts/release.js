@@ -1,8 +1,9 @@
-// Release to npm: test, bump the version in package.json, publish, purge
-// jsDelivr's cache of the changed files, then commit the bump and tag it
-// v<version>. Nothing is pushed: pushing the tag makes the release workflow
-// publish a GitHub release, whose notes are written afterwards (see
-// scripts/release-notes.js and "Releasing" in AGENTS.md).
+// Release to npm: test, bump the version in package.json, publish, then
+// commit the bump and tag it v<version>. Nothing is pushed: pushing the tag
+// makes the release workflow publish a GitHub release, whose notes are
+// written afterwards (see scripts/release-notes.js and "Releasing" in
+// AGENTS.md), and purge jsDelivr's cache of the changed files
+// (scripts/purge-cdn.js).
 //
 // Usage: npm run release -- [bump] [--dry-run]
 //   bump: patch (default), minor, major or an exact version such as 0.2.0.
@@ -137,7 +138,12 @@ if (dryRun) {
     step('Dry run: showing the package contents')
     run('npm', ['pack', '--dry-run'])
     step('Dry run: files jsDelivr would be purged of')
-    await purgeRelease({ version, previous: currentVersion, dryRun: true })
+    await purgeRelease({
+        version,
+        previous: currentVersion,
+        distDir: 'dist',
+        dryRun: true,
+    })
     restoreReleaseFiles()
     console.log('\n✅ Dry run finished; no changes were kept.')
     process.exit(0)
@@ -161,10 +167,6 @@ writeFileSync(
     `${JSON.stringify([...new Set([...known, ...shipped])].sort(), null, 4)}\n`,
 )
 
-// --- Purge jsDelivr (never fatal: the release is already out) ---
-step('Purging the changed files from jsDelivr')
-await purgeRelease({ version, previous: currentVersion })
-
 // --- Commit the bump (not pushed) ---
 step('Committing the version bump')
 run('git', ['add', ...RELEASE_FILES])
@@ -177,5 +179,5 @@ run('git', ['tag', '--annotate', '--message', tag, tag])
 console.log(
     `\n✅ Published soaring-symbols@${version} and tagged ${tag}.` +
         `\n   Push both with "git push --atomic ${REMOTE} ${BRANCH} ${tag}"; the release workflow` +
-        `\n   then publishes the GitHub release, ready for its notes.`,
+        `\n   then publishes the GitHub release, ready for its notes, and purges jsDelivr.`,
 )
