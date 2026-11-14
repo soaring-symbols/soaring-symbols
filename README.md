@@ -26,8 +26,8 @@ This is the one roadmap for the collection and every integration around it, incl
 - [x] Raycast extension
 - [x] Logo history: an airline's older marks, in `assets/<slug>/history/<year>/` (see [CONTRIBUTING.md](CONTRIBUTING.md#older-marks-logo-history))
 - [x] Renames and mergers: old slugs keep working after a rename, and a merged airline points to its `successor` (see [CONTRIBUTING.md](CONTRIBUTING.md#renames-and-mergers))
+- [x] Alliance marks, starting with the oneworld, SkyTeam and Star Alliance icons, in `alliances/<slug>/`, with `listAlliances()`, `getAlliance()` and `getAllianceAssetPath()` (see [CONTRIBUTING.md](CONTRIBUTING.md#alliance-marks))
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
-- [ ] Alliance logos (oneworld, SkyTeam, Star Alliance and others) in `alliances/<slug>/`, with `listAlliances()`, `getAlliance()` and `getAllianceAssetPath()` (see [CONTRIBUTING.md](CONTRIBUTING.md#alliance-marks))
 - [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's official reversed version where it has one, and a white version of single-color marks
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
 
@@ -70,6 +70,12 @@ Link any mark straight from the npm package through jsDelivr or unpkg, with noth
 ```text
 https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg
 https://unpkg.com/soaring-symbols/dist/assets/<slug>/logo.svg
+```
+
+Alliance marks sit beside them under `alliances/`, with an icon and, for some, a logo:
+
+```text
+https://cdn.jsdelivr.net/npm/soaring-symbols/dist/alliances/skyteam/icon.svg
 ```
 
 Both serve any release: add a release line (`soaring-symbols@0.3`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.3.1`) to keep the files as they are. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect for a few minutes only.
@@ -122,6 +128,12 @@ const svg = readFileSync(
     fileURLToPath(import.meta.resolve(getAssetPath('VN', 'logo'))),
     'utf8',
 )
+
+// Alliances work the same way, by name or slug
+import { getAlliance, getAllianceAssetPath } from 'soaring-symbols'
+
+getAlliance(vna.alliance).slug // 'skyteam'
+getAllianceAssetPath('SkyTeam', 'icon') // 'soaring-symbols/alliances/skyteam/icon.svg'
 ```
 
 For a full list of functions and the data structures they return, please see the [API Reference](./API.md). Upgrading from `0.1.0-alpha.14` or earlier, which had `getAssets()` and `getAssetContent()`? The reference has a [migration guide](./API.md#migrating-from-the-old-api).
