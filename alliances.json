@@ -5,6 +5,7 @@
         "website": "https://www.oneworld.com",
         "founded": 1999,
         "branding": {
+            "primary_color": "#120c80",
             "tagline": "Travel Bright"
         }
     },
@@ -14,6 +15,7 @@
         "website": "https://www.skyteam.com",
         "founded": 2000,
         "branding": {
+            "primary_color": "#1a3576",
             "tagline": "The Priority Is You"
         }
     },
@@ -23,6 +25,7 @@
         "website": "https://www.staralliance.com",
         "founded": 1997,
         "branding": {
+            "primary_color": "#000000",
             "tagline": "Together. Better. Connected."
         }
     },
