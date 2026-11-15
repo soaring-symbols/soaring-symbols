@@ -181,6 +181,19 @@ const findAllianceHistoryProblems = (airlines) =>
         ]),
     )
 
+// A joint flag carrier's countries include its own
+const findFlagCarrierProblems = (airlines) =>
+    airlines
+        .filter(
+            (a) =>
+                a.flag_carrier_countries &&
+                !a.flag_carrier_countries.includes(a.country),
+        )
+        .map(
+            (a) =>
+                `${a.name}: flag_carrier_countries must include its country (${a.country})`,
+        )
+
 // `parent`, `marks` and `successor` must name another airline in the
 // catalog, `marks` one with SVGs of its own (no chains), and following
 // `successor` must end at an airline without one (no loops)
@@ -242,6 +255,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findDuplicateSlugs(airlines),
         ...findFormerProblems(airlines),
         ...findAllianceHistoryProblems(airlines),
+        ...findFlagCarrierProblems(airlines),
         ...findOpenHistory(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),

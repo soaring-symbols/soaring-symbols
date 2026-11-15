@@ -820,6 +820,47 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
+    it('checks a joint flag carrier lists its own country among several', () => {
+        const sas = (fields) =>
+            entry('Scandinavian Airlines', { country: 'SE', ...fields })
+        assert.deepEqual(
+            validateAirlines([
+                sas({
+                    flag_carrier: true,
+                    flag_carrier_countries: ['DK', 'NO', 'SE'],
+                }),
+            ]),
+            [],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                sas({
+                    flag_carrier: true,
+                    flag_carrier_countries: ['DK', 'NO'],
+                }),
+            ]),
+            [
+                'Scandinavian Airlines: flag_carrier_countries must include its country (SE)',
+            ],
+        )
+        // Needs flag_carrier: true, two or more distinct codes, and one
+        // country in `country`
+        for (const fields of [
+            { flag_carrier_countries: ['DK', 'NO', 'SE'] },
+            { flag_carrier: false, flag_carrier_countries: ['DK', 'SE'] },
+            { flag_carrier: true, flag_carrier_countries: ['SE'] },
+            { flag_carrier: true, flag_carrier_countries: ['SE', 'SE'] },
+            { flag_carrier: true, flag_carrier_countries: ['DK', 'se'] },
+            { country: 'DK,NO,SE', flag_carrier: true },
+        ]) {
+            assert.notDeepEqual(
+                validateAirlines([sas(fields)]),
+                [],
+                JSON.stringify(fields),
+            )
+        }
+    })
+
     it('publishes the slugs of former names', () => {
         const [serbia] = publishCatalog(
             [

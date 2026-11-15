@@ -60,9 +60,9 @@
             "pattern": "^[\\p{Lu}0-9]+([ '.-][\\p{Lu}0-9]+)*$"
         },
         "country": {
-            "description": "ISO 3166-1 alpha-2 code (or an ISO 3166-2 subdivision such as \"GB-SCT\"); several are comma-separated without spaces, e.g. \"DK,NO,SE\".",
+            "description": "ISO 3166-1 alpha-2 code (or an ISO 3166-2 subdivision such as \"GB-SCT\"): one country, where the airline is based.",
             "type": "string",
-            "pattern": "^[A-Z]{2}(-[A-Z]{2,3})?(,[A-Z]{2}(-[A-Z]{2,3})?)*$"
+            "pattern": "^[A-Z]{2}(-[A-Z]{2,3})?$"
         },
         "url": {
             "type": "string",
@@ -136,6 +136,10 @@
                 "successor": {
                     "required": ["defunct"],
                     "properties": { "defunct": { "const": true } }
+                },
+                "flag_carrier_countries": {
+                    "required": ["flag_carrier"],
+                    "properties": { "flag_carrier": { "const": true } }
                 }
             },
             "properties": {
@@ -161,7 +165,17 @@
                     "items": { "$ref": "#/$defs/former" }
                 },
                 "country": { "$ref": "#/$defs/country" },
-                "flag_carrier": { "type": "boolean" },
+                "flag_carrier": {
+                    "description": "The airline is a national flag carrier: of its country, or of the countries in flag_carrier_countries.",
+                    "type": "boolean"
+                },
+                "flag_carrier_countries": {
+                    "description": "ISO 3166-1 alpha-2 codes of the countries a joint flag carrier serves, its own country among them, e.g. [\"DK\", \"NO\", \"SE\"] for Scandinavian Airlines. Only for an airline that is the flag carrier of several countries; one that serves only its own country has none.",
+                    "type": "array",
+                    "minItems": 2,
+                    "uniqueItems": true,
+                    "items": { "type": "string", "pattern": "^[A-Z]{2}$" }
+                },
                 "website": {
                     "$ref": "#/$defs/url",
                     "description": "Official website of the airline."

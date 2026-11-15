@@ -2306,8 +2306,13 @@
         "iata": "SK",
         "icao": "SAS",
         "callsign": "SCANDINAVIAN",
-        "country": "DK,NO,SE",
+        "country": "SE",
         "flag_carrier": true,
+        "flag_carrier_countries": [
+            "DK",
+            "NO",
+            "SE"
+        ],
         "website": "https://www.flysas.com",
         "alliance": "SkyTeam",
         "alliance_history": [
