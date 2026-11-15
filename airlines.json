@@ -1754,10 +1754,6 @@
             {
                 "name": "LAN Airlines",
                 "until": 2016
-            },
-            {
-                "name": "LATAM Airlines",
-                "until": 2026
             }
         ],
         "country": "CL",
