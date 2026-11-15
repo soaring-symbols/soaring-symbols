@@ -89,7 +89,7 @@ export interface Airline {
     readonly icao: string
     /** ICAO radiotelephony callsign, uppercase (e.g. "VIET NAM AIRLINES"). */
     readonly callsign?: string
-    /** ISO 3166-1 alpha-2 code(s), comma-separated (e.g. "VN"). */
+    /** ISO 3166-1 alpha-2 code of the one country it is based in (e.g. "VN"). */
     readonly country: string
     readonly slug: string
     /**
@@ -100,7 +100,17 @@ export interface Airline {
      */
     readonly former?: readonly FormerIdentity[]
     readonly website?: string
+    /**
+     * `true` for a national flag carrier: of its `country`, or of each
+     * country in `flag_carrier_countries`.
+     */
     readonly flag_carrier?: boolean
+    /**
+     * Codes of the countries a joint flag carrier serves, its own `country`
+     * among them, e.g. ["DK", "NO", "SE"] for Scandinavian Airlines. Only on
+     * a flag carrier of several countries.
+     */
+    readonly flag_carrier_countries?: readonly string[]
     /**
      * The alliance it is a member of now, or was when it ceased, e.g.
      * "oneworld", "SkyTeam", "Star Alliance". An affiliate flying under
