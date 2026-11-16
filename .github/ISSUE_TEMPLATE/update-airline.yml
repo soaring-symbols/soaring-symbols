@@ -1,19 +1,38 @@
-name: "Update Existing Airline"
-description: Request to update an existing airline icon, logo, or related information (e.g., color, design change).
-title: "Update: [Name of Airline] (e.g., Vietnam Airlines)"
-labels: ["update airline"]
+name: 'Update Existing Airline'
+description: Report a change to an airline already in the collection, such as a new logo, a rename, new codes, a merger or a shutdown, or a mistake in its marks or data.
+title: 'Update: [Name of Airline] (e.g., Vietnam Airlines)'
+labels: ['update airline']
 body:
   - type: markdown
     attributes:
       value: |
-        This form is for requesting **UPDATES** to existing assets. Please be precise about the changes and provide the latest source, official if the airline publishes one.
-  
+        This form is for **changes** to an airline already in the collection. Earlier logos and names are kept, not replaced: an old logo moves to the airline's history and an old name or code to its former names, so please say **when** the change happened. "When an airline changes" in the [Contribution Guidelines](https://github.com/soaring-symbols/soaring-symbols/blob/main/CONTRIBUTING.md#when-an-airline-changes) shows what each kind of change becomes.
+
+        To have an airline removed, use the "Remove Airline" form instead.
+
   - type: input
     id: airline_name
     attributes:
-      label: Full Airline Name
-      description: The official name of the airline whose asset needs updating.
+      label: Airline Name
+      description: Its name as shown on [soaringsymbols.org](https://soaringsymbols.org).
       placeholder: e.g., Vietnam Airlines
+    validations:
+      required: true
+
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Kind of Change
+      options:
+        - New logo, icon or tail (rebrand)
+        - New name
+        - New IATA or ICAO code or callsign
+        - Merged into another airline, joined a group's brand, or refounded
+        - Shut down
+        - Website, hubs, alliance or brand color
+        - A mistake in its marks (wrong colors, shapes or crop)
+        - A mistake in its data
+        - Other (explained below)
     validations:
       required: true
 
@@ -22,23 +41,26 @@ body:
     attributes:
       label: 📝 Describe the Change
       description: |
-        **Required:** Clearly explain what has changed.
-      placeholder: e.g., Airline underwent a 2024 rebrand, changing the tail fin design and color palette.
+        **Required:** What changed, and when (the year a new logo was introduced, or the date of a rename, merger or shutdown).
+      placeholder: e.g., The airline introduced a new logo and tail design in 2024, with a darker blue.
     validations:
       required: true
 
   - type: input
     id: official_website_link
     attributes:
-      label: Official Airline Website Link
-      description: The main URL for the airline's website. Required for validation.
+      label: Official Airline Website
+      description: The airline's own website, if it changed or helps confirm the change.
       placeholder: https://www.vietnamairlines.com/
+    validations:
+      required: false
 
   - type: textarea
     id: source_file_link
     attributes:
-      label: Direct Link to NEW SVG File or Brand/Press Kit Page
-      description: Provide the direct URL to the **updated** SVG file or the official brand page showing the new design. If the airline publishes no SVG, link the logo's file page on Wikimedia Commons or Wikipedia.
+      label: Source for the Change
+      description: |
+        For new marks, a direct link to the **new** SVG or the official brand page showing them; if the airline publishes no SVG, the logo's file page on Wikimedia Commons or Wikipedia (never a third-party logo site). For other changes, a press release or news article.
       placeholder: |
         https://www.airline.com/assets/new-logo.svg
         OR

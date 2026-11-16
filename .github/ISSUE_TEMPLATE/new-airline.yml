@@ -1,38 +1,60 @@
-name: "Add New Airline"
-description: Request to add a brand new airline icon or logo to the Soaring Symbols library.
-title: "Add: [Name of Airline] (e.g., Vietnam Airlines)"
-labels: ["new airline"]
+name: 'Add New Airline'
+description: Ask for an airline that isn't in the collection yet to be added, with its logo, icon or tail.
+title: 'Add: [Name of Airline] (e.g., Vietnam Airlines)'
+labels: ['new airline']
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve the Soaring Symbols library! This form is for **NEW** icons only. Please link a direct source for every asset, official if the airline publishes one.
-  
+        Thanks for helping grow Soaring Symbols! This form is for airlines **not yet in the collection**: search [soaringsymbols.org](https://soaringsymbols.org) first, including former names. For an airline already there, such as a new logo or a rename, use the "Update Existing Airline" form.
+
+        Want to add it yourself? Follow the [Contribution Guidelines](https://github.com/soaring-symbols/soaring-symbols/blob/main/CONTRIBUTING.md) and open a pull request instead; no issue needed.
+
   - type: input
     id: airline_name
     attributes:
       label: Full Airline Name
-      description: The official name of the airline.
+      description: The name the airline flies under today.
       placeholder: e.g., Vietnam Airlines
     validations:
       required: true
 
   - type: input
+    id: codes
+    attributes:
+      label: IATA and ICAO Codes
+      description: Leave out a code the airline doesn't have.
+      placeholder: e.g., VN / HVN
+    validations:
+      required: false
+
+  - type: input
+    id: country
+    attributes:
+      label: Country
+      description: The country the airline is based in.
+      placeholder: e.g., Vietnam
+    validations:
+      required: false
+
+  - type: input
     id: official_website_link
     attributes:
-      label: Official Airline Website Link
-      description: The main URL for the airline's website. This is required for validation.
+      label: Official Airline Website
+      description: The airline's own website, used to check the name, codes and colors.
       placeholder: https://www.vietnamairlines.com/
+    validations:
+      required: true
 
   - type: textarea
     id: source_file_link
     attributes:
-      label: Direct Link to SVG File or Brand/Press Kit Page
+      label: Link to the SVG File or Brand/Press Kit Page
       description: |
-        **Crucial:** Provide a direct link to the source, in this order of preference:
+        **Required:** Link the source of every mark (logo, icon, tail), in this order of preference:
         1. An SVG on the airline's own website, or its **brand guideline** or **press kit** page (make sure that page offers a downloadable SVG).
-        2. If the airline publishes no SVG: the logo's file page on Wikimedia Commons or Wikipedia (e.g. `https://en.wikipedia.org/wiki/File:...svg`). Not a third-party logo site.
-        3. If no SVG exists anywhere: a high-quality PNG or JPG, but note that vectorization may be needed.
+        2. If the airline publishes no SVG: the logo's file page on Wikimedia Commons or Wikipedia (e.g. `https://en.wikipedia.org/wiki/File:...svg`). Never a third-party logo site.
+        3. If no SVG exists anywhere: a high-quality PNG or JPG, which will need to be vectorized by hand.
       placeholder: |
         https://www.airline.com/assets/logo.svg
         OR
@@ -41,10 +63,10 @@ body:
         https://en.wikipedia.org/wiki/File:Airline_logo.svg
     validations:
       required: true
-      
+
   - type: checkboxes
     id: vector_status
     attributes:
       label: Vector File Status
       options:
-        - label: SVG file is **NOT** provided. (Please manually apply the **needs vectorization** label.)
+        - label: No SVG is available, only a PNG or JPG (a maintainer will add the **needs vectorization** label).

@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: "GitHub Discussions"
-    url: "https://github.com/soaring-symbols/soaring-symbols/discussions"
-    about: "For questions, suggestions, or general discussions about Soaring Symbols."
+  - name: 'GitHub Discussions'
+    url: 'https://github.com/soaring-symbols/soaring-symbols/discussions'
+    about: 'For questions, suggestions, or general discussions about Soaring Symbols.'
+  - name: 'SVG Validator'
+    url: 'https://soaringsymbols.org/validate'
+    about: 'Check an SVG against the contribution guidelines, and fix what can be fixed, before opening a pull request.'
