@@ -65,6 +65,7 @@
   "files": [
     "dist/",
     "API.md",
+    "DISCLAIMER.md",
     "LICENSE",
     "README.md"
   ],

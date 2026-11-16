@@ -4,6 +4,8 @@ This document outlines the guidelines for contributing logos and icons to the So
 
 > [!IMPORTANT]
 > "Soaring Symbols" provides airline logos/icons in SVG for informational and reference purposes only. We do not claim ownership of any trademarks or copyrighted materials. The logos remain the intellectual property of their respective airlines.
+>
+> The MIT License covers your contributions to the code and the catalog data. The marks you add stay their owners' (see the [Disclaimer](DISCLAIMER.md)), so only submit SVGs taken or traced from a public source, never one you were given under a confidentiality or brand-partner agreement.
 
 ---
 

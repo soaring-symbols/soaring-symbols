@@ -3,7 +3,7 @@
 This project aims to create a meticulously curated collection of airline logos, icons and tail designs entirely in SVG format, serving as a valuable resource for travelers, aviation enthusiasts, and designers.
 
 > [!IMPORTANT]
-> "Soaring Symbols" provides airline logos/icons in SVG for informational and reference purposes only. We do not claim ownership of any trademarks or copyrighted materials. The logos remain the intellectual property of their respective airlines.
+> "Soaring Symbols" provides airline logos/icons in SVG for informational and reference purposes only. We do not claim ownership of any trademarks or copyrighted materials. The logos remain the intellectual property of their respective airlines, are not covered by this project's license, and may need their owner's permission to use: read the [Disclaimer](DISCLAIMER.md) first.
 
 ## Features
 
@@ -144,6 +144,6 @@ Whether through adding new logos, improving existing ones, or suggesting feature
 
 ## License
 
-This repository is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
+The source code and the catalog data (`airlines.json`, `alliances.json`, `airports.json`) are licensed under the MIT License, see [LICENSE](./LICENSE). The logos, icons and tail designs are not: they belong to their airlines and alliances, and the [Disclaimer](./DISCLAIMER.md) explains what that means for using them and how an owner can ask for a mark to be removed.
 
 [anhthang]: https://github.com/anhthang
