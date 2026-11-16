@@ -24,4 +24,4 @@ The marks and data are provided as is, without warranty of any kind. Brands chan
 
 ## Removal requests
 
-If you own a mark in this collection, or act for its owner, and want it changed or removed, please [open an issue](https://github.com/soaring-symbols/soaring-symbols/issues/new) saying which airline or alliance it concerns. A removal requested by the owner is made in the next patch release, with the reason in its release notes. Copies already published in earlier releases on npm and the CDNs cannot be withdrawn from those releases.
+If you own a mark in this collection, or act for its owner, and want it changed or removed, please open a [removal request](https://github.com/soaring-symbols/soaring-symbols/issues/new?template=remove-airline.yml) saying which airline or alliance it concerns. A removal requested by the owner is made in the next patch release, with the reason in its release notes. Copies already published in earlier releases on npm and the CDNs cannot be withdrawn from those releases.

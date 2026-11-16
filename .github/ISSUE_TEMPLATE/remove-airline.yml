@@ -1,0 +1,67 @@
+name: 'Remove Airline'
+description: Ask for an airline or alliance, or its marks, to be removed, as the owner of the marks or because it was added by mistake.
+title: 'Remove: [Name of Airline] (e.g., Vietnam Airlines)'
+labels: ['remove airline']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for **removing** an airline or alliance, or some of its marks, from the collection. Please read the [Disclaimer](https://github.com/soaring-symbols/soaring-symbols/blob/main/DISCLAIMER.md) first.
+
+        - An airline that **shut down, merged or was renamed** is not removed: it keeps its entry and its marks. Use the "Update Existing Airline" form instead.
+        - A removal **requested by the owner of the marks** ships in the next patch release, with the reason in its release notes.
+        - Any other removal (an entry added by mistake, a duplicate) breaks apps that use it, so it waits for the next minor release.
+        - Copies already published in earlier releases on npm and the CDNs cannot be withdrawn from those releases.
+
+  - type: input
+    id: airline_name
+    attributes:
+      label: Airline or Alliance
+      description: Its name as shown on [soaringsymbols.org](https://soaringsymbols.org), or its slug.
+      placeholder: e.g., Vietnam Airlines
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reason
+    attributes:
+      label: Reason
+      options:
+        - I own these marks, or act for their owner, and ask for them to be removed
+        - It was added by mistake (not an airline, never flew, or a fictional brand)
+        - It duplicates another entry
+        - Other (explained below)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: What should be removed
+      options:
+        - The whole entry and all its marks
+        - Only some marks (listed below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: 📝 Details
+      description: |
+        **Required:** Explain the request. For a duplicate, name the entry it duplicates; for some marks only, list them (e.g., `tail.svg`, the 2005 mark in history).
+      placeholder: e.g., The 2010 tail design is not ours and should be removed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: owner
+    attributes:
+      label: Owner of the Marks
+      description: |
+        **For a request from the owner only:** who you are, how you act for the owner (e.g., its brand or legal team, or a firm instructed by it), and a link to an official page that shows the owner, such as its brand guidelines or legal notices. Please don't post personal data you would not want public: issues are public.
+      placeholder: |
+        Brand team, Example Airways
+        https://www.example-airways.com/legal/trademarks
+    validations:
+      required: false
