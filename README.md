@@ -28,6 +28,7 @@ This is the one roadmap for the collection and every integration around it, incl
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
 - [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's official reversed version where it has one, and a white version of single-color marks
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
+- [ ] Cargo airlines, such as FedEx Express, UPS Airlines, Cargolux and DHL Aviation, and the cargo brands of passenger airlines (Lufthansa Cargo, Qatar Airways Cargo), so cargo flights can show a mark too
 
 ### Not planned
 
