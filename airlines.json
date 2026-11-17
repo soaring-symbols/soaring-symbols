@@ -2425,7 +2425,10 @@
         ],
         "founded": 1947,
         "branding": {
-            "primary_color": "#232f67"
+            "primary_color": "#232f67",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
