@@ -40,6 +40,7 @@ import {
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { selectSvgs } from './lint/changed.js'
 import { groupCommits, renderNotes, REPO_URL } from './release-notes.js'
+import { LINE_DOCS, releaseLine, setLine, staleLines } from './release-line.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
@@ -1838,6 +1839,37 @@ describe('lint file selection (lint-svg --changed)', () => {
         const { base, listed } = selectSvgs(['--changed', '--base', 'HEAD'])
         assert.equal(base, 'HEAD')
         assert.equal(listed, false)
+    })
+})
+
+describe('release line links (release-line.js)', () => {
+    const { version } = JSON.parse(
+        readFileSync(new URL('../package.json', import.meta.url)),
+    )
+
+    it('keeps the docs on the current release line', () => {
+        for (const file of LINE_DOCS) {
+            const text = readFileSync(
+                new URL(`../${file}`, import.meta.url),
+                'utf8',
+            )
+            assert.deepEqual(
+                staleLines(text, releaseLine(version)),
+                [],
+                `${file} links another line than @${releaseLine(version)}; npm run release moves them on a minor release`,
+            )
+        }
+    })
+
+    it('moves line links but leaves exact releases alone', () => {
+        assert.equal(releaseLine('0.5.2'), '0.5')
+        const text =
+            'soaring-symbols@0.4/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.4'
+        assert.deepEqual(staleLines(text, '0.5'), ['0.4'])
+        assert.equal(
+            setLine(text, '0.5'),
+            'soaring-symbols@0.5/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.5',
+        )
     })
 })
 

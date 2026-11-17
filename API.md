@@ -120,7 +120,7 @@ const unpkgUrl = `https://unpkg.com/soaring-symbols/dist/assets/${airline.slug}/
 Without a bundler, a page can import the library itself from unpkg as an ES module. Name `dist/index.js`: the bare `https://unpkg.com/soaring-symbols` serves the CommonJS build.
 
 ```js
-import { getAirline } from 'https://unpkg.com/soaring-symbols@0.3/dist/index.js'
+import { getAirline } from 'https://unpkg.com/soaring-symbols@0.4/dist/index.js'
 ```
 
 ### `listAlliances()`
@@ -167,7 +167,7 @@ const { content, fixed, issues, warnings } = fixSvg(svgText, {
 Without a bundler, import it from unpkg with `?module`, which turns its `@resvg/resvg-wasm` import into an unpkg URL for the pinned version:
 
 ```js
-import { initSvgFixer, fixSvg } from 'https://unpkg.com/soaring-symbols@0.3/dist/svg-fixer.js?module'
+import { initSvgFixer, fixSvg } from 'https://unpkg.com/soaring-symbols@0.4/dist/svg-fixer.js?module'
 
 await initSvgFixer(fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm'))
 ```

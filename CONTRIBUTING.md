@@ -321,7 +321,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 
 #### Removing an airline
 
-An airline that shut down keeps its entry (see the table above). Removing one, for an entry added by mistake or a duplicate, breaks whoever uses it: `getAirline()` no longer finds it and its files disappear from the release line (`soaring-symbols@0.3/...`). So the pull request stays open, labeled `breaking`, until the next minor release, which gathers such changes; new airlines and fixes keep shipping in the weekly patch releases meanwhile. A takedown request from a trademark owner is the exception and ships in the next patch release. Either kind can start with a [removal request](https://github.com/soaring-symbols/soaring-symbols/issues/new?template=remove-airline.yml).
+An airline that shut down keeps its entry (see the table above). Removing one, for an entry added by mistake or a duplicate, breaks whoever uses it: `getAirline()` no longer finds it and its files disappear from the release line (`soaring-symbols@0.<minor>/...`). So the pull request stays open, labeled `breaking`, until the next minor release, which gathers such changes; new airlines and fixes keep shipping in the weekly patch releases meanwhile. A takedown request from a trademark owner is the exception and ships in the next patch release. Either kind can start with a [removal request](https://github.com/soaring-symbols/soaring-symbols/issues/new?template=remove-airline.yml).
 
 ### Example JSON Data
 

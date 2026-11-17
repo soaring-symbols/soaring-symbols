@@ -1,5 +1,6 @@
 // Release to npm: test, bump the version in package.json, publish, then
-// commit the bump and tag it v<version>. Nothing is pushed: pushing the tag
+// commit the bump (with the docs' release line links, moved on a minor
+// release) and tag it v<version>. Nothing is pushed: pushing the tag
 // makes the release workflow publish a GitHub release, whose notes are
 // written afterwards (see scripts/release-notes.js and "Releasing" in
 // AGENTS.md), and purge jsDelivr's cache of the changed files
@@ -15,6 +16,7 @@ import { spawnSync } from 'child_process'
 import { readFileSync, writeFileSync } from 'fs'
 import { parseArgs } from 'util'
 import { purgeRelease } from './purge-cdn.js'
+import { LINE_DOCS, releaseLine, updateLineDocs } from './release-line.js'
 
 const BRANCH = 'main'
 const REMOTE = 'origin'
@@ -22,6 +24,8 @@ const RELEASE_FILES = [
     'package.json',
     'package-lock.json',
     'published-slugs.json',
+    // A minor release moves their release line links (scripts/release-line.js)
+    ...LINE_DOCS,
 ]
 
 const { values, positionals } = parseArgs({
@@ -126,6 +130,14 @@ run('npm', ['version', bump, '--no-git-tag-version'])
 
 const version = readVersion()
 const tag = `v${version}`
+// A minor release starts a new line: the docs' examples move to it before
+// publishing, so the README on npm shows it too
+const movedDocs = updateLineDocs(releaseLine(version))
+if (movedDocs.length) {
+    console.log(
+        `  Moved the release line links in ${movedDocs.join(' and ')} to @${releaseLine(version)}`,
+    )
+}
 console.log(
     `\n  version:   ${version}\n  dist-tag:  latest\n  tag:       ${tag}`,
 )
