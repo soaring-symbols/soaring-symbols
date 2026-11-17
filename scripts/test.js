@@ -32,7 +32,11 @@ import {
     normalizeCatalog,
     publishCatalog,
 } from '../utils/catalog.js'
-import { validateAirlines, validateAlliances } from '../utils/schema.js'
+import {
+    findDarkColorWarnings,
+    validateAirlines,
+    validateAlliances,
+} from '../utils/schema.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import { selectSvgs } from './lint/changed.js'
 import { groupCommits, renderNotes, REPO_URL } from './release-notes.js'
@@ -549,15 +553,14 @@ describe('airlines.json schema', () => {
             ...a,
             branding: { ...a.branding, dark_color: types },
         })
-        // TAROM's navy hardly reads on dark; Vietnam Airlines has no tail
-        assert.deepEqual(
-            validateAirlines(withEntry('tarom', keep(['logo'])), {
-                published: true,
-            }),
-            [
-                'TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e',
-            ],
-        )
+        // TAROM's navy hardly reads on dark: a warning for review, since
+        // what the airline does wins, not a problem
+        const tarom = withEntry('tarom', keep(['logo']))
+        assert.deepEqual(validateAirlines(tarom, { published: true }), [])
+        assert.deepEqual(findDarkColorWarnings(tarom), [
+            "TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e; check it against the airline's own use",
+        ])
+        // Vietnam Airlines has no tail
         assert.deepEqual(
             validateAirlines(withEntry('vietnam-airlines', keep(['tail'])), {
                 published: true,

@@ -30,7 +30,11 @@ import {
     publishCatalog,
 } from '../utils/catalog.js'
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
-import { validateAirlines, validateAlliances } from '../utils/schema.js'
+import {
+    findDarkColorWarnings,
+    validateAirlines,
+    validateAlliances,
+} from '../utils/schema.js'
 
 const airlines = normalizeCatalog(
     JSON.parse(readFileSync('airlines.json', 'utf8')),
@@ -38,9 +42,8 @@ const airlines = normalizeCatalog(
 
 // Check the catalog the build would publish, with `assets`, before touching
 // any file
-const problems = validateAirlines(publishCatalog(airlines), {
-    published: true,
-})
+const published = publishCatalog(airlines)
+const problems = validateAirlines(published, { published: true })
 if (problems.length) {
     console.error('❌ airlines.json does not match airlines.schema.json:')
     problems.forEach((problem) => console.error(`  - ${problem}`))
@@ -50,7 +53,8 @@ if (problems.length) {
 const alliances = normalizeAlliances(
     JSON.parse(readFileSync('alliances.json', 'utf8')),
 )
-const allianceProblems = validateAlliances(publishAlliances(alliances), {
+const publishedAlliances = publishAlliances(alliances)
+const allianceProblems = validateAlliances(publishedAlliances, {
     published: true,
 })
 if (allianceProblems.length) {
@@ -72,7 +76,12 @@ const unused = Object.keys(airports).filter((code) => !tidyAirports[code])
 // Folders whose derived monos go once every check has passed, so a failed
 // check leaves the working tree as it was
 const monoFolders = []
-const darkWarnings = []
+// Colors that hardly read on dark, kept by branding.dark_color or drawn in a
+// hand-made -dark.svg: printed for review, never a reason to stop
+const darkWarnings = [
+    ...findDarkColorWarnings(published),
+    ...findDarkColorWarnings(publishedAlliances),
+]
 
 // Stop on a hand-made -dark.svg that is out of place; collect its warnings
 const checkDarks = (where, dirs, assetsDir, keepColor) => {

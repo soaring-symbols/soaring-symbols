@@ -26,7 +26,10 @@
         "founded": 1997,
         "branding": {
             "primary_color": "#000000",
-            "tagline": "Together. Better. Connected."
+            "tagline": "Together. Better. Connected.",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {

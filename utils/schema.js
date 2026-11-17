@@ -271,9 +271,9 @@ const validateAirlines = (airlines, { published = false } = {}) => {
 }
 
 // branding.dark_color keeps a mark's color file on dark backgrounds: the
-// mark must have one, every color must read there, and an airline sharing
-// another's marks (`marks`) follows that airline's choice. Only the published
-// copy has `assets` to tell.
+// mark must have one, and an airline sharing another's marks (`marks`)
+// follows that airline's choice. Only the published copy has `assets` to
+// tell.
 const findDarkColorProblems = (entries) =>
     entries.flatMap((a) => {
         const types = a.branding?.dark_color ?? []
@@ -286,22 +286,32 @@ const findDarkColorProblems = (entries) =>
         // The repo copy has no assets to check against
         if (!a.assets) return []
 
-        return types.flatMap((type) => {
-            const asset = a.assets[type]
-            if (!asset?.color) {
-                return [
+        return types
+            .filter((type) => !a.assets[type]?.color)
+            .map(
+                (type) =>
                     `${a.name}: branding.dark_color lists ${type}, which has no ${type}.svg`,
-                ]
-            }
-            const faint = asset.colors.filter((c) => !readsOnDark(c))
+            )
+    })
+
+// The colors branding.dark_color keeps on dark backgrounds that hardly read
+// there (under 3:1 on #1e1e1e), for a reviewer to check against the source:
+// what the airline does wins, so they don't stop anything. Published copy
+// only, as above.
+const findDarkColorWarnings = (entries) =>
+    entries.flatMap((a) =>
+        (a.branding?.dark_color ?? []).flatMap((type) => {
+            const faint = (a.assets?.[type]?.colors ?? []).filter(
+                (c) => !readsOnDark(c),
+            )
 
             return faint.length
                 ? [
-                      `${a.name}: branding.dark_color keeps the ${type} in color, but ${faint.join(', ')} is under ${MIN_DARK_CONTRAST}:1 on ${DARK_BACKGROUND}`,
+                      `${a.name}: branding.dark_color keeps the ${type} in color, but ${faint.join(', ')} is under ${MIN_DARK_CONTRAST}:1 on ${DARK_BACKGROUND}; check it against the airline's own use`,
                   ]
                 : []
-        })
-    })
+        }),
+    )
 
 // An alliance may wait for its primary color until its SVGs are in the
 // collection, but no longer: like every airline, one with marks has a color.
@@ -349,6 +359,7 @@ const validateAlliances = (alliances, { published = false } = {}) => {
 }
 
 export {
+    findDarkColorWarnings,
     airlineFields,
     allianceFields,
     isValidField,
