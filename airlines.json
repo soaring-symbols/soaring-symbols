@@ -236,7 +236,10 @@
         ],
         "founded": 1937,
         "branding": {
-            "primary_color": "#f01428"
+            "primary_color": "#f01428",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
@@ -2514,7 +2517,10 @@
         "branding": {
             "primary_color": "#ca1c2a",
             "tagline": "Taking flight from identity - reaching new heights through experience",
-            "since": 2026
+            "since": 2026,
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
