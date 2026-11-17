@@ -1636,6 +1636,31 @@ describe('package exports', () => {
         }
     })
 
+    it('types the alliance names and asset types the schema allows', () => {
+        const types = readFileSync(
+            new URL('../index.d.ts', import.meta.url),
+            'utf8',
+        )
+        const { $defs } = JSON.parse(
+            readFileSync(new URL('../airlines.schema.json', import.meta.url)),
+        )
+        // The string literals of one exported union type
+        const union = (name) => {
+            const match = types.match(
+                new RegExp(`export type ${name} =([^]*?)(?:\\n\\n|$)`),
+            )
+            assert.ok(match, `index.d.ts exports ${name}`)
+
+            return [...match[1].matchAll(/'([^']+)'/g)].map(([, v]) => v)
+        }
+
+        assert.deepEqual(union('AllianceName'), $defs.alliance.enum)
+        assert.deepEqual(
+            union('AssetType'),
+            Object.keys($defs.assets.properties),
+        )
+    })
+
     it('ships the browser fixer as ESM with its declarations', () => {
         const base = require
             .resolve('soaring-symbols/package.json')

@@ -414,6 +414,26 @@ const current = (airline) =>
     airline.successor ? current(getAirline(airline.successor)) : airline
 ```
 
+## Versioning
+
+A minor release may add to the package without breaking code written for the one before. Two kinds of additions need code that expects them:
+
+- **Lists of values grow.** A new asset type (as `'logo-stacked'` was) or a new alliance can come in a minor release, so `AssetType`, the keys of `assets` and `AllianceName` may hold a value your code doesn't know yet. Skip it or fall back to a default rather than throwing:
+
+  ```js
+  const LABELS = { icon: 'Icon', logo: 'Logo', 'logo-stacked': 'Stacked logo', tail: 'Tail' }
+
+  for (const [type, info] of Object.entries(airline.assets)) {
+      const label = LABELS[type]
+      if (!label) continue // a type added in a later release
+      // ...
+  }
+  ```
+
+  In TypeScript, a `switch` that must cover every value (with an `assertNever` in `default`) fails to compile after such a release until it has the new case; a `switch` with a plain `default` keeps working.
+
+- **SVG rules tighten.** `soaring-symbols/svg-validator` and `soaring-symbols/svg-fixer` keep the files clean and to the [contribution guidelines](CONTRIBUTING.md), so a release may add or change a rule, and an SVG that passed before may fail it. That is not a breaking change: fix the file. The shape of their results (`issues`, `warnings`, each check's `group`, `level` and `fixable`) only changes in a breaking release.
+
 ## Changes in 0.5
 
 0.5 gives every airline its full name and moves one wrongly kept name out of the catalog. Look airlines up by IATA or ICAO code where you can: codes didn't change.
@@ -431,6 +451,7 @@ const current = (airline) =>
 
 - **LATAM Airlines Chile no longer answers to `LATAM Airlines`.** That name was never its own, so `getAirline('latam-airlines')` returns `undefined` and `assets/latam-airlines/` is gone: use `latam-airlines-chile`, `LA` or `LAN`.
 - **A new asset type.** `AssetType` adds `'logo-stacked'`, the vertical lockup a few airlines have beside their `logo`, and `assets` has a key for it there. A `switch` over every `AssetType`, or code that reads every key of `assets` as one of three types, needs the new case.
+- **Types for TypeScript.** `alliance`, `alliance_history[].alliance` and an alliance's `name` are typed as `AllianceName`, the alliances the catalog knows, instead of `string`, so a misspelt name like `'Skyteam'` fails to compile. `AirlineBranding` is now `Branding`, as alliances share it; the old name stays as a deprecated alias.
 
 Nothing else changes for code written for 0.4: the marks for dark backgrounds (`<type>-dark.svg`, `assets.<type>.dark`, `getAssetPath(..., { dark: true })` and `branding.dark_color`) are additions.
 

@@ -1,8 +1,22 @@
 /**
  * `logo` is the horizontal lockup, or the airline's only one; `logo-stacked`
  * the vertical one (the name under the mark), for airlines that have both.
+ * New types may come in a minor release, as `logo-stacked` did: skip a type
+ * you don't know instead of failing.
  */
 export type AssetType = 'icon' | 'logo' | 'logo-stacked' | 'tail'
+
+/**
+ * An alliance's name as airlines write it in `alliance`. New alliances may
+ * come in a minor release: handle a name you don't know instead of failing.
+ */
+export type AllianceName =
+    | 'oneworld'
+    | 'SkyTeam'
+    | 'Star Alliance'
+    | 'U-FLY Alliance'
+    | 'Value Alliance'
+    | 'Vanilla Alliance'
 
 /** Which files exist for one asset type of an airline. */
 export interface AssetInfo {
@@ -49,7 +63,8 @@ export interface HistoricalMarks {
     readonly assets: AssetMap
 }
 
-export interface AirlineBranding {
+/** The brand details of an airline or an alliance. */
+export interface Branding {
     readonly primary_color?: string
     readonly tagline?: string
     readonly guidelines?: string
@@ -62,6 +77,9 @@ export interface AirlineBranding {
      */
     readonly dark_color?: readonly AssetType[]
 }
+
+/** @deprecated Use `Branding`, which airlines and alliances share. */
+export type AirlineBranding = Branding
 
 /** Another name an airline uses now, beside its full one (e.g. "SWISS"). */
 export interface Alias {
@@ -94,7 +112,7 @@ export interface FormerIdentity {
 
 /** An alliance an airline was a member of, in `alliance_history`. */
 export interface AllianceMembership {
-    readonly alliance: string
+    readonly alliance: AllianceName
     /** Year the airline joined the alliance, when known. */
     readonly since?: number
     /** Year the airline left the alliance. */
@@ -150,7 +168,7 @@ export interface Airline {
      * "oneworld", "SkyTeam", "Star Alliance". An affiliate flying under
      * another member's membership has none.
      */
-    readonly alliance?: string
+    readonly alliance?: AllianceName
     /** Alliances it was a member of before, oldest first. */
     readonly alliance_history?: readonly AllianceMembership[]
     /** Slug of the airline group this one is a subsidiary of (e.g. "airasia"). */
@@ -178,7 +196,7 @@ export interface Airline {
      * earliest to cease first; absent when there are none.
      */
     readonly predecessors?: readonly string[]
-    readonly branding?: AirlineBranding
+    readonly branding?: Branding
     readonly assets: AssetMap
     /**
      * Marks the airline used before its current ones, oldest first; absent
@@ -196,7 +214,7 @@ export type AllianceAssetType = 'icon' | 'logo'
  */
 export interface Alliance {
     /** As airlines write it in `alliance` (e.g. "Star Alliance"). */
-    readonly name: string
+    readonly name: AllianceName
     readonly slug: string
     readonly website?: string
     /** Year the alliance was founded. */
@@ -204,7 +222,7 @@ export interface Alliance {
     readonly defunct?: boolean
     /** Year a defunct alliance was dissolved. */
     readonly ceased?: number
-    readonly branding?: AirlineBranding
+    readonly branding?: Branding
     /** Empty until the alliance has SVGs. */
     readonly assets: Readonly<Partial<Record<AllianceAssetType, AssetInfo>>>
     /**
