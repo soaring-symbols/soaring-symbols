@@ -1505,7 +1505,10 @@
         ],
         "founded": 1951,
         "branding": {
-            "primary_color": "#cc0000"
+            "primary_color": "#cc0000",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
