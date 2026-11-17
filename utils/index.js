@@ -22,15 +22,20 @@ const toSlug = (name) => {
 const formerNames = (airline) =>
     (airline.former ?? []).flatMap(({ name }) => (name ? [name] : []))
 
-// The slugs an airline's former names had, apart from its current one: the
-// build keeps each working as an alias
-const formerSlugs = (airline) => [
-    ...new Set(
-        formerNames(airline)
-            .map(toSlug)
-            .filter((slug) => slug !== airline.slug),
-    ),
+// The other names an airline uses now (`aliases`)
+const aliasNames = (airline) => (airline.aliases ?? []).map(({ name }) => name)
+
+// The slugs of some of an airline's names, apart from its own slug
+const otherSlugs = (airline, names) => [
+    ...new Set(names.map(toSlug).filter((slug) => slug !== airline.slug)),
 ]
+
+// The slugs an airline's former names had, apart from its current one: the
+// build keeps each working
+const formerSlugs = (airline) => otherSlugs(airline, formerNames(airline))
+
+// The slugs of an airline's aliases, apart from its own: they find it too
+const aliasSlugs = (airline) => otherSlugs(airline, aliasNames(airline))
 
 // Hex colors an SVG paints with: fill, stroke and gradient stops, as
 // attributes or inside style, so gradient marks are not mistaken for
@@ -404,6 +409,8 @@ export {
     toSlug,
     formerNames,
     formerSlugs,
+    aliasNames,
+    aliasSlugs,
     toFullHex,
     getAirlineAssets,
     writeDerivedMonos,

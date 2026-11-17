@@ -59,6 +59,16 @@ export interface AirlineBranding {
     readonly dark_color?: readonly AssetType[]
 }
 
+/** Another name an airline uses now, beside its full one (e.g. "SWISS"). */
+export interface Alias {
+    readonly name: string
+    /**
+     * The slug of `name`, when it differs from the airline's: getAirline()
+     * finds the airline by it.
+     */
+    readonly slug?: string
+}
+
 /**
  * A name or codes an airline used before, and the year it stopped using
  * them. Holds only what changed then: at least one of `name`, `iata`, `icao`
@@ -106,6 +116,12 @@ export interface Airline {
     /** ISO 3166-1 alpha-2 code of the one country it is based in (e.g. "VN"). */
     readonly country: string
     readonly slug: string
+    /**
+     * Other names the airline uses now beside its full `name`, such as the
+     * short one on its logo (e.g. SWISS for Swiss International Air Lines).
+     * getAirline() finds the airline by each one and its slug.
+     */
+    readonly aliases?: readonly Alias[]
     /**
      * The names and codes the airline used before its current ones, oldest
      * first (e.g. Jat Airways, ICAO JAT, until 2013 for Air Serbia).
@@ -221,8 +237,8 @@ export function listAirlines(): Airline[]
  * with a defunct airline finds the active one, a code a brand shares with
  * its parent finds the parent, and an IATA code IATA gave to two airlines
  * finds the one without `iata_duplicate` and, written with IATA's asterisk
- * ("SL*"), the one with it. Former names and slugs find the airline
- * as current ones do; a former code only when no airline has it now.
+ * ("SL*"), the one with it. Aliases, former names and their slugs find the
+ * airline as current ones do; a former code only when no airline has it now.
  */
 export function getAirline(query: string): Airline | undefined
 /**

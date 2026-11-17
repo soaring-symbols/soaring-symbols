@@ -2,12 +2,12 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://github.com/soaring-symbols/soaring-symbols/airlines.schema.json",
     "title": "Soaring Symbols airlines",
-    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `slug` to each name in `former` with another slug and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
+    "description": "The airline catalog in airlines.json, as kept in the repo. The build adds `assets` to every entry of the copy it publishes, `history` to those with older marks, `slug` to each name in `aliases` and `former` with another slug and `predecessors` to those that carried on a defunct airline (see $defs/published); leave them out of the repo.",
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
         "published": {
-            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `former` with another slug, and `predecessors` when it carried on a defunct airline.",
+            "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `aliases` and `former` with another slug, and `predecessors` when it carried on a defunct airline.",
             "type": "array",
             "items": {
                 "allOf": [
@@ -87,6 +87,22 @@
             "minLength": 1,
             "pattern": "^\\S(.*\\S)?$"
         },
+        "alias": {
+            "description": "Another name the airline uses now, beside its full one.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "properties": {
+                "name": {
+                    "$ref": "#/$defs/name",
+                    "description": "The other name, e.g. \"SWISS\" for Swiss International Air Lines."
+                },
+                "slug": {
+                    "$ref": "#/$defs/slug",
+                    "description": "Added by the build when the name's slug differs from the airline's: getAirline() finds the airline by it. Only in the published catalog."
+                }
+            }
+        },
         "former": {
             "description": "A name or codes the airline used before: at least one of `name`, `iata`, `icao` and `callsign`, and the year it stopped using them.",
             "type": "object",
@@ -150,6 +166,12 @@
                 "slug": {
                     "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
                     "$ref": "#/$defs/slug"
+                },
+                "aliases": {
+                    "description": "Other names the airline uses now beside its full `name`, such as the short one on its logo, e.g. [{ \"name\": \"SWISS\" }] for Swiss International Air Lines. Only names the airline itself uses; a name it stopped using goes in `former`. getAirline() finds the airline by each alias and its slug.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "$ref": "#/$defs/alias" }
                 },
                 "iata": { "$ref": "#/$defs/iata" },
                 "iata_duplicate": {

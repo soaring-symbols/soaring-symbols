@@ -132,7 +132,7 @@ async function copyFiles() {
         }
     }
     // After the monos and darks, so airlines sharing marks get those too, and after
-    // those, so a former slug gets whatever its airline ships
+    // those, so an alias or former slug gets whatever its airline ships
     await copySharedMarks(catalog)
     await copyFormerSlugs(catalog)
 }
@@ -173,7 +173,8 @@ async function copySharedMarks(airlines) {
 
 // A renamed airline's slug follows its new name. Links to an old slug keep
 // working: when a release shipped that slug (published-slugs.json), the
-// airline's current files are also published there. A former name that was
+// airline's current files are also published there, as for the slug of an
+// alias (SWISS, before the airline took its full name). A name that was
 // never a slug in the package (Air Pacific for Fiji Airways) has no links to
 // keep, so it gets no copy; getAirline() still finds it.
 async function copyFormerSlugs(airlines) {
@@ -181,7 +182,8 @@ async function copyFormerSlugs(airlines) {
         JSON.parse(await fs.readFile('./published-slugs.json', 'utf-8')),
     )
     for (const airline of airlines) {
-        for (const { slug } of airline.former ?? []) {
+        const names = [...(airline.aliases ?? []), ...(airline.former ?? [])]
+        for (const { slug } of names) {
             if (slug && published.has(slug)) {
                 await copyCurrentMarks(airline.slug, slug, airline.name)
             }

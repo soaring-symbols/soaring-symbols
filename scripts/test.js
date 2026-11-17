@@ -245,6 +245,28 @@ for (const [format, api] of [
                 )
             })
 
+            it('finds an airline by its aliases and their slugs', () => {
+                const connect = api.getAirline('sas-connect')
+                assert.deepEqual(connect.aliases, [
+                    {
+                        name: 'Scandinavian Airlines Connect',
+                        slug: 'scandinavian-airlines-connect',
+                    },
+                ])
+                assert.equal(
+                    api.getAirline('Scandinavian Airlines Connect'),
+                    connect,
+                )
+                assert.equal(
+                    api.getAirline('scandinavian-airlines-connect'),
+                    connect,
+                )
+                assert.equal(
+                    api.getAssetPath('scandinavian-airlines-connect', 'logo'),
+                    'soaring-symbols/assets/sas-connect/logo.svg',
+                )
+            })
+
             it('finds an airline by its former codes when no airline has them now', () => {
                 const serbia = getAirline('air-serbia')
                 assert.equal(getAirline('JAT'), serbia)
@@ -867,6 +889,89 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
+    const aka = (name, aliases, fields) =>
+        entry(name, {
+            aliases: aliases.map((alias) => ({ name: alias })),
+            ...fields,
+        })
+
+    it('keeps aliases apart from every other airline', () => {
+        const swiss = aka('Swiss International Air Lines', ['SWISS'])
+        assert.deepEqual(validateAirlines([swiss]), [])
+        // Its alias's slug is another airline's slug
+        assert.deepEqual(
+            validateAirlines([
+                swiss,
+                entry('Swiss', { iata: 'XX', icao: 'XXX' }),
+            ]),
+            [
+                'slug "swiss" is used by more than one airline: Swiss International Air Lines, Swiss',
+            ],
+        )
+    })
+
+    it('rejects aliases that are its name, a former name or repeated', () => {
+        assert.deepEqual(
+            validateAirlines([
+                aka('Swiss International Air Lines', [
+                    'swiss international air lines',
+                    'SWISS',
+                    'Swiss',
+                ]),
+            ]),
+            [
+                'Swiss International Air Lines: aliases lists its own name',
+                'Swiss International Air Lines: aliases lists "Swiss" twice',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines([
+                aka('Air Serbia', ['Jat Airways'], {
+                    former: [{ name: 'Jat Airways', until: 2013 }],
+                }),
+            ]),
+            [
+                'Air Serbia: "Jat Airways" is in both aliases and former; a name it stopped using goes in former only',
+            ],
+        )
+        // Each alias needs a name, and nothing else
+        for (const aliases of [[], [{}], [{ name: 'SWISS', until: 2026 }]]) {
+            assert.notDeepEqual(
+                validateAirlines([
+                    entry('Swiss International Air Lines', { aliases }),
+                ]),
+                [],
+                JSON.stringify(aliases),
+            )
+        }
+    })
+
+    it('publishes the slugs of aliases', () => {
+        const [thai] = publishCatalog(
+            [aka('Thai Airways International', ['THAI', 'Thai Airways'])],
+            noAssets,
+        )
+        assert.deepEqual(thai.aliases, [
+            { name: 'THAI', slug: 'thai' },
+            { name: 'Thai Airways', slug: 'thai-airways' },
+        ])
+        assert.deepEqual(validateAirlines([thai], { published: true }), [])
+        // The repo copy keeps none of them, and the field comes after slug
+        const [source] = normalizeCatalog([thai])
+        assert.deepEqual(source.aliases, [
+            { name: 'THAI' },
+            { name: 'Thai Airways' },
+        ])
+        assert.deepEqual(Object.keys(source).slice(0, 3), [
+            'name',
+            'slug',
+            'aliases',
+        ])
+        // An alias with the airline's own slug adds none
+        const [klm] = publishCatalog([aka('K.L.M.', ['KLM'])], noAssets)
+        assert.deepEqual(klm.aliases, [{ name: 'KLM' }])
+    })
+
     it('checks alliance_history is oldest first and joined before it was left', () => {
         const sas = (history) =>
             entry('Scandinavian Airlines', {
@@ -1159,9 +1264,11 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
-    it('publishes the current files of a renamed airline at its published former slugs', () => {
+    it('publishes the current files of an airline at its published alias and former slugs', () => {
         const slugsOf = (a) =>
-            (a.former ?? []).flatMap(({ slug }) => (slug ? [slug] : []))
+            [...(a.aliases ?? []), ...(a.former ?? [])].flatMap(({ slug }) =>
+                slug ? [slug] : [],
+            )
         const renamed = cjs.listAirlines().filter((a) => slugsOf(a).length)
         assert.ok(renamed.length > 0)
         const published = new Set(
@@ -1200,6 +1307,7 @@ describe('airlines.json assets metadata', () => {
                 .listAirlines()
                 .flatMap((a) => [
                     a.slug,
+                    ...(a.aliases ?? []).map(({ slug }) => slug),
                     ...(a.former ?? []).map(({ slug }) => slug),
                 ]),
         )

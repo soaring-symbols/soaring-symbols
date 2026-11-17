@@ -7,6 +7,9 @@ import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
     MIN_DARK_CONTRAST,
+    aliasNames,
+    aliasSlugs,
+    formerNames,
     formerSlugs,
     readsOnDark,
     toSlug,
@@ -111,25 +114,27 @@ const findWrongSlugs = (airlines) =>
         )
 
 // Slugs name the asset folders and what `parent` and `marks` point at, so no
-// two airlines may share one, defunct or not. The slugs of former names count
-// too, since the package keeps them working: a link to assets/<old slug>/
-// must lead to one airline.
+// two airlines may share one, defunct or not. The slugs of aliases and former
+// names count too, since the package keeps them working: a link to
+// assets/<old slug>/ must lead to one airline.
 const findDuplicateSlugs = (airlines) => {
     const seen = new Map()
 
     return airlines.flatMap((a) =>
-        [a.slug, ...formerSlugs(a)].flatMap((slug) => {
-            const first = seen.get(slug)
-            if (!first) {
-                seen.set(slug, a)
+        [...new Set([a.slug, ...aliasSlugs(a), ...formerSlugs(a)])].flatMap(
+            (slug) => {
+                const first = seen.get(slug)
+                if (!first) {
+                    seen.set(slug, a)
 
-                return []
-            }
+                    return []
+                }
 
-            return [
-                `slug "${slug}" is used by more than one airline: ${first.name}, ${a.name}`,
-            ]
-        }),
+                return [
+                    `slug "${slug}" is used by more than one airline: ${first.name}, ${a.name}`,
+                ]
+            },
+        ),
     )
 }
 
@@ -169,6 +174,31 @@ const findFormerProblems = (airlines) =>
                 : []),
         ]),
     )
+
+// `aliases` are other names the airline uses now: never its own name, a
+// former one or the same alias twice (letter case aside, as getAirline()
+// compares names)
+const findAliasProblems = (airlines) =>
+    airlines.flatMap((a) => {
+        const lower = (name) => name.toLowerCase()
+        const former = new Set(formerNames(a).map(lower))
+
+        return aliasNames(a).flatMap((alias, i, aliases) => {
+            const key = lower(alias)
+            if (key === lower(a.name)) {
+                return [`${a.name}: aliases lists its own name`]
+            }
+            if (former.has(key)) {
+                return [
+                    `${a.name}: "${alias}" is in both aliases and former; a name it stopped using goes in former only`,
+                ]
+            }
+
+            return aliases.findIndex((other) => lower(other) === key) < i
+                ? [`${a.name}: aliases lists "${alias}" twice`]
+                : []
+        })
+    })
 
 // `alliance_history` lists the alliances the airline left, oldest first,
 // each joined no later than it was left
@@ -260,6 +290,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
     return [
         ...findWrongSlugs(airlines),
         ...findDuplicateSlugs(airlines),
+        ...findAliasProblems(airlines),
         ...findFormerProblems(airlines),
         ...findAllianceHistoryProblems(airlines),
         ...findFlagCarrierProblems(airlines),
