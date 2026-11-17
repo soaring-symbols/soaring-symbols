@@ -1321,6 +1321,33 @@
         }
     },
     {
+        "name": "Gulf Air",
+        "slug": "gulf-air",
+        "iata": "GF",
+        "icao": "GFA",
+        "callsign": "GULF AIR",
+        "former": [
+            {
+                "name": "Gulf Aviation",
+                "until": 1974
+            }
+        ],
+        "country": "BH",
+        "flag_carrier": true,
+        "website": "https://www.gulfair.com",
+        "hubs": [
+            "BAH"
+        ],
+        "founded": 1950,
+        "branding": {
+            "primary_color": "#a18f63",
+            "guidelines": "https://bahrainlibrary.com/wp-content/uploads/bl/guides/gulf-air-brand-guidelines.pdf",
+            "dark_color": [
+                "icon"
+            ]
+        }
+    },
+    {
         "name": "Hainan Airlines",
         "slug": "hainan-airlines",
         "iata": "HU",
