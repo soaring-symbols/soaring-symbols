@@ -1293,8 +1293,8 @@
         }
     },
     {
-        "name": "GOL",
-        "slug": "gol",
+        "name": "Gol Linhas Aéreas",
+        "slug": "gol-linhas-aereas",
         "iata": "G3",
         "icao": "GLO",
         "callsign": "GOL",

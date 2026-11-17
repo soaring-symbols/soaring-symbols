@@ -39,7 +39,6 @@ const PAGE_TITLES = {
     Firefly: 'Firefly (airline)',
     // The original airline; a relaunch flew under the brand in 2022-2023
     Flybe: 'Flybe (1979–2020)',
-    GOL: 'Gol Linhas Aéreas',
     Iberia: 'Iberia (airline)',
     'LATAM Airlines Chile': 'LATAM Chile',
     Level: 'Level (airline)',
