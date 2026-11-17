@@ -1546,7 +1546,10 @@
         "parent": "qantas",
         "founded": 2003,
         "branding": {
-            "primary_color": "#ff5111"
+            "primary_color": "#ff5111",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
