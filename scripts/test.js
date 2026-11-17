@@ -398,9 +398,20 @@ for (const [format, api] of [
                     getAssetPath('EI', 'logo', { mono: true }),
                     undefined,
                 )
-                // Qantas ships only a mono icon
-                assert.equal(getAssetPath('QF', 'icon'), undefined)
-                assert.ok(getAssetPath('QF', 'icon', { mono: true }))
+                // An icon shipped only as a mono file has no color path
+                const monoOnly = {
+                    ...getAirline('QF'),
+                    assets: {
+                        icon: {
+                            color: false,
+                            mono: true,
+                            dark: true,
+                            colors: [],
+                        },
+                    },
+                }
+                assert.equal(getAssetPath(monoOnly, 'icon'), undefined)
+                assert.ok(getAssetPath(monoOnly, 'icon', { mono: true }))
             })
 
             it('returns an older mark from the history with since', () => {

@@ -517,7 +517,7 @@ Versions up to `0.1.0-alpha.14` exported `getAssets()`, `getAssetContent()`, a d
 Two behaviors changed along the way:
 
 - **Paths are package paths.** `getAssets()` returned `assets/<slug>/logo.svg`, relative to the package's `dist/` folder. `getAssetPath()` returns `soaring-symbols/assets/<slug>/logo.svg`, which `require.resolve`, `import.meta.resolve` and bundlers resolve directly.
-- **No path for a missing file.** `getAssets()` always set `color`, even for an asset with only a `-mono.svg` file (for example the Qantas icon). `getAssetPath()` returns `undefined` instead.
+- **No path for a missing file.** `getAssets()` always set `color`, even for an asset with only a `-mono.svg` file. `getAssetPath()` returns `undefined` instead.
 
 ### Example: reading every logo
 
