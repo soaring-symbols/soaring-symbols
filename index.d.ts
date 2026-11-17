@@ -1,4 +1,8 @@
-export type AssetType = 'icon' | 'logo' | 'tail'
+/**
+ * `logo` is the horizontal lockup, or the airline's only one; `logo-stacked`
+ * the vertical one (the name under the mark), for airlines that have both.
+ */
+export type AssetType = 'icon' | 'logo' | 'logo-stacked' | 'tail'
 
 /** Which files exist for one asset type of an airline. */
 export interface AssetInfo {

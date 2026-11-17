@@ -287,7 +287,7 @@
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
-                    "items": { "enum": ["icon", "logo", "tail"] }
+                    "items": { "enum": ["icon", "logo", "logo-stacked", "tail"] }
                 }
             }
         },
@@ -298,6 +298,10 @@
             "properties": {
                 "icon": { "$ref": "#/$defs/assetInfo" },
                 "logo": { "$ref": "#/$defs/assetInfo" },
+                "logo-stacked": {
+                    "$ref": "#/$defs/assetInfo",
+                    "description": "The vertical lockup, the name under the mark, for an airline that also has the horizontal one in logo."
+                },
                 "tail": { "$ref": "#/$defs/assetInfo" }
             }
         },

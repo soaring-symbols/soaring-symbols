@@ -298,8 +298,29 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),
         ...findDarkColorProblems(airlines),
+        ...findLoneStackedLogos(airlines),
     ]
 }
+
+// logo-stacked.svg is the vertical lockup of an airline that also has the
+// horizontal one; an airline with only a vertical lockup keeps it in
+// logo.svg, so logo is always there to fall back on. Checked for the current
+// marks and each set in history, from the published `assets`.
+const findLoneStackedLogos = (airlines) =>
+    airlines.flatMap((a) =>
+        [
+            { assets: a.assets, where: 'assets' },
+            ...(a.history ?? []).map((mark) => ({
+                assets: mark.assets,
+                where: `history/${mark.since}`,
+            })),
+        ]
+            .filter(({ assets }) => assets?.['logo-stacked'] && !assets.logo)
+            .map(
+                ({ where }) =>
+                    `${a.name}: ${where} has logo-stacked but no logo; an airline with only a vertical lockup keeps it in logo.svg`,
+            ),
+    )
 
 // branding.dark_color keeps a mark's color file on dark backgrounds: the
 // mark must have one, and an airline sharing another's marks (`marks`)

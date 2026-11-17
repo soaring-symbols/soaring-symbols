@@ -72,7 +72,7 @@ Returns the package path of one SVG file, ready to pass to `require.resolve`, `i
 
 - **Arguments:**
   - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
-  - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
+  - `type`: `'icon'`, `'logo'`, `'logo-stacked'` or `'tail'` (any other value throws a `TypeError`). `'logo'` is the horizontal lockup, or the airline's only one; `'logo-stacked'` the vertical one (the name under the mark), only for airlines that have both, so fall back to `'logo'` when it returns `undefined`
   - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
   - `options.dark` (boolean, default `false`): return the `-dark.svg` variant, for dark backgrounds (see [Dark backgrounds](#dark-backgrounds)); passing it with `mono` throws a `TypeError`
   - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
@@ -83,6 +83,9 @@ getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
 getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-mono.svg'
 getAssetPath('VN', 'logo', { dark: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-dark.svg'
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
+
+// The stacked logo for a square slot, else the horizontal one
+getAssetPath('VN', 'logo-stacked') ?? getAssetPath('VN', 'logo')
 
 // An older mark, once the airline has one in its history
 getAssetPath('9G', 'logo', { since: 2025 }) // 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'
@@ -241,7 +244,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `successor`              | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)).                                                                 |
 | `predecessors`           | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                                                                                         |
 | `branding`               | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines), `since` (year the current marks came in) and `dark_color` (types kept in color on dark backgrounds), each optional.                  |
-| `assets`                 | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                                                                                         |
+| `assets`                 | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `logo-stacked`, `tail`). Missing types have no key.                                                                                         |
 | `history`                | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                                                                                       |
 
 ### AssetInfo
