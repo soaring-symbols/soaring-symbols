@@ -259,6 +259,13 @@
                 "guidelines": {
                     "$ref": "#/$defs/url",
                     "description": "Link to the airline's brand guidelines."
+                },
+                "dark_color": {
+                    "description": "The mark types the airline keeps in color on dark backgrounds, so their -dark.svg is the color file instead of the monochrome one in white. Only with a source showing it.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "enum": ["icon", "logo", "tail"] }
                 }
             }
         },

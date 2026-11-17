@@ -22,10 +22,12 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
   - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
   - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it. When the airline has an all-white version (on dark or colored backgrounds), draw the mono from that artwork, as one path, even where it differs from the color mark.
-- **Dark Background Assets**: `<type>-dark.svg` is the version for dark backgrounds. The build makes it for almost every asset: the color file when all its colors read on dark (3:1 against `#1e1e1e`), else the monochrome file in white. Add one by hand only when the airline's own version for dark backgrounds changes part of the mark and keeps other colors (Ryanair's blue lettering in white, its harp still yellow):
+- **Dark Background Assets**: `<type>-dark.svg` is the version for dark backgrounds. Brand guidelines keep the full-color mark for light backgrounds and show it in white on dark ones, so the build makes it from the monochrome file in white; a multi-color mark without a monochrome file gets its color file when every color reads on dark (3:1 against `#1e1e1e`), and none otherwise. Two exceptions, each only with a source showing what the airline does on a dark background:
+  - **The airline keeps its colors:** list the type in `branding.dark_color` in `airlines.json` (`"dark_color": ["icon"]`), and the build uses the color file. `npm run generate` stops when a color in it doesn't reach 3:1 on `#1e1e1e`.
+  - **The airline changes part of the mark** and keeps other colors (Air Canada's black lettering in white, its maple leaf still red): add `<type>-dark.svg` by hand, as below.
   - **Follow the airline:** draw it from what the airline itself shows on a dark background (its brand guidelines, a dark website header, its app), and link the source in the pull request. Never recolor a mark yourself. A version on a background in the brand's own color (white lettering on a red header) is made for that color, not for dark backgrounds, so it doesn't count.
   - **Several colors:** a one-color version is a monochrome one: draw it as `<type>-mono.svg` instead, and the build makes the white `-dark.svg` from it.
-  - **Same canvas:** the same `viewBox` and `<title>` as the color file, and the same SVG specifications. `npm run generate` stops on a dark file without its color file, with another `viewBox`, identical to the color file or in one color, and warns about colors that hardly read on dark.
+  - **Same canvas:** the same `viewBox` and `<title>` as the color file, and the same SVG specifications. `npm run generate` stops on a dark file without its color file, with another `viewBox`, identical to the color file, in one color or for a type in `branding.dark_color`, and warns about colors that hardly read on dark.
 
 **Correct Structure Example:**
 
@@ -141,7 +143,7 @@ IATA and ICAO codes must be unique among active airlines, with three exceptions.
 | `defunct`                |    No    | `true` if the airline has ceased operations.                                                                                                                                                                                  |
 | `ceased`                 |    No    | Year a defunct airline ceased operations; requires `defunct`.                                                                                                                                                                 |
 | `successor`              |    No    | Slug of the airline that carried on a defunct one (a merger, refounding or brand move).                                                                                                                                       |
-| `branding`               |   Yes    | `primary_color` (six-digit lowercase hex), and optionally `tagline`, `guidelines` and `since`.                                                                                                                                |
+| `branding`               |   Yes    | `primary_color` (six-digit lowercase hex), and optionally `tagline`, `guidelines`, `since` and `dark_color`.                                                                                                                  |
 
 #### Alliance Marks
 

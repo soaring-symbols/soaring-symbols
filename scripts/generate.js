@@ -73,8 +73,11 @@ const removedMonos = []
 const darkWarnings = []
 
 // Stop on a hand-made -dark.svg that is out of place; collect its warnings
-const checkDarks = (where, dirs, assetsDir) => {
-    const found = dirs.map((dir) => findDarkProblems(dir, assetsDir))
+const checkDarks = (where, dirs, assetsDir, keepColor) => {
+    // branding.dark_color is about the current marks, the first folder
+    const found = dirs.map((dir, i) =>
+        findDarkProblems(dir, assetsDir, i === 0 ? keepColor : []),
+    )
     const darkProblems = found.flatMap((f) => f.problems)
     darkWarnings.push(...found.flatMap((f) => f.warnings))
     if (darkProblems.length) {
@@ -84,7 +87,7 @@ const checkDarks = (where, dirs, assetsDir) => {
     }
 }
 
-for (const { name, slug, marks } of airlines) {
+for (const { name, slug, marks, branding } of airlines) {
     // An airline with `marks` has no SVGs of its own: the build copies the
     // files of the airline it names to its slug
     if (marks && existsSync(`assets/${slug}`)) {
@@ -106,7 +109,7 @@ for (const { name, slug, marks } of airlines) {
         historyProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
-    checkDarks(name, getAssetDirs(slug), 'assets')
+    checkDarks(name, getAssetDirs(slug), 'assets', branding?.dark_color)
     for (const dir of getAssetDirs(slug)) {
         removedMonos.push(...removeDerivedMonos(dir))
     }
@@ -140,6 +143,7 @@ for (const slug of allianceDirs) {
         `${ALLIANCES_DIR}/${slug}`,
         getAssetDirs(slug, ALLIANCES_DIR),
         ALLIANCES_DIR,
+        alliances.find((a) => a.slug === slug)?.branding?.dark_color,
     )
     for (const dir of getAssetDirs(slug, ALLIANCES_DIR)) {
         removedMonos.push(...removeDerivedMonos(dir, ALLIANCES_DIR))

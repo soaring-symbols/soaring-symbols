@@ -115,11 +115,15 @@ const publishedHistory = (entry, assetsDir) => {
 const publishCatalog = (airlines, assetsDir = 'assets') => {
     const catalog = normalizeCatalog(airlines)
     const predecessorsOf = getPredecessors(catalog)
+    const bySlug = new Map(catalog.map((a) => [a.slug, a]))
 
     return catalog.map((airline) => {
+        // Shared marks keep the colors their owner keeps on dark
+        const owner = bySlug.get(airline.marks) ?? airline
         const assets = getAirlineAssets(
-            airline.marks ?? airline.slug,
+            owner.slug,
             assetsDir,
+            owner.branding?.dark_color,
         )
 
         const history = airline.marks
@@ -156,7 +160,11 @@ const publishAlliances = (alliances, assetsDir = ALLIANCES_DIR) =>
         return orderKeys(
             {
                 ...alliance,
-                assets: getAirlineAssets(alliance.slug, assetsDir),
+                assets: getAirlineAssets(
+                    alliance.slug,
+                    assetsDir,
+                    alliance.branding?.dark_color,
+                ),
                 ...(history.length && { history }),
             },
             allianceFields,

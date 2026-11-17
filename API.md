@@ -238,7 +238,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `ceased`                 | `number?`   | Year a defunct airline ceased operations.                                                                                                                                                                     |
 | `successor`              | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)).                                                                 |
 | `predecessors`           | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                                                                                         |
-| `branding`               | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.                                                                          |
+| `branding`               | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines), `since` (year the current marks came in) and `dark_color` (types kept in color on dark backgrounds), each optional.                  |
 | `assets`                 | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                                                                                         |
 | `history`                | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                                                                                       |
 
@@ -269,11 +269,12 @@ assets/<slug>/
 
 ### Dark backgrounds
 
-Most marks are drawn for light backgrounds, and their dark parts (navy or black text) disappear on a dark one. `<type>-dark.svg` is the file to show there instead, chosen in this order:
+Most marks are drawn for light backgrounds, and brand guidelines show them in white on dark ones. `<type>-dark.svg` is the file to show there instead, chosen in this order:
 
-1. **The airline's own version**, drawn by hand from what it uses on dark backgrounds, when it changes only part of the mark (Ryanair's blue lettering in white, its harp still yellow).
-2. **The color file**, as it is, when every one of its colors reaches 3:1 against `#1e1e1e` (WCAG's contrast for graphics): a yellow mark reads on dark as well as on light.
-3. **The monochrome file in white** (`#ffffff`), the version most airlines use on dark backgrounds.
+1. **The airline's own version**, drawn by hand from what it uses on dark backgrounds, when it changes only part of the mark (Air Canada's black lettering in white, its maple leaf still red).
+2. **The color file**, as it is, for the types in `branding.dark_color`: the airline keeps those in color on dark backgrounds.
+3. **The monochrome file in white** (`#ffffff`), what most airlines use on dark backgrounds.
+4. **The color file** of a multi-color mark without a `-mono.svg` yet, when every one of its colors reaches 3:1 against `#1e1e1e` (WCAG's contrast for graphics).
 
 An asset with none of these (a multi-color mark with dark parts and no `-mono.svg` yet) has no `-dark.svg` and `dark: false`: show its color file on a light tile. So on a dark background, use `getAssetPath(airline, type, { dark: true })` and fall back to the color file on a light ground when it returns `undefined`.
 

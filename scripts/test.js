@@ -539,6 +539,60 @@ describe('airlines.json schema', () => {
         }
     })
 
+    it('checks branding.dark_color against the marks', () => {
+        const shipped = JSON.parse(
+            readFileSync(new URL('../dist/airlines.json', import.meta.url)),
+        )
+        const withEntry = (slug, patch) =>
+            shipped.map((a) => (a.slug === slug ? patch(a) : a))
+        const keep = (types) => (a) => ({
+            ...a,
+            branding: { ...a.branding, dark_color: types },
+        })
+        // TAROM's navy hardly reads on dark; Vietnam Airlines has no tail
+        assert.deepEqual(
+            validateAirlines(withEntry('tarom', keep(['logo'])), {
+                published: true,
+            }),
+            [
+                'TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines(withEntry('vietnam-airlines', keep(['tail'])), {
+                published: true,
+            }),
+            [
+                'Vietnam Airlines: branding.dark_color lists tail, which has no tail.svg',
+            ],
+        )
+        const borrower = shipped.find((a) => a.marks)
+        assert.deepEqual(
+            validateAirlines(withEntry(borrower.slug, keep(['icon'])), {
+                published: true,
+            }),
+            [
+                `${borrower.name}: shares the marks of "${borrower.marks}", so set branding.dark_color there`,
+            ],
+        )
+        // Not in the repo copy's schema as anything but a list of types
+        assert.notDeepEqual(
+            validateAirlines(
+                JSON.parse(
+                    readFileSync(new URL('../airlines.json', import.meta.url)),
+                ).map((a) =>
+                    a.slug === 'tarom'
+                        ? {
+                              ...a,
+                              branding: { ...a.branding, dark_color: ['wing'] },
+                          }
+                        : a,
+                ),
+            ),
+            [],
+        )
+    })
+
     it('requires assets in the published catalog', () => {
         const source = JSON.parse(
             readFileSync(new URL('../airlines.json', import.meta.url)),
@@ -1018,7 +1072,11 @@ describe('airlines.json assets metadata', () => {
                     continue
                 }
                 const svg = readFileSync(dark, 'utf8')
-                const source = darkSource({ ...info, dark: false })
+                const source = darkSource({
+                    ...info,
+                    dark: false,
+                    keepColor: Boolean(a.branding?.dark_color?.includes(type)),
+                })
                 if (source === 'color') {
                     assert.equal(
                         svg,
@@ -1034,18 +1092,45 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
-    it('keeps the color file on dark only when every color reaches 3:1', () => {
-        const pick = (colors, mono = false) =>
-            darkSource({ dark: false, colors, mono })
-        // Yellow reads on dark, navy does not
-        assert.equal(pick(['#ffc80b']), 'color')
+    it('paints the mono white on dark unless the airline keeps its colors', () => {
+        const pick = (colors, mono = false, keepColor = false) =>
+            darkSource({ dark: false, colors, mono, keepColor })
+        // The mono in white, as brand guidelines do, even when the colors
+        // would read on dark
+        assert.equal(pick(['#ffc80b'], true), 'mono')
         assert.equal(pick(['#003366'], true), 'mono')
+        // branding.dark_color keeps the color file
+        assert.equal(pick(['#ffc80b'], true, true), 'color')
+        // Without a mono, the color file only when every color reads on
+        // dark: yellow does, navy does not
+        assert.equal(pick(['#ffc80b', '#f1c931']), 'color')
         assert.equal(pick(['#0066b3', '#ffc80b']), null)
-        assert.equal(pick(['#0066b3', '#ffc80b'], true), 'mono')
         assert.equal(
-            darkSource({ dark: true, colors: [], mono: false }),
+            darkSource({
+                dark: true,
+                colors: [],
+                mono: false,
+                keepColor: true,
+            }),
             'dark',
         )
+    })
+
+    it('keeps the icons of Air Canada and Sun PhuQuoc Airways in color', () => {
+        for (const code of ['AC', '9G']) {
+            const airline = cjs.getAirline(code)
+            assert.equal(
+                readFileSync(
+                    new URL(`${airline.slug}/icon-dark.svg`, assetsDir),
+                    'utf8',
+                ),
+                readFileSync(
+                    new URL(`${airline.slug}/icon.svg`, assetsDir),
+                    'utf8',
+                ),
+                code,
+            )
+        }
     })
 
     it('writes every color as six-digit lowercase hex', () => {
@@ -1306,6 +1391,13 @@ describe('hand-made -dark.svg files', () => {
             problems: [],
             warnings: [],
         })
+    })
+
+    it('refuses one where branding.dark_color keeps the color file', () => {
+        const { problems } = findDarkProblems('x', assetsDir, ['logo'])
+        assert.deepEqual(problems, [
+            `${join(assetsDir, 'x', 'logo-dark.svg')} is there, but branding.dark_color keeps the logo in color; keep one`,
+        ])
     })
 
     it('reports a copy, one color, another viewBox or no color file', () => {

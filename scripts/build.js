@@ -125,16 +125,18 @@ async function copyFiles() {
             writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
         }
     }
-    // Then every asset without a hand-made -dark.svg gets one when its
-    // colors read on dark or it has a mono to paint white
-    for (const airline of catalog.filter((a) => !a.marks)) {
-        for (const dir of getAssetDirs(airline.slug)) {
-            writeDerivedDarks(dir, path.join(distDir, 'assets'))
-        }
-    }
-    for (const alliance of alliances) {
-        for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
-            writeDerivedDarks(dir, path.join(distDir, ALLIANCES_DIR))
+    // Then every asset without a hand-made -dark.svg gets one: its mono in
+    // white, or its color file where branding.dark_color keeps it (current
+    // marks only) or it has no mono but reads on dark
+    for (const entries of [
+        { list: catalog.filter((a) => !a.marks), root: 'assets' },
+        { list: alliances, root: ALLIANCES_DIR },
+    ]) {
+        for (const entry of entries.list) {
+            const [current, ...older] = getAssetDirs(entry.slug, entries.root)
+            const dest = path.join(distDir, entries.root)
+            writeDerivedDarks(current, dest, entry.branding?.dark_color)
+            for (const dir of older) writeDerivedDarks(dir, dest)
         }
     }
     // After the monos and darks, so airlines sharing marks get those too, and after

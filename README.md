@@ -26,7 +26,7 @@ The site also serves a JSON and image API, with no key needed: [`/api/airlines/V
 This is the one roadmap for the collection and every integration around it, including those built in other repositories (the website's API, the Raycast extension, the Figma plugin). What already exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
-- [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's own version where it changes part of the mark, else the color mark when it reads on dark, else the monochrome mark in white; then the website, Raycast and Figma showing them
+- [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's own version where it changes part of the mark, the color mark where the airline keeps it, else the monochrome mark in white; then the website, Raycast and Figma showing them
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
 - [ ] Cargo airlines, such as FedEx Express, UPS Airlines, Cargolux and DHL Aviation, and the cargo brands of passenger airlines (Lufthansa Cargo, Qatar Airways Cargo), so cargo flights can show a mark too
 
