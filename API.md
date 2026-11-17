@@ -196,7 +196,8 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
     "branding": {
         "primary_color": "#d99e09",
         "tagline": "Reach Further",
-        "guidelines": "https://web.archive.org/web/20210515192059/https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
+        "guidelines": "https://web.archive.org/web/20210515192059/https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
+        "dark_color": ["icon"]
     },
     "assets": {
         "icon": {
