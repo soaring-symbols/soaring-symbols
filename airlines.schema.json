@@ -259,6 +259,13 @@
                 "guidelines": {
                     "$ref": "#/$defs/url",
                     "description": "Link to the airline's brand guidelines."
+                },
+                "dark_color": {
+                    "description": "The mark types the airline keeps in color on dark backgrounds, so their -dark.svg is the color file instead of the monochrome one in white. Only with a source showing it.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "enum": ["icon", "logo", "tail"] }
                 }
             }
         },
@@ -300,10 +307,14 @@
         "assetInfo": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["color", "mono", "colors"],
+            "required": ["color", "mono", "dark", "colors"],
             "properties": {
                 "color": { "type": "boolean" },
                 "mono": { "type": "boolean" },
+                "dark": {
+                    "description": "Whether <type>-dark.svg, for dark backgrounds, is published: the airline's own version, the color file for a type in branding.dark_color, the monochrome file in white, or, without a monochrome file, the color file when its colors read on dark.",
+                    "type": "boolean"
+                },
                 "colors": {
                     "type": "array",
                     "uniqueItems": true,

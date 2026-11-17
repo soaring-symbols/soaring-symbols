@@ -7,6 +7,14 @@ export interface AssetInfo {
     /** `<type>-mono.svg` exists; always true for single-color assets. */
     readonly mono: boolean
     /**
+     * `<type>-dark.svg`, for dark backgrounds, exists: the airline's own
+     * version when it has one, the color file for a type in
+     * `branding.dark_color`, else the monochrome file in white, else (no
+     * monochrome file yet) the color file when every color reads on dark
+     * (3:1 against #1e1e1e).
+     */
+    readonly dark: boolean
+    /**
      * Hex colors the color file paints with (fills, strokes and gradient
      * stops), lowercase; empty when there is no color file.
      */
@@ -43,6 +51,12 @@ export interface AirlineBranding {
     readonly guidelines?: string
     /** Year the current marks were introduced; set when it has `history`. */
     readonly since?: number
+    /**
+     * The mark types the airline keeps in color on dark backgrounds, so
+     * their `-dark.svg` is the color file instead of the monochrome one in
+     * white.
+     */
+    readonly dark_color?: readonly AssetType[]
 }
 
 /**
@@ -188,6 +202,11 @@ export interface FindAirlinesOptions {
 export interface AssetPathOptions {
     /** Return the `-mono.svg` variant. */
     mono?: boolean
+    /**
+     * Return the `-dark.svg` variant, for dark backgrounds. Throws a
+     * TypeError together with `mono`.
+     */
+    dark?: boolean
     /**
      * Return the file of the older mark introduced that year, from the
      * airline's `history`, instead of the current one.

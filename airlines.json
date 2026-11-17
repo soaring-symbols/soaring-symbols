@@ -236,7 +236,10 @@
         ],
         "founded": 1937,
         "branding": {
-            "primary_color": "#f01428"
+            "primary_color": "#f01428",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
@@ -2243,7 +2246,10 @@
         "website": "https://www.ryanair.com",
         "founded": 1984,
         "branding": {
-            "primary_color": "#073590"
+            "primary_color": "#073590",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
@@ -2422,7 +2428,10 @@
         ],
         "founded": 1947,
         "branding": {
-            "primary_color": "#232f67"
+            "primary_color": "#232f67",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
@@ -2514,7 +2523,10 @@
         "branding": {
             "primary_color": "#ca1c2a",
             "tagline": "Taking flight from identity - reaching new heights through experience",
-            "since": 2026
+            "since": 2026,
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
@@ -2745,7 +2757,10 @@
         "branding": {
             "primary_color": "#d99e09",
             "tagline": "Reach Further",
-            "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
+            "guidelines": "https://web.archive.org/web/20210515192059/https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {

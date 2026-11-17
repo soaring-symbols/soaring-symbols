@@ -19,6 +19,8 @@ import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
 import {
     ALLIANCE_TYPES,
+    darkSource,
+    findDarkProblems,
     findHistoryProblems,
     getAirlineAssets,
     getAirlineHistory,
@@ -310,6 +312,26 @@ for (const [format, api] of [
                 )
             })
 
+            it('returns the dark variant when asked', () => {
+                assert.equal(
+                    getAssetPath('VN', 'logo', { dark: true }),
+                    'soaring-symbols/assets/vietnam-airlines/logo-dark.svg',
+                )
+                // Aer Lingus' logo neither reads on dark nor has a mono
+                assert.equal(
+                    getAssetPath('EI', 'logo', { dark: true }),
+                    undefined,
+                )
+            })
+
+            it('refuses mono and dark together', () => {
+                assert.throws(
+                    () =>
+                        getAssetPath('VN', 'logo', { mono: true, dark: true }),
+                    TypeError,
+                )
+            })
+
             it('accepts an airline object', () => {
                 assert.equal(
                     getAssetPath(getAirline('VN'), 'icon'),
@@ -517,6 +539,60 @@ describe('airlines.json schema', () => {
         }
     })
 
+    it('checks branding.dark_color against the marks', () => {
+        const shipped = JSON.parse(
+            readFileSync(new URL('../dist/airlines.json', import.meta.url)),
+        )
+        const withEntry = (slug, patch) =>
+            shipped.map((a) => (a.slug === slug ? patch(a) : a))
+        const keep = (types) => (a) => ({
+            ...a,
+            branding: { ...a.branding, dark_color: types },
+        })
+        // TAROM's navy hardly reads on dark; Vietnam Airlines has no tail
+        assert.deepEqual(
+            validateAirlines(withEntry('tarom', keep(['logo'])), {
+                published: true,
+            }),
+            [
+                'TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e',
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines(withEntry('vietnam-airlines', keep(['tail'])), {
+                published: true,
+            }),
+            [
+                'Vietnam Airlines: branding.dark_color lists tail, which has no tail.svg',
+            ],
+        )
+        const borrower = shipped.find((a) => a.marks)
+        assert.deepEqual(
+            validateAirlines(withEntry(borrower.slug, keep(['icon'])), {
+                published: true,
+            }),
+            [
+                `${borrower.name}: shares the marks of "${borrower.marks}", so set branding.dark_color there`,
+            ],
+        )
+        // Not in the repo copy's schema as anything but a list of types
+        assert.notDeepEqual(
+            validateAirlines(
+                JSON.parse(
+                    readFileSync(new URL('../airlines.json', import.meta.url)),
+                ).map((a) =>
+                    a.slug === 'tarom'
+                        ? {
+                              ...a,
+                              branding: { ...a.branding, dark_color: ['wing'] },
+                          }
+                        : a,
+                ),
+            ),
+            [],
+        )
+    })
+
     it('requires assets in the published catalog', () => {
         const source = JSON.parse(
             readFileSync(new URL('../airlines.json', import.meta.url)),
@@ -583,7 +659,12 @@ describe('alliances.json schema', () => {
 
     it('needs a primary color once an alliance has SVGs', () => {
         const [first, ...rest] = read('dist/alliances.json')
-        const icon = { color: true, mono: true, colors: ['#1a3576'] }
+        const icon = {
+            color: true,
+            mono: true,
+            dark: true,
+            colors: ['#1a3576'],
+        }
         const { branding, ...uncolored } = first
         assert.deepEqual(
             validateAlliances([{ ...uncolored, assets: {} }, ...rest], {
@@ -978,6 +1059,70 @@ describe('airlines.json assets metadata', () => {
         }
     })
 
+    it('ships the -dark.svg the metadata names, from the right file', () => {
+        const repo = new URL('../assets/', import.meta.url)
+        for (const a of cjs.listAirlines().filter((a) => !a.marks)) {
+            for (const [type, info] of Object.entries(a.assets)) {
+                const file = (name) => new URL(`${a.slug}/${name}`, assetsDir)
+                const dark = file(`${type}-dark.svg`)
+                assert.equal(existsSync(dark), info.dark, `${a.slug} ${type}`)
+                if (!info.dark) continue
+                // An airline's own version ships as it is
+                if (existsSync(new URL(`${a.slug}/${type}-dark.svg`, repo))) {
+                    continue
+                }
+                const svg = readFileSync(dark, 'utf8')
+                const source = darkSource({
+                    ...info,
+                    keepColor: Boolean(a.branding?.dark_color?.includes(type)),
+                })
+                if (source === 'color') {
+                    assert.equal(
+                        svg,
+                        readFileSync(file(`${type}.svg`), 'utf8'),
+                        `${a.slug} ${type}`,
+                    )
+                } else {
+                    assert.equal(source, 'mono', `${a.slug} ${type}`)
+                    assert.doesNotMatch(svg, /currentColor/, a.slug)
+                    assert.match(svg, /#ffffff/, `${a.slug} ${type}`)
+                }
+            }
+        }
+    })
+
+    it('paints the mono white on dark unless the airline keeps its colors', () => {
+        const pick = (colors, mono = false, keepColor = false) =>
+            darkSource({ colors, mono, keepColor })
+        // The mono in white, as brand guidelines do, even when the colors
+        // would read on dark
+        assert.equal(pick(['#ffc80b'], true), 'mono')
+        assert.equal(pick(['#003366'], true), 'mono')
+        // branding.dark_color keeps the color file
+        assert.equal(pick(['#ffc80b'], true, true), 'color')
+        // Without a mono, the color file only when every color reads on
+        // dark: yellow does, navy does not
+        assert.equal(pick(['#ffc80b', '#f1c931']), 'color')
+        assert.equal(pick(['#0066b3', '#ffc80b']), null)
+    })
+
+    it('keeps the icons of Air Canada and Sun PhuQuoc Airways in color', () => {
+        for (const code of ['AC', '9G']) {
+            const airline = cjs.getAirline(code)
+            assert.equal(
+                readFileSync(
+                    new URL(`${airline.slug}/icon-dark.svg`, assetsDir),
+                    'utf8',
+                ),
+                readFileSync(
+                    new URL(`${airline.slug}/icon.svg`, assetsDir),
+                    'utf8',
+                ),
+                code,
+            )
+        }
+    })
+
     it('writes every color as six-digit lowercase hex', () => {
         const FULL_HEX = /^#[0-9a-f]{6}$/
         for (const a of cjs.listAirlines()) {
@@ -1105,15 +1250,30 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
                 since: 1984,
                 name: 'Korean Air',
                 assets: {
-                    icon: { color: true, mono: true, colors: ['#c60c30'] },
-                    logo: { color: true, mono: true, colors: ['#c60c30'] },
+                    icon: {
+                        color: true,
+                        mono: true,
+                        dark: true,
+                        colors: ['#c60c30'],
+                    },
+                    logo: {
+                        color: true,
+                        mono: true,
+                        dark: true,
+                        colors: ['#c60c30'],
+                    },
                 },
             },
             {
                 since: 2002,
                 name: 'Korean Air',
                 assets: {
-                    logo: { color: true, mono: true, colors: ['#00256c'] },
+                    logo: {
+                        color: true,
+                        mono: true,
+                        dark: true,
+                        colors: ['#00256c'],
+                    },
                 },
             },
         ])
@@ -1193,9 +1353,60 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
         const problems = findHistoryProblems('x', dir, ALLIANCE_TYPES)
         rmSync(dir, { recursive: true, force: true })
         assert.deepEqual(problems, [
-            `${dir}/x/history/2000/tail.svg is not icon or logo (.svg or -mono.svg)`,
+            `${dir}/x/history/2000/tail.svg is not icon or logo (.svg, -mono.svg or -dark.svg)`,
             `${dir}/x/history/2000/ has no icon.svg or logo.svg`,
         ])
+    })
+})
+
+describe('hand-made -dark.svg files', () => {
+    let assetsDir
+    const svg = (viewBox, ...fills) =>
+        `<svg role="img" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg"><title>X</title>${fills
+            .map((f) => `<path fill="${f}" d="M0 0h1v1H0z"/>`)
+            .join('')}</svg>`
+    const write = (name, content) =>
+        writeFileSync(join(assetsDir, 'x', name), content)
+
+    before(() => {
+        assetsDir = mkdtempSync(join(tmpdir(), 'dark-'))
+        mkdirSync(join(assetsDir, 'x'))
+    })
+    after(() => rmSync(assetsDir, { recursive: true, force: true }))
+
+    it('accepts an airline’s own version beside its color file', () => {
+        write('logo.svg', svg('0 0 64 64', '#073590', '#f1c931'))
+        write('logo-dark.svg', svg('0 0 64 64', '#ffffff', '#f1c931'))
+        assert.deepEqual(findDarkProblems('x', assetsDir), {
+            problems: [],
+            warnings: [],
+        })
+    })
+
+    it('refuses one where branding.dark_color keeps the color file', () => {
+        const { problems } = findDarkProblems('x', assetsDir, ['logo'])
+        assert.deepEqual(problems, [
+            `${join(assetsDir, 'x', 'logo-dark.svg')} is there, but branding.dark_color keeps the logo in color; keep one`,
+        ])
+    })
+
+    it('reports a copy, one color, another viewBox or no color file', () => {
+        write('logo.svg', svg('0 0 64 64', '#073590', '#f1c931'))
+        write('logo-dark.svg', svg('0 0 64 64', '#073590', '#f1c931'))
+        write('icon.svg', svg('0 0 24 24', '#073590', '#f1c931'))
+        write('icon-dark.svg', svg('0 0 64 64', '#ffffff'))
+        write('tail-dark.svg', svg('0 0 24 24', '#ffffff', '#f1c931'))
+        const { problems, warnings } = findDarkProblems('x', assetsDir)
+        const dark = (type) => join(assetsDir, 'x', `${type}-dark.svg`)
+        assert.deepEqual(problems, [
+            `${dark('icon')} has viewBox "0 0 64 64", icon.svg "0 0 24 24"`,
+            `${dark('icon')} has one color: draw it as icon-mono.svg in currentColor, the build makes the white -dark.svg from it`,
+            `${dark('logo')} is the same as logo.svg; leave it out, and list logo in branding.dark_color to keep the color file on dark`,
+            `${dark('tail')} has no tail.svg beside it`,
+        ])
+        // The copy keeps its navy, which hardly reads on dark
+        assert.equal(warnings.length, 1)
+        assert.match(warnings[0], /#073590 under 3:1/)
     })
 })
 

@@ -190,16 +190,24 @@ const markPath = (root, types, entry, type, options) => {
             : entry?.history?.find((mark) => mark.since === since)?.assets
     const asset = assets?.[type]
     const mono = Boolean(options.mono)
-    if (!asset || !(mono ? asset.mono : asset.color)) return undefined
+    const dark = Boolean(options.dark)
+    if (mono && dark) {
+        throw new TypeError('Pass either `mono` or `dark`, not both')
+    }
+    const variant = mono ? 'mono' : dark ? 'dark' : 'color'
+    if (!asset?.[variant]) return undefined
     const dir =
         since === undefined ? entry.slug : `${entry.slug}/history/${since}`
+    const suffix = variant === 'color' ? '' : `-${variant}`
 
-    return `soaring-symbols/${root}/${dir}/${type}${mono ? '-mono' : ''}.svg`
+    return `soaring-symbols/${root}/${dir}/${type}${suffix}.svg`
 }
 
 /**
  * Package path of one asset file, e.g.
- * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `since`, the file
+ * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `mono`, the
+ * monochrome file; with `dark`, the one for dark backgrounds
+ * ('.../logo-dark.svg'); never both. With `since`, the file
  * of an older mark from the airline's `history`, e.g.
  * 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'.
  * Returns undefined when the airline, that mark or that file does not exist.
@@ -212,9 +220,9 @@ function getAssetPath(airline, type, options = {}) {
 
 /**
  * Package path of one file of an alliance's marks, icon or logo, e.g.
- * 'soaring-symbols/alliances/star-alliance/logo.svg'; `mono` and `since`
- * work as in getAssetPath(). Returns undefined when the alliance, that mark
- * or that file does not exist.
+ * 'soaring-symbols/alliances/star-alliance/logo.svg'; `mono`, `dark` and
+ * `since` work as in getAssetPath(). Returns undefined when the alliance,
+ * that mark or that file does not exist.
  */
 function getAllianceAssetPath(alliance, type, options = {}) {
     const entry =

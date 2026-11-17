@@ -74,12 +74,14 @@ Returns the package path of one SVG file, ready to pass to `require.resolve`, `i
   - `airline`: an `Airline` object, or any `query` accepted by `getAirline()`
   - `type`: `'icon'`, `'logo'` or `'tail'` (any other value throws a `TypeError`)
   - `options.mono` (boolean, default `false`): return the `-mono.svg` variant
+  - `options.dark` (boolean, default `false`): return the `-dark.svg` variant, for dark backgrounds (see [Dark backgrounds](#dark-backgrounds)); passing it with `mono` throws a `TypeError`
   - `options.since` (number, optional): return the file of an older mark from the airline's [`history`](#history), the one introduced that year
 - **Returns:** `string`, or `undefined` if the airline is unknown, it has no older mark from `since`, or that file does not exist.
 
 ```js
 getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
 getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-mono.svg'
+getAssetPath('VN', 'logo', { dark: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-dark.svg'
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
 
 // An older mark, once the airline has one in its history
@@ -133,7 +135,7 @@ getAlliance(getAirline('VN').alliance).name // 'SkyTeam'
 
 ### `getAllianceAssetPath(alliance, type, options?)`
 
-Like [`getAssetPath()`](#getassetpathairline-type-options) for an alliance's marks: `alliance` is an `Alliance` or any `query` accepted by `getAlliance()`, `type` is `'icon'` or `'logo'` (an alliance has no tail; any other value throws a `TypeError`), and `options.mono` and `options.since` work the same way.
+Like [`getAssetPath()`](#getassetpathairline-type-options) for an alliance's marks: `alliance` is an `Alliance` or any `query` accepted by `getAlliance()`, `type` is `'icon'` or `'logo'` (an alliance has no tail; any other value throws a `TypeError`), and `options.mono`, `options.dark` and `options.since` work the same way.
 
 ```js
 getAllianceAssetPath('Star Alliance', 'logo') // 'soaring-symbols/alliances/star-alliance/logo.svg', once it has one
@@ -194,13 +196,20 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
     "branding": {
         "primary_color": "#d99e09",
         "tagline": "Reach Further",
-        "guidelines": "https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf"
+        "guidelines": "https://web.archive.org/web/20210515192059/https://www.vietnamairlines.com/~/media/FilesDownload/AboutUs/Corporate-Identity/GSM-2017-Web1.pdf",
+        "dark_color": ["icon"]
     },
     "assets": {
-        "icon": { "color": true, "mono": true, "colors": ["#d99e09"] },
+        "icon": {
+            "color": true,
+            "mono": true,
+            "dark": true,
+            "colors": ["#d99e09"]
+        },
         "logo": {
             "color": true,
             "mono": true,
+            "dark": true,
             "colors": ["#d99e09", "#005e80"]
         }
     }
@@ -230,7 +239,7 @@ The object returned by `getAirline()` and found in the array from `listAirlines(
 | `ceased`                 | `number?`   | Year a defunct airline ceased operations.                                                                                                                                                                     |
 | `successor`              | `string?`   | Slug of the airline that carried on a defunct one after a merger, refounding or brand move (see [Renames and mergers](#renames-and-mergers)).                                                                 |
 | `predecessors`           | `string[]?` | Slugs of the defunct airlines whose `successor` is this one, the earliest to cease first. No key when there are none.                                                                                         |
-| `branding`               | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines) and `since` (year the current marks came in), each optional.                                                                          |
+| `branding`               | `object?`   | `primary_color`, `tagline`, `guidelines` (link to the brand guidelines), `since` (year the current marks came in) and `dark_color` (types kept in color on dark backgrounds), each optional.                  |
 | `assets`                 | `object`    | One [`AssetInfo`](#assetinfo) per available type (`icon`, `logo`, `tail`). Missing types have no key.                                                                                                         |
 | `history`                | `object[]?` | The marks the airline used before its current ones, oldest first (see [History](#history)). No key when there are none.                                                                                       |
 
@@ -242,6 +251,7 @@ Describes which files exist for one asset type.
 | :------- | :--------- | :--------------------------------------------------------------------------------------------------------------------- |
 | `color`  | `boolean`  | `<type>.svg`, the full-color version, exists.                                                                          |
 | `mono`   | `boolean`  | `<type>-mono.svg`, the monochrome version (drawn in `currentColor`), exists. Always `true` for single-color assets.    |
+| `dark`   | `boolean`  | `<type>-dark.svg`, the version for dark backgrounds, exists (see [Dark backgrounds](#dark-backgrounds)).               |
 | `colors` | `string[]` | Lowercase hex colors the color file paints with: fills, strokes and gradient stops. Empty when there is no color file. |
 
 Every single-color asset ships a `-mono.svg`, generated from its color file. Multi-color assets have one only when it was drawn by hand, so check `mono` (or whether `getAssetPath(..., { mono: true })` returns a path) before offering a monochrome version.
@@ -252,9 +262,22 @@ The asset folder follows this structure:
 assets/<slug>/
 ├── icon.svg
 ├── icon-mono.svg   # generated when icon.svg is single-color
+├── icon-dark.svg   # generated, or the airline's own version
 ├── logo.svg
-└── logo-mono.svg   # hand-made for a multi-color logo, optional
+├── logo-mono.svg   # hand-made for a multi-color logo, optional
+└── logo-dark.svg
 ```
+
+### Dark backgrounds
+
+Most marks are drawn for light backgrounds, and brand guidelines show them in white on dark ones. `<type>-dark.svg` is the file to show there instead, chosen in this order:
+
+1. **The airline's own version**, drawn by hand from what it uses on dark backgrounds, when it changes only part of the mark (Air Canada's black lettering in white, its maple leaf still red).
+2. **The color file**, as it is, for the types in `branding.dark_color`: the airline keeps those in color on dark backgrounds.
+3. **The monochrome file in white** (`#ffffff`), what most airlines use on dark backgrounds.
+4. **The color file** of a multi-color mark without a `-mono.svg` yet, when every one of its colors reaches 3:1 against `#1e1e1e` (WCAG's contrast for graphics).
+
+An asset with none of these (a multi-color mark with dark parts and no `-mono.svg` yet) has no `-dark.svg` and `dark: false`: show its color file on a light tile. So on a dark background, use `getAssetPath(airline, type, { dark: true })` and fall back to the color file on a light ground when it returns `undefined`.
 
 ### History
 

@@ -1,4 +1,5 @@
 import {
+    copyFileSync,
     readFileSync,
     readdirSync,
     existsSync,
@@ -56,6 +57,47 @@ const toMonoSvg = (svg) =>
         match.replace(color, 'currentColor'),
     )
 
+// A -mono.svg painted white, for a dark background
+const toWhiteSvg = (svg) => svg.replace(/currentColor/g, '#ffffff')
+
+// Marks on dark backgrounds: a color reads on one when it reaches WCAG's 3:1
+// for graphics (1.4.11) against this dark gray, close to the dark themes of
+// the website, Raycast and Figma
+const DARK_BACKGROUND = '#1e1e1e'
+const MIN_DARK_CONTRAST = 3
+
+const luminance = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((i) => {
+        const v = parseInt(hex.slice(i, i + 2), 16) / 255
+
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+    })
+
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+const contrastRatio = (a, b) => {
+    const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
+
+    return (hi + 0.05) / (lo + 0.05)
+}
+
+const readsOnDark = (color) =>
+    contrastRatio(color, DARK_BACKGROUND) >= MIN_DARK_CONTRAST
+
+// What the build makes an asset's <type>-dark.svg from when the airline has
+// no version of its own drawn by hand, following what brand guidelines do on
+// dark backgrounds: 'color' for the color file when the airline keeps its
+// colors there (`keepColor`, from branding.dark_color); 'mono' for the
+// monochrome file in white, the usual case; 'color' again for a mark with no
+// monochrome file yet whose colors all read on dark; or null for none
+const darkSource = ({ colors, mono, keepColor = false }) => {
+    if (keepColor) return 'color'
+    if (mono) return 'mono'
+
+    return colors.length && colors.every(readsOnDark) ? 'color' : null
+}
+
 const assetTypes = ['icon', 'logo', 'tail']
 
 // Alliance marks live apart from the airlines' assets/, in
@@ -67,9 +109,11 @@ const ALLIANCE_TYPES = ['icon', 'logo']
 // Every folder of marks, for the tools that walk them all
 const MARK_DIRS = [ASSETS_DIR, ALLIANCES_DIR]
 
-// <type>.svg or <type>-mono.svg for one of the types, and the types as
-// prose: "icon, logo or tail"
-const markFile = (types) => new RegExp(`^(${types.join('|')})(-mono)?\\.svg$`)
+// <type>.svg, <type>-mono.svg or <type>-dark.svg for one of the types, and
+// the types as prose: "icon, logo or tail"
+const markFile = (types) =>
+    new RegExp(`^(${types.join('|')})(-mono|-dark)?\\.svg$`)
+const VARIANTS = '.svg, -mono.svg or -dark.svg'
 const typeList = (types) =>
     `${types.slice(0, -1).join(', ')} or ${types.at(-1)}`
 
@@ -84,17 +128,22 @@ const findAllianceFileProblems = (slug, assetsDir = ALLIANCES_DIR) => {
         .filter((d) => !d.isFile() || !file.test(d.name))
         .map(
             (d) =>
-                `${dir}/${d.name} is not ${typeList(ALLIANCE_TYPES)} (.svg or -mono.svg)`,
+                `${dir}/${d.name} is not ${typeList(ALLIANCE_TYPES)} (${VARIANTS})`,
         )
 }
+
+// One mark file in a folder of marks: <type>.svg, or with `suffix`
+// <type>-mono.svg or <type>-dark.svg
+const markFilePath = (assetsDir, dir, assetType, suffix = '') =>
+    join(assetsDir, dir, `${assetType}${suffix}.svg`)
 
 // The <type>.svg / <type>-mono.svg pairs of an airline whose color file is
 // single-color: their mono file is derived from it, never drawn by hand
 const derivedMonoPairs = (slug, assetsDir) =>
     assetTypes
         .map((assetType) => ({
-            colorPath: join(assetsDir, slug, `${assetType}.svg`),
-            monoPath: join(assetsDir, slug, `${assetType}-mono.svg`),
+            colorPath: markFilePath(assetsDir, slug, assetType),
+            monoPath: markFilePath(assetsDir, slug, assetType, '-mono'),
         }))
         .filter(
             ({ colorPath }) =>
@@ -123,12 +172,39 @@ const removeDerivedMonos = (slug, assetsDir = 'assets') =>
             return true
         })
 
+// Write <type>-dark.svg, for dark backgrounds, for every asset without a
+// hand-made one: the monochrome file in white, or the color file for the
+// types in `keepColor` (branding.dark_color) and for marks with no monochrome
+// file that read on dark (darkSource). Runs on dist after writeDerivedMonos,
+// so the derived monos are there to paint; the repo keeps no copies.
+const writeDerivedDarks = (slug, assetsDir, keepColor = []) => {
+    for (const assetType of assetTypes) {
+        const path = (suffix) =>
+            markFilePath(assetsDir, slug, assetType, suffix)
+        if (existsSync(path('-dark'))) continue
+        const color = existsSync(path(''))
+        const source = darkSource({
+            colors: color ? extractColorsFromSvg(path('')) : [],
+            mono: existsSync(path('-mono')),
+            keepColor: keepColor.includes(assetType),
+        })
+        if (source === 'color') {
+            copyFileSync(path(''), path('-dark'))
+        } else if (source === 'mono') {
+            const mono = readFileSync(path('-mono'), 'utf8')
+            writeFileSync(path('-dark'), toWhiteSvg(mono))
+        }
+    }
+}
+
 // Describe which files an airline publishes for each asset type:
-// { logo: { color: true, mono: false, colors: ['#d99e09'] }, ... }
+// { logo: { color: true, mono: false, dark: true, colors: ['#d99e09'] } }
 // `colors` comes from the color file and is empty when there is none. A
-// single-color asset always has `mono`, since the build derives that file.
+// single-color asset always has `mono`, since the build derives that file,
+// and `dark` is true whenever the build ships a -dark.svg (darkSource, with
+// `keepColor` the types of branding.dark_color).
 // Repo tooling only: the published library reads this from airlines.json.
-const getAirlineAssets = (slug, assetsDir = 'assets') => {
+const getAirlineAssets = (slug, assetsDir = 'assets', keepColor = []) => {
     const airlineDir = join(assetsDir, slug)
 
     const assets = {}
@@ -142,10 +218,70 @@ const getAirlineAssets = (slug, assetsDir = 'assets') => {
 
         if (!color && !mono) return
 
-        assets[assetType] = { color, mono, colors }
+        // A hand-made one, or one the build makes
+        const dark =
+            existsSync(markFilePath(assetsDir, slug, assetType, '-dark')) ||
+            darkSource({
+                colors,
+                mono,
+                keepColor: keepColor.includes(assetType),
+            }) !== null
+
+        assets[assetType] = { color, mono, dark, colors }
     })
 
     return assets
+}
+
+const viewBoxOf = (svg) => svg.match(/viewBox="([^"]*)"/)?.[1]
+
+// What is wrong with the hand-made <type>-dark.svg files in an airline's or
+// alliance's folder (one of getAssetDirs): one without its color file, with
+// another viewBox, a copy of the color file, one color only, which is a
+// monochrome version, or a type branding.dark_color (`keepColor`) keeps in
+// color. `warnings` lists colors that hardly read on dark.
+const findDarkProblems = (dir, assetsDir = 'assets', keepColor = []) => {
+    const problems = []
+    const warnings = []
+    for (const assetType of assetTypes) {
+        const path = (suffix) => markFilePath(assetsDir, dir, assetType, suffix)
+        const where = path('-dark')
+        if (!existsSync(where)) continue
+        if (keepColor.includes(assetType)) {
+            problems.push(
+                `${where} is there, but branding.dark_color keeps the ${assetType} in color; keep one`,
+            )
+        }
+        if (!existsSync(path(''))) {
+            problems.push(`${where} has no ${assetType}.svg beside it`)
+            continue
+        }
+        const dark = readFileSync(where, 'utf8')
+        const color = readFileSync(path(''), 'utf8')
+        const colors = extractColorsFromSvg(where)
+        if (viewBoxOf(dark) !== viewBoxOf(color)) {
+            problems.push(
+                `${where} has viewBox "${viewBoxOf(dark)}", ${assetType}.svg "${viewBoxOf(color)}"`,
+            )
+        }
+        if (dark === color) {
+            problems.push(
+                `${where} is the same as ${assetType}.svg; leave it out, and list ${assetType} in branding.dark_color to keep the color file on dark`,
+            )
+        } else if (colors.length < 2) {
+            problems.push(
+                `${where} has one color: draw it as ${assetType}-mono.svg in currentColor, the build makes the white -dark.svg from it`,
+            )
+        }
+        const faint = colors.filter((c) => !readsOnDark(c))
+        if (faint.length) {
+            warnings.push(
+                `${where}: ${faint.join(', ')} under ${MIN_DARK_CONTRAST}:1 on ${DARK_BACKGROUND}; check it against the airline's own version`,
+            )
+        }
+    }
+
+    return { problems, warnings }
 }
 
 // Older marks live in assets/<slug>/history/<year>/, one folder per year a
@@ -241,7 +377,7 @@ const findHistoryProblems = (
                 .filter((f) => !file.test(f))
                 .map(
                     (f) =>
-                        `${where}/${f} is not ${typeList(types)} (.svg or -mono.svg)`,
+                        `${where}/${f} is not ${typeList(types)} (${VARIANTS})`,
                 )
             const hasColor = files.some((f) => colorFile.test(f))
 
@@ -272,4 +408,10 @@ export {
     getAirlineAssets,
     writeDerivedMonos,
     removeDerivedMonos,
+    writeDerivedDarks,
+    findDarkProblems,
+    darkSource,
+    readsOnDark,
+    DARK_BACKGROUND,
+    MIN_DARK_CONTRAST,
 }

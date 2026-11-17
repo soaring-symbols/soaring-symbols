@@ -4,6 +4,7 @@ import { build as esbuild } from 'esbuild'
 import {
     ALLIANCES_DIR,
     getAssetDirs,
+    writeDerivedDarks,
     writeDerivedMonos,
 } from '../utils/index.js'
 import { publishAlliances, publishCatalog } from '../utils/catalog.js'
@@ -111,20 +112,26 @@ async function copyFiles() {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
-    // Single-color assets, older marks included, get their -mono.svg here,
-    // not in the repo
-    for (const airline of catalog.filter((a) => !a.marks)) {
-        for (const dir of getAssetDirs(airline.slug)) {
-            writeDerivedMonos(dir, path.join(distDir, 'assets'))
+    // Every folder of marks, older marks included (an alliance without SVGs
+    // yet has no folder, which finds nothing): single-color assets get their
+    // -mono.svg here, not in the repo; then every asset without a hand-made
+    // -dark.svg gets one, from its mono in white or its color file where
+    // branding.dark_color keeps it (current marks only) or it has no mono
+    // but reads on dark
+    const sources = [
+        { entries: catalog.filter((a) => !a.marks), root: 'assets' },
+        { entries: alliances, root: ALLIANCES_DIR },
+    ]
+    for (const { entries, root } of sources) {
+        const dest = path.join(distDir, root)
+        for (const entry of entries) {
+            const [current, ...older] = getAssetDirs(entry.slug, root)
+            for (const dir of [current, ...older]) writeDerivedMonos(dir, dest)
+            writeDerivedDarks(current, dest, entry.branding?.dark_color)
+            for (const dir of older) writeDerivedDarks(dir, dest)
         }
     }
-    // An alliance without SVGs yet has no folder, which finds no pair
-    for (const alliance of alliances) {
-        for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
-            writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
-        }
-    }
-    // After the monos, so airlines sharing marks get those too, and after
+    // After the monos and darks, so airlines sharing marks get those too, and after
     // those, so a former slug gets whatever its airline ships
     await copySharedMarks(catalog)
     await copyFormerSlugs(catalog)

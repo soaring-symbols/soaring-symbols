@@ -1,11 +1,12 @@
 // Tidy airlines.json and check it before it is committed: sort it, order each
 // entry's keys, fill in a missing slug, drop the fields only the build adds,
 // validate the catalog as it would be published, check every slug has its
-// asset folder and well-formed history folders, and delete committed
-// -mono.svg files the build derives. airports.json gets the same: sorted,
-// trimmed to the hubs the catalog lists, and checked that each has its
-// coordinates. alliances.json and alliances/ get the airlines' treatment too,
-// except that an alliance may have no SVGs yet.
+// asset folder and well-formed history folders, check hand-made -dark.svg
+// files, and delete committed -mono.svg files the build derives.
+// airports.json gets the same: sorted, trimmed to the hubs the catalog lists,
+// and checked that each has its coordinates. alliances.json and alliances/
+// get the airlines' treatment too, except that an alliance may have no SVGs
+// yet.
 import {
     existsSync,
     readFileSync,
@@ -17,6 +18,7 @@ import {
     ALLIANCE_TYPES,
     ALLIANCES_DIR,
     findAllianceFileProblems,
+    findDarkProblems,
     findHistoryProblems,
     getAssetDirs,
     removeDerivedMonos,
@@ -67,9 +69,27 @@ if (airportProblems.length) {
 const tidyAirports = normalizeAirports(airports, airlines)
 const unused = Object.keys(airports).filter((code) => !tidyAirports[code])
 
-const removedMonos = []
+// Folders whose derived monos go once every check has passed, so a failed
+// check leaves the working tree as it was
+const monoFolders = []
+const darkWarnings = []
 
-for (const { name, slug, marks } of airlines) {
+// Stop on a hand-made -dark.svg that is out of place; collect its warnings
+const checkDarks = (where, dirs, assetsDir, keepColor) => {
+    // branding.dark_color is about the current marks, the first folder
+    const found = dirs.map((dir, i) =>
+        findDarkProblems(dir, assetsDir, i === 0 ? keepColor : []),
+    )
+    const darkProblems = found.flatMap((f) => f.problems)
+    darkWarnings.push(...found.flatMap((f) => f.warnings))
+    if (darkProblems.length) {
+        console.error(`❌ ${where} has -dark.svg files out of place:`)
+        darkProblems.forEach((problem) => console.error(`  - ${problem}`))
+        process.exit(1)
+    }
+}
+
+for (const { name, slug, marks, branding } of airlines) {
     // An airline with `marks` has no SVGs of its own: the build copies the
     // files of the airline it names to its slug
     if (marks && existsSync(`assets/${slug}`)) {
@@ -91,21 +111,21 @@ for (const { name, slug, marks } of airlines) {
         historyProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
-    for (const dir of getAssetDirs(slug)) {
-        removedMonos.push(...removeDerivedMonos(dir))
-    }
+    const dirs = getAssetDirs(slug)
+    checkDarks(name, dirs, 'assets', branding?.dark_color)
+    monoFolders.push(...dirs.map((dir) => [dir, 'assets']))
 }
 
 // An alliance needs no folder until its SVGs come, but a folder needs an
 // alliance
-const allianceSlugs = new Set(alliances.map((a) => a.slug))
+const alliancesBySlug = new Map(alliances.map((a) => [a.slug, a]))
 const allianceDirs = existsSync(ALLIANCES_DIR)
     ? readdirSync(ALLIANCES_DIR, { withFileTypes: true })
           .filter((d) => d.isDirectory())
           .map((d) => d.name)
     : []
 for (const slug of allianceDirs) {
-    if (!allianceSlugs.has(slug)) {
+    if (!alliancesBySlug.has(slug)) {
         console.error(
             `❌ ${ALLIANCES_DIR}/${slug} matches no alliance in alliances.json; its slug is the slugified name`,
         )
@@ -120,10 +140,19 @@ for (const slug of allianceDirs) {
         folderProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
-    for (const dir of getAssetDirs(slug, ALLIANCES_DIR)) {
-        removedMonos.push(...removeDerivedMonos(dir, ALLIANCES_DIR))
-    }
+    const dirs = getAssetDirs(slug, ALLIANCES_DIR)
+    checkDarks(
+        `${ALLIANCES_DIR}/${slug}`,
+        dirs,
+        ALLIANCES_DIR,
+        alliancesBySlug.get(slug).branding?.dark_color,
+    )
+    monoFolders.push(...dirs.map((dir) => [dir, ALLIANCES_DIR]))
 }
+
+const removedMonos = monoFolders.flatMap(([dir, root]) =>
+    removeDerivedMonos(dir, root),
+)
 
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))
 writeFileSync('alliances.json', JSON.stringify(alliances, null, 4))
@@ -146,6 +175,7 @@ if (removedMonos.length) {
         `✅ Removed ${removedMonos.length} -mono.svg file(s) the build derives from single-color assets`,
     )
 }
+darkWarnings.forEach((warning) => console.warn(`⚠️  ${warning}`))
 console.log(
     '✅ airlines.json, alliances.json and airports.json are sorted and valid',
 )

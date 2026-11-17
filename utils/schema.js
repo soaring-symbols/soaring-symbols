@@ -3,7 +3,14 @@
 // from utils/index.js so the SVG tooling doesn't load Ajv.
 import { readFileSync } from 'fs'
 import Ajv2020 from 'ajv/dist/2020.js'
-import { ALLIANCES_DIR, formerSlugs, toSlug } from './index.js'
+import {
+    ALLIANCES_DIR,
+    DARK_BACKGROUND,
+    MIN_DARK_CONTRAST,
+    formerSlugs,
+    readsOnDark,
+    toSlug,
+} from './index.js'
 
 const schema = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
@@ -259,8 +266,42 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findOpenHistory(airlines),
         ...findDuplicateCodes(airlines),
         ...findBrokenReferences(airlines),
+        ...findDarkColorProblems(airlines),
     ]
 }
+
+// branding.dark_color keeps a mark's color file on dark backgrounds: the
+// mark must have one, every color must read there, and an airline sharing
+// another's marks (`marks`) follows that airline's choice. Only the published
+// copy has `assets` to tell.
+const findDarkColorProblems = (entries) =>
+    entries.flatMap((a) => {
+        const types = a.branding?.dark_color ?? []
+        if (types.length && a.marks) {
+            return [
+                `${a.name}: shares the marks of "${a.marks}", so set branding.dark_color there`,
+            ]
+        }
+
+        // The repo copy has no assets to check against
+        if (!a.assets) return []
+
+        return types.flatMap((type) => {
+            const asset = a.assets[type]
+            if (!asset?.color) {
+                return [
+                    `${a.name}: branding.dark_color lists ${type}, which has no ${type}.svg`,
+                ]
+            }
+            const faint = asset.colors.filter((c) => !readsOnDark(c))
+
+            return faint.length
+                ? [
+                      `${a.name}: branding.dark_color keeps the ${type} in color, but ${faint.join(', ')} is under ${MIN_DARK_CONTRAST}:1 on ${DARK_BACKGROUND}`,
+                  ]
+                : []
+        })
+    })
 
 // An alliance may wait for its primary color until its SVGs are in the
 // collection, but no longer: like every airline, one with marks has a color.
@@ -303,6 +344,7 @@ const validateAlliances = (alliances, { published = false } = {}) => {
             .map((name) => `alliances.json lists ${name} more than once`),
         ...findOpenHistory(alliances),
         ...findMissingColors(alliances),
+        ...findDarkColorProblems(alliances),
     ]
 }
 
