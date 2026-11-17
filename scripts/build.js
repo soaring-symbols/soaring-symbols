@@ -112,29 +112,21 @@ async function copyFiles() {
         await copyDir(dir.src, path.join(distDir, dir.dest))
     }
 
-    // Single-color assets, older marks included, get their -mono.svg here,
-    // not in the repo
-    for (const airline of catalog.filter((a) => !a.marks)) {
-        for (const dir of getAssetDirs(airline.slug)) {
-            writeDerivedMonos(dir, path.join(distDir, 'assets'))
-        }
-    }
-    // An alliance without SVGs yet has no folder, which finds no pair
-    for (const alliance of alliances) {
-        for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
-            writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
-        }
-    }
-    // Then every asset without a hand-made -dark.svg gets one: its mono in
-    // white, or its color file where branding.dark_color keeps it (current
-    // marks only) or it has no mono but reads on dark
-    for (const entries of [
-        { list: catalog.filter((a) => !a.marks), root: 'assets' },
-        { list: alliances, root: ALLIANCES_DIR },
-    ]) {
-        for (const entry of entries.list) {
-            const [current, ...older] = getAssetDirs(entry.slug, entries.root)
-            const dest = path.join(distDir, entries.root)
+    // Every folder of marks, older marks included (an alliance without SVGs
+    // yet has no folder, which finds nothing): single-color assets get their
+    // -mono.svg here, not in the repo; then every asset without a hand-made
+    // -dark.svg gets one, from its mono in white or its color file where
+    // branding.dark_color keeps it (current marks only) or it has no mono
+    // but reads on dark
+    const sources = [
+        { entries: catalog.filter((a) => !a.marks), root: 'assets' },
+        { entries: alliances, root: ALLIANCES_DIR },
+    ]
+    for (const { entries, root } of sources) {
+        const dest = path.join(distDir, root)
+        for (const entry of entries) {
+            const [current, ...older] = getAssetDirs(entry.slug, root)
+            for (const dir of [current, ...older]) writeDerivedMonos(dir, dest)
             writeDerivedDarks(current, dest, entry.branding?.dark_color)
             for (const dir of older) writeDerivedDarks(dir, dest)
         }

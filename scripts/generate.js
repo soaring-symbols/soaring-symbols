@@ -109,22 +109,23 @@ for (const { name, slug, marks, branding } of airlines) {
         historyProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
-    checkDarks(name, getAssetDirs(slug), 'assets', branding?.dark_color)
-    for (const dir of getAssetDirs(slug)) {
+    const dirs = getAssetDirs(slug)
+    checkDarks(name, dirs, 'assets', branding?.dark_color)
+    for (const dir of dirs) {
         removedMonos.push(...removeDerivedMonos(dir))
     }
 }
 
 // An alliance needs no folder until its SVGs come, but a folder needs an
 // alliance
-const allianceSlugs = new Set(alliances.map((a) => a.slug))
+const alliancesBySlug = new Map(alliances.map((a) => [a.slug, a]))
 const allianceDirs = existsSync(ALLIANCES_DIR)
     ? readdirSync(ALLIANCES_DIR, { withFileTypes: true })
           .filter((d) => d.isDirectory())
           .map((d) => d.name)
     : []
 for (const slug of allianceDirs) {
-    if (!allianceSlugs.has(slug)) {
+    if (!alliancesBySlug.has(slug)) {
         console.error(
             `❌ ${ALLIANCES_DIR}/${slug} matches no alliance in alliances.json; its slug is the slugified name`,
         )
@@ -139,13 +140,14 @@ for (const slug of allianceDirs) {
         folderProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
+    const dirs = getAssetDirs(slug, ALLIANCES_DIR)
     checkDarks(
         `${ALLIANCES_DIR}/${slug}`,
-        getAssetDirs(slug, ALLIANCES_DIR),
+        dirs,
         ALLIANCES_DIR,
-        alliances.find((a) => a.slug === slug)?.branding?.dark_color,
+        alliancesBySlug.get(slug).branding?.dark_color,
     )
-    for (const dir of getAssetDirs(slug, ALLIANCES_DIR)) {
+    for (const dir of dirs) {
         removedMonos.push(...removeDerivedMonos(dir, ALLIANCES_DIR))
     }
 }

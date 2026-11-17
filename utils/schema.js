@@ -7,8 +7,8 @@ import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
     MIN_DARK_CONTRAST,
-    contrastRatio,
     formerSlugs,
+    readsOnDark,
     toSlug,
 } from './index.js'
 
@@ -293,9 +293,7 @@ const findDarkColorProblems = (entries) =>
                     `${a.name}: branding.dark_color lists ${type}, which has no ${type}.svg`,
                 ]
             }
-            const faint = asset.colors.filter(
-                (c) => contrastRatio(c, DARK_BACKGROUND) < MIN_DARK_CONTRAST,
-            )
+            const faint = asset.colors.filter((c) => !readsOnDark(c))
 
             return faint.length
                 ? [

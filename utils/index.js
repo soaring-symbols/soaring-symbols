@@ -85,14 +85,13 @@ const contrastRatio = (a, b) => {
 const readsOnDark = (color) =>
     contrastRatio(color, DARK_BACKGROUND) >= MIN_DARK_CONTRAST
 
-// Where an asset's <type>-dark.svg comes from, following what airlines' brand
-// guidelines do on dark backgrounds: 'dark' for the airline's own version
-// drawn by hand; 'color' for the color file when the airline keeps its colors
-// there (`keepColor`, from branding.dark_color); 'mono' for the monochrome
-// file in white, the usual case; 'color' again for a mark with no monochrome
-// file yet whose colors all read on dark; or null when there is none of those
-const darkSource = ({ dark, colors, mono, keepColor = false }) => {
-    if (dark) return 'dark'
+// What the build makes an asset's <type>-dark.svg from when the airline has
+// no version of its own drawn by hand, following what brand guidelines do on
+// dark backgrounds: 'color' for the color file when the airline keeps its
+// colors there (`keepColor`, from branding.dark_color); 'mono' for the
+// monochrome file in white, the usual case; 'color' again for a mark with no
+// monochrome file yet whose colors all read on dark; or null for none
+const darkSource = ({ colors, mono, keepColor = false }) => {
     if (keepColor) return 'color'
     if (mono) return 'mono'
 
@@ -133,13 +132,18 @@ const findAllianceFileProblems = (slug, assetsDir = ALLIANCES_DIR) => {
         )
 }
 
+// One mark file in a folder of marks: <type>.svg, or with `suffix`
+// <type>-mono.svg or <type>-dark.svg
+const markFilePath = (assetsDir, dir, assetType, suffix = '') =>
+    join(assetsDir, dir, `${assetType}${suffix}.svg`)
+
 // The <type>.svg / <type>-mono.svg pairs of an airline whose color file is
 // single-color: their mono file is derived from it, never drawn by hand
 const derivedMonoPairs = (slug, assetsDir) =>
     assetTypes
         .map((assetType) => ({
-            colorPath: join(assetsDir, slug, `${assetType}.svg`),
-            monoPath: join(assetsDir, slug, `${assetType}-mono.svg`),
+            colorPath: markFilePath(assetsDir, slug, assetType),
+            monoPath: markFilePath(assetsDir, slug, assetType, '-mono'),
         }))
         .filter(
             ({ colorPath }) =>
@@ -176,11 +180,10 @@ const removeDerivedMonos = (slug, assetsDir = 'assets') =>
 const writeDerivedDarks = (slug, assetsDir, keepColor = []) => {
     for (const assetType of assetTypes) {
         const path = (suffix) =>
-            join(assetsDir, slug, `${assetType}${suffix}.svg`)
+            markFilePath(assetsDir, slug, assetType, suffix)
         if (existsSync(path('-dark'))) continue
         const color = existsSync(path(''))
         const source = darkSource({
-            dark: false,
             colors: color ? extractColorsFromSvg(path('')) : [],
             mono: existsSync(path('-mono')),
             keepColor: keepColor.includes(assetType),
@@ -215,9 +218,10 @@ const getAirlineAssets = (slug, assetsDir = 'assets', keepColor = []) => {
 
         if (!color && !mono) return
 
+        // A hand-made one, or one the build makes
         const dark =
+            existsSync(markFilePath(assetsDir, slug, assetType, '-dark')) ||
             darkSource({
-                dark: existsSync(join(airlineDir, `${assetType}-dark.svg`)),
                 colors,
                 mono,
                 keepColor: keepColor.includes(assetType),
@@ -240,8 +244,7 @@ const findDarkProblems = (dir, assetsDir = 'assets', keepColor = []) => {
     const problems = []
     const warnings = []
     for (const assetType of assetTypes) {
-        const path = (suffix) =>
-            join(assetsDir, dir, `${assetType}${suffix}.svg`)
+        const path = (suffix) => markFilePath(assetsDir, dir, assetType, suffix)
         const where = path('-dark')
         if (!existsSync(where)) continue
         if (keepColor.includes(assetType)) {
@@ -408,7 +411,7 @@ export {
     writeDerivedDarks,
     findDarkProblems,
     darkSource,
-    contrastRatio,
+    readsOnDark,
     DARK_BACKGROUND,
     MIN_DARK_CONTRAST,
 }

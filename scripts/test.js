@@ -1074,7 +1074,6 @@ describe('airlines.json assets metadata', () => {
                 const svg = readFileSync(dark, 'utf8')
                 const source = darkSource({
                     ...info,
-                    dark: false,
                     keepColor: Boolean(a.branding?.dark_color?.includes(type)),
                 })
                 if (source === 'color') {
@@ -1094,7 +1093,7 @@ describe('airlines.json assets metadata', () => {
 
     it('paints the mono white on dark unless the airline keeps its colors', () => {
         const pick = (colors, mono = false, keepColor = false) =>
-            darkSource({ dark: false, colors, mono, keepColor })
+            darkSource({ colors, mono, keepColor })
         // The mono in white, as brand guidelines do, even when the colors
         // would read on dark
         assert.equal(pick(['#ffc80b'], true), 'mono')
@@ -1105,15 +1104,6 @@ describe('airlines.json assets metadata', () => {
         // dark: yellow does, navy does not
         assert.equal(pick(['#ffc80b', '#f1c931']), 'color')
         assert.equal(pick(['#0066b3', '#ffc80b']), null)
-        assert.equal(
-            darkSource({
-                dark: true,
-                colors: [],
-                mono: false,
-                keepColor: true,
-            }),
-            'dark',
-        )
     })
 
     it('keeps the icons of Air Canada and Sun PhuQuoc Airways in color', () => {
