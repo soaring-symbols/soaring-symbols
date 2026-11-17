@@ -414,6 +414,26 @@ const current = (airline) =>
     airline.successor ? current(getAirline(airline.successor)) : airline
 ```
 
+## Changes in 0.5
+
+0.5 gives every airline its full name and moves one wrongly kept name out of the catalog. Look airlines up by IATA or ICAO code where you can: codes didn't change.
+
+- **`name` is the full name.** The shorter names an airline uses now are in the new [`aliases`](#aliases), which `getAirline()` searches too. Four airlines change name and slug, and only SWISS keeps its old slug:
+
+  | Up to 0.4                     | From 0.5                                                        | Still found by                                                         |
+  | :---------------------------- | :-------------------------------------------------------------- | :--------------------------------------------------------------------- |
+  | Azul (`azul`)                 | Azul Brazilian Airlines (`azul-brazilian-airlines`)             | `AD`, `AZU`                                                            |
+  | GOL (`gol`)                   | Gol Linhas Aéreas (`gol-linhas-aereas`)                         | `G3`, `GLO`                                                            |
+  | SWISS (`swiss`)               | Swiss International Air Lines (`swiss-international-air-lines`) | `LX`, `SWR`, the alias `SWISS` and its slug `swiss`                    |
+  | Thai Airways (`thai-airways`) | Thai Airways International (`thai-airways-international`)       | `TG`, `THA` and the alias `THAI`, not `Thai Airways` or `thai-airways` |
+
+  The files are published under the new slugs, and under `assets/swiss/` too; `assets/azul/`, `assets/gol/` and `assets/thai-airways/` are gone.
+
+- **LATAM Airlines Chile no longer answers to `LATAM Airlines`.** That name was never its own, so `getAirline('latam-airlines')` returns `undefined` and `assets/latam-airlines/` is gone: use `latam-airlines-chile`, `LA` or `LAN`.
+- **A new asset type.** `AssetType` adds `'logo-stacked'`, the vertical lockup a few airlines have beside their `logo`, and `assets` has a key for it there. A `switch` over every `AssetType`, or code that reads every key of `assets` as one of three types, needs the new case.
+
+Nothing else changes for code written for 0.4: the marks for dark backgrounds (`<type>-dark.svg`, `assets.<type>.dark`, `getAssetPath(..., { dark: true })` and `branding.dark_color`) are additions.
+
 ## Joint flag carriers in 0.4.1
 
 0.4.1 gives every airline one `country`. Scandinavian Airlines, the only entry that had several, is now `"SE"`, where it is based, and lists the three countries it is the flag carrier of in the new `flag_carrier_countries`:
