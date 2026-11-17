@@ -2637,8 +2637,13 @@
         }
     },
     {
-        "name": "Thai Airways",
-        "slug": "thai-airways",
+        "name": "Thai Airways International",
+        "slug": "thai-airways-international",
+        "aliases": [
+            {
+                "name": "THAI"
+            }
+        ],
         "iata": "TG",
         "icao": "THA",
         "callsign": "THAI",
