@@ -2246,7 +2246,10 @@
         "website": "https://www.ryanair.com",
         "founded": 1984,
         "branding": {
-            "primary_color": "#073590"
+            "primary_color": "#073590",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
