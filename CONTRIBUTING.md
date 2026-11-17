@@ -21,7 +21,11 @@ This project uses a "color-first" approach, where the default asset is the full-
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
   - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
-  - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it.
+  - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it. When the airline has an all-white version (on dark or colored backgrounds), draw the mono from that artwork, as one path, even where it differs from the color mark.
+- **Dark Background Assets**: `<type>-dark.svg` is the version for dark backgrounds. The build makes it for almost every asset: the color file when all its colors read on dark (3:1 against `#1e1e1e`), else the monochrome file in white. Add one by hand only when the airline's own version for dark backgrounds changes part of the mark and keeps other colors (Ryanair's blue lettering in white, its harp still yellow):
+  - **Follow the airline:** draw it from what the airline itself shows on a dark background (its brand guidelines, a dark website header, its app), and link the source in the pull request. Never recolor a mark yourself. A version on a background in the brand's own color (white lettering on a red header) is made for that color, not for dark backgrounds, so it doesn't count.
+  - **Several colors:** a one-color version is a monochrome one: draw it as `<type>-mono.svg` instead, and the build makes the white `-dark.svg` from it.
+  - **Same canvas:** the same `viewBox` and `<title>` as the color file, and the same SVG specifications. `npm run generate` stops on a dark file without its color file, with another `viewBox`, identical to the color file or in one color, and warns about colors that hardly read on dark.
 
 **Correct Structure Example:**
 
@@ -31,7 +35,9 @@ assets/
     ├── icon.svg         # Color version (default); single-color, so the
     │                    #   build adds icon-mono.svg to the package
     ├── logo.svg         # Color version (default)
-    └── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
+    ├── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
+    └── logo-dark.svg    # Dark version (hand-made only for the airline's own
+                         #   partial recolor; the build adds the others)
 ```
 
 #### Older Marks (Logo History)
@@ -51,8 +57,8 @@ assets/
 ```
 
 - **One folder per mark**, named after the four-digit year it was introduced (look it up in the airline's Wikipedia article or press release). A mark is taken to be used until the next one's year; the newest history folder until the current marks.
-- **Only `icon`, `logo` and `tail`** (`.svg`, or a hand-made `-mono.svg` for a multi-color mark) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
-- **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's name, or to the name the mark was used under when the airline was renamed and lists it in `former` (T'way Air for Trinity Airways' 2010 logo); `lint-svg.js --fix` writes the current name when it is neither. Single-color marks get their `-mono.svg` from the build, as in `assets/<slug>/`.
+- **Only `icon`, `logo` and `tail`** (`.svg`, or a hand-made `-mono.svg` or `-dark.svg`) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
+- **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's name, or to the name the mark was used under when the airline was renamed and lists it in `former` (T'way Air for Trinity Airways' 2010 logo); `lint-svg.js --fix` writes the current name when it is neither. Single-color marks get their `-mono.svg` from the build, and every mark its `-dark.svg` where one can be made, as in `assets/<slug>/`.
 - **Set `branding.since`** in `airlines.json` to the year the current marks came in: the last older mark was used until then. The build reads the folders and publishes them as the airline's `history`, each mark with the years it was used (`since`, `until`) and the name on it. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files, or has no color file, or if `branding.since` is missing or not after the last folder's year.
 - **Never move the current files into `history/` without new ones:** `assets/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
 - **When the name changes too**, rename the airline first (see [Renames and mergers](#renames-and-mergers)); its old marks then go in the new slug's `history/`.
@@ -152,7 +158,7 @@ alliances/
 ```
 
 - **The icon first:** alliances show their symbol far more often than a logo with the name, so start with `icon.svg`. Add `logo.svg` only for an official lockup of the symbol and name; an alliance without one is fine, and apps should show the icon when `assets.logo` is missing.
-- **Only `icon` and `logo`**, with a hand-made `-mono.svg` for a multi-color one; an alliance has no tail. `npm run generate` stops on any other file, and on a folder that matches no alliance.
+- **Only `icon` and `logo`**, with a hand-made `-mono.svg` for a multi-color one (and `-dark.svg` as for an airline); an alliance has no tail. `npm run generate` stops on any other file, and on a folder that matches no alliance.
 - **Same rules as airline marks:** the SVG specifications below, `<title>` set to the alliance's name exactly as `alliances.json` writes it (`oneworld`, `SkyTeam`), and older marks in `history/<year>/` with `branding.since` set.
 - **Fields in `alliances.json`:** `name` and `slug` are required; `website`, `founded`, `defunct`, `ceased` and `branding` (as for an airline, with the alliance's slogan as `tagline`; `primary_color` can wait until its SVGs are added: `npm run generate` stops when an alliance has SVGs but no `primary_color`, as it does for any airline) are optional. A new alliance goes into the `alliance` list in `airlines.schema.json` and into `alliances.json` in the same pull request.
 
@@ -164,6 +170,7 @@ In the published package (`dist/airlines.json`), each airline also has an `asset
 | :--------- | :-------------------------------------------------------------------------------------------------------------- |
 | `color`    | `true` if the full-color `<type>.svg` exists.                                                                   |
 | `mono`     | `true` if a corresponding `-mono.svg` variant exists; always `true` for single-color assets.                    |
+| `dark`     | `true` if a `-dark.svg` variant, for dark backgrounds, exists: hand-made, or made by the build.                 |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
 Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), the `slug` of each name in `former` and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.

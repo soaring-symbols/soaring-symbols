@@ -4,6 +4,7 @@ import { build as esbuild } from 'esbuild'
 import {
     ALLIANCES_DIR,
     getAssetDirs,
+    writeDerivedDarks,
     writeDerivedMonos,
 } from '../utils/index.js'
 import { publishAlliances, publishCatalog } from '../utils/catalog.js'
@@ -124,7 +125,19 @@ async function copyFiles() {
             writeDerivedMonos(dir, path.join(distDir, ALLIANCES_DIR))
         }
     }
-    // After the monos, so airlines sharing marks get those too, and after
+    // Then every asset without a hand-made -dark.svg gets one when its
+    // colors read on dark or it has a mono to paint white
+    for (const airline of catalog.filter((a) => !a.marks)) {
+        for (const dir of getAssetDirs(airline.slug)) {
+            writeDerivedDarks(dir, path.join(distDir, 'assets'))
+        }
+    }
+    for (const alliance of alliances) {
+        for (const dir of getAssetDirs(alliance.slug, ALLIANCES_DIR)) {
+            writeDerivedDarks(dir, path.join(distDir, ALLIANCES_DIR))
+        }
+    }
+    // After the monos and darks, so airlines sharing marks get those too, and after
     // those, so a former slug gets whatever its airline ships
     await copySharedMarks(catalog)
     await copyFormerSlugs(catalog)

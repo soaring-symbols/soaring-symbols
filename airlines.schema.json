@@ -300,10 +300,14 @@
         "assetInfo": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["color", "mono", "colors"],
+            "required": ["color", "mono", "dark", "colors"],
             "properties": {
                 "color": { "type": "boolean" },
                 "mono": { "type": "boolean" },
+                "dark": {
+                    "description": "Whether <type>-dark.svg, for dark backgrounds, is published: the airline's own version, the color file when its colors read on dark, or the monochrome file in white.",
+                    "type": "boolean"
+                },
                 "colors": {
                     "type": "array",
                     "uniqueItems": true,
