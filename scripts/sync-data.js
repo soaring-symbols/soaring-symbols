@@ -33,7 +33,6 @@ import {
 // Wikipedia page of airlines whose name leads elsewhere (a disambiguation
 // page, another topic)
 const PAGE_TITLES = {
-    Azul: 'Azul Brazilian Airlines',
     Condor: 'Condor (airline)',
     Emirates: 'Emirates (airline)',
     Firefly: 'Firefly (airline)',

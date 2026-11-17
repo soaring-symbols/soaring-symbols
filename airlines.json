@@ -739,8 +739,8 @@
         }
     },
     {
-        "name": "Azul",
-        "slug": "azul",
+        "name": "Azul Brazilian Airlines",
+        "slug": "azul-brazilian-airlines",
         "iata": "AD",
         "icao": "AZU",
         "callsign": "AZUL",
