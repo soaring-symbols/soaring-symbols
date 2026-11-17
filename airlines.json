@@ -2061,7 +2061,9 @@
         "callsign": "OMAN AIR",
         "former": [
             {
-                "name": "Gulf Aviation",
+                "name": "Oman Aviation Services",
+                "icao": "OAS",
+                "callsign": "ORYX",
                 "until": 1993
             }
         ],
@@ -2072,7 +2074,7 @@
         "hubs": [
             "MCT"
         ],
-        "founded": 1949,
+        "founded": 1970,
         "branding": {
             "primary_color": "#b39759"
         }

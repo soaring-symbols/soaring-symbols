@@ -450,6 +450,7 @@ A minor release may add to the package without breaking code written for the one
   The files are published under the new slugs, and under `assets/swiss/` too; `assets/azul/`, `assets/gol/` and `assets/thai-airways/` are gone.
 
 - **LATAM Airlines Chile no longer answers to `LATAM Airlines`.** That name was never its own, so `getAirline('latam-airlines')` returns `undefined` and `assets/latam-airlines/` is gone: use `latam-airlines-chile`, `LA` or `LAN`.
+- **`Gulf Aviation` finds Gulf Air, not Oman Air.** It is Gulf Air's name until 1974; Oman Air's former name is now `Oman Aviation Services` (until 1993, with the ICAO code `OAS`), and its `founded` is 1970 instead of 1949.
 - **A new asset type.** `AssetType` adds `'logo-stacked'`, the vertical lockup a few airlines have beside their `logo`, and `assets` has a key for it there. A `switch` over every `AssetType`, or code that reads every key of `assets` as one of three types, needs the new case.
 - **Types for TypeScript.** `alliance`, `alliance_history[].alliance` and an alliance's `name` are typed as `AllianceName`, the alliances the catalog knows, instead of `string`, so a misspelt name like `'Skyteam'` fails to compile. `AirlineBranding` is now `Branding`, as alliances share it; the old name stays as a deprecated alias.
 

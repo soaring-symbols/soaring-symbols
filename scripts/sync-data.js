@@ -54,6 +54,9 @@ const IGNORE = {
     // Malaysia-Singapore Airlines split in two in 1972: neither carried on
     // the name alone
     'Malaysia Airlines': { former: ['Malayan Airways'] },
+    // Gulf Aviation is Gulf Air's former name: Oman, one of its owners, set
+    // up its own airline in 1970, as Oman Aviation Services from 1981
+    'Oman Air': { founded: 1949, former: ['Gulf Aviation'] },
     'Peach Aviation': { former: ['A&F Aviation'] },
     'Singapore Airlines': { former: ['Malayan Airways'] },
     // ModiLuft, the company SpiceJet grew out of, and the year it was founded
