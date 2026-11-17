@@ -64,7 +64,7 @@ The Raycast extension also works in launchers that run Raycast extensions, such 
 
 ### CDN
 
-Link any mark straight from the npm package through jsDelivr or unpkg, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`; every airline's page on [soaringsymbols.org](https://soaringsymbols.org) shows it); swap `logo` for `icon` or `tail` to get the other marks.
+Link any mark straight from the npm package through jsDelivr or unpkg, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`; every airline's page on [soaringsymbols.org](https://soaringsymbols.org) shows it); swap `logo` for `icon` or `tail` to get the other marks, or for `logo-stacked` to get the vertical lockup of an airline that has one.
 
 ```text
 https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg

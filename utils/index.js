@@ -103,7 +103,9 @@ const darkSource = ({ colors, mono, keepColor = false }) => {
     return colors.length && colors.every(readsOnDark) ? 'color' : null
 }
 
-const assetTypes = ['icon', 'logo', 'tail']
+// logo-stacked is the airline's vertical lockup (name under the mark), only
+// when it also has the horizontal one in logo.svg
+const assetTypes = ['icon', 'logo', 'logo-stacked', 'tail']
 
 // Alliance marks live apart from the airlines' assets/, in
 // alliances/<slug>/, with the same file names and history/ folders; an

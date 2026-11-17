@@ -370,6 +370,27 @@ for (const [format, api] of [
                 )
             })
 
+            it('returns a stacked logo only where there is one', () => {
+                const vn = getAirline('VN')
+                assert.equal(getAssetPath(vn, 'logo-stacked'), undefined)
+                const stacked = {
+                    ...vn,
+                    assets: {
+                        ...vn.assets,
+                        'logo-stacked': vn.assets.logo,
+                    },
+                }
+                assert.equal(
+                    getAssetPath(stacked, 'logo-stacked', { dark: true }),
+                    'soaring-symbols/assets/vietnam-airlines/logo-stacked-dark.svg',
+                )
+                // An alliance has none
+                assert.throws(
+                    () => getAllianceAssetPath('star-alliance', 'logo-stacked'),
+                    TypeError,
+                )
+            })
+
             it('accepts an airline object', () => {
                 assert.equal(
                     getAssetPath(getAirline('VN'), 'icon'),
@@ -630,6 +651,39 @@ describe('airlines.json schema', () => {
                 ),
             ),
             [],
+        )
+    })
+
+    it('requires logo beside logo-stacked', () => {
+        const shipped = JSON.parse(
+            readFileSync(new URL('../dist/airlines.json', import.meta.url)),
+        )
+        const vn = shipped.find((a) => a.slug === 'vietnam-airlines')
+        const { logo, ...others } = vn.assets
+        const patch = (assets, history) =>
+            shipped.map((a) => (a === vn ? { ...a, assets, history } : a))
+        assert.deepEqual(
+            validateAirlines(patch({ ...vn.assets, 'logo-stacked': logo }), {
+                published: true,
+            }),
+            [],
+        )
+        assert.deepEqual(
+            validateAirlines(
+                patch({ ...others, 'logo-stacked': logo }, [
+                    {
+                        since: 2002,
+                        name: 'Vietnam Airlines',
+                        until: 2015,
+                        assets: { 'logo-stacked': logo },
+                    },
+                ]),
+                { published: true },
+            ),
+            [
+                'Vietnam Airlines: assets has logo-stacked but no logo; an airline with only a vertical lockup keeps it in logo.svg',
+                'Vietnam Airlines: history/2002 has logo-stacked but no logo; an airline with only a vertical lockup keeps it in logo.svg',
+            ],
         )
     })
 
@@ -1466,7 +1520,7 @@ describe('asset history (assets/<slug>/history/<year>/)', () => {
         has('history/logo.svg must be in a year folder')
         has('history/old/ must be named after the year')
         has('history/2999/ must be named after the year')
-        has('history/1990/logo-2.svg is not icon, logo or tail')
+        has('history/1990/logo-2.svg is not icon, logo, logo-stacked or tail')
         has('history/1990/ has no icon.svg')
         has('history/1995/ has no icon.svg')
         assert.equal(problems.length, 6)
@@ -1533,6 +1587,46 @@ describe('hand-made -dark.svg files', () => {
         // The copy keeps its navy, which hardly reads on dark
         assert.equal(warnings.length, 1)
         assert.match(warnings[0], /#073590 under 3:1/)
+    })
+})
+
+describe('stacked logos (logo-stacked.svg)', () => {
+    let assetsDir
+    const svg = (...fills) =>
+        `<svg role="img" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title>X</title>${fills
+            .map((f) => `<path fill="${f}" d="M0 0h1v1H0z"/>`)
+            .join('')}</svg>`
+
+    before(() => {
+        assetsDir = mkdtempSync(join(tmpdir(), 'stacked-'))
+        mkdirSync(join(assetsDir, 'x/history/2000'), { recursive: true })
+        writeFileSync(join(assetsDir, 'x/logo.svg'), svg('#073590'))
+        writeFileSync(
+            join(assetsDir, 'x/logo-stacked.svg'),
+            svg('#073590', '#f1c931'),
+        )
+        writeFileSync(
+            join(assetsDir, 'x/history/2000/logo-stacked.svg'),
+            svg('#073590'),
+        )
+        writeFileSync(
+            join(assetsDir, 'x/history/2000/logo.svg'),
+            svg('#073590'),
+        )
+    })
+    after(() => rmSync(assetsDir, { recursive: true, force: true }))
+
+    it('is an asset type of its own', () => {
+        assert.deepEqual(getAirlineAssets('x', assetsDir)['logo-stacked'], {
+            color: true,
+            mono: false,
+            dark: false,
+            colors: ['#073590', '#f1c931'],
+        })
+    })
+
+    it('belongs in a history folder', () => {
+        assert.deepEqual(findHistoryProblems('x', assetsDir), [])
     })
 })
 

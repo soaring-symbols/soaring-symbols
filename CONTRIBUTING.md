@@ -19,6 +19,7 @@ This project uses a "color-first" approach, where the default asset is the full-
 
 - **Folder Structure**: Each airline's assets must be placed in their own folder under `assets/`. The folder name is the airline's `slug` in `airlines.json`: its name slugified, in lowercase with hyphens (e.g., `assets/vietnam-airlines/`).
 - **Color Assets (Default)**: The standard color version of an asset should be named simply `icon.svg` or `logo.svg`.
+- **Horizontal and Stacked Logos**: `logo.svg` is the horizontal lockup, the name beside the mark. When the airline also has an official vertical (stacked) lockup, the name under the mark, add it as `logo-stacked.svg`, with its own `-mono.svg` and `-dark.svg` as for any type. An airline with only a vertical lockup keeps it in `logo.svg`, so every airline with a stacked logo has a horizontal one to fall back on (`npm run generate` stops otherwise). Add only a lockup the airline itself uses (brand guidelines, its website or app, signage), never one built by moving its mark and name around, and link the source in the pull request.
 - **Monochrome Assets**: Monochrome versions are named with a `-mono` suffix (e.g., `icon-mono.svg` or `logo-mono.svg`) and drawn with `fill="currentColor"`.
   - **Single-color assets:** don't add one. The build writes it into the published package from the color file (its one color becomes `currentColor`), and `npm run generate` deletes any committed copy.
   - **Multi-color assets:** a hand-made monochrome version is optional but welcome. If a single-color asset becomes multi-color, its mono version is no longer generated: draw one by hand if you want it. When the airline has an all-white version (on dark or colored backgrounds), draw the mono from that artwork, as one path, even where it differs from the color mark.
@@ -28,6 +29,7 @@ This project uses a "color-first" approach, where the default asset is the full-
     - **Follow the airline:** draw it from what the airline itself shows on a dark background (its brand guidelines, a dark website header, its app), and link the source in the pull request. Never recolor a mark yourself.
 
       > **Note:** a version on a background in the brand's own color (white lettering on a red header) is made for that color and may not be what the airline does on dark backgrounds. When it is the only source you have, say so in the pull request, so it can be checked again once a dark one turns up.
+
     - **Several colors:** a one-color version is a monochrome one: draw it as `<type>-mono.svg` instead, and the build makes the white `-dark.svg` from it.
     - **Same canvas:** the same `viewBox` and `<title>` as the color file, and the same SVG specifications. `npm run generate` stops on a dark file without its color file, with another `viewBox`, identical to the color file, in one color or for a type in `branding.dark_color`, and warns about colors that hardly read on dark.
 
@@ -40,8 +42,9 @@ assets/
     │                    #   build adds icon-mono.svg to the package
     ├── logo.svg         # Color version (default)
     ├── logo-mono.svg    # Mono version (hand-made, optional for multi-color)
-    └── logo-dark.svg    # Dark version (hand-made only for the airline's own
-                         #   partial recolor; the build adds the others)
+    ├── logo-dark.svg    # Dark version (hand-made only for the airline's own
+    │                    #   partial recolor; the build adds the others)
+    └── logo-stacked.svg # Vertical lockup (optional, only beside logo.svg)
 ```
 
 #### Older Marks (Logo History)
@@ -61,7 +64,7 @@ assets/
 ```
 
 - **One folder per mark**, named after the four-digit year it was introduced (look it up in the airline's Wikipedia article or press release). A mark is taken to be used until the next one's year; the newest history folder until the current marks.
-- **Only `icon`, `logo` and `tail`** (`.svg`, or a hand-made `-mono.svg` or `-dark.svg`) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
+- **Only `icon`, `logo`, `logo-stacked` and `tail`** (`.svg`, or a hand-made `-mono.svg` or `-dark.svg`) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
 - **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's name, or to the name the mark was used under when the airline was renamed and lists it in `former` (T'way Air for Trinity Airways' 2010 logo); `lint-svg.js --fix` writes the current name when it is neither. Single-color marks get their `-mono.svg` from the build, and every mark its `-dark.svg` where one can be made, as in `assets/<slug>/`.
 - **Set `branding.since`** in `airlines.json` to the year the current marks came in: the last older mark was used until then. The build reads the folders and publishes them as the airline's `history`, each mark with the years it was used (`since`, `until`) and the name on it. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files, or has no color file, or if `branding.since` is missing or not after the last folder's year.
 - **Never move the current files into `history/` without new ones:** `assets/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
@@ -85,7 +88,7 @@ assets/
 - **One Path per Color**: Draw each color in one `<path>`, so a single-color SVG (including every `-mono` file) has one `<path>` and a multi-color SVG one per color. You can try the experimental `node scripts/lint-svg.js --fix --merge-paths`: it joins neighbouring `<path>`s of the same color, in single- and multi-color SVGs alike, only when the result renders the same, and leaves them apart (still warning) when overlapping shapes would leave a hole. Open the result and check it before committing. Otherwise combine the shapes in your editor (e.g. Inkscape's _Path → Combine_) and check that overlapping shapes don't leave holes. Only combine shapes drawn one after another: if another color sits between two shapes of the same color, merging them would change which one is drawn on top, so they stay apart. `npm run lint:svg` warns about shapes that could join the one before them.
 
 - **ViewBox Dimensions**:
-  - **Logos** should use a `viewBox` of `0 0 64 64`.
+  - **Logos** (`logo.svg` and `logo-stacked.svg`) should use a `viewBox` of `0 0 64 64`.
   - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
@@ -169,7 +172,7 @@ alliances/
 
 #### Generated Asset Metadata
 
-In the published package (`dist/airlines.json`), each airline also has an `assets` object with one entry per available asset type (`icon`, `logo`, `tail`):
+In the published package (`dist/airlines.json`), each airline also has an `assets` object with one entry per available asset type (`icon`, `logo`, `logo-stacked`, `tail`):
 
 | Field Name | Description                                                                                                     |
 | :--------- | :-------------------------------------------------------------------------------------------------------------- |

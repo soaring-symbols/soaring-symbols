@@ -2,7 +2,7 @@ import airlines from './airlines.json' with { type: 'json' }
 import alliances from './alliances.json' with { type: 'json' }
 
 // Same list as utils/index.js, which can't be imported here: it uses fs
-const ASSET_TYPES = ['icon', 'logo', 'tail']
+const ASSET_TYPES = ['icon', 'logo', 'logo-stacked', 'tail']
 // An alliance has no tail
 const ALLIANCE_ASSET_TYPES = ['icon', 'logo']
 
