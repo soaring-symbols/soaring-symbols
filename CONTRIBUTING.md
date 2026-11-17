@@ -127,6 +127,7 @@ IATA and ICAO codes must be unique among active airlines, with three exceptions.
 | :----------------------- | :------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`                   |   Yes    | Full name of the airline. **Keep the JSON array sorted alphabetically by this field.**                                                                                                                                        |
 | `slug`                   |   Yes    | The name slugified, e.g. "vietnam-airlines"; also the `assets/<slug>/` folder name.                                                                                                                                           |
+| `aliases`                |    No    | Other names the airline uses now beside its full one, e.g. `[{ "name": "SWISS" }]` for Swiss International Air Lines (see [Aliases](#aliases)).                                                                               |
 | `iata`                   |   Yes    | The airline's two-character IATA code.                                                                                                                                                                                        |
 | `iata_duplicate`         |    No    | `true` when the IATA code is a controlled duplicate shown with an asterisk on IATA's code search, e.g. `SL*` for SAS Connect.                                                                                                 |
 | `icao`                   |   Yes    | The airline's three-character ICAO code.                                                                                                                                                                                      |
@@ -177,7 +178,7 @@ In the published package (`dist/airlines.json`), each airline also has an `asset
 | `dark`     | `true` if a `-dark.svg` variant, for dark backgrounds, exists: hand-made, or made by the build.                 |
 | `colors`   | The hexadecimal colors the color SVG paints with (fills, strokes and gradient stops); empty when there is none. |
 
-Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), the `slug` of each name in `former` and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
+Don't add `assets` to `airlines.json`: `npm run generate` removes it. The same goes for `history` (from `assets/<slug>/history/`), the `slug` of each name in `aliases` and `former` and `predecessors` (the slugs of the airlines whose `successor` is this one), which the build adds too.
 
 ### 4. Pull Requests
 
@@ -203,6 +204,23 @@ A subsidiary needs SVGs only when its logo differs:
 - **Same logo as another airline:** add no `assets/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's own slug in the published package, so the repository keeps one copy.
 - **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
 - **A logo shared by sister airlines but not the parent:** put the SVGs in one of them, and point the others' `marks` at it. `marks` must name an airline with SVGs of its own.
+
+#### Aliases
+
+`name` is the airline's full name, as on its Wikipedia page. When the airline also goes by a shorter name, often the one on its logo, list it in `aliases`: Swiss International Air Lines flies as SWISS, Thai Airways International as THAI.
+
+```json
+{
+    "name": "Swiss International Air Lines",
+    "slug": "swiss-international-air-lines",
+    "aliases": [{ "name": "SWISS" }],
+    ...
+}
+```
+
+- Only names the airline itself uses now. A name it stopped using goes in `former`, never in both, and a misspelling or a code is no alias.
+- `getAirline()` finds the airline by each alias and its slug, so an alias's slug can't be another airline's slug, alias or former name; `npm run generate` stops if it is.
+- When an airline's entry used the short name before and takes its full name, keep the short one as an alias, not in `former`: the build adds the alias's slug and, when a release shipped it (`published-slugs.json`), copies the airline's current files there, so old links keep working and the change ships as a patch.
 
 #### Renames and mergers
 
@@ -239,7 +257,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 **A different airline** gets a new entry, and the old one becomes `"defunct": true` with `"ceased": <year>` and `"successor": "<new slug>"`. That is the case when:
 
 - it merged into another airline (Vistara into `air-india`); several airlines can share one successor;
-- the company was refounded under a new name (Swissair and SWISS);
+- the company was refounded under a new name (Swissair and Swiss International Air Lines);
 - it moved into or out of a group's brand, so its `parent` and `marks` changed with the name: Pacific Airlines flew as Jetstar Pacific, with the Jetstar logo, from 2008 to 2020, then went back to its own name under Vietnam Airlines.
 
 ```json
@@ -287,6 +305,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 | :---------------------------------------------- | :------------------------------------------------------------------------------------------------------------------ |
 | The logo, not the name                          | New SVGs in `assets/<slug>/`, old ones in `history/<year introduced>/` ([Older Marks](#older-marks-logo-history)).  |
 | The name, with or without the logo              | Rename in place with `former` and the new slug ([Renames and mergers](#renames-and-mergers)).                       |
+| Goes by a short name beside its full one        | Keep the full name in `name` and add the short one to `aliases` ([Aliases](#aliases)).                              |
 | Moves into or out of a group's brand            | New entry; the old one defunct with `successor`.                                                                    |
 | Merged into another airline, or refounded       | The old airline defunct with `successor` set to the one that carried on.                                            |
 | Shut down                                       | `defunct` and `ceased`, keeping the entry and its SVGs.                                                             |

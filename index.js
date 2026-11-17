@@ -68,6 +68,16 @@ for (const airline of airlines) {
     bySlug.set(airline.slug, airline)
     byName.set(airline.name.toLowerCase(), airline)
 }
+// An airline is also found by its aliases and their slugs (SWISS for Swiss
+// International Air Lines), which no other airline may use
+for (const airline of airlines) {
+    for (const { name, slug } of airline.aliases ?? []) {
+        if (slug && !bySlug.has(slug)) bySlug.set(slug, airline)
+        if (!byName.has(name.toLowerCase())) {
+            byName.set(name.toLowerCase(), airline)
+        }
+    }
+}
 // A renamed airline is also found by the slugs and names it had before, which
 // no other airline may use, and by its former codes, which another airline
 // may hold now
@@ -105,7 +115,8 @@ function listAirlines() {
  * tried in that order. A code shared with a defunct airline finds the
  * active one, a code a brand shares with its parent finds the parent, and an
  * IATA code IATA gave to two airlines finds the one without `iata_duplicate`
- * and, written with IATA's asterisk ("SL*"), the one with it. A renamed
+ * and, written with IATA's asterisk ("SL*"), the one with it. An airline is
+ * also found by its aliases (`aliases`) and their slugs. A renamed
  * airline is also found by its former slugs and names, and returned with its
  * current slug; a former code (`former`) finds it only when no airline has
  * that code now.

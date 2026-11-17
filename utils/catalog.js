@@ -1,7 +1,7 @@
 // The two shapes of the airline catalog. The repo keeps only the fields people
 // write, `slug` included (normalizeCatalog); the build adds `assets` and
-// `history`, which come from the SVGs on disk, the slugs of former names
-// (in `former`), and `predecessors`, the reverse of `successor`, to the copy it publishes
+// `history`, which come from the SVGs on disk, the slugs of aliases and
+// former names (in `aliases` and `former`), and `predecessors`, the reverse of `successor`, to the copy it publishes
 // (publishCatalog).
 // Keeping generated fields out of the repo means a pull request that adds an
 // airline only touches its own entry.
@@ -18,20 +18,21 @@ import { airlineFields, allianceFields } from './schema.js'
 // Fields only the published catalog has
 const GENERATED_FIELDS = ['assets', 'history', 'predecessors']
 
-// The items of `former` without the `slug` the build adds
-const sourceFormer = (former) => former.map(({ slug, ...item }) => item)
+// The items of `aliases` or `former` without the `slug` the build adds
+const withoutSlugs = (items) => items.map(({ slug, ...item }) => item)
 
+const ALIAS_FIELDS = ['name', 'slug']
 const FORMER_FIELDS = ['name', 'slug', 'iata', 'icao', 'callsign', 'until']
 
-// The items of `former` with the slug of each name that differs from the
-// airline's own
-const publishedFormer = (airline) =>
-    airline.former.map((item) => {
+// The items of `aliases` or `former` with the slug of each name that differs
+// from the airline's own
+const withSlugs = (items, airline, fields) =>
+    items.map((item) => {
         const slug = item.name && toSlug(item.name)
 
         return orderKeys(
             { ...item, ...(slug && slug !== airline.slug && { slug }) },
-            FORMER_FIELDS,
+            fields,
         )
     })
 
@@ -58,8 +59,10 @@ const normalizeEntries = (entries, fields) =>
             ),
         )
         entry.slug ??= toSlug(entry.name)
-        if (Array.isArray(entry.former))
-            entry.former = sourceFormer(entry.former)
+        for (const field of ['aliases', 'former']) {
+            if (Array.isArray(entry[field]))
+                entry[field] = withoutSlugs(entry[field])
+        }
         if (entry.branding?.primary_color) {
             entry.branding = {
                 ...entry.branding,
@@ -107,7 +110,8 @@ const publishedHistory = (entry, assetsDir) => {
 // The catalog as the package ships it: every entry also gets the `assets`
 // found in `assetsDir`, the `history` of its older marks when it has any
 // (each with the years it was used and the name on it),
-// the slug of each former name that had another one (in `former`), and
+// the slug of each alias and former name that has another one (in `aliases`
+// and `former`), and
 // `predecessors`
 // when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names, which the
@@ -135,8 +139,11 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
         return orderKeys(
             {
                 ...airline,
+                ...(Array.isArray(airline.aliases) && {
+                    aliases: withSlugs(airline.aliases, airline, ALIAS_FIELDS),
+                }),
                 ...(Array.isArray(airline.former) && {
-                    former: publishedFormer(airline),
+                    former: withSlugs(airline.former, airline, FORMER_FIELDS),
                 }),
                 ...(predecessors && { predecessors }),
                 assets,

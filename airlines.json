@@ -742,8 +742,8 @@
         }
     },
     {
-        "name": "Azul",
-        "slug": "azul",
+        "name": "Azul Brazilian Airlines",
+        "slug": "azul-brazilian-airlines",
         "iata": "AD",
         "icao": "AZU",
         "callsign": "AZUL",
@@ -1299,8 +1299,8 @@
         }
     },
     {
-        "name": "GOL",
-        "slug": "gol",
+        "name": "Gol Linhas Aéreas",
+        "slug": "gol-linhas-aereas",
         "iata": "G3",
         "icao": "GLO",
         "callsign": "GOL",
@@ -2283,6 +2283,11 @@
     {
         "name": "SAS Connect",
         "slug": "sas-connect",
+        "aliases": [
+            {
+                "name": "Scandinavian Airlines Connect"
+            }
+        ],
         "iata": "SL",
         "iata_duplicate": true,
         "icao": "SZS",
@@ -2561,8 +2566,13 @@
         }
     },
     {
-        "name": "SWISS",
-        "slug": "swiss",
+        "name": "Swiss International Air Lines",
+        "slug": "swiss-international-air-lines",
+        "aliases": [
+            {
+                "name": "SWISS"
+            }
+        ],
         "iata": "LX",
         "icao": "SWR",
         "callsign": "SWISS",
@@ -2636,8 +2646,13 @@
         }
     },
     {
-        "name": "Thai Airways",
-        "slug": "thai-airways",
+        "name": "Thai Airways International",
+        "slug": "thai-airways-international",
+        "aliases": [
+            {
+                "name": "THAI"
+            }
+        ],
         "iata": "TG",
         "icao": "THA",
         "callsign": "THAI",
