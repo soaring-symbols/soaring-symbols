@@ -329,7 +329,10 @@
         ],
         "founded": 1932,
         "branding": {
-            "primary_color": "#da0e29"
+            "primary_color": "#da0e29",
+            "dark_color": [
+                "icon"
+            ]
         }
     },
     {
