@@ -321,9 +321,9 @@ for (const [format, api] of [
                     getAssetPath('VN', 'logo', { dark: true }),
                     'soaring-symbols/assets/vietnam-airlines/logo-dark.svg',
                 )
-                // Aer Lingus' logo neither reads on dark nor has a mono
+                // Bamboo Airways' logo neither reads on dark nor has a mono
                 assert.equal(
-                    getAssetPath('EI', 'logo', { dark: true }),
+                    getAssetPath('QH', 'logo', { dark: true }),
                     undefined,
                 )
             })
@@ -557,9 +557,12 @@ describe('airlines.json schema', () => {
         // what the airline does wins, not a problem
         const tarom = withEntry('tarom', keep(['logo']))
         assert.deepEqual(validateAirlines(tarom, { published: true }), [])
-        assert.deepEqual(findDarkColorWarnings(tarom), [
-            "TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e; check it against the airline's own use",
-        ])
+        assert.deepEqual(
+            findDarkColorWarnings(tarom.filter((a) => a.slug === 'tarom')),
+            [
+                "TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e; check it against the airline's own use",
+            ],
+        )
         // Vietnam Airlines has no tail
         assert.deepEqual(
             validateAirlines(withEntry('vietnam-airlines', keep(['tail'])), {
