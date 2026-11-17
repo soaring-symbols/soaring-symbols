@@ -265,6 +265,18 @@ for (const [format, api] of [
                     api.getAssetPath('scandinavian-airlines-connect', 'logo'),
                     'soaring-symbols/assets/sas-connect/logo.svg',
                 )
+                // SWISS was its name in releases before it took its full one:
+                // the old slug keeps finding it and its files
+                const swiss = api.getAirline('swiss-international-air-lines')
+                assert.deepEqual(swiss.aliases, [
+                    { name: 'SWISS', slug: 'swiss' },
+                ])
+                assert.equal(api.getAirline('SWISS'), swiss)
+                assert.equal(api.getAirline('swiss'), swiss)
+                assert.equal(
+                    api.getAssetPath('swiss', 'logo'),
+                    'soaring-symbols/assets/swiss-international-air-lines/logo.svg',
+                )
             })
 
             it('finds an airline by its former codes when no airline has them now', () => {

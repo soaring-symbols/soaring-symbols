@@ -257,7 +257,7 @@ Nothing breaks, so it ships as a patch release: the build adds the slug of each 
 **A different airline** gets a new entry, and the old one becomes `"defunct": true` with `"ceased": <year>` and `"successor": "<new slug>"`. That is the case when:
 
 - it merged into another airline (Vistara into `air-india`); several airlines can share one successor;
-- the company was refounded under a new name (Swissair and SWISS);
+- the company was refounded under a new name (Swissair and Swiss International Air Lines);
 - it moved into or out of a group's brand, so its `parent` and `marks` changed with the name: Pacific Airlines flew as Jetstar Pacific, with the Jetstar logo, from 2008 to 2020, then went back to its own name under Vietnam Airlines.
 
 ```json

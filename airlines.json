@@ -2557,8 +2557,13 @@
         }
     },
     {
-        "name": "SWISS",
-        "slug": "swiss",
+        "name": "Swiss International Air Lines",
+        "slug": "swiss-international-air-lines",
+        "aliases": [
+            {
+                "name": "SWISS"
+            }
+        ],
         "iata": "LX",
         "icao": "SWR",
         "callsign": "SWISS",
