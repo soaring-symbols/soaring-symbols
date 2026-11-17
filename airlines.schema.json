@@ -312,7 +312,7 @@
                 "color": { "type": "boolean" },
                 "mono": { "type": "boolean" },
                 "dark": {
-                    "description": "Whether <type>-dark.svg, for dark backgrounds, is published: the airline's own version, the color file when its colors read on dark, or the monochrome file in white.",
+                    "description": "Whether <type>-dark.svg, for dark backgrounds, is published: the airline's own version, the color file for a type in branding.dark_color, the monochrome file in white, or, without a monochrome file, the color file when its colors read on dark.",
                     "type": "boolean"
                 },
                 "colors": {

@@ -69,7 +69,9 @@ if (airportProblems.length) {
 const tidyAirports = normalizeAirports(airports, airlines)
 const unused = Object.keys(airports).filter((code) => !tidyAirports[code])
 
-const removedMonos = []
+// Folders whose derived monos go once every check has passed, so a failed
+// check leaves the working tree as it was
+const monoFolders = []
 const darkWarnings = []
 
 // Stop on a hand-made -dark.svg that is out of place; collect its warnings
@@ -111,9 +113,7 @@ for (const { name, slug, marks, branding } of airlines) {
     }
     const dirs = getAssetDirs(slug)
     checkDarks(name, dirs, 'assets', branding?.dark_color)
-    for (const dir of dirs) {
-        removedMonos.push(...removeDerivedMonos(dir))
-    }
+    monoFolders.push(...dirs.map((dir) => [dir, 'assets']))
 }
 
 // An alliance needs no folder until its SVGs come, but a folder needs an
@@ -147,10 +147,12 @@ for (const slug of allianceDirs) {
         ALLIANCES_DIR,
         alliancesBySlug.get(slug).branding?.dark_color,
     )
-    for (const dir of dirs) {
-        removedMonos.push(...removeDerivedMonos(dir, ALLIANCES_DIR))
-    }
+    monoFolders.push(...dirs.map((dir) => [dir, ALLIANCES_DIR]))
 }
+
+const removedMonos = monoFolders.flatMap(([dir, root]) =>
+    removeDerivedMonos(dir, root),
+)
 
 writeFileSync('airlines.json', JSON.stringify(airlines, null, 4))
 writeFileSync('alliances.json', JSON.stringify(alliances, null, 4))

@@ -1401,7 +1401,7 @@ describe('hand-made -dark.svg files', () => {
         assert.deepEqual(problems, [
             `${dark('icon')} has viewBox "0 0 64 64", icon.svg "0 0 24 24"`,
             `${dark('icon')} has one color: draw it as icon-mono.svg in currentColor, the build makes the white -dark.svg from it`,
-            `${dark('logo')} is the same as logo.svg; leave it out, the build adds it when the colors read on dark`,
+            `${dark('logo')} is the same as logo.svg; leave it out, and list logo in branding.dark_color to keep the color file on dark`,
             `${dark('tail')} has no tail.svg beside it`,
         ])
         // The copy keeps its navy, which hardly reads on dark

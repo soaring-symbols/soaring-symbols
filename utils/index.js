@@ -266,7 +266,7 @@ const findDarkProblems = (dir, assetsDir = 'assets', keepColor = []) => {
         }
         if (dark === color) {
             problems.push(
-                `${where} is the same as ${assetType}.svg; leave it out, the build adds it when the colors read on dark`,
+                `${where} is the same as ${assetType}.svg; leave it out, and list ${assetType} in branding.dark_color to keep the color file on dark`,
             )
         } else if (colors.length < 2) {
             problems.push(
