@@ -371,19 +371,13 @@ for (const [format, api] of [
             })
 
             it('returns a stacked logo only where there is one', () => {
-                const vn = getAirline('VN')
-                assert.equal(getAssetPath(vn, 'logo-stacked'), undefined)
-                const stacked = {
-                    ...vn,
-                    assets: {
-                        ...vn.assets,
-                        'logo-stacked': vn.assets.logo,
-                    },
-                }
                 assert.equal(
-                    getAssetPath(stacked, 'logo-stacked', { dark: true }),
+                    getAssetPath('VN', 'logo-stacked', { dark: true }),
                     'soaring-symbols/assets/vietnam-airlines/logo-stacked-dark.svg',
                 )
+                // Bamboo Airways has only its horizontal logo
+                assert.equal(getAssetPath('QH', 'logo-stacked'), undefined)
+                assert.ok(getAssetPath('QH', 'logo'))
                 // An alliance has none
                 assert.throws(
                     () => getAllianceAssetPath('star-alliance', 'logo-stacked'),
