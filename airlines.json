@@ -499,6 +499,28 @@
         }
     },
     {
+        "name": "Alitalia",
+        "slug": "alitalia",
+        "iata": "AZ",
+        "icao": "AZA",
+        "callsign": "ALITALIA",
+        "country": "IT",
+        "flag_carrier": true,
+        "website": "https://www.alitalia.com",
+        "alliance": "SkyTeam",
+        "hubs": [
+            "FCO",
+            "LIN"
+        ],
+        "founded": 1946,
+        "defunct": true,
+        "ceased": 2021,
+        "successor": "ita-airways",
+        "branding": {
+            "primary_color": "#006643"
+        }
+    },
+    {
         "name": "All Nippon Airways",
         "slug": "all-nippon-airways",
         "iata": "NH",
