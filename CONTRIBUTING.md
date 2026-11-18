@@ -122,7 +122,7 @@ Every entry must match [`airlines.schema.json`](airlines.schema.json). `npm run 
 
 Every airline needs its own `slug`, defunct or not: it names the `assets/<slug>/` folder and is what `parent` and `marks` point at. It must be the name slugified, exactly as `npm run generate` writes it when you leave it out; any other value is rejected, as is a slug another airline already has. `npm run generate` also stops when an airline without `marks` has no `assets/<slug>/` folder.
 
-IATA and ICAO codes must be unique among active airlines, with three exceptions. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code. A brand that flies under its parent's codes (Hawaiian Airlines under Alaska Airlines since 2026, or a cargo brand such as Qatar Airways Cargo) may share them with its `parent`; `getAirline()` then finds the parent, and the brand by its slug, its name or the codes it had before (`former`). IATA itself gives a code to two airlines whose services don't overlap, a controlled duplicate, and its code search marks all holders but one with an asterisk (`SL*` for SAS Connect, whose SL Thai Lion Air also holds): set `iata_duplicate: true` on each starred holder. `getAirline()` then finds the holder without the asterisk by the code, and a starred one by the code with the asterisk (`SL*`), its ICAO code, slug or name.
+IATA and ICAO codes must be unique among active airlines, with three exceptions. A defunct airline may keep a code that has since been reassigned; `getAirline()` then finds the active airline by that code. A brand that flies under its parent's codes (Hawaiian Airlines under Alaska Airlines since 2026) may share them with its `parent`; `getAirline()` then finds the parent, and the brand by its slug, its name or the codes it had before (`former`). IATA itself gives a code to two airlines whose services don't overlap, a controlled duplicate, and its code search marks all holders but one with an asterisk (`SL*` for SAS Connect, whose SL Thai Lion Air also holds): set `iata_duplicate: true` on each starred holder. `getAirline()` then finds the holder without the asterisk by the code, and a starred one by the code with the asterisk (`SL*`), its ICAO code, slug or name.
 
 #### Information to Add Manually
 
@@ -211,12 +211,10 @@ A subsidiary needs SVGs only when its logo differs:
 
 #### Cargo airlines
 
-A cargo airline is an entry like any other, with `cargo: true`. A passenger airline that also carries cargo in its holds has none.
+Set `cargo: true` on an airline that flies only freight (Cargolux) and on a passenger airline's cargo brand; a passenger airline that also carries cargo in its holds has none. Otherwise a cargo airline is added like any other: a cargo subsidiary (Cargolux Italia, Lufthansa Cargo) takes `parent`, as above, and a cargo brand that flies under its parent's codes (Qatar Airways Cargo) takes them, as any brand may (see [JSON Data Updates](#3-json-data-updates)).
 
-- **A cargo airline of its own** (FedEx Express, UPS Airlines, Cargolux): its own codes, as for any airline.
-- **A passenger airline's cargo subsidiary with its own ICAO code** (Lufthansa Cargo, GEC): a subsidiary with `parent`, sharing the parent's IATA code when it flies under it.
-- **A cargo brand that flies under its parent's codes** (Qatar Airways Cargo, Emirates SkyCargo): an entry with `parent` and the parent's IATA and ICAO codes, as Hawaiian Airlines takes Alaska Airlines'. `getAirline()` finds the parent by the codes, and the brand by its slug or name. Add one only when the airline shows a cargo logo of its own: freighters in the parent's livery need no entry. Such a brand usually has a `logo` and no `tail`, as its freighters wear the parent's.
-- **A brand without codes** (DHL, Amazon Air), whose aircraft other airlines fly under their own codes, has no entry yet.
+- **A cargo brand needs a logo of its own:** add one only when the airline shows a cargo logo; freighters in the parent's livery need no entry. Such a brand usually has a `logo` and no `tail`, as its freighters wear the parent's.
+- **Brands without codes of their own** (DHL, Amazon Air), whose aircraft other airlines fly under their own codes, have no entry yet.
 
 #### Aliases
 

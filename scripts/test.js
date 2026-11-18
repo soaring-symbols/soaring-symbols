@@ -1125,29 +1125,10 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
-    it('lets a cargo brand share its parent codes', () => {
-        const qatar = entry('Qatar Airways', { iata: 'QR', icao: 'QTR' })
-        const cargo = (fields) =>
-            entry('Qatar Airways Cargo', {
-                iata: 'QR',
-                icao: 'QTR',
-                cargo: true,
-                parent: 'qatar-airways',
-                ...fields,
-            })
-        assert.deepEqual(validateAirlines([qatar, cargo()]), [])
-        // Only true, and only codes shared with the parent
-        assert.notDeepEqual(
-            validateAirlines([qatar, cargo({ cargo: false })]),
-            [],
-        )
-        assert.deepEqual(
-            validateAirlines([qatar, cargo({ parent: undefined })]),
-            [
-                'IATA QR is used by more than one active airline: Qatar Airways, Qatar Airways Cargo',
-                'ICAO QTR is used by more than one active airline: Qatar Airways, Qatar Airways Cargo',
-            ],
-        )
+    it('takes cargo only as true', () => {
+        const cargolux = (cargo) => entry('Cargolux', { cargo })
+        assert.deepEqual(validateAirlines([cargolux(true)]), [])
+        assert.notDeepEqual(validateAirlines([cargolux(false)]), [])
     })
 
     it('publishes the slugs of former names', () => {

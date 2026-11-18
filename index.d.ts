@@ -166,9 +166,7 @@ export interface Airline {
     /**
      * `true` for an airline that flies only freight, or the cargo brand of a
      * passenger airline (e.g. FedEx Express, Qatar Airways Cargo). A
-     * passenger airline that also carries cargo has none. A cargo brand
-     * flying under its parent's codes shares them with its `parent`, and
-     * getAirline() finds the parent by them.
+     * passenger airline that also carries cargo has none.
      */
     readonly cargo?: true
     /**

@@ -199,7 +199,7 @@
                     "items": { "type": "string", "pattern": "^[A-Z]{2}$" }
                 },
                 "cargo": {
-                    "description": "The airline flies only freight, or the entry is the cargo brand of a passenger airline, e.g. FedEx Express or Qatar Airways Cargo. A passenger airline that also carries cargo has none. A cargo brand flying under its parent's codes shares them with its `parent`, and getAirline() finds the parent by them.",
+                    "description": "The airline flies only freight, or the entry is the cargo brand of a passenger airline, e.g. FedEx Express or Qatar Airways Cargo. A passenger airline that also carries cargo has none.",
                     "const": true
                 },
                 "website": {
