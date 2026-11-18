@@ -3,7 +3,11 @@ import path from 'path'
 import { build as esbuild } from 'esbuild'
 import {
     ALLIANCES_DIR,
+    assetTypes,
+    borrowedTypes,
     getAssetDirs,
+    hasOwnMarks,
+    markFile,
     writeDerivedDarks,
     writeDerivedMonos,
 } from '../utils/index.js'
@@ -119,7 +123,10 @@ async function copyFiles() {
     // branding.dark_color keeps it (current marks only) or it has no mono
     // but reads on dark
     const sources = [
-        { entries: catalog.filter((a) => !a.marks), root: 'assets' },
+        {
+            entries: catalog.filter(hasOwnMarks),
+            root: 'assets',
+        },
         { entries: alliances, root: ALLIANCES_DIR },
     ]
     for (const { entries, root } of sources) {
@@ -141,13 +148,15 @@ const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // Copy an airline's current files (never history/) from dist/assets/<from>/
-// to dist/assets/<to>/, titled with the airline's name
-async function copyCurrentMarks(from, to, name) {
+// to dist/assets/<to>/, titled with the airline's name: those of `types`
+// (icon.svg, icon-mono.svg, icon-dark.svg), by default every type's
+async function copyCurrentMarks(from, to, name, types = assetTypes) {
     const src = path.join(distDir, 'assets', from)
     const dest = path.join(distDir, 'assets', to)
     await fs.mkdir(dest, { recursive: true })
+    const ofTypes = markFile(types)
     const files = (await fs.readdir(src, { withFileTypes: true }))
-        .filter((entry) => entry.isFile())
+        .filter((entry) => entry.isFile() && ofTypes.test(entry.name))
         .map((entry) => entry.name)
     for (const file of files) {
         const svg = await fs.readFile(path.join(src, file), 'utf-8')
@@ -161,13 +170,19 @@ async function copyCurrentMarks(from, to, name) {
     }
 }
 
-// Airlines with `marks` use another airline's SVGs. Copy those files to their
-// own slug in dist (never in the repo), titled with their own name, so every
+// Airlines with `marks` use another airline's SVGs: all of them, or only the
+// types in `marks_types` beside their own. Copy those files to their own
+// slug in dist (never in the repo), titled with their own name, so every
 // airline's files live at assets/<slug>/ like any other. Only the current
 // marks are shared, never the history/ folder.
 async function copySharedMarks(airlines) {
     for (const airline of airlines.filter((a) => a.marks)) {
-        await copyCurrentMarks(airline.marks, airline.slug, airline.name)
+        await copyCurrentMarks(
+            airline.marks,
+            airline.slug,
+            airline.name,
+            borrowedTypes(airline),
+        )
     }
 }
 

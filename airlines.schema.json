@@ -6,6 +6,10 @@
     "type": "array",
     "items": { "$ref": "#/$defs/airline" },
     "$defs": {
+        "assetType": {
+            "description": "A type of mark: icon, logo, logo-stacked (the vertical lockup beside the logo) or tail.",
+            "enum": ["icon", "logo", "logo-stacked", "tail"]
+        },
         "published": {
             "description": "The catalog the package ships in dist/airlines.json: every entry also has `assets`, `history` when it has older marks, a `slug` on each name in `aliases` and `former` with another slug, and `predecessors` when it carried on a defunct airline.",
             "type": "array",
@@ -156,7 +160,8 @@
                 "flag_carrier_countries": {
                     "required": ["flag_carrier"],
                     "properties": { "flag_carrier": { "const": true } }
-                }
+                },
+                "marks_types": { "required": ["marks"] }
             },
             "properties": {
                 "name": {
@@ -223,6 +228,13 @@
                 "marks": {
                     "description": "Slug of the airline whose SVGs this one uses, when it has none of its own: often the parent, or a sibling that shares a different logo. The build copies those files to this airline's slug.",
                     "$ref": "#/$defs/slug"
+                },
+                "marks_types": {
+                    "description": "Only these mark types come from the airline in `marks`, e.g. [\"icon\"] for a cargo brand drawn with its own logo and its parent's icon; the others are this airline's own, in its assets/<slug>/ folder. Without it, every mark comes from `marks`.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "$ref": "#/$defs/assetType" }
                 },
                 "hubs": {
                     "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"]. Operating bases of low-cost carriers are not hubs.",
@@ -291,7 +303,7 @@
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
-                    "items": { "enum": ["icon", "logo", "logo-stacked", "tail"] }
+                    "items": { "$ref": "#/$defs/assetType" }
                 }
             }
         },

@@ -886,6 +886,10 @@
         "cargo": true,
         "website": "https://www.cargolux-italia.com",
         "parent": "cargolux",
+        "marks": "cargolux",
+        "marks_types": [
+            "icon"
+        ],
         "hubs": [
             "MXP"
         ],
@@ -2283,6 +2287,27 @@
         "branding": {
             "primary_color": "#662046",
             "guidelines": "https://www.qatarairways.com/content/dam/tradepartners/pdf-files/Brand-Elements_Section-1.pdf"
+        }
+    },
+    {
+        "name": "Qatar Airways Cargo",
+        "slug": "qatar-airways-cargo",
+        "iata": "QR",
+        "icao": "QTR",
+        "callsign": "QATARI",
+        "country": "QA",
+        "cargo": true,
+        "website": "https://www.qrcargo.com",
+        "parent": "qatar-airways",
+        "marks": "qatar-airways",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "DOH"
+        ],
+        "branding": {
+            "primary_color": "#620e3e"
         }
     },
     {

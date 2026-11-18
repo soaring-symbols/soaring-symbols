@@ -633,14 +633,30 @@ describe('airlines.json schema', () => {
                 'Vietnam Airlines: branding.dark_color lists tail, which has no tail.svg',
             ],
         )
-        const borrower = shipped.find((a) => a.marks)
+        const borrower = shipped.find((a) => a.marks && !a.marks_types)
         assert.deepEqual(
             validateAirlines(withEntry(borrower.slug, keep(['icon'])), {
                 published: true,
             }),
             [
-                `${borrower.name}: shares the marks of "${borrower.marks}", so set branding.dark_color there`,
+                `${borrower.name}: shares its icon with "${borrower.marks}", so set branding.dark_color there`,
             ],
+        )
+        // With marks_types, only the shared types follow the other airline
+        const partial = shipped.find((a) => a.marks_types?.includes('icon'))
+        assert.deepEqual(
+            validateAirlines(withEntry(partial.slug, keep(['icon'])), {
+                published: true,
+            }),
+            [
+                `${partial.name}: shares its icon with "${partial.marks}", so set branding.dark_color there`,
+            ],
+        )
+        assert.deepEqual(
+            validateAirlines(withEntry(partial.slug, keep(['logo'])), {
+                published: true,
+            }),
+            [],
         )
         // Not in the repo copy's schema as anything but a list of types
         assert.notDeepEqual(
@@ -1168,6 +1184,45 @@ describe('renames and mergers (successor)', () => {
         )
     })
 
+    it('takes marks_types only with marks, and only types the other airline has', () => {
+        const owner = entry('Cargolux', { iata: 'CV', icao: 'CLX' })
+        const italia = (fields) =>
+            entry('Cargolux Italia', {
+                iata: 'C8',
+                icao: 'ICV',
+                marks: 'cargolux',
+                marks_types: ['icon'],
+                ...fields,
+            })
+        assert.deepEqual(validateAirlines([owner, italia()]), [])
+        assert.notDeepEqual(
+            validateAirlines([owner, italia({ marks: undefined })]),
+            [],
+        )
+        assert.notDeepEqual(
+            validateAirlines([owner, italia({ marks_types: [] })]),
+            [],
+        )
+        // The published copy knows which marks the other airline has
+        const withAssets = (a, assets) => ({ ...a, assets })
+        const color = { color: true, mono: true, dark: true, colors: [] }
+        assert.deepEqual(
+            validateAirlines(
+                [
+                    withAssets(owner, { icon: color, logo: color }),
+                    withAssets(italia({ marks_types: ['icon', 'tail'] }), {
+                        icon: color,
+                        logo: color,
+                    }),
+                ],
+                { published: true },
+            ),
+            [
+                'Cargolux Italia: marks_types takes tail from "cargolux", which has no tail.svg',
+            ],
+        )
+    })
+
     it('lets a brand share codes with its parent only', () => {
         const alaska = entry('Alaska Airlines', { iata: 'AS', icao: 'ASA' })
         const hawaiian = entry('Hawaiian Airlines', {
@@ -1250,8 +1305,11 @@ describe('airlines.json assets metadata', () => {
 
     it('ships the -dark.svg the metadata names, from the right file', () => {
         const repo = new URL('../assets/', import.meta.url)
-        for (const a of cjs.listAirlines().filter((a) => !a.marks)) {
+        const own = cjs.listAirlines().filter((a) => !a.marks || a.marks_types)
+        for (const a of own) {
             for (const [type, info] of Object.entries(a.assets)) {
+                // A type shared through marks_types ships the other airline's
+                if (a.marks_types?.includes(type)) continue
                 const file = (name) => new URL(`${a.slug}/${name}`, assetsDir)
                 const dark = file(`${type}-dark.svg`)
                 assert.equal(existsSync(dark), info.dark, `${a.slug} ${type}`)
@@ -1328,9 +1386,19 @@ describe('airlines.json assets metadata', () => {
     it('publishes shared marks under the borrowing airline, with its title', () => {
         const borrowers = cjs.listAirlines().filter((a) => a.marks)
         assert.ok(borrowers.length > 0)
+        assert.ok(borrowers.some((a) => a.marks_types))
         for (const a of borrowers) {
             const owner = cjs.getAirline(a.marks)
-            assert.deepEqual(a.assets, owner.assets, a.slug)
+            // All of its marks, or only those in marks_types beside its own
+            const shared = a.marks_types ?? Object.keys(owner.assets)
+            for (const type of shared) {
+                assert.deepEqual(a.assets[type], owner.assets[type], a.slug)
+            }
+            assert.equal(
+                Object.keys(a.assets).some((type) => !shared.includes(type)),
+                Boolean(a.marks_types),
+                a.slug,
+            )
             for (const type of Object.keys(a.assets)) {
                 const svg = readFileSync(
                     new URL(`${a.slug}/${type}.svg`, assetsDir),

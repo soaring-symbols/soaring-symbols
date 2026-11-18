@@ -184,6 +184,12 @@ export interface Airline {
      * files are still published under this airline's own slug.
      */
     readonly marks?: string
+    /**
+     * With `marks`, the only mark types that come from that airline (e.g.
+     * ["icon"] for a cargo brand with its own logo); the others are this
+     * airline's own. `assets` lists both.
+     */
+    readonly marks_types?: readonly AssetType[]
     /** IATA codes of its hub airports (e.g. ["HAN", "SGN"]). */
     readonly hubs?: readonly string[]
     /** Year founded, counting from the predecessor its history starts with. */

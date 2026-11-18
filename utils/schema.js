@@ -6,6 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
+    borrowedTypes,
     MIN_DARK_CONTRAST,
     aliasNames,
     aliasSlugs,
@@ -232,8 +233,9 @@ const findFlagCarrierProblems = (airlines) =>
         )
 
 // `parent`, `marks` and `successor` must name another airline in the
-// catalog, `marks` one with SVGs of its own (no chains), and following
-// `successor` must end at an airline without one (no loops)
+// catalog, `marks` one with SVGs of its own (no chains) and, in the published
+// copy, every type `marks_types` takes from it, and following `successor`
+// must end at an airline without one (no loops)
 const findBrokenReferences = (airlines) => {
     const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
@@ -265,6 +267,14 @@ const findBrokenReferences = (airlines) => {
                 return [
                     `${a.name}: marks "${slug}" uses the marks of "${target.marks}"; point at that airline instead`,
                 ]
+            }
+            if (field === 'marks' && target.assets) {
+                return (a.marks_types ?? [])
+                    .filter((type) => !target.assets[type])
+                    .map(
+                        (type) =>
+                            `${a.name}: marks_types takes ${type} from "${slug}", which has no ${type}.svg`,
+                    )
             }
             if (field === 'successor') return findLoop(a)
 
@@ -323,15 +333,16 @@ const findLoneStackedLogos = (airlines) =>
     )
 
 // branding.dark_color keeps a mark's color file on dark backgrounds: the
-// mark must have one, and an airline sharing another's marks (`marks`)
-// follows that airline's choice. Only the published copy has `assets` to
-// tell.
+// mark must have one, and a mark shared from another airline (`marks`, or
+// the types in `marks_types`) follows that airline's choice. Only the
+// published copy has `assets` to tell.
 const findDarkColorProblems = (entries) =>
     entries.flatMap((a) => {
         const types = a.branding?.dark_color ?? []
-        if (types.length && a.marks) {
+        const shared = types.filter((type) => borrowedTypes(a).includes(type))
+        if (shared.length) {
             return [
-                `${a.name}: shares the marks of "${a.marks}", so set branding.dark_color there`,
+                `${a.name}: shares its ${shared.join(' and ')} with "${a.marks}", so set branding.dark_color there`,
             ]
         }
 
