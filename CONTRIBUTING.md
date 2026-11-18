@@ -140,6 +140,7 @@ IATA and ICAO codes must be unique among active airlines, with three exceptions.
 | `former`                 |    No    | Names and codes it used before, oldest first, each with the year it stopped (see [Renames and mergers](#renames-and-mergers)).                                                                                                |
 | `flag_carrier`           |    No    | `true` or `false`: `true` makes it the flag carrier of its `country`.                                                                                                                                                         |
 | `flag_carrier_countries` |    No    | Only for a joint flag carrier: the codes of all its countries, its own `country` among them, e.g. `["DK", "NO", "SE"]` for Scandinavian Airlines. Needs `flag_carrier: true`.                                                 |
+| `cargo`                  |    No    | `true` for an airline that flies only freight, or a passenger airline's cargo brand (see [Cargo airlines](#cargo-airlines)).                                                                                                  |
 | `alliance`               |    No    | One of the alliances listed in the schema, e.g. "oneworld", "SkyTeam", "Star Alliance", when the airline is a member itself: an affiliate flying under its parent's membership has none.                                      |
 | `alliance_history`       |    No    | Alliances it was a member of before its current one, oldest first, each with the year it left (`until`) and, when known, joined (`since`), e.g. `[{ "alliance": "Star Alliance", "since": 1997, "until": 2024 }]`.            |
 | `parent`                 |    No    | Slug of the airline group this one is a subsidiary of, e.g. "airasia".                                                                                                                                                        |
@@ -207,6 +208,13 @@ A subsidiary needs SVGs only when its logo differs:
 - **Same logo as another airline:** add no `assets/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's own slug in the published package, so the repository keeps one copy.
 - **Its own logo:** add `assets/<slug>/` as for any airline, and leave out `marks`.
 - **A logo shared by sister airlines but not the parent:** put the SVGs in one of them, and point the others' `marks` at it. `marks` must name an airline with SVGs of its own.
+
+#### Cargo airlines
+
+Set `cargo: true` on an airline that flies only freight (Cargolux) and on a passenger airline's cargo brand; a passenger airline that also carries cargo in its holds has none. Otherwise a cargo airline is added like any other: a cargo subsidiary (Cargolux Italia, Lufthansa Cargo) takes `parent`, as above, and a cargo brand that flies under its parent's codes (Qatar Airways Cargo) takes them, as any brand may (see [JSON Data Updates](#3-json-data-updates)).
+
+- **A cargo brand needs a logo of its own:** add one only when the airline shows a cargo logo; freighters in the parent's livery need no entry. Such a brand usually has a `logo` and no `tail`, as its freighters wear the parent's.
+- **Brands without codes of their own** (DHL, Amazon Air), whose aircraft other airlines fly under their own codes, have no entry yet.
 
 #### Aliases
 

@@ -1125,6 +1125,12 @@ describe('renames and mergers (successor)', () => {
         }
     })
 
+    it('takes cargo only as true', () => {
+        const cargolux = (cargo) => entry('Cargolux', { cargo })
+        assert.deepEqual(validateAirlines([cargolux(true)]), [])
+        assert.notDeepEqual(validateAirlines([cargolux(false)]), [])
+    })
+
     it('publishes the slugs of former names', () => {
         const [serbia] = publishCatalog(
             [

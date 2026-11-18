@@ -7,8 +7,8 @@ This project aims to create a meticulously curated collection of airline logos, 
 
 ## Features
 
-- Airline logos, icons and tail designs as SVG, drawn to one set of rules ([CONTRIBUTING.md](CONTRIBUTING.md)), with a monochrome version in `currentColor` for every single-color mark and for many multi-color ones, and a version for dark backgrounds wherever one can be made.
-- A catalog of every airline with its IATA and ICAO codes, callsign, country, hubs, alliance, founding year and brand color, and a small JS API to look airlines up by code, slug or name ([API.md](API.md)).
+- Airline logos, icons and tail designs as SVG, drawn to one set of rules ([CONTRIBUTING.md](CONTRIBUTING.md)), with a stacked logo beside the horizontal one where the airline has its own, a monochrome version in `currentColor` for every single-color mark and for many multi-color ones, and a version for dark backgrounds wherever one can be made.
+- A catalog of every airline with its IATA and ICAO codes, callsign, country, hubs, alliance, founding year and brand color, the shorter names it goes by (SWISS, THAI) and whether it flies only cargo, and a small JS API to look airlines up by code, slug or name ([API.md](API.md)).
 - Earlier logos, by the year each came in, in `assets/<slug>/history/<year>/` ([Older marks](CONTRIBUTING.md#older-marks-logo-history)).
 - Renames and mergers: an old name or slug still finds the airline and its files, and a merged airline points to its `successor` ([Renames and mergers](CONTRIBUTING.md#renames-and-mergers)).
 - Alliance marks, starting with the oneworld, SkyTeam and Star Alliance icons, in `alliances/<slug>/` ([Alliance marks](CONTRIBUTING.md#alliance-marks)).
@@ -26,9 +26,9 @@ The site also serves a JSON and image API, with no key needed: [`/api/airlines/V
 This is the one roadmap for the collection and every integration around it, including those built in other repositories (the website's API, the Raycast extension, the Figma plugin). What already exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
-- [ ] Marks for dark backgrounds (`logo-dark.svg` and the like): the airline's own version where it changes part of the mark, the color mark where the airline keeps it, else the monochrome mark in white; then the website, Raycast and Figma showing them
+- [ ] Marks for dark backgrounds in the Raycast extension and the Figma plugin, as the website shows them
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without waiting for a manual release
-- [ ] Cargo airlines, such as FedEx Express, UPS Airlines, Cargolux and DHL Aviation, and the cargo brands of passenger airlines (Lufthansa Cargo, Qatar Airways Cargo), so cargo flights can show a mark too
+- [ ] More cargo airlines, such as FedEx Express and UPS Airlines, and the cargo brands of passenger airlines (Lufthansa Cargo, Qatar Airways Cargo), so cargo flights can show a mark too; then a cargo filter on the website's API and a cargo badge on the website, in Raycast and in Figma
 
 ### Not planned
 

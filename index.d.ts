@@ -164,6 +164,12 @@ export interface Airline {
      */
     readonly flag_carrier_countries?: readonly string[]
     /**
+     * `true` for an airline that flies only freight, or the cargo brand of a
+     * passenger airline (e.g. FedEx Express, Qatar Airways Cargo). A
+     * passenger airline that also carries cargo has none.
+     */
+    readonly cargo?: true
+    /**
      * The alliance it is a member of now, or was when it ceased, e.g.
      * "oneworld", "SkyTeam", "Star Alliance". An affiliate flying under
      * another member's membership has none.
