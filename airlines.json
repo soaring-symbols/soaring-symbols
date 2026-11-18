@@ -2850,6 +2850,27 @@
         }
     },
     {
+        "name": "Turkish Cargo",
+        "slug": "turkish-cargo",
+        "iata": "TK",
+        "icao": "THY",
+        "callsign": "TURKISH",
+        "country": "TR",
+        "cargo": true,
+        "website": "https://www.turkishcargo.com",
+        "parent": "turkish-airlines",
+        "marks": "turkish-airlines",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "IST"
+        ],
+        "branding": {
+            "primary_color": "#c90019"
+        }
+    },
+    {
         "name": "United Airlines",
         "slug": "united-airlines",
         "iata": "UA",
