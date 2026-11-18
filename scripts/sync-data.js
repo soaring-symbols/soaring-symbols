@@ -54,8 +54,9 @@ const IGNORE = {
     // Malaysia-Singapore Airlines split in two in 1972: neither carried on
     // the name alone
     'Malaysia Airlines': { former: ['Malayan Airways'] },
-    // Gulf Aviation is Gulf Air's former name: Oman, one of its owners, set
-    // up its own airline in 1970, as Oman Aviation Services from 1981
+    // Gulf Aviation is Gulf Air's former name. Oman Air grew out of Oman
+    // International Services, a ground handler set up in 1970, which flew as
+    // Oman Aviation Services from 1981; Oman co-owned Gulf Air until 2007
     'Oman Air': { founded: 1949, former: ['Gulf Aviation'] },
     'Peach Aviation': { former: ['A&F Aviation'] },
     'Singapore Airlines': { former: ['Malayan Airways'] },
