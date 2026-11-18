@@ -591,6 +591,33 @@ export function stripProlog(source) {
     return start > 0 ? source.slice(start) : source
 }
 
+// The file with the SVG namespace bound only as the default one: Inkscape
+// also binds it to a prefix (xmlns:svg="http://www.w3.org/2000/svg") and may
+// write elements with it (<svg:path>), which resvg can't read. Drops each
+// such binding and the prefix from the tags, adding xmlns when the root had
+// none.
+export function unprefixSvg(source) {
+    const binding =
+        /\sxmlns:([\w.-]+)=(["'])http:\/\/www\.w3\.org\/2000\/svg\2/g
+    const prefixes = [...source.matchAll(binding)].map(([, prefix]) =>
+        prefix.replaceAll('.', '\\.'),
+    )
+    if (!prefixes.length) return source
+
+    let content = source.replace(binding, '')
+    for (const prefix of prefixes) {
+        content = content.replace(new RegExp(`(</?)${prefix}:`, 'g'), '$1')
+    }
+    if (!/<svg\b[^>]*\sxmlns=/.test(content)) {
+        content = content.replace(
+            /<svg\b/,
+            '<svg xmlns="http://www.w3.org/2000/svg"',
+        )
+    }
+
+    return content
+}
+
 // The file with fill before d on every <path>
 export function orderPathAttrs(source) {
     return source.replace(

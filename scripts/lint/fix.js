@@ -7,7 +7,7 @@
 import { DOM_RULES, STRING_RULES } from './rules.js'
 import { ruleGeometry } from './rule-geometry.js'
 import { ruleOptimize } from './rule-optimize.js'
-import { isMonoFile } from './validators.js'
+import { isMonoFile, unprefixSvg } from './validators.js'
 
 // Fixes `source` and returns { content, fixed, issues, warnings, errorCount }:
 // `content` is the fixed SVG (the source itself when nothing changed),
@@ -28,7 +28,7 @@ import { isMonoFile } from './validators.js'
 //   none of its own (drawn in currentColor or default black); any other
 //   value is reported and the file left alone
 export function fixSvg(
-    source,
+    original,
     {
         parse,
         type = 'logo',
@@ -41,12 +41,14 @@ export function fixSvg(
         fillColor,
     },
 ) {
+    // Before anything parses it: resvg can't read prefixed SVG elements
+    const source = unprefixSvg(original)
     let document = parse(source)
     let svgElement = document.querySelector('svg')
 
     if (!svgElement) {
         return {
-            content: source,
+            content: original,
             fixed: false,
             issues: ['Invalid SVG: Missing <svg> element.'],
             warnings: [],
@@ -69,6 +71,11 @@ export function fixSvg(
         issues: [],
         // Reported only; never trigger a rewrite
         warnings: [],
+    }
+    if (source !== original) {
+        ctx.issues.push(
+            'Format: SVG namespace prefix (xmlns:svg, <svg:…>) removed.',
+        )
     }
 
     // Phase 0: SVGO, for the problems only it fixes; the rules lint its result
@@ -105,7 +112,7 @@ export function fixSvg(
 
     return {
         content,
-        fixed: content !== source,
+        fixed: content !== original,
         issues: ctx.issues,
         warnings: ctx.warnings,
         errorCount: ctx.issues.length,

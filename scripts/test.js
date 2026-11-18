@@ -2527,6 +2527,16 @@ describe('svg-fixer', () => {
             { type: 'icon', airlineName: 'Test Air' },
         ],
         [
+            'the SVG namespace bound to svg:, as Inkscape saves it',
+            `<svg ${NS} xmlns:svg="http://www.w3.org/2000/svg" role="img" viewBox="0 0 24 24" fill="#123456"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon' },
+        ],
+        [
+            'elements written with an svg: prefix',
+            `<svg:svg xmlns:svg="http://www.w3.org/2000/svg" role="img" viewBox="0 0 24 24" fill="#123456"><svg:title>Test Air</svg:title><svg:path d="M0 0h24v24H0z"/></svg:svg>`,
+            { type: 'icon' },
+        ],
+        [
             'a <style> and a transform',
             `<svg role="img" viewBox="0 0 64 64" ${NS}><title>Test Air</title><style>.a{fill:#123456}</style><g transform="translate(0 2)"><path class="a" d="M0 0h64v60H0z"/></g></svg>`,
             { type: 'logo' },
