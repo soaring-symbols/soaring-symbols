@@ -859,6 +859,24 @@
         }
     },
     {
+        "name": "Cargolux",
+        "slug": "cargolux",
+        "iata": "CV",
+        "icao": "CLX",
+        "callsign": "CARGOLUX",
+        "country": "LU",
+        "cargo": true,
+        "website": "https://www.cargolux.com",
+        "hubs": [
+            "LUX"
+        ],
+        "founded": 1970,
+        "branding": {
+            "primary_color": "#cc0033",
+            "tagline": "You name it, we fly it!"
+        }
+    },
+    {
         "name": "Cathay Pacific",
         "slug": "cathay-pacific",
         "iata": "CX",
