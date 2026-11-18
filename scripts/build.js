@@ -119,7 +119,10 @@ async function copyFiles() {
     // branding.dark_color keeps it (current marks only) or it has no mono
     // but reads on dark
     const sources = [
-        { entries: catalog.filter((a) => !a.marks), root: 'assets' },
+        {
+            entries: catalog.filter((a) => !a.marks || a.marks_types),
+            root: 'assets',
+        },
         { entries: alliances, root: ALLIANCES_DIR },
     ]
     for (const { entries, root } of sources) {
@@ -141,13 +144,21 @@ const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // Copy an airline's current files (never history/) from dist/assets/<from>/
-// to dist/assets/<to>/, titled with the airline's name
-async function copyCurrentMarks(from, to, name) {
+// to dist/assets/<to>/, titled with the airline's name: all of them, or with
+// `types` only those types' files (icon.svg, icon-mono.svg, icon-dark.svg)
+async function copyCurrentMarks(from, to, name, types) {
     const src = path.join(distDir, 'assets', from)
     const dest = path.join(distDir, 'assets', to)
     await fs.mkdir(dest, { recursive: true })
+    const ofTypes = (file) =>
+        !types ||
+        types.some((type) =>
+            [`${type}.svg`, `${type}-mono.svg`, `${type}-dark.svg`].includes(
+                file,
+            ),
+        )
     const files = (await fs.readdir(src, { withFileTypes: true }))
-        .filter((entry) => entry.isFile())
+        .filter((entry) => entry.isFile() && ofTypes(entry.name))
         .map((entry) => entry.name)
     for (const file of files) {
         const svg = await fs.readFile(path.join(src, file), 'utf-8')
@@ -161,13 +172,19 @@ async function copyCurrentMarks(from, to, name) {
     }
 }
 
-// Airlines with `marks` use another airline's SVGs. Copy those files to their
-// own slug in dist (never in the repo), titled with their own name, so every
+// Airlines with `marks` use another airline's SVGs: all of them, or only the
+// types in `marks_types` beside their own. Copy those files to their own
+// slug in dist (never in the repo), titled with their own name, so every
 // airline's files live at assets/<slug>/ like any other. Only the current
 // marks are shared, never the history/ folder.
 async function copySharedMarks(airlines) {
     for (const airline of airlines.filter((a) => a.marks)) {
-        await copyCurrentMarks(airline.marks, airline.slug, airline.name)
+        await copyCurrentMarks(
+            airline.marks,
+            airline.slug,
+            airline.name,
+            airline.marks_types,
+        )
     }
 }
 

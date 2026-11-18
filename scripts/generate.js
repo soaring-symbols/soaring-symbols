@@ -98,22 +98,35 @@ const checkDarks = (where, dirs, assetsDir, keepColor) => {
     }
 }
 
-for (const { name, slug, marks, branding } of airlines) {
-    // An airline with `marks` has no SVGs of its own: the build copies the
-    // files of the airline it names to its slug
-    if (marks && existsSync(`assets/${slug}`)) {
+for (const { name, slug, marks, marks_types, branding } of airlines) {
+    // An airline with `marks` alone has no SVGs of its own: the build copies
+    // the files of the airline it names to its slug. With `marks_types` it
+    // copies only those types, and the others are the airline's own.
+    if (marks && !marks_types && existsSync(`assets/${slug}`)) {
         console.error(
-            `❌ ${name} has both marks "${marks}" and its own assets/${slug}; keep one`,
+            `❌ ${name} has both marks "${marks}" and its own assets/${slug}; keep one, or list the types it takes from "${marks}" in marks_types`,
         )
         process.exit(1)
     }
-    if (!marks && !existsSync(`assets/${slug}`)) {
+    if ((!marks || marks_types) && !existsSync(`assets/${slug}`)) {
         console.error(
             `❌ ${name} has slug "${slug}" but no assets/${slug} folder; add it, or set marks`,
         )
         process.exit(1)
     }
-    if (marks) continue
+    if (marks && !marks_types) continue
+    // A type it takes from `marks` has no file of its own
+    const doubled = (marks_types ?? []).flatMap((type) =>
+        ['', '-mono', '-dark']
+            .map((suffix) => `${type}${suffix}.svg`)
+            .filter((file) => existsSync(`assets/${slug}/${file}`)),
+    )
+    if (doubled.length) {
+        console.error(
+            `❌ ${name} takes ${marks_types.join(', ')} from "${marks}" (marks_types) but has its own ${doubled.join(', ')}; remove them or the type`,
+        )
+        process.exit(1)
+    }
     const historyProblems = findHistoryProblems(slug)
     if (historyProblems.length) {
         console.error(`❌ ${name} has a malformed assets/${slug}/history:`)

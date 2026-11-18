@@ -156,7 +156,8 @@
                 "flag_carrier_countries": {
                     "required": ["flag_carrier"],
                     "properties": { "flag_carrier": { "const": true } }
-                }
+                },
+                "marks_types": { "required": ["marks"] }
             },
             "properties": {
                 "name": {
@@ -223,6 +224,13 @@
                 "marks": {
                     "description": "Slug of the airline whose SVGs this one uses, when it has none of its own: often the parent, or a sibling that shares a different logo. The build copies those files to this airline's slug.",
                     "$ref": "#/$defs/slug"
+                },
+                "marks_types": {
+                    "description": "Only these mark types come from the airline in `marks`, e.g. [\"icon\"] for a cargo brand drawn with its own logo and its parent's icon; the others are this airline's own, in its assets/<slug>/ folder. Without it, every mark comes from `marks`.",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "enum": ["icon", "logo", "logo-stacked", "tail"] }
                 },
                 "hubs": {
                     "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"]. Operating bases of low-cost carriers are not hubs.",

@@ -886,6 +886,10 @@
         "cargo": true,
         "website": "https://www.cargolux-italia.com",
         "parent": "cargolux",
+        "marks": "cargolux",
+        "marks_types": [
+            "icon"
+        ],
         "hubs": [
             "MXP"
         ],

@@ -8,6 +8,7 @@
 import sortBy from 'lodash.sortby'
 import {
     ALLIANCES_DIR,
+    assetTypes,
     getAirlineAssets,
     getAirlineHistory,
     toFullHex,
@@ -115,7 +116,21 @@ const publishedHistory = (entry, assetsDir) => {
 // `predecessors`
 // when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names, which the
-// build copies to its own slug, and no history.
+// build copies to its own slug, and no history; with `marks_types`, only
+// those types come from there, the others and any history from its own
+// folder.
+// An airline's own assets with the types in `types` taken from `shared`
+// instead, in the usual type order
+const sharedTypes = (own, shared, types) =>
+    Object.fromEntries(
+        assetTypes
+            .map((type) => [
+                type,
+                types.includes(type) ? shared[type] : own[type],
+            ])
+            .filter(([, info]) => info),
+    )
+
 const publishCatalog = (airlines, assetsDir = 'assets') => {
     const catalog = normalizeCatalog(airlines)
     const predecessorsOf = getPredecessors(catalog)
@@ -124,15 +139,27 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
     return catalog.map((airline) => {
         // Shared marks keep the colors their owner keeps on dark
         const owner = bySlug.get(airline.marks) ?? airline
-        const assets = getAirlineAssets(
+        const shared = getAirlineAssets(
             owner.slug,
             assetsDir,
             owner.branding?.dark_color,
         )
+        const assets = airline.marks_types
+            ? sharedTypes(
+                  getAirlineAssets(
+                      airline.slug,
+                      assetsDir,
+                      airline.branding?.dark_color,
+                  ),
+                  shared,
+                  airline.marks_types,
+              )
+            : shared
 
-        const history = airline.marks
-            ? []
-            : publishedHistory(airline, assetsDir)
+        const history =
+            airline.marks && !airline.marks_types
+                ? []
+                : publishedHistory(airline, assetsDir)
 
         const predecessors = predecessorsOf.get(airline.slug)
 
