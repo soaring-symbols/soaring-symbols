@@ -2290,6 +2290,27 @@
         }
     },
     {
+        "name": "Qatar Airways Cargo",
+        "slug": "qatar-airways-cargo",
+        "iata": "QR",
+        "icao": "QTR",
+        "callsign": "QATARI",
+        "country": "QA",
+        "cargo": true,
+        "website": "https://www.qrcargo.com",
+        "parent": "qatar-airways",
+        "marks": "qatar-airways",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "DOH"
+        ],
+        "branding": {
+            "primary_color": "#620e3e"
+        }
+    },
+    {
         "name": "Riyadh Air",
         "slug": "riyadh-air",
         "iata": "RX",
