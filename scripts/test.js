@@ -639,7 +639,7 @@ describe('airlines.json schema', () => {
                 published: true,
             }),
             [
-                `${borrower.name}: shares the marks of "${borrower.marks}", so set branding.dark_color there`,
+                `${borrower.name}: shares its icon with "${borrower.marks}", so set branding.dark_color there`,
             ],
         )
         // With marks_types, only the shared types follow the other airline
@@ -1394,14 +1394,11 @@ describe('airlines.json assets metadata', () => {
             for (const type of shared) {
                 assert.deepEqual(a.assets[type], owner.assets[type], a.slug)
             }
-            if (a.marks_types) {
-                assert.ok(
-                    Object.keys(a.assets).some((t) => !shared.includes(t)),
-                    `${a.slug} has marks of its own`,
-                )
-            } else {
-                assert.deepEqual(a.assets, owner.assets, a.slug)
-            }
+            assert.equal(
+                Object.keys(a.assets).some((type) => !shared.includes(type)),
+                Boolean(a.marks_types),
+                a.slug,
+            )
             for (const type of Object.keys(a.assets)) {
                 const svg = readFileSync(
                     new URL(`${a.slug}/${type}.svg`, assetsDir),

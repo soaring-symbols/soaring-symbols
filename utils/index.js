@@ -116,6 +116,15 @@ const ALLIANCE_TYPES = ['icon', 'logo']
 // Every folder of marks, for the tools that walk them all
 const MARK_DIRS = [ASSETS_DIR, ALLIANCES_DIR]
 
+// The mark types an airline takes from the airline in `marks`: every one, or
+// only those in `marks_types`; none without `marks`
+const borrowedTypes = (airline) =>
+    airline.marks ? (airline.marks_types ?? assetTypes) : []
+
+// Whether an airline keeps marks of its own in assets/<slug>/: every one
+// without `marks`, the types it doesn't borrow with `marks_types`
+const hasOwnMarks = (airline) => !airline.marks || Boolean(airline.marks_types)
+
 // <type>.svg, <type>-mono.svg or <type>-dark.svg for one of the types, and
 // the types as prose: "icon, logo or tail"
 const markFile = (types) =>
@@ -398,6 +407,9 @@ const findHistoryProblems = (
 }
 
 export {
+    borrowedTypes,
+    hasOwnMarks,
+    markFile,
     ALLIANCE_TYPES,
     ALLIANCES_DIR,
     ASSETS_DIR,

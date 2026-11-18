@@ -215,7 +215,7 @@ A subsidiary needs SVGs only when its logo differs:
 
 Set `cargo: true` on an airline that flies only freight (Cargolux) and on a passenger airline's cargo brand; a passenger airline that also carries cargo in its holds has none. Otherwise a cargo airline is added like any other: a cargo subsidiary (Cargolux Italia, Lufthansa Cargo) takes `parent`, as above, and a cargo brand that flies under its parent's codes (Qatar Airways Cargo) takes them, as any brand may (see [JSON Data Updates](#3-json-data-updates)).
 
-- **A cargo brand needs a logo of its own:** add one only when the airline shows a cargo logo; freighters in the parent's livery need no entry. Such a brand usually has its own `logo` and its parent's icon and tail, through `marks` and `marks_types`.
+- **A cargo brand needs a logo of its own:** add one only when the airline shows a cargo logo; freighters in the parent's livery need no entry. It usually takes its parent's icon and tail through `marks_types` (see [Subsidiaries and shared logos](#subsidiaries-and-shared-logos)).
 - **Brands without codes of their own** (DHL, Amazon Air), whose aircraft other airlines fly under their own codes, have no entry yet.
 
 #### Aliases

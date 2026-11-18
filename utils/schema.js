@@ -6,6 +6,7 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
+    borrowedTypes,
     MIN_DARK_CONTRAST,
     aliasNames,
     aliasSlugs,
@@ -338,12 +339,7 @@ const findLoneStackedLogos = (airlines) =>
 const findDarkColorProblems = (entries) =>
     entries.flatMap((a) => {
         const types = a.branding?.dark_color ?? []
-        if (types.length && a.marks && !a.marks_types) {
-            return [
-                `${a.name}: shares the marks of "${a.marks}", so set branding.dark_color there`,
-            ]
-        }
-        const shared = types.filter((type) => a.marks_types?.includes(type))
+        const shared = types.filter((type) => borrowedTypes(a).includes(type))
         if (shared.length) {
             return [
                 `${a.name}: shares its ${shared.join(' and ')} with "${a.marks}", so set branding.dark_color there`,

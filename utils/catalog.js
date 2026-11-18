@@ -9,7 +9,9 @@ import sortBy from 'lodash.sortby'
 import {
     ALLIANCES_DIR,
     assetTypes,
+    borrowedTypes,
     getAirlineAssets,
+    hasOwnMarks,
     getAirlineHistory,
     toFullHex,
     toSlug,
@@ -144,22 +146,18 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
             assetsDir,
             owner.branding?.dark_color,
         )
-        const assets = airline.marks_types
-            ? sharedTypes(
-                  getAirlineAssets(
-                      airline.slug,
-                      assetsDir,
-                      airline.branding?.dark_color,
-                  ),
-                  shared,
-                  airline.marks_types,
+        const own = hasOwnMarks(airline)
+            ? getAirlineAssets(
+                  airline.slug,
+                  assetsDir,
+                  airline.branding?.dark_color,
               )
-            : shared
+            : {}
+        const assets = sharedTypes(own, shared, borrowedTypes(airline))
 
-        const history =
-            airline.marks && !airline.marks_types
-                ? []
-                : publishedHistory(airline, assetsDir)
+        const history = hasOwnMarks(airline)
+            ? publishedHistory(airline, assetsDir)
+            : []
 
         const predecessors = predecessorsOf.get(airline.slug)
 

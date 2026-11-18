@@ -3,7 +3,11 @@ import path from 'path'
 import { build as esbuild } from 'esbuild'
 import {
     ALLIANCES_DIR,
+    assetTypes,
+    borrowedTypes,
     getAssetDirs,
+    hasOwnMarks,
+    markFile,
     writeDerivedDarks,
     writeDerivedMonos,
 } from '../utils/index.js'
@@ -120,7 +124,7 @@ async function copyFiles() {
     // but reads on dark
     const sources = [
         {
-            entries: catalog.filter((a) => !a.marks || a.marks_types),
+            entries: catalog.filter(hasOwnMarks),
             root: 'assets',
         },
         { entries: alliances, root: ALLIANCES_DIR },
@@ -144,21 +148,15 @@ const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // Copy an airline's current files (never history/) from dist/assets/<from>/
-// to dist/assets/<to>/, titled with the airline's name: all of them, or with
-// `types` only those types' files (icon.svg, icon-mono.svg, icon-dark.svg)
-async function copyCurrentMarks(from, to, name, types) {
+// to dist/assets/<to>/, titled with the airline's name: those of `types`
+// (icon.svg, icon-mono.svg, icon-dark.svg), by default every type's
+async function copyCurrentMarks(from, to, name, types = assetTypes) {
     const src = path.join(distDir, 'assets', from)
     const dest = path.join(distDir, 'assets', to)
     await fs.mkdir(dest, { recursive: true })
-    const ofTypes = (file) =>
-        !types ||
-        types.some((type) =>
-            [`${type}.svg`, `${type}-mono.svg`, `${type}-dark.svg`].includes(
-                file,
-            ),
-        )
+    const ofTypes = markFile(types)
     const files = (await fs.readdir(src, { withFileTypes: true }))
-        .filter((entry) => entry.isFile() && ofTypes(entry.name))
+        .filter((entry) => entry.isFile() && ofTypes.test(entry.name))
         .map((entry) => entry.name)
     for (const file of files) {
         const svg = await fs.readFile(path.join(src, file), 'utf-8')
@@ -183,7 +181,7 @@ async function copySharedMarks(airlines) {
             airline.marks,
             airline.slug,
             airline.name,
-            airline.marks_types,
+            borrowedTypes(airline),
         )
     }
 }
