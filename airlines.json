@@ -2947,6 +2947,23 @@
         }
     },
     {
+        "name": "Uzbekistan Airways",
+        "slug": "uzbekistan-airways",
+        "iata": "HY",
+        "icao": "UZB",
+        "callsign": "UZBEK",
+        "country": "UZ",
+        "flag_carrier": true,
+        "website": "https://www.uzairways.com",
+        "hubs": [
+            "TAS"
+        ],
+        "founded": 1992,
+        "branding": {
+            "primary_color": "#254a88"
+        }
+    },
+    {
         "name": "VietJet Air",
         "slug": "vietjet-air",
         "iata": "VJ",
