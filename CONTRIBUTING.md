@@ -93,6 +93,8 @@ assets/
 
 - **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Under 0.0005 off counts as exact (it reads as 32.000, not 31.999); a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
+- **No Trademark Symbols**: Leave out the ® and ™ an airline prints beside its logo. They are legal notices rather than part of the mark, can't be read at icon size, and pull the artwork off center, since the geometry checks measure them with the rest. Keep one only when the airline's brand guidelines make it part of the mark itself, and link them in the pull request. Remove it from every version of a mark (color, `-mono`, `-dark`, stacked) alike.
+
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
 
 - **No Styles**: Write every color and property as an attribute (`fill="#ff6600"`, `stop-color="#ff6600"`), not in a `style` attribute or a `<style>` element. `npm run optimize` and `node scripts/lint-svg.js --fix` both turn `style` attributes into attributes; `npm run optimize` also inlines `<style>` elements, and so does `--fix` when the result renders the same.
