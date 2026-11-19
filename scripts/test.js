@@ -2457,6 +2457,33 @@ describe('svg-validator', () => {
         }
     })
 
+    it('keeps the artwork on the center it sat on', () => {
+        // Three decimals leave each of these 0.0007-0.0014 off center
+        // (31.999 instead of 32); four keep them on it
+        for (const file of [
+            'aeromexico/logo.svg',
+            'korean-air/history/1984/logo.svg',
+            'shandong-airlines/logo-mono.svg',
+        ]) {
+            const source = readFileSync(
+                new URL(`../assets/${file}`, import.meta.url),
+                'utf8',
+            )
+            const result = optimizeSvg(source)
+            assert.ok(result.alike, file)
+            assert.ok(result.precision > 3, `${file}: ${result.precision}`)
+            const { x, y, width, height } = measureBBox(result.data)
+            for (const center of [x + width / 2, y + height / 2]) {
+                assert.ok(
+                    Math.abs(center - 32) < 0.0005,
+                    `${file}: center at ${center}`,
+                )
+            }
+            // Optimizing the result again changes nothing
+            assert.equal(optimizeSvg(result.data).data, result.data, file)
+        }
+    })
+
     it('keeps black in a multi-color svg, however it is written', () => {
         const svg = (black, extra = '') =>
             `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>X</title>${extra}<path fill="#ff0000" d="M0 0h10v10H0z"/><path ${black} d="M12 12h10v10H12z"/></svg>`
