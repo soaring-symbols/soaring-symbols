@@ -2176,18 +2176,27 @@ describe('svg-validator', () => {
                     .filter((c) => c.group === 'Geometry')
                     .map((c) => [c.label, c.pass ? 'pass' : c.level]),
             )
-        // Off by less than 0.01: exact
-        assert.deepEqual(grade({ x: 0.005, y: 2, width: 23.995, height: 20 }), {
+        // Off by less than 0.0005, reading as exact at three decimals
+        assert.deepEqual(
+            grade({ x: 0.0002, y: 2, width: 23.9996, height: 20 }),
+            {
+                'Fills viewBox': 'pass',
+                'Fits viewBox': 'pass',
+                Centered: 'pass',
+            },
+        )
+        // Off by 0.001 (12.001): a warning, not exact
+        assert.deepEqual(grade({ x: 0.002, y: 2, width: 24, height: 20 }), {
             'Fills viewBox': 'pass',
-            'Fits viewBox': 'pass',
-            Centered: 'pass',
+            'Fits viewBox': 'warning',
+            Centered: 'warning',
         })
-        // Within each tolerance but not exact
+        // Within each tolerance but not exact (0.003 past the right edge)
         assert.deepEqual(
             grade({ x: 0.027, y: 1.507, width: 23.976, height: 21.016 }),
             {
                 'Fills viewBox': 'warning',
-                'Fits viewBox': 'pass',
+                'Fits viewBox': 'warning',
                 Centered: 'warning',
             },
         )

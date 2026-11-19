@@ -30,8 +30,8 @@ export const precisionOf = (svg) =>
 // A measurement this close to the viewBox's reads as equal to it at three
 // decimals (64.000), as the validator page shows it
 const ON_VIEWBOX = 0.0005
-// What rule-geometry.js calls exact: an edge or center this close to the
-// viewBox's is meant to sit on it
+// An edge or center this close to the viewBox's is meant to sit on it, as
+// a near miss rule-geometry.js only warns about
 const EXACT = 0.01
 
 const viewBoxOf = (svg) =>
