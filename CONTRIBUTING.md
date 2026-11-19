@@ -91,7 +91,7 @@ assets/
   - **Logos** (`logo.svg` and `logo-stacked.svg`) should use a `viewBox` of `0 0 64 64`.
   - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
-- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Within 0.01 of a viewBox unit counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
+- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Under 0.0005 off counts as exact (it reads as 32.000, not 31.999); a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
 - **No Transforms or Scripts**: Don't leave `transform` attributes in the file; apply them to the path data instead (SVGO bakes most of them, and ungrouping in your editor often helps). `<script>` elements and `on*` event attributes are not allowed either. `npm run lint:svg` reports transforms and `<script>` elements.
 
@@ -112,7 +112,7 @@ assets/
 >
 > - **Preserve White Paths:** Please ensure that legitimate white paths within a logo are preserved and not removed or filled during optimization.
 > - **Visual Verification:** It's highly recommended to double-check the visual appearance of the logo/icon after optimization to ensure color accuracy and alignment within the `viewBox`.
-> - **`npm run optimize` is experimental:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges, but a shape can still shift slightly. It lists any bounding box value that changed (e.g. `y 28.253 → 28.254`); compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor, and revert any that is even slightly off.
+> - **`npm run optimize` is experimental:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges and center, but a shape can still shift slightly. It lists any bounding box value that changed (e.g. `y 28.253 → 28.254`); compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor, and revert any that is even slightly off.
 
 ### 3. JSON Data Updates
 

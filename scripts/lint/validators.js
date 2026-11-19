@@ -117,17 +117,18 @@ export function validateNoNestedGroups(svg) {
 // Check: geometry - fills viewBox, fits within it, and is centered.
 // Requires a pre-computed bbox (e.g. from getBBox() in the browser).
 // Returns an array of SvgValidation-shaped objects (1 or 3 items). Each check
-// has three outcomes: exact (within 0.01 of a viewBox unit) passes; off by
-// more but within its tolerance fails as a `warning`, which doesn't fail the
-// SVG but asks for a look; beyond the tolerance fails as an `error`.
+// has three outcomes: exact (under 0.0005 off, so it reads as exact at the
+// three decimals the details show: 32.000, never 31.999) passes; off by more
+// but within its tolerance fails as a `warning`, which doesn't fail the SVG
+// but asks for a look; beyond the tolerance fails as an `error`.
 export function validateGeometry(type, bbox) {
     if (!bbox) return []
 
-    const exact = 0.01
+    const exact = 0.0005
     const size = type === 'logo' ? 64 : 24
     const half = size / 2
     const row = (label, offset, tolerance, okDetail, offDetail) => {
-        if (offset <= exact)
+        if (offset < exact)
             return { label, pass: true, level: 'error', detail: okDetail }
 
         return {

@@ -4,8 +4,8 @@
 // default, keeps files smallest and is enough for most logos. Some shapes
 // move at three, either visibly (small circles drawn as arcs) or by the few
 // thousandths that rounding errors add up to, enough to take the artwork
-// off an edge of the viewBox it filled (63.999 instead of 64), so those get
-// four or five. Shared by `npm run optimize` and `lint-svg.js --fix`
+// off an edge of the viewBox it filled (63.999 instead of 64) or off the
+// center it sat on (12.001 instead of 12), so those get four or five. Shared by `npm run optimize` and `lint-svg.js --fix`
 // (rule-optimize.js); `npm run optimize:check` uses `optimizeAt` and
 // `precisionOf`.
 import { optimize } from 'svgo'
@@ -30,6 +30,32 @@ export const precisionOf = (svg) =>
 // A measurement this close to the viewBox's reads as equal to it at three
 // decimals (64.000), as the validator page shows it
 const ON_VIEWBOX = 0.0005
+// An edge or center this close to the viewBox's is meant to sit on it, as
+// a near miss rule-geometry.js only warns about
+const EXACT = 0.01
+
+const viewBoxOf = (svg) =>
+    (svg.match(/viewBox="([^"]+)"/)?.[1] ?? '')
+        .trim()
+        .split(/[\s,]+/)
+        .map(Number)
+
+// How far the artwork's edges ([left, top, right, bottom]) and center
+// ([x, y]) are from the viewBox's, or null when nothing renders
+const placementOf = (svg) => {
+    const box = measureBBox(svg)
+    if (!box) return null
+    const [x, y, width, height] = viewBoxOf(svg)
+
+    return [
+        box.x - x,
+        box.y - y,
+        box.x + box.width - (x + width),
+        box.y + box.height - (y + height),
+        box.x + box.width / 2 - (x + width / 2),
+        box.y + box.height / 2 - (y + height / 2),
+    ]
+}
 
 // What a file's geometry looks like, to compare before and after: which of
 // the artwork's edges ([left, top, right, bottom]) and sides (width, height)
@@ -39,10 +65,7 @@ const ON_VIEWBOX = 0.0005
 const geometryOf = (svg) => {
     const box = measureBBox(svg)
     if (!box) return ''
-    const [x, y, width, height] = (svg.match(/viewBox="([^"]+)"/)?.[1] ?? '')
-        .trim()
-        .split(/[\s,]+/)
-        .map(Number)
+    const [x, y, width, height] = viewBoxOf(svg)
     const measured = [
         box.x,
         box.y,
@@ -65,13 +88,30 @@ const geometryOf = (svg) => {
 // Returns { data, precision, alike }. `data` is the optimized markup,
 // `precision` the floatPrecision it was written with, and `alike` whether it
 // renders like `source` with the artwork on the same viewBox edges and the
-// same geometry checks passing.
+// same geometry checks passing. Of the results that are alike, the first
+// (fewest decimals) that keeps the artwork as exactly on the edges and
+// center it sat on as the source does wins; when none does, the one closest
+// to them.
 export function optimizeSvg(source, path) {
     const geometry = geometryOf(source)
     const keeps = (data) =>
         rendersAlike(source, data) && geometryOf(data) === geometry
     const run = (svg, precision) => optimizeAt(svg, precision, path)
 
+    // The edges and center the source sits on (within EXACT), and how far
+    // a result is from them: the source's own offset, plus what reads as
+    // equal at three decimals, is exact enough
+    const aimed = (placementOf(source) ?? []).map((d) => Math.abs(d) <= EXACT)
+    const missOf = (svg) =>
+        Math.max(
+            0,
+            ...(placementOf(svg) ?? [])
+                .filter((_, i) => aimed[i])
+                .map(Math.abs),
+        )
+    const tolerance = missOf(source) + ON_VIEWBOX
+
+    let closest
     let result
     for (const precision of PRECISIONS) {
         const data = run(source, precision)
@@ -81,14 +121,20 @@ export function optimizeSvg(source, path) {
         }
         // Rounding the result again at fewer decimals can keep the edges
         // where rounding the original couldn't, and is smaller
-        for (const lower of PRECISIONS.filter((p) => p < precision)) {
-            const again = run(data, lower)
-            if (again.length < data.length && keeps(again)) {
-                return { data: again, precision: lower, alike: true }
-            }
+        const candidates = PRECISIONS.filter((p) => p < precision)
+            .map((lower) => ({ data: run(data, lower), precision: lower }))
+            .filter((again) => again.data.length < data.length)
+            .concat({ data, precision })
+        for (const candidate of candidates) {
+            if (candidate.data !== data && !keeps(candidate.data)) continue
+            const miss = missOf(candidate.data)
+            if (miss <= tolerance) return { ...candidate, alike: true }
+            if (!closest || miss < closest.miss)
+                closest = { ...candidate, miss }
         }
-
-        return { data, precision, alike: true }
+    }
+    if (closest) {
+        return { data: closest.data, precision: closest.precision, alike: true }
     }
 
     return result

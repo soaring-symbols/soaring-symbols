@@ -2176,18 +2176,27 @@ describe('svg-validator', () => {
                     .filter((c) => c.group === 'Geometry')
                     .map((c) => [c.label, c.pass ? 'pass' : c.level]),
             )
-        // Off by less than 0.01: exact
-        assert.deepEqual(grade({ x: 0.005, y: 2, width: 23.995, height: 20 }), {
+        // Off by less than 0.0005, reading as exact at three decimals
+        assert.deepEqual(
+            grade({ x: 0.0002, y: 2, width: 23.9996, height: 20 }),
+            {
+                'Fills viewBox': 'pass',
+                'Fits viewBox': 'pass',
+                Centered: 'pass',
+            },
+        )
+        // Off by 0.001 (12.001): a warning, not exact
+        assert.deepEqual(grade({ x: 0.002, y: 2, width: 24, height: 20 }), {
             'Fills viewBox': 'pass',
-            'Fits viewBox': 'pass',
-            Centered: 'pass',
+            'Fits viewBox': 'warning',
+            Centered: 'warning',
         })
-        // Within each tolerance but not exact
+        // Within each tolerance but not exact (0.003 past the right edge)
         assert.deepEqual(
             grade({ x: 0.027, y: 1.507, width: 23.976, height: 21.016 }),
             {
                 'Fills viewBox': 'warning',
-                'Fits viewBox': 'pass',
+                'Fits viewBox': 'warning',
                 Centered: 'warning',
             },
         )
@@ -2452,6 +2461,33 @@ describe('svg-validator', () => {
                     `${file}: edge ${i} moved from ${before[i]} to ${edge}`,
                 )
             })
+            // Optimizing the result again changes nothing
+            assert.equal(optimizeSvg(result.data).data, result.data, file)
+        }
+    })
+
+    it('keeps the artwork on the center it sat on', () => {
+        // Three decimals leave each of these 0.0007-0.0014 off center
+        // (31.999 instead of 32); four keep them on it
+        for (const file of [
+            'aeromexico/logo.svg',
+            'korean-air/history/1984/logo.svg',
+            'shandong-airlines/logo-mono.svg',
+        ]) {
+            const source = readFileSync(
+                new URL(`../assets/${file}`, import.meta.url),
+                'utf8',
+            )
+            const result = optimizeSvg(source)
+            assert.ok(result.alike, file)
+            assert.ok(result.precision > 3, `${file}: ${result.precision}`)
+            const { x, y, width, height } = measureBBox(result.data)
+            for (const center of [x + width / 2, y + height / 2]) {
+                assert.ok(
+                    Math.abs(center - 32) < 0.0005,
+                    `${file}: center at ${center}`,
+                )
+            }
             // Optimizing the result again changes nothing
             assert.equal(optimizeSvg(result.data).data, result.data, file)
         }
