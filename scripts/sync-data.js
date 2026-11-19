@@ -50,6 +50,10 @@ const PAGE_TITLES = {
 // own: a company name, a description, or the ancestor of a split.
 const IGNORE = {
     Aeroméxico: { former: ['Aeronaves de México S.A. de C.V.'] },
+    // Its freighters stopped flying in 2012, but it still carries cargo in
+    // Air India's passenger aircraft under the name, so it isn't defunct;
+    // 1932 is when Air India itself began
+    'Air India Cargo': { founded: 1932, defunct: true, ceased: 2012 },
     'American Airlines': { former: ['a union of more than 80 airlines'] },
     // Malaysia-Singapore Airlines split in two in 1972: neither carried on
     // the name alone
