@@ -2074,6 +2074,34 @@
         }
     },
     {
+        "name": "Lufthansa Cargo",
+        "slug": "lufthansa-cargo",
+        "iata": "LH",
+        "icao": "GEC",
+        "callsign": "LUFTHANSA CARGO",
+        "former": [
+            {
+                "name": "German Cargo",
+                "until": 1993
+            }
+        ],
+        "country": "DE",
+        "cargo": true,
+        "website": "https://www.lufthansa-cargo.com",
+        "parent": "lufthansa",
+        "marks": "lufthansa",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "FRA"
+        ],
+        "founded": 1977,
+        "branding": {
+            "primary_color": "#05164d"
+        }
+    },
+    {
         "name": "Malaysia Airlines",
         "slug": "malaysia-airlines",
         "iata": "MH",
