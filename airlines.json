@@ -336,6 +336,27 @@
         }
     },
     {
+        "name": "Air India Cargo",
+        "slug": "air-india-cargo",
+        "iata": "AI",
+        "icao": "AIC",
+        "callsign": "AIRINDIA",
+        "country": "IN",
+        "cargo": true,
+        "website": "https://cargo.airindia.com",
+        "parent": "air-india",
+        "marks": "air-india",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "DEL"
+        ],
+        "branding": {
+            "primary_color": "#da0e29"
+        }
+    },
+    {
         "name": "Air Mauritius",
         "slug": "air-mauritius",
         "iata": "MK",
