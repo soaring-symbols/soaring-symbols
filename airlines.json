@@ -1159,7 +1159,25 @@
         ],
         "founded": 2003,
         "branding": {
-            "primary_color": "#bd8b13"
+            "primary_color": "#c4921b",
+            "guidelines": "https://strapi.wasmenia.com/uploads/Etihad_Airlines_Guideline_5a7d17b7d6.pdf"
+        }
+    },
+    {
+        "name": "Etihad Cargo",
+        "slug": "etihad-cargo",
+        "iata": "EY",
+        "icao": "ETD",
+        "callsign": "ETIHAD",
+        "country": "AE",
+        "cargo": true,
+        "website": "https://www.etihadcargo.com",
+        "parent": "etihad-airways",
+        "hubs": [
+            "AUH"
+        ],
+        "branding": {
+            "primary_color": "#c4921b"
         }
     },
     {
