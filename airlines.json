@@ -1618,6 +1618,11 @@
     {
         "name": "JetBlue Airways",
         "slug": "jetblue-airways",
+        "aliases": [
+            {
+                "name": "JetBlue"
+            }
+        ],
         "iata": "B6",
         "icao": "JBU",
         "callsign": "JETBLUE",
@@ -1626,7 +1631,7 @@
         "website": "https://www.jetblue.com",
         "founded": 1998,
         "branding": {
-            "primary_color": "#003876"
+            "primary_color": "#0000aa"
         }
     },
     {
