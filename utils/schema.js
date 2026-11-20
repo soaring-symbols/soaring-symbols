@@ -233,9 +233,12 @@ const findFlagCarrierProblems = (airlines) =>
         )
 
 // `parent`, `marks` and `successor` must name another airline in the
-// catalog, `marks` one with SVGs of its own (no chains) and, in the published
-// copy, every type `marks_types` takes from it, and following `successor`
-// must end at an airline without one (no loops)
+// catalog, `marks` one with SVGs of its own and, in the published copy,
+// every type `marks_types` takes from it, and following `successor` must end
+// at an airline without one (no loops). `marks` may name an airline that
+// itself takes some types with `marks_types` from one with its own SVGs (a
+// cargo brand with its own logo and another airline's icon, which its
+// sister airlines share whole), but no longer chain.
 const findBrokenReferences = (airlines) => {
     const bySlug = new Map(airlines.map((a) => [a.slug, a]))
 
@@ -263,7 +266,9 @@ const findBrokenReferences = (airlines) => {
             if (!target || target === a) {
                 return [`${a.name}: ${field} "${slug}" is not another airline`]
             }
-            if (field === 'marks' && target.marks) {
+            const sharesPart =
+                target.marks_types && !bySlug.get(target.marks)?.marks
+            if (field === 'marks' && target.marks && !sharesPart) {
                 return [
                     `${a.name}: marks "${slug}" uses the marks of "${target.marks}"; point at that airline instead`,
                 ]

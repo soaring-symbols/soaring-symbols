@@ -2048,6 +2048,85 @@
         }
     },
     {
+        "name": "LATAM Cargo Brasil",
+        "slug": "latam-cargo-brasil",
+        "iata": "M3",
+        "icao": "LTG",
+        "callsign": "TAMCARGO",
+        "former": [
+            {
+                "name": "Brasil Transair",
+                "until": 2001
+            },
+            {
+                "name": "ABSA Cargo Airline",
+                "until": 2012
+            },
+            {
+                "name": "TAM Cargo",
+                "until": 2016
+            }
+        ],
+        "country": "BR",
+        "cargo": true,
+        "website": "https://www.latamcargo.com",
+        "marks": "latam-cargo-chile",
+        "hubs": [
+            "VCP"
+        ],
+        "founded": 1995,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Cargo Chile",
+        "slug": "latam-cargo-chile",
+        "iata": "UC",
+        "icao": "LCO",
+        "callsign": "LAN CARGO",
+        "former": [
+            {
+                "name": "LAN Cargo",
+                "until": 2016
+            }
+        ],
+        "country": "CL",
+        "cargo": true,
+        "website": "https://www.latamcargo.com",
+        "marks": "latam-airlines-chile",
+        "marks_types": [
+            "icon"
+        ],
+        "hubs": [
+            "SCL",
+            "LIM",
+            "MIA"
+        ],
+        "founded": 1970,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
+        "name": "LATAM Cargo Colombia",
+        "slug": "latam-cargo-colombia",
+        "iata": "L7",
+        "icao": "LAE",
+        "callsign": "LANCO",
+        "country": "CO",
+        "cargo": true,
+        "website": "https://www.latamcargo.com",
+        "marks": "latam-cargo-chile",
+        "hubs": [
+            "BOG"
+        ],
+        "founded": 2009,
+        "branding": {
+            "primary_color": "#1b0088"
+        }
+    },
+    {
         "name": "Level",
         "slug": "level",
         "iata": "LL",

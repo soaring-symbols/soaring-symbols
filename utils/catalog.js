@@ -120,7 +120,8 @@ const publishedHistory = (entry, assetsDir) => {
 // `marks` reports the current files of the airline it names, which the
 // build copies to its own slug, and no history; with `marks_types`, only
 // those types come from there, the others and any history from its own
-// folder.
+// folder. The airline it names may itself take types from another
+// (`marks_types`), and those come through too.
 // An airline's own assets with the types in `types` taken from `shared`
 // instead, in the usual type order
 const sharedTypes = (own, shared, types) =>
@@ -138,14 +139,10 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
     const predecessorsOf = getPredecessors(catalog)
     const bySlug = new Map(catalog.map((a) => [a.slug, a]))
 
-    return catalog.map((airline) => {
-        // Shared marks keep the colors their owner keeps on dark
-        const owner = bySlug.get(airline.marks) ?? airline
-        const shared = getAirlineAssets(
-            owner.slug,
-            assetsDir,
-            owner.branding?.dark_color,
-        )
+    // An airline's assets: its own, with the types it borrows taken from
+    // the published assets of the airline in `marks`. Shared marks keep the
+    // colors their owner keeps on dark.
+    const assetsOf = (airline, depth = 0) => {
         const own = hasOwnMarks(airline)
             ? getAirlineAssets(
                   airline.slug,
@@ -153,7 +150,16 @@ const publishCatalog = (airlines, assetsDir = 'assets') => {
                   airline.branding?.dark_color,
               )
             : {}
-        const assets = sharedTypes(own, shared, borrowedTypes(airline))
+        const owner = bySlug.get(airline.marks)
+        // A chain longer than the catalog must loop; the schema reports it
+        const shared =
+            owner && depth < catalog.length ? assetsOf(owner, depth + 1) : {}
+
+        return sharedTypes(own, shared, borrowedTypes(airline))
+    }
+
+    return catalog.map((airline) => {
+        const assets = assetsOf(airline)
 
         const history = hasOwnMarks(airline)
             ? publishedHistory(airline, assetsDir)
