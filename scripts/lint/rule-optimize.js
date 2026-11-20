@@ -61,8 +61,11 @@ export function ruleOptimize(
     }
     // What moved at three decimals, as `npm run optimize` lists it
     const moved = bboxChanges(source, optimized)
+    const changed = moved.length
+        ? `; bounding box changed: ${moved.join(', ')}`
+        : ''
     issues.push(
-        `Format: Optimized with svgo.config.mjs for ${found.join(', ')} (compare it with the original before committing${moved.length ? `; bounding box changed: ${moved.join(', ')}` : ''}).`,
+        `Format: Optimized with svgo.config.mjs for ${found.join(', ')} (compare it with the original before committing${changed}).`,
     )
 
     return optimized

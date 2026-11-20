@@ -13,7 +13,7 @@ import {
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { fixSvg } from './lint/fix.js'
-import { MAX_SAVING, precisionArg, savingOf } from './lint/optimize.js'
+import { MAX_SAVING, precisionArgOrExit, savingOf } from './lint/optimize.js'
 
 // --- CONFIGURATION ---
 const DRY_RUN = !process.argv.includes('--fix')
@@ -22,16 +22,8 @@ const CHECK = process.argv.includes('--check')
 // Experimental: join neighbouring paths of the same color, in single- and
 // multi-color SVGs (see ruleOnePathPerColor)
 const MERGE_PATHS = process.argv.includes('--merge-paths')
-// --precision=4 (or 5): the fewest decimals SVGO may write when --fix
-// optimizes a file, for one that rounds 0.0005 off its edges or center at
-// three. Written with `=`, as an argument without `--` names a file.
-let PRECISION
-try {
-    PRECISION = precisionArg(process.argv)
-} catch (error) {
-    console.error(error.message)
-    process.exit(1)
-}
+// --precision=4 (or 5): the fewest decimals SVGO may write (precisionArg)
+const PRECISION = precisionArgOrExit(process.argv)
 // Experimental: lint only the SVGs listed, or with --changed those added or
 // changed since origin/main (or --base <ref>), so a pull request's own files
 // can be fixed without touching or reporting the others. `--base <ref>` alone
@@ -101,7 +93,7 @@ const lintSvgFile = (filePath) => {
     // leaves unoptimized gets a pointer to `npm run optimize`, which
     // optimizes clean files too. A warning: optimize:check is what fails CI.
     const content = result.fixed ? result.content : source
-    const saving = SCOPED ? savingOf(content, filePath) : 0
+    const saving = SCOPED && savingOf(content, filePath)
     const optimizeHint =
         saving > MAX_SAVING
             ? [
@@ -112,7 +104,7 @@ const lintSvgFile = (filePath) => {
     return {
         issues: [...result.issues, ...result.warnings, ...optimizeHint],
         errorCount: result.errorCount,
-        fixedContent: result.fixed ? result.content : null,
+        fixedContent: result.fixed ? content : null,
     }
 }
 

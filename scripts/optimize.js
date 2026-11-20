@@ -12,21 +12,14 @@ import { readFileSync, writeFileSync } from 'fs'
 import {
     bboxChanges,
     optimizeSvg,
-    precisionArg,
+    precisionArgOrExit,
     PRECISIONS,
 } from './lint/optimize.js'
 
 const args = process.argv.slice(2)
 const files = args.filter((arg) => arg.endsWith('.svg'))
-// --precision=4 or 5: the fewest decimals to write, for a file that rounds
-// 0.0005 off its edges or center at three
-let precision
-try {
-    precision = precisionArg(args)
-} catch (error) {
-    console.error(error.message)
-    process.exit(1)
-}
+// --precision=4 or 5: the fewest decimals to write (precisionArg)
+const fewest = precisionArgOrExit(args)
 
 if (!files.length) {
     console.log('Usage: npm run optimize -- [--precision=4] <files.svg...>')
@@ -39,12 +32,8 @@ console.log(
 
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
-    const {
-        data,
-        precision: written,
-        alike,
-    } = optimizeSvg(source, file, {
-        precision,
+    const { data, precision, alike } = optimizeSvg(source, file, {
+        precision: fewest,
     })
     if (!alike) {
         console.log(
@@ -56,7 +45,7 @@ for (const file of files) {
     writeFileSync(file, data)
     const saving = Math.round((1 - data.length / source.length) * 100)
     console.log(
-        `✅ ${file}: ${source.length} → ${data.length} bytes (-${saving}%), ${written} decimals`,
+        `✅ ${file}: ${source.length} → ${data.length} bytes (-${saving}%), ${precision} decimals`,
     )
     const moved = bboxChanges(source, data)
     if (moved.length)
