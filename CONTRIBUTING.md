@@ -91,7 +91,7 @@ assets/
   - **Logos** (`logo.svg` and `logo-stacked.svg`) should use a `viewBox` of `0 0 64 64`.
   - **Icons/Symbols** should use a `viewBox` of `0 0 24 24`.
 
-- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Under 0.0005 off counts as exact (it reads as 32.000, not 31.999); a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
+- **Geometry**: The artwork should fill the `viewBox` without padding: scale it so its larger side equals the `viewBox` size (64 for logos, 24 for icons and tails), keep it fully inside the `viewBox`, and center it on both axes. Up to 0.0005 off counts as exact; a small offset within the tolerance shows as a warning, a larger one as an error. `npm run lint:svg` and the [validator page](https://soaringsymbols.org/validate) check this.
 
 - **No Trademark Symbols**: Leave out the ® and ™ an airline prints beside its logo. They are legal notices rather than part of the mark, can't be read at icon size, and pull the artwork off center, since the geometry checks measure them with the rest. Keep one only when the airline's brand guidelines make it part of the mark itself, and link them in the pull request. Remove it from every version of a mark (color, `-mono`, `-dark`, stacked) alike.
 

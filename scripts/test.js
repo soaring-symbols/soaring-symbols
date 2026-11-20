@@ -2176,7 +2176,7 @@ describe('svg-validator', () => {
                     .filter((c) => c.group === 'Geometry')
                     .map((c) => [c.label, c.pass ? 'pass' : c.level]),
             )
-        // Off by less than 0.0005, reading as exact at three decimals
+        // Off by less than 0.0005: exact
         assert.deepEqual(
             grade({ x: 0.0002, y: 2, width: 23.9996, height: 20 }),
             {
@@ -2191,6 +2191,19 @@ describe('svg-validator', () => {
             'Fits viewBox': 'warning',
             Centered: 'warning',
         })
+        // Off by exactly 0.0005, as float32 boxes measure it on either side
+        // (TAROM's logo: 0.0005007 in resvg, 0.0004997 in Chrome): exact in
+        // both, so the CLI and the website agree
+        for (const height of [20.0010014, 20.0009994])
+            assert.equal(
+                grade({ x: 0, y: 2, width: 24, height }).Centered,
+                'pass',
+            )
+        // Just past it: a warning
+        assert.equal(
+            grade({ x: 0, y: 2, width: 24, height: 20.0012 }).Centered,
+            'warning',
+        )
         // Within each tolerance but not exact (0.003 past the right edge)
         assert.deepEqual(
             grade({ x: 0.027, y: 1.507, width: 23.976, height: 21.016 }),

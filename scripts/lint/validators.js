@@ -117,25 +117,29 @@ export function validateNoNestedGroups(svg) {
 // Check: geometry - fills viewBox, fits within it, and is centered.
 // Requires a pre-computed bbox (e.g. from getBBox() in the browser).
 // Returns an array of SvgValidation-shaped objects (1 or 3 items). Each check
-// has three outcomes: exact (under 0.0005 off, so it reads as exact at the
-// three decimals the details show: 32.000, never 31.999) passes; off by more
-// but within its tolerance fails as a `warning`, which doesn't fail the SVG
-// but asks for a look; beyond the tolerance fails as an `error`.
+// has three outcomes: exact (up to 0.0005 off, half the last of the three
+// decimals SVGs are written with) passes; off by more but within its
+// tolerance fails as a `warning`, which doesn't fail the SVG but asks for a
+// look; beyond the tolerance fails as an `error`.
 export function validateGeometry(type, bbox) {
     if (!bbox) return []
 
     const exact = 0.0005
     const size = type === 'logo' ? 64 : 24
     const half = size / 2
+    // Offsets are rounded to 1e-5 so the float32 boxes from resvg and
+    // getBBox() agree: an offset of exactly 0.0005 measures 0.0005007 in one
+    // and 0.0004997 in the other, and passed on the website but warned in
+    // the CLI. The details show the rounded offset too.
+    const snap = (n) => Math.round(n * 1e5) / 1e5
     const row = (label, offset, tolerance, okDetail, offDetail) => {
-        if (offset < exact)
+        if (offset <= exact)
             return { label, pass: true, level: 'error', detail: okDetail }
 
         return {
             label,
             pass: false,
-            // 1e-9 absorbs float error: 24 - 23.976 is 0.024000000000001
-            level: offset <= tolerance + 1e-9 ? 'warning' : 'error',
+            level: offset <= tolerance ? 'warning' : 'error',
             detail: offDetail,
         }
     }
@@ -146,7 +150,7 @@ export function validateGeometry(type, bbox) {
     const center = `center (${r(cx)}, ${r(cy)})`
 
     // The larger side should equal the viewBox size; up to 0.1% short passes
-    const short = size - Math.max(bbox.width, bbox.height)
+    const short = snap(size - Math.max(bbox.width, bbox.height))
     const fills = row(
         'Fills viewBox',
         Math.max(short, 0),
@@ -174,14 +178,16 @@ export function validateGeometry(type, bbox) {
     }
 
     // How far the artwork reaches past the viewBox's edges
-    const overflow = Math.max(
-        -bbox.x,
-        -bbox.y,
-        bbox.x + bbox.width - size,
-        bbox.y + bbox.height - size,
-        0,
+    const overflow = snap(
+        Math.max(
+            -bbox.x,
+            -bbox.y,
+            bbox.x + bbox.width - size,
+            bbox.y + bbox.height - size,
+            0,
+        ),
     )
-    const offCenter = Math.max(Math.abs(cx - half), Math.abs(cy - half))
+    const offCenter = snap(Math.max(Math.abs(cx - half), Math.abs(cy - half)))
 
     return [
         fills,
