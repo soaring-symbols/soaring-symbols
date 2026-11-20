@@ -1738,6 +1738,28 @@
         }
     },
     {
+        "name": "K-Mile Air",
+        "slug": "k-mile-air",
+        "aliases": [
+            {
+                "name": "K-Mile Asia"
+            }
+        ],
+        "iata": "8K",
+        "icao": "KMI",
+        "callsign": "KAY-MILE AIR",
+        "country": "TH",
+        "cargo": true,
+        "website": "https://k-mile.co.th",
+        "hubs": [
+            "BKK"
+        ],
+        "founded": 2004,
+        "branding": {
+            "primary_color": "#0053a1"
+        }
+    },
+    {
         "name": "Kenya Airways",
         "slug": "kenya-airways",
         "iata": "KQ",
