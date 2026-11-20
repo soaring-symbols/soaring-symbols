@@ -174,9 +174,17 @@ async function copyCurrentMarks(from, to, name, types = assetTypes) {
 // types in `marks_types` beside their own. Copy those files to their own
 // slug in dist (never in the repo), titled with their own name, so every
 // airline's files live at assets/<slug>/ like any other. Only the current
-// marks are shared, never the history/ folder.
+// marks are shared, never the history/ folder. They are copied from dist, so
+// an airline that borrows from one that itself borrows some types
+// (`marks_types`) is copied after it and gets those types too.
 async function copySharedMarks(airlines) {
-    for (const airline of airlines.filter((a) => a.marks)) {
+    const bySlug = new Map(airlines.map((a) => [a.slug, a]))
+    const sharing = airlines.filter((a) => a.marks)
+    const chained = (a) => Boolean(bySlug.get(a.marks)?.marks)
+    for (const airline of [
+        ...sharing.filter((a) => !chained(a)),
+        ...sharing.filter(chained),
+    ]) {
         await copyCurrentMarks(
             airline.marks,
             airline.slug,

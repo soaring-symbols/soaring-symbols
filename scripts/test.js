@@ -1195,6 +1195,39 @@ describe('renames and mergers (successor)', () => {
                 ...fields,
             })
         assert.deepEqual(validateAirlines([owner, italia()]), [])
+        // A sister airline may share all of an airline that takes only some
+        // types from another (LATAM Cargo Brasil, from LATAM Cargo Chile),
+        // but not of one that takes them all, and no longer chain
+        const sister = (marks, name = 'Cargolux Sister') =>
+            entry(name, { iata: 'C9', icao: 'ICX', marks })
+        assert.deepEqual(
+            validateAirlines([owner, italia(), sister('cargolux-italia')]),
+            [],
+        )
+        const whole = entry('Cargolux Italia', {
+            iata: 'C8',
+            icao: 'ICV',
+            marks: 'cargolux',
+        })
+        assert.match(
+            validateAirlines([owner, whole, sister('cargolux-italia')]).join(
+                '\n',
+            ),
+            /uses the marks of "cargolux"/,
+        )
+        assert.match(
+            validateAirlines([
+                owner,
+                italia(),
+                sister('cargolux-italia'),
+                entry('Cargolux Third', {
+                    iata: 'C7',
+                    icao: 'ICY',
+                    marks: 'cargolux-sister',
+                }),
+            ]).join('\n'),
+            /Cargolux Third: marks "cargolux-sister" uses the marks of "cargolux-italia"/,
+        )
         assert.notDeepEqual(
             validateAirlines([owner, italia({ marks: undefined })]),
             [],
