@@ -2282,8 +2282,23 @@
         "slug": "parata-air",
         "iata": "WE",
         "icao": "PTA",
+        "callsign": "PARATA AIR",
+        "former": [
+            {
+                "name": "Fly Yangyang",
+                "until": 2017
+            },
+            {
+                "name": "Fly Gangwon",
+                "iata": "4V",
+                "icao": "FGW",
+                "callsign": "GANGWON",
+                "until": 2024
+            }
+        ],
         "country": "KR",
         "website": "https://www.parataair.com",
+        "founded": 2016,
         "branding": {
             "primary_color": "#001ee6"
         }
