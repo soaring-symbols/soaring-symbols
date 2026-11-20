@@ -5,9 +5,9 @@
 // A file that changes even at the highest precision is left as it is and
 // reported.
 //
-// Experimental: the checks catch what resvg sees, not every slight shift, so
-// it prints any bounding box value (as the validator page shows it) that
-// changed, and each result needs a look before it is committed.
+// The checks catch what resvg sees, so it also prints any bounding box value
+// (as the validator page shows it) that changed, to compare each result with
+// the original before it is committed.
 import { readFileSync, writeFileSync } from 'fs'
 import { optimizeSvg, PRECISIONS } from './lint/optimize.js'
 import { measureBBox } from './lint/render.js'
@@ -34,7 +34,7 @@ if (!files.length) {
 }
 
 console.log(
-    '--- 🧪 EXPERIMENTAL: compare each result with the original (the bounding box changes listed below, the validator page, the rendering) before committing it, and revert any file that looks even slightly off. ---\n',
+    '--- 🔍 Compare each result with the original (the bounding box changes listed below, the validator page, the rendering) before committing it, and revert any file that looks even slightly off. ---\n',
 )
 
 for (const file of files) {

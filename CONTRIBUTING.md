@@ -114,7 +114,7 @@ assets/
 >
 > - **Preserve White Paths:** Keep legitimate white paths in a logo; don't let optimization remove or fill them.
 > - **Visual Verification:** Check the logo/icon visually after optimization for color accuracy and alignment within the `viewBox`.
-> - **`npm run optimize` is experimental:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges and center, but a shape can still shift slightly. It lists any bounding box value that changed (e.g. `y 28.253 → 28.254`); compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor, and revert any that is even slightly off.
+> - **Check what `npm run optimize` changed:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges and center, and lists any bounding box value that changed (e.g. `y 28.253 → 28.254`). Compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor before committing, and revert any that is even slightly off.
 
 ### 3. JSON Data Updates
 
