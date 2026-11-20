@@ -1,14 +1,14 @@
 /**
  * `logo` is the horizontal lockup, or the airline's only one; `logo-stacked`
  * the vertical one (the name under the mark), for airlines that have both.
- * New types may come in a minor release, as `logo-stacked` did: skip a type
+ * New types may come in any release, as `logo-stacked` did: skip a type
  * you don't know instead of failing.
  */
 export type AssetType = 'icon' | 'logo' | 'logo-stacked' | 'tail'
 
 /**
  * An alliance's name as airlines write it in `alliance`. New alliances may
- * come in a minor release: handle a name you don't know instead of failing.
+ * come in any release: handle a name you don't know instead of failing.
  */
 export type AllianceName =
     | 'oneworld'
