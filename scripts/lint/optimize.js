@@ -91,8 +91,11 @@ const geometryOf = (svg) => {
 // same geometry checks passing. Of the results that are alike, the first
 // (fewest decimals) that keeps the artwork as exactly on the edges and
 // center it sat on as the source does wins; when none does, the one closest
-// to them.
-export function optimizeSvg(source, path) {
+// to them. `precision` is the fewest decimals to try (3, the default, or 4
+// or 5): a result at three decimals can sit 0.0005 off where the source was
+// exact, which passes but four may avoid.
+export function optimizeSvg(source, path, { precision: fewest = 3 } = {}) {
+    const precisions = PRECISIONS.filter((p) => p >= fewest)
     const geometry = geometryOf(source)
     const keeps = (data) =>
         rendersAlike(source, data) && geometryOf(data) === geometry
@@ -113,7 +116,7 @@ export function optimizeSvg(source, path) {
 
     let closest
     let result
-    for (const precision of PRECISIONS) {
+    for (const precision of precisions) {
         const data = run(source, precision)
         if (!keeps(data)) {
             result = { data, precision, alike: false }
@@ -121,7 +124,8 @@ export function optimizeSvg(source, path) {
         }
         // Rounding the result again at fewer decimals can keep the edges
         // where rounding the original couldn't, and is smaller
-        const candidates = PRECISIONS.filter((p) => p < precision)
+        const candidates = precisions
+            .filter((p) => p < precision)
             .map((lower) => ({ data: run(data, lower), precision: lower }))
             .filter((again) => again.data.length < data.length)
             .concat({ data, precision })

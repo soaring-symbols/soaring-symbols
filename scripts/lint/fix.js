@@ -24,6 +24,8 @@ import { isMonoFile, unprefixSvg } from './validators.js'
 //   renamed to it (otherwise a title is only moved, never renamed)
 // - formerNames: names an older mark may keep as its title
 // - mergePaths: also join neighbouring paths of one color (experimental)
+// - precision: the fewest decimals SVGO may write (3, the default, 4 or 5),
+//   for a file that rounds 0.0005 off its edges or center at three
 // - fillColor: the hex color (#rrggbb) to draw a color file in when it has
 //   none of its own (drawn in currentColor or default black); any other
 //   value is reported and the file left alone
@@ -39,6 +41,7 @@ export function fixSvg(
         formerNames,
         mergePaths = false,
         fillColor,
+        precision,
     },
 ) {
     // Before anything parses it: resvg can't read prefixed SVG elements
@@ -67,6 +70,7 @@ export function fixSvg(
         isCatalogName,
         formerNames,
         mergePaths,
+        precision,
         fillColor: fillColor?.toLowerCase(),
         issues: [],
         // Reported only; never trigger a rewrite

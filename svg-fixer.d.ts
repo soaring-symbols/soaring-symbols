@@ -13,6 +13,8 @@ export interface SvgFixOptions {
     formerNames?: string[]
     /** Also join neighbouring paths of one color, as `lint-svg.js --fix --merge-paths` does. Experimental. */
     mergePaths?: boolean
+    /** The fewest decimals SVGO may write when the file needs optimizing: 3 (the default), 4 or 5, for a file that rounds 0.0005 off its edges or center at three, as `lint-svg.js --fix --precision=4`. */
+    precision?: 3 | 4 | 5
     /** A `#rrggbb` color to fill a color file that has none of its own (only `currentColor` or default black); without it, or with any other value, such a file is reported and left alone. Ignored when `mono`. */
     fillColor?: string
 }

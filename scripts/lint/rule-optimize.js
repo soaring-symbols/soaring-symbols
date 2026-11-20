@@ -30,7 +30,11 @@ const NEEDS_SVGO = [
 // linted as it is
 // and the rules report each problem. Returns the content the rules should
 // lint.
-export function ruleOptimize(source, svgElement, { issues, warnings }) {
+export function ruleOptimize(
+    source,
+    svgElement,
+    { issues, warnings, precision },
+) {
     const found = NEEDS_SVGO.filter(([, has]) => has(svgElement)).map(
         ([name]) => name,
     )
@@ -38,7 +42,7 @@ export function ruleOptimize(source, svgElement, { issues, warnings }) {
 
     let optimized
     try {
-        const result = optimizeSvg(source)
+        const result = optimizeSvg(source, undefined, { precision })
         optimized = result.data
         if (optimized === source) return source
         if (!result.alike) {

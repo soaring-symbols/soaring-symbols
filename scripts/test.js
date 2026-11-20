@@ -2625,7 +2625,34 @@ describe('svg-fixer', () => {
             `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="#000000" d="M0 0h24v24H0z"/></svg>`,
             { type: 'icon', fileName: 'icon-mono.svg' },
         ],
+        [
+            'long decimals, kept at four',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`,
+            { type: 'icon', precision: 4 },
+        ],
     ]
+
+    it('writes no fewer decimals than its precision', () => {
+        const source = BROKEN.at(-1)[1]
+        const decimals = (svg) =>
+            Math.max(...(svg.match(/\.\d+/g) ?? []).map((n) => n.length - 1))
+        for (const [precision, expected] of [
+            [undefined, 0],
+            [4, 4],
+            [5, 5],
+        ]) {
+            const [fromBrowser, fromCli] = both(source, {
+                type: 'icon',
+                precision,
+            })
+            assert.deepEqual(fromBrowser, fromCli)
+            assert.equal(
+                Math.max(decimals(fromBrowser.content), 0),
+                expected,
+                `precision ${precision}`,
+            )
+        }
+    })
 
     for (const [name, source, options] of BROKEN) {
         it(`fixes ${name} as lint-svg.js --fix does`, () => {

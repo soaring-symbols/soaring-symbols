@@ -21,6 +21,17 @@ const CHECK = process.argv.includes('--check')
 // Experimental: join neighbouring paths of the same color, in single- and
 // multi-color SVGs (see ruleOnePathPerColor)
 const MERGE_PATHS = process.argv.includes('--merge-paths')
+// --precision=4 (or 5): the fewest decimals SVGO may write when --fix
+// optimizes a file, for one that rounds 0.0005 off its edges or center at
+// three. Written with `=`, as an argument without `--` names a file.
+const PRECISION = Number(
+    process.argv.find((arg) => arg.startsWith('--precision='))?.split('=')[1] ??
+        3,
+)
+if (![3, 4, 5].includes(PRECISION)) {
+    console.error('--precision takes 3, 4 or 5, as --precision=4')
+    process.exit(1)
+}
 // Experimental: lint only the SVGs listed, or with --changed those added or
 // changed since origin/main (or --base <ref>), so a pull request's own files
 // can be fixed without touching or reporting the others. `--base <ref>` alone
@@ -81,6 +92,7 @@ const lintSvgFile = (filePath) => {
         // former name as its title
         formerNames: inHistory && airline ? formerNames(airline) : undefined,
         mergePaths: MERGE_PATHS,
+        precision: PRECISION,
     })
 
     return {
