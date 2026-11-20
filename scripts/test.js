@@ -45,7 +45,7 @@ import { EXCLUDE_FILES } from './lint/exclude.js'
 import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
 import { ruleOptimize } from './lint/rule-optimize.js'
-import { optimizeSvg } from './lint/optimize.js'
+import { bboxChanges, optimizeSvg, precisionArg } from './lint/optimize.js'
 import { measureBBox } from './lint/render.js'
 import {
     ruleNoNestedGroups,
@@ -2437,6 +2437,25 @@ describe('svg-validator', () => {
         const brussels = optimizeAsset('brussels-airlines/icon.svg')
         assert.ok(brussels.precision > 3, `${brussels.precision} decimals`)
         assert.ok(brussels.alike)
+    })
+
+    it('takes --precision and lists the bounding box values that moved', () => {
+        const source = `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#123456"><title>X</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`
+        assert.equal(precisionArg([]), 3)
+        assert.equal(precisionArg(['--fix', '--precision=4']), 4)
+        assert.throws(() => precisionArg(['--precision=7']), /--precision/)
+
+        // At three decimals the top edge rounds from 2.0006 to 2
+        const three = optimizeSvg(source)
+        assert.equal(three.precision, 3)
+        assert.deepEqual(bboxChanges(source, three.data), [
+            'y 2.001 → 2.000',
+            'height 19.999 → 20.000',
+        ])
+        // At four it stays where it was
+        const four = optimizeSvg(source, undefined, { precision: 4 })
+        assert.equal(four.precision, 4)
+        assert.deepEqual(bboxChanges(source, four.data), [])
     })
 
     it('keeps the artwork on the edges of the viewBox it filled', () => {

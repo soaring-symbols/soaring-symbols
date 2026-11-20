@@ -6,8 +6,7 @@
 // thousandths that rounding errors add up to, enough to take the artwork
 // off an edge of the viewBox it filled (63.999 instead of 64) or off the
 // center it sat on (12.001 instead of 12), so those get four or five. Shared by `npm run optimize` and `lint-svg.js --fix`
-// (rule-optimize.js); `npm run optimize:check` uses `optimizeAt` and
-// `precisionOf`.
+// (rule-optimize.js); `npm run optimize:check` uses `savingOf`.
 import { optimize } from 'svgo'
 import svgoConfig from '../../svgo.config.mjs'
 import { measureBBox, rendersAlike } from './render.js'
@@ -18,18 +17,82 @@ import { validateGeometry } from './validators.js'
 export const PRECISIONS = [3, 4, 5]
 
 // The project's SVGO config at one precision
-export const optimizeAt = (svg, precision, path) =>
+const optimizeAt = (svg, precision, path) =>
     optimize(svg, { ...svgoConfig, floatPrecision: precision, path }).data
 
 // The precision a file is written with: the most decimals any of its numbers
 // has, kept within PRECISIONS
-export const precisionOf = (svg) =>
+const precisionOf = (svg) =>
     PRECISIONS.findLast((p) => new RegExp(String.raw`\.\d{${p}}`).test(svg)) ??
     PRECISIONS[0]
+
+// The fewest decimals SVGO may write, from a script's `--precision=4`
+// argument (with `=`, as an argument without `--` names a file): three
+// when there is none. Throws on any other value; `precisionArgOrExit` is
+// the scripts' form, which prints that and exits.
+export function precisionArg(args) {
+    const arg = args.find((a) => a.startsWith('--precision='))
+    if (!arg) return PRECISIONS[0]
+    const precision = Number(arg.slice('--precision='.length))
+    if (!PRECISIONS.includes(precision))
+        throw new Error(
+            `--precision takes ${PRECISIONS.join(', ')}, as --precision=4`,
+        )
+
+    return precision
+}
+
+// `precisionArg` for `lint-svg.js --fix` and `npm run optimize`
+export function precisionArgOrExit(args) {
+    try {
+        return precisionArg(args)
+    } catch (error) {
+        console.error(error.message)
+        process.exit(1)
+    }
+}
+
+// Share of its size SVGO may still remove from an optimized file at its own
+// precision. SVGOMG's output stays under 7%; unoptimized exports lose 15-40%.
+export const MAX_SAVING = 0.1
+
+// How much smaller the project's SVGO config would still make an SVG at the
+// precision it is written with: over MAX_SAVING, it was never optimized
+// (`npm run optimize:check`, and `lint-svg.js` on the files it is given)
+export const savingOf = (svg, path) =>
+    1 - optimizeAt(svg, precisionOf(svg), path).length / svg.length
 
 // A measurement this close to the viewBox's reads as equal to it at three
 // decimals (64.000), as the validator page shows it
 const ON_VIEWBOX = 0.0005
+
+// x, y, width and height at three decimals, as the validator page shows them
+const shownBBox = (svg) => {
+    const box = measureBBox(svg)
+    if (!box) return {}
+    const show = (value) =>
+        (Math.abs(value) < ON_VIEWBOX ? 0 : value).toFixed(3)
+
+    return {
+        x: show(box.x),
+        y: show(box.y),
+        width: show(box.width),
+        height: show(box.height),
+    }
+}
+
+// The bounding box values that read differently at three decimals after
+// optimizing, as "y 28.253 → 28.254": what to compare with the original.
+// Shared by `npm run optimize` and `lint-svg.js --fix`.
+export function bboxChanges(before, after) {
+    const was = shownBBox(before)
+    const now = shownBBox(after)
+
+    return Object.keys(was)
+        .filter((key) => was[key] !== now[key])
+        .map((key) => `${key} ${was[key]} → ${now[key]}`)
+}
+
 // An edge or center this close to the viewBox's is meant to sit on it, as
 // a near miss rule-geometry.js only warns about
 const EXACT = 0.01

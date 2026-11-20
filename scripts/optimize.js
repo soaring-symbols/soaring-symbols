@@ -9,27 +9,20 @@
 // (as the validator page shows it) that changed, to compare each result with
 // the original before it is committed.
 import { readFileSync, writeFileSync } from 'fs'
-import { optimizeSvg, PRECISIONS } from './lint/optimize.js'
-import { measureBBox } from './lint/render.js'
+import {
+    bboxChanges,
+    optimizeSvg,
+    precisionArgOrExit,
+    PRECISIONS,
+} from './lint/optimize.js'
 
-// x, y, width and height at three decimals, as the validator page shows them
-const shownBBox = (svg) => {
-    const box = measureBBox(svg)
-    if (!box) return {}
-    const show = (value) => (Math.abs(value) < 0.0005 ? 0 : value).toFixed(3)
-
-    return {
-        x: show(box.x),
-        y: show(box.y),
-        width: show(box.width),
-        height: show(box.height),
-    }
-}
-
-const files = process.argv.slice(2).filter((arg) => arg.endsWith('.svg'))
+const args = process.argv.slice(2)
+const files = args.filter((arg) => arg.endsWith('.svg'))
+// --precision=4 or 5: the fewest decimals to write (precisionArg)
+const fewest = precisionArgOrExit(args)
 
 if (!files.length) {
-    console.log('Usage: npm run optimize -- <files.svg...>')
+    console.log('Usage: npm run optimize -- [--precision=4] <files.svg...>')
     process.exit(1)
 }
 
@@ -39,7 +32,9 @@ console.log(
 
 for (const file of files) {
     const source = readFileSync(file, 'utf8')
-    const { data, precision, alike } = optimizeSvg(source, file)
+    const { data, precision, alike } = optimizeSvg(source, file, {
+        precision: fewest,
+    })
     if (!alike) {
         console.log(
             `⚠️  ${file}: optimizing changes how it renders or moves the artwork even at ${PRECISIONS.at(-1)} decimals, so it was left as it is; fix it in your editor.`,
@@ -52,14 +47,7 @@ for (const file of files) {
     console.log(
         `✅ ${file}: ${source.length} → ${data.length} bytes (-${saving}%), ${precision} decimals`,
     )
-    const before = shownBBox(source)
-    const after = shownBBox(data)
-    const moved = Object.keys(before).filter(
-        (key) => before[key] !== after[key],
-    )
-    if (moved.length) {
-        console.log(
-            `   ↳ bounding box changed: ${moved.map((key) => `${key} ${before[key]} → ${after[key]}`).join(', ')}`,
-        )
-    }
+    const moved = bboxChanges(source, data)
+    if (moved.length)
+        console.log(`   ↳ bounding box changed: ${moved.join(', ')}`)
 }

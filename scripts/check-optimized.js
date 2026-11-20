@@ -17,7 +17,7 @@
 // the limit (#54). Exits with 1 when a file needs optimizing.
 import { readFileSync } from 'fs'
 import { selectSvgs } from './lint/changed.js'
-import { optimizeAt, precisionOf } from './lint/optimize.js'
+import { MAX_SAVING, savingOf } from './lint/optimize.js'
 
 const { files } = selectSvgs(process.argv.slice(2))
 
@@ -26,20 +26,14 @@ if (!files.length) {
     process.exit(0)
 }
 
-// Share of its size SVGO may still remove from an optimized file at its own
-// precision. SVGOMG's output stays under 7%; unoptimized exports lose 15-40%.
-const MAX_SAVING = 0.1
-
 // GitHub Actions turns ::error lines into annotations on the pull request
 const inCI = Boolean(process.env.GITHUB_ACTIONS)
 
 const unoptimized = files
-    .map((file) => {
-        const svg = readFileSync(file, 'utf8')
-        const optimized = optimizeAt(svg, precisionOf(svg), file)
-
-        return { file, saving: 1 - optimized.length / svg.length }
-    })
+    .map((file) => ({
+        file,
+        saving: savingOf(readFileSync(file, 'utf8'), file),
+    }))
     .filter(({ saving }) => saving > MAX_SAVING)
 
 for (const { file, saving } of unoptimized) {
