@@ -237,7 +237,7 @@
                     "items": { "$ref": "#/$defs/assetType" }
                 },
                 "hubs": {
-                    "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"]. Operating bases of low-cost carriers are not hubs.",
+                    "description": "IATA codes of the airline's hub airports, e.g. [\"HAN\", \"SGN\"].",
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
