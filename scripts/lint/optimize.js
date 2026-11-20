@@ -27,6 +27,57 @@ export const precisionOf = (svg) =>
     PRECISIONS.findLast((p) => new RegExp(String.raw`\.\d{${p}}`).test(svg)) ??
     PRECISIONS[0]
 
+// The fewest decimals SVGO may write, from a script's `--precision=4`
+// argument (with `=`, as an argument without `--` names a file): three
+// when there is none. Shared by `lint-svg.js --fix` and `npm run optimize`.
+export function precisionArg(args) {
+    const arg = args.find((a) => a.startsWith('--precision='))
+    if (!arg) return PRECISIONS[0]
+    const precision = Number(arg.slice('--precision='.length))
+    if (!PRECISIONS.includes(precision))
+        throw new Error(
+            `--precision takes ${PRECISIONS.join(', ')}, as --precision=4`,
+        )
+
+    return precision
+}
+
+// Share of its size SVGO may still remove from an optimized file at its own
+// precision. SVGOMG's output stays under 7%; unoptimized exports lose 15-40%.
+export const MAX_SAVING = 0.1
+
+// How much smaller the project's SVGO config would still make an SVG at the
+// precision it is written with: over MAX_SAVING, it was never optimized
+// (`npm run optimize:check`, and `lint-svg.js` on the files it is given)
+export const savingOf = (svg, path) =>
+    1 - optimizeAt(svg, precisionOf(svg), path).length / svg.length
+
+// x, y, width and height at three decimals, as the validator page shows them
+const shownBBox = (svg) => {
+    const box = measureBBox(svg)
+    if (!box) return {}
+    const show = (value) => (Math.abs(value) < 0.0005 ? 0 : value).toFixed(3)
+
+    return {
+        x: show(box.x),
+        y: show(box.y),
+        width: show(box.width),
+        height: show(box.height),
+    }
+}
+
+// The bounding box values that read differently at three decimals after
+// optimizing, as "y 28.253 → 28.254": what to compare with the original.
+// Shared by `npm run optimize` and `lint-svg.js --fix`.
+export function bboxChanges(before, after) {
+    const was = shownBBox(before)
+    const now = shownBBox(after)
+
+    return Object.keys(was)
+        .filter((key) => was[key] !== now[key])
+        .map((key) => `${key} ${was[key]} → ${now[key]}`)
+}
+
 // A measurement this close to the viewBox's reads as equal to it at three
 // decimals (64.000), as the validator page shows it
 const ON_VIEWBOX = 0.0005

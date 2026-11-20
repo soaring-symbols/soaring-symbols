@@ -13,6 +13,7 @@ import {
 import { selectSvgs } from './lint/changed.js'
 import { EXCLUDE_FILES } from './lint/exclude.js'
 import { fixSvg } from './lint/fix.js'
+import { MAX_SAVING, precisionArg, savingOf } from './lint/optimize.js'
 
 // --- CONFIGURATION ---
 const DRY_RUN = !process.argv.includes('--fix')
@@ -24,12 +25,11 @@ const MERGE_PATHS = process.argv.includes('--merge-paths')
 // --precision=4 (or 5): the fewest decimals SVGO may write when --fix
 // optimizes a file, for one that rounds 0.0005 off its edges or center at
 // three. Written with `=`, as an argument without `--` names a file.
-const PRECISION = Number(
-    process.argv.find((arg) => arg.startsWith('--precision='))?.split('=')[1] ??
-        3,
-)
-if (![3, 4, 5].includes(PRECISION)) {
-    console.error('--precision takes 3, 4 or 5, as --precision=4')
+let PRECISION
+try {
+    PRECISION = precisionArg(process.argv)
+} catch (error) {
+    console.error(error.message)
     process.exit(1)
 }
 // Experimental: lint only the SVGs listed, or with --changed those added or
@@ -82,7 +82,8 @@ const lintSvgFile = (filePath) => {
     const airline = catalogs[root]?.get(slug)
     const inHistory = folder === HISTORY_DIR
     const name = basename(filePath)
-    const result = fixSvg(readFileSync(filePath, 'utf8'), {
+    const source = readFileSync(filePath, 'utf8')
+    const result = fixSvg(source, {
         parse,
         fileName: filePath,
         type: ['icon', 'tail'].find((kind) => name.includes(kind)) ?? 'logo',
@@ -95,8 +96,21 @@ const lintSvgFile = (filePath) => {
         precision: PRECISION,
     })
 
+    // On the files it is given (as CI's optimize:check, only the changed
+    // ones: many older SVGs are still over the limit, #54), a file --fix
+    // leaves unoptimized gets a pointer to `npm run optimize`, which
+    // optimizes clean files too. A warning: optimize:check is what fails CI.
+    const content = result.fixed ? result.content : source
+    const saving = SCOPED ? savingOf(content, filePath) : 0
+    const optimizeHint =
+        saving > MAX_SAVING
+            ? [
+                  `Format: Not optimized: SVGO would still make it ${Math.round(saving * 100)}% smaller, which \`npm run optimize:check\` fails in CI. Run \`npm run optimize -- ${filePath}\`.`,
+              ]
+            : []
+
     return {
-        issues: [...result.issues, ...result.warnings],
+        issues: [...result.issues, ...result.warnings, ...optimizeHint],
         errorCount: result.errorCount,
         fixedContent: result.fixed ? result.content : null,
     }

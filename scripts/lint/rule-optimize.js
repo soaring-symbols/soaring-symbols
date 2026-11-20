@@ -1,4 +1,4 @@
-import { optimizeSvg, PRECISIONS } from './optimize.js'
+import { bboxChanges, optimizeSvg, PRECISIONS } from './optimize.js'
 import {
     validateHexColors,
     validateNoEditorData,
@@ -59,8 +59,10 @@ export function ruleOptimize(
 
         return source
     }
+    // What moved at three decimals, as `npm run optimize` lists it
+    const moved = bboxChanges(source, optimized)
     issues.push(
-        `Format: Optimized with svgo.config.mjs for ${found.join(', ')} (compare it with the original before committing).`,
+        `Format: Optimized with svgo.config.mjs for ${found.join(', ')} (compare it with the original before committing${moved.length ? `; bounding box changed: ${moved.join(', ')}` : ''}).`,
     )
 
     return optimized

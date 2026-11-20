@@ -79,6 +79,8 @@ assets/
   npm run optimize -- assets/vietnam-airlines/*.svg
   ```
 
+  If the checks pass at three decimals but the artwork sits 0.0005 off an edge or the center where your original was exact, the [validator page](https://soaringsymbols.org/validate) says so: optimize the original again with one more decimal, `npm run optimize -- --precision=4 <file>` (or `node scripts/lint-svg.js --fix --precision=4 <file>`).
+
   Online tools such as [SVGOMG](https://svgomg.net) work too, but SVGO's defaults drop `role="img"` and may write a color as a name (`red`); run `node scripts/lint-svg.js --fix` afterwards to add `role="img"` back and turn named colors into hex.
 
   `node scripts/lint-svg.js` checks that every SVG looks optimized, whichever tool produced it: no `width`/`height`, XML declaration, comments or design-tool data, at most five decimals in path data, and no leading zeros (`.5`, not `0.5`) or `-0`. When a file still has design-tool data, longer decimals or `-0`, color names or `rgb()`, a `<style>` element or a `transform`, `--fix` runs it through the project's config, as `npm run optimize` would, and keeps the result only if it renders the same; otherwise it reports what to fix by hand. SVGs a pull request adds or changes must also be optimized: CI fails one that the project's config would still make more than 10% smaller at the file's own precision (up to five decimals), which only happens to files never optimized (`npm run optimize:check` runs the check locally). A file kept at four decimals passes, though `npm run optimize` may write a smaller one at three.
@@ -114,7 +116,7 @@ assets/
 >
 > - **Preserve White Paths:** Keep legitimate white paths in a logo; don't let optimization remove or fill them.
 > - **Visual Verification:** Check the logo/icon visually after optimization for color accuracy and alignment within the `viewBox`.
-> - **Check what `npm run optimize` changed:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges and center, and lists any bounding box value that changed (e.g. `y 28.253 → 28.254`). Compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor before committing, and revert any that is even slightly off.
+> - **Check what `npm run optimize` changed:** it only keeps a result that resvg renders like the original with the artwork on the same viewBox edges and center, and lists any bounding box value that changed (e.g. `y 28.253 → 28.254`), as `node scripts/lint-svg.js --fix` does when it optimizes a file. Compare each file with the original on the [validator page](https://soaringsymbols.org/validate) or in your editor before committing, and revert any that is even slightly off.
 
 ### 3. JSON Data Updates
 
