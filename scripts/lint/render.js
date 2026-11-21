@@ -1,4 +1,5 @@
 import { Resvg } from '@resvg/resvg-js'
+import { withCubicPaths } from './cubic-path.js'
 
 // Size the SVGs are compared at, large enough that a hole or a lost shape
 // covers many pixels
@@ -20,9 +21,12 @@ const render = (svgString) =>
 
 // The artwork's bounding box in viewBox units ({ x, y, width, height }), as
 // the browser's getBBox() gives it (both leave strokes out); undefined for an
-// SVG that draws nothing. jsdom has no layout, so resvg measures it.
+// SVG that draws nothing. jsdom has no layout, so resvg measures it, with
+// quadratic curves written as cubics, which it measures right.
+// FIXME: drop withCubicPaths once resvg-js measures quadratics right
+// (https://github.com/thx/resvg-js/issues/282; see cubic-path.js).
 export function measureBBox(svgString) {
-    return new Resvg(svgString, { font: FONT }).getBBox()
+    return new Resvg(withCubicPaths(svgString), { font: FONT }).getBBox()
 }
 
 // Whether two SVGs render the same, apart from antialiasing along the edges
