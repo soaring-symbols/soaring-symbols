@@ -46,7 +46,8 @@ import { BROWSER_CHECKS, DOM_RULES, STRING_RULES } from './lint/rules.js'
 import { ruleFillPlacement } from './lint/rule-styling.js'
 import { ruleOptimize } from './lint/rule-optimize.js'
 import { bboxChanges, optimizeSvg, precisionArg } from './lint/optimize.js'
-import { measureBBox } from './lint/render.js'
+import { measureBBox, rendersAlike } from './lint/render.js'
+import { toCubicPath } from './lint/cubic-path.js'
 import {
     ruleNoNestedGroups,
     ruleOnePathPerColor,
@@ -2611,6 +2612,34 @@ describe('svg-validator', () => {
             })
             // Optimizing the result again changes nothing
             assert.equal(optimizeSvg(result.data).data, result.data, file)
+        }
+    })
+
+    it('measures quadratic curves as the browser does', () => {
+        // resvg puts this icon's right edge, a quadratic curve, at 24.0075;
+        // getBBox() and the same curve as a cubic put it at 24
+        const source = readFileSync(
+            new URL(
+                '../assets/aerolineas-argentinas/icon.svg',
+                import.meta.url,
+            ),
+            'utf8',
+        )
+        const { x, width } = measureBBox(source)
+        assert.ok(Math.abs(x + width - 24) < 0.0001, `right edge ${x + width}`)
+
+        // Written in cubics, every path draws the same shapes: a parse error
+        // would leave whole areas, not antialiased edges, apart
+        const svg = (d) =>
+            `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`
+        for (const d of [
+            'M2 12q5-10 10 0t10 0z',
+            'M2 2Q12 22 22 2T22 22H2z',
+            'm2 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9q-5 0-9-9z',
+            'M4 4a8 8 0 01.5.5q8 8 15 15V4z',
+        ]) {
+            assert.ok(rendersAlike(svg(d), svg(toCubicPath(d))), d)
+            assert.doesNotMatch(toCubicPath(d), /[QqTtSs]/, d)
         }
     })
 
