@@ -1972,11 +1972,11 @@ describe('release line links (release-line.js)', () => {
     it('moves line links but leaves exact releases alone', () => {
         assert.equal(releaseLine('0.5.2'), '0.5')
         const text =
-            'soaring-symbols@0.4/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.4'
-        assert.deepEqual(staleLines(text, '0.5'), ['0.4'])
+            'soaring-symbols@0.4/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.4, @soaring-symbols/drawio@0.3/dist/icons.xml, @soaring-symbols/drawio@0.4.1/dist/icons.xml'
+        assert.deepEqual(staleLines(text, '0.5'), ['0.4', '0.3'])
         assert.equal(
             setLine(text, '0.5'),
-            'soaring-symbols@0.5/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.5',
+            'soaring-symbols@0.5/dist/index.js, soaring-symbols@0.2.4/dist/x.svg, soaring-symbols@0.5, @soaring-symbols/drawio@0.5/dist/icons.xml, @soaring-symbols/drawio@0.4.1/dist/icons.xml',
         )
     })
 })

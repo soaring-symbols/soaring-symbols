@@ -9,8 +9,9 @@ import { readFileSync, writeFileSync } from 'fs'
 
 export const LINE_DOCS = ['README.md', 'API.md']
 
-// A line, not an exact release: @0.4 but not @0.4.1
-const LINE_LINK = /soaring-symbols@(\d+\.\d+)(?![.\d])/g
+// A line, not an exact release: @0.4 but not @0.4.1, of the package or of
+// the draw.io libraries (@soaring-symbols/drawio), which share its version
+const LINE_LINK = /(soaring-symbols(?:\/drawio)?)@(\d+\.\d+)(?![.\d])/g
 
 // The release line of a version: '0.5' for 0.5.2 (a 0.x minor release is a
 // new line)
@@ -20,14 +21,13 @@ export const releaseLine = (version) => version.split('.').slice(0, 2).join('.')
 export const staleLines = (text, line) => [
     ...new Set(
         [...text.matchAll(LINE_LINK)]
-            .map((match) => match[1])
+            .map((match) => match[2])
             .filter((found) => found !== line),
     ),
 ]
 
 // The text with every line link pointing at `line`
-export const setLine = (text, line) =>
-    text.replace(LINE_LINK, `soaring-symbols@${line}`)
+export const setLine = (text, line) => text.replace(LINE_LINK, `$1@${line}`)
 
 // Point the line links of LINE_DOCS at `line`; returns the files it changed
 export const updateLineDocs = (line) =>

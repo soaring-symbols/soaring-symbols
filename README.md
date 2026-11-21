@@ -26,7 +26,6 @@ The site also serves a JSON and image API, no key needed: [`/api/airlines/VN`](h
 The one roadmap for the collection and every integration around it, including those in other repositories (the website's API, the Raycast extension, the Figma plugin, the draw.io libraries). What exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
-- [ ] draw.io libraries of every mark, searchable by name and IATA or ICAO code, with mono versions that can be recolored: built in [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio), not yet published as `@soaring-symbols/drawio` on npm
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without a manual release
 - [ ] Tails on one shared fin shape, so they line up in a grid: each airline's livery placed on a common outline instead of the fin of the aircraft it was drawn from, with the outline as a template in the repository
 
@@ -59,8 +58,11 @@ bun add soaring-symbols
 | [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
 | [unpkg CDN](https://app.unpkg.com/soaring-symbols) <img src="https://cdn.simpleicons.org/unpkg/000/000000" alt="unpkg" align=left width=24 height=24 />                         | [unpkg](https://unpkg.com)           |
 | [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />  | [anhthang]                           |
+| [draw.io Libraries](https://github.com/soaring-symbols/drawio) <img src="https://cdn.simpleicons.org/diagramsdotnet/000/F08705" alt="draw.io" align=left width=24 height=24 />  | [anhthang]                           |
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). The [ecosystem page on the website](https://soaringsymbols.org/ecosystem#raycast) explains how to use each.
+
+The draw.io libraries (`@soaring-symbols/drawio`) hold every airline's icons, logos and tails, and the alliance marks, searchable by name or code in draw.io's shape search, with mono versions that can be recolored: [open them in app.diagrams.net](https://app.diagrams.net/?clibs=Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/icons.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/logos.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/tails.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/alliances.xml), or see [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio) for each library's link.
 
 ### CDN
 
