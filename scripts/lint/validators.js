@@ -638,9 +638,22 @@ export function validateAttributes(svg) {
 // `inheriting` the shapes of a multi-color SVG that are painted with the
 // root's fill, which has to move onto them.
 export function validateFillPlacement(svg, isMono = false) {
+    // A fill="var(--name)" the file gives no value draws nothing of its own
+    // (the browser ignores it, and --fix drops it: css-vars.js), so it
+    // counts as no fill
+    const sources = [...svg.querySelectorAll('style, [style]')]
+        .map((el) => el.getAttribute('style') ?? el.textContent)
+        .join(';')
+    const unset = (el) => {
+        const name = /^var\(\s*(--[\w-]+)\s*\)$/.exec(
+            el.getAttribute('fill').trim(),
+        )?.[1]
+
+        return !!name && !new RegExp(`${name}\\s*:`).test(sources)
+    }
     // The root counts: a single-color SVG keeps its fill there
-    const withFill = [svg, ...svg.querySelectorAll('[fill]')].filter((el) =>
-        el.hasAttribute('fill'),
+    const withFill = [svg, ...svg.querySelectorAll('[fill]')].filter(
+        (el) => el.hasAttribute('fill') && !unset(el),
     )
     const fills = withFill.map((el) => el.getAttribute('fill').trim())
     const result = (pass, detail, rest) => ({

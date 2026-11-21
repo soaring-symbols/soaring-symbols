@@ -7,6 +7,7 @@
 import { DOM_RULES, STRING_RULES } from './rules.js'
 import { ruleGeometry } from './rule-geometry.js'
 import { ruleOptimize } from './rule-optimize.js'
+import { resolveCssVars } from './css-vars.js'
 import { isMonoFile, unprefixSvg } from './validators.js'
 
 // Fixes `source` and returns { content, fixed, issues, warnings, errorCount }:
@@ -45,7 +46,7 @@ export function fixSvg(
     },
 ) {
     // Before anything parses it: resvg can't read prefixed SVG elements
-    const source = unprefixSvg(original)
+    let source = unprefixSvg(original)
     let document = parse(source)
     let svgElement = document.querySelector('svg')
 
@@ -81,6 +82,23 @@ export function fixSvg(
             'Format: SVG namespace prefix (xmlns:svg, <svg:…>) removed.',
         )
     }
+
+    // CSS custom properties (fill="var(--brand)"), before SVGO reads the
+    // paint: each becomes the value the file gives it, or goes (css-vars.js)
+    const vars = resolveCssVars(svgElement)
+    for (const { property, value, resolved, inherited } of vars) {
+        const what = `Style: ${property}="${value}"`
+        const none =
+            'has no value in the file (a CSS variable from the page it came from)'
+        ctx.issues.push(
+            resolved != null
+                ? `${what} written as "${resolved}", the value the file gives it.`
+                : inherited != null
+                  ? `${what} ${none}, so it draws in "${inherited}", which --fix wrote; give the shape its own hex color if that's wrong.`
+                  : `${what} ${none} and draws nothing of its own; removed. Give the shapes their hex color.`,
+        )
+    }
+    if (vars.length) source = svgElement.outerHTML
 
     // Phase 0: SVGO, for the problems only it fixes; the rules lint its result
     const optimized = ruleOptimize(source, svgElement, ctx)

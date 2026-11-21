@@ -2800,11 +2800,53 @@ describe('svg-fixer', () => {
             { type: 'icon' },
         ],
         [
+            'a fill from a CSS variable the file never defines, given its color',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="var(--color-icon-brand-green)" d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon', fileName: 'icon.svg', fillColor: '#00a651' },
+        ],
+        [
+            'CSS variables from a <style>, a style="" and a fallback',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} style="--red: #C30B12"><title>Test Air</title><style>:root{--blue:#0080be}.a{fill:var(--blue)}</style><path class="a" d="M0 0h8v24H0z"/><path fill="var(--red)" d="M8 0h8v24H8z"/><path fill="var(--green, #00a651)" d="M16 0h8v24h-8z"/></svg>`,
+            { type: 'icon' },
+        ],
+        [
+            'a CSS variable the file never defines, beside another color',
+            `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="var(--brand)" d="M0 0h12v24H0z"/><path fill="#ff0000" d="M12 0h12v24H12z"/></svg>`,
+            { type: 'icon' },
+        ],
+        [
             'long decimals, kept at four',
             `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`,
             { type: 'icon', precision: 4 },
         ],
     ]
+
+    it('writes CSS variables as the values they draw with', () => {
+        const fix = (index) => both(BROKEN[index][1], BROKEN[index][2])[0]
+        const at = (label) => BROKEN.findIndex(([name]) => name === label)
+        // Defined nowhere, alone: dropped, then filled with fillColor
+        const alone = fix(
+            at(
+                'a fill from a CSS variable the file never defines, given its color',
+            ),
+        )
+        assert.match(alone.content, /<svg [^>]*fill="#00a651"/)
+        assert.doesNotMatch(alone.content, /var\(/)
+        // From the file: a <style>, a style="" and a fallback
+        const defined = fix(
+            at('CSS variables from a <style>, a style="" and a fallback'),
+        )
+        for (const color of ['#0080be', '#c30b12', '#00a651']) {
+            assert.ok(defined.content.includes(color), color)
+        }
+        assert.doesNotMatch(defined.content, /var\(|--|style/)
+        // Defined nowhere, beside another color: drawn black, as before
+        const beside = fix(
+            at('a CSS variable the file never defines, beside another color'),
+        )
+        assert.match(beside.content, /fill="#000000"/)
+        assert.match(beside.content, /fill="#ff0000"/)
+    })
 
     it('writes no fewer decimals than its precision', () => {
         const source = BROKEN.at(-1)[1]
