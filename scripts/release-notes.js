@@ -27,10 +27,13 @@ const DATA_FILE =
 const SUBJECT =
     /^(?<type>\w+)(?:\((?<scope>[^)]*)\))?(?<bang>!)?: (?<summary>.+)$/
 
+// A pull request number in a subject, e.g. ` (#91)`
+const PR_REF = / \(#\d+\)/g
+
 const SECTIONS = [
     ['breaking', 'Breaking changes'],
-    ['airlines', 'Airlines'],
     ['features', 'Features'],
+    ['airlines', 'Airlines'],
     ['fixes', 'Fixes'],
 ]
 
@@ -50,8 +53,10 @@ export function groupCommits(commits) {
             files.length > 0 && files.every((file) => DATA_FILE.test(file))
 
         if (breaking) groups.breaking.push(entry)
+        // An airline's line drops its pull request: one that also brought a
+        // feature or a fix is linked there already, so it would show twice
         else if (dataOnly && ['feat', 'fix', 'chore'].includes(type))
-            groups.airlines.push(entry)
+            groups.airlines.push(entry.replace(PR_REF, ''))
         else if (type === 'feat') groups.features.push(entry)
         else if (type === 'fix' || type === 'perf') groups.fixes.push(entry)
     }

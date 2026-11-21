@@ -1991,7 +1991,7 @@ describe('release notes (release-notes.js)', () => {
     it('groups commits by type and leaves out the rest', () => {
         const groups = groupCommits([
             commit('feat!: replace getAssets with getAssetPath (#44)'),
-            commit('feat: add Juneyao Air (#20)', [
+            commit('feat: add Juneyao Air (#20) and its tail (#21)', [
                 'airlines.json',
                 'assets/juneyao-air/logo.svg',
             ]),
@@ -2017,9 +2017,9 @@ describe('release notes (release-notes.js)', () => {
                 'Drop the old field',
             ],
             airlines: [
-                'Add Juneyao Air (#20)',
+                'Add Juneyao Air and its tail',
                 'Drop the hubs',
-                'Sync airline data from wikipedia (#45)',
+                'Sync airline data from wikipedia',
             ],
             features: ['Add a no-strokes rule'],
             fixes: ['Keep black fills when optimizing'],
@@ -2035,6 +2035,22 @@ describe('release notes (release-notes.js)', () => {
             notes,
             `### Airlines\n\n- Add SpiceJet\n\n**Full Changelog**: <${REPO_URL}/compare/v0.3.0...v0.3.1>\n`,
         )
+    })
+
+    it('lists features before airlines, as the releases do', () => {
+        const notes = renderNotes(
+            groupCommits([
+                commit('fix: keep black fills'),
+                commit('feat: add SpiceJet', ['airlines.json']),
+                commit('feat(lint): add a no-strokes rule'),
+            ]),
+            { from: 'v0.3.0', version: '0.3.1' },
+        )
+        assert.deepEqual(notes.match(/^### .+$/gm), [
+            '### Features',
+            '### Airlines',
+            '### Fixes',
+        ])
     })
 
     it('says so when nothing user-facing changed', () => {
