@@ -855,10 +855,7 @@
         ],
         "founded": 1974,
         "branding": {
-            "primary_color": "#2e5c99",
-            "dark_color": [
-                "icon"
-            ]
+            "primary_color": "#2e5c99"
         }
     },
     {
