@@ -45,7 +45,6 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
     })
     const fill = validateFillPlacement(svg, mono)
     const strokes = validateNoStrokes(svg)
-    const attributes = validateAttributes(svg)
 
     return [
         row(
@@ -56,14 +55,8 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         row('Structure', 'Title first', validateTitleFirst(svg)),
         row('Structure', 'No embedded scripts', validateNoScripts(svg)),
         row('Structure', 'No transforms', validateNoTransforms(svg)),
-        // Only the attributes that change nothing can go
-        row(
-            'Structure',
-            'Known attributes',
-            attributes,
-            'error',
-            !attributes.unknown.length && !attributes.unknownElements.length,
-        ),
+        // The unknown ones go only where the SVG renders the same without
+        row('Structure', 'Known attributes', validateAttributes(svg)),
         row(
             'Structure',
             'No nested groups',

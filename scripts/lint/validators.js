@@ -546,7 +546,8 @@ export function validateFillRules(svg) {
 // class with no <style> to match it, an id nothing refers to, and
 // xmlns:xlink, as xlink:href, SVG 1.1's href, is renamed to href (`rename`).
 // <desc> is dead too (`deadElements`). `unknown` and `unknownElements` list
-// the rest, which may change the drawing, so the editor decides. Attributes
+// the rest, which may change the drawing: --fix removes each only when the
+// SVG renders the same without it. Attributes
 // and elements another check reports (style, transform, strokes, width and
 // height on the root, scripts, styles, editor data) are left to it.
 export function validateAttributes(svg) {
