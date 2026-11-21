@@ -2815,6 +2815,11 @@ describe('svg-fixer', () => {
             { type: 'icon' },
         ],
         [
+            'role="presentation", as a website marks a decorative image',
+            `<svg role="presentation" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 0h24v24H0z"/></svg>`,
+            { type: 'icon' },
+        ],
+        [
             'long decimals, kept at four',
             `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`,
             { type: 'icon', precision: 4 },
