@@ -26,7 +26,7 @@ The site also serves a JSON and image API, no key needed: [`/api/airlines/VN`](h
 The one roadmap for the collection and every integration around it, including those in other repositories (the website's API, the Raycast extension, the Figma plugin, the draw.io libraries). What exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
-- [ ] draw.io libraries of every mark, searchable by name and IATA or ICAO code, with mono versions that can be recolored: built in [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio), not yet published as `soaring-symbols-drawio` on npm
+- [ ] draw.io libraries of every mark, searchable by name and IATA or ICAO code, with mono versions that can be recolored: built in [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio), not yet published as `@soaring-symbols/drawio` on npm
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without a manual release
 - [ ] Tails on one shared fin shape, so they line up in a grid: each airline's livery placed on a common outline instead of the fin of the aircraft it was drawn from, with the outline as a template in the repository
 

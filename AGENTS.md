@@ -79,7 +79,7 @@ Patch releases go out weekly, by hand, in a week with something users see since 
 
 Pushing the tag (`git push --atomic origin main v<version>`, the maintainer's call) runs `.github/workflows/release.yml`: it publishes a GitHub release titled `v<version>` with only a compare link to the previous tag (never touching a release that already exists) and, in a job of its own, purges jsDelivr's cache of the files changed since the previous release (`scripts/purge-cdn.js`). Nothing is released automatically or on a schedule; that is not decided yet.
 
-Then release the draw.io libraries ([soaring-symbols/drawio](https://github.com/soaring-symbols/drawio)) from the version just published: `npm run release -- <version>` there publishes `soaring-symbols-drawio` under the same version. It is done by hand for now; whether this workflow should trigger it, or a schedule there, is not decided ("Releasing automatically" in its README).
+Then release the draw.io libraries ([soaring-symbols/drawio](https://github.com/soaring-symbols/drawio)) from the version just published: `npm run release -- <version>` there publishes `@soaring-symbols/drawio` under the same version. It is done by hand for now; whether this workflow should trigger it, or a schedule there, is not decided ("Releasing automatically" in its README).
 
 The release notes are written afterwards, when the maintainer asks. Start from the draft `node scripts/release-notes.js --to v<version>` prints (the commits since the previous tag, grouped into breaking changes, features, airlines and fixes) and rewrite it for readers of the package, the way the existing releases read:
 
