@@ -3,6 +3,7 @@ import {
     validateHexColors,
     validateFillPlacement,
     validateNoStrokes,
+    validateFillRules,
     validateNoStyles,
     orderPathAttrs,
     orderSvgAttrs,
@@ -72,6 +73,23 @@ export function ruleNoStrokes({ svgElement, issues }) {
             .join(';')
         if (style) el.setAttribute('style', style)
         else el.removeAttribute('style')
+    }
+}
+
+// RULE: fill-rule and clip-rule only where they change something
+//       (validateFillRules): a redundant one, or a clip-rule with no
+//       <clipPath> to apply to (a design tool's leftover), is removed.
+//       evenodd, which decides how a path's subpaths fill, stays.
+export function ruleFillRules({ svgElement, issues }) {
+    for (const { el, name, value, dead } of validateFillRules(svgElement)
+        .redundant) {
+        const tag = `<${el.tagName.toLowerCase()}>`
+        issues.push(
+            dead
+                ? `Style: ${name}="${value}" on ${tag} does nothing outside a <clipPath> and should be removed.`
+                : `Style: Redundant ${name}="${value}" on ${tag} should be removed.`,
+        )
+        el.removeAttribute(name)
     }
 }
 

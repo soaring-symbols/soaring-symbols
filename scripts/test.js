@@ -2170,6 +2170,40 @@ describe('svg-validator', () => {
         }
     })
 
+    it('reports only the fill and clip rules that change nothing', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const fillRules = (body, rootAttrs = '') =>
+            runSvgValidations(
+                parse(
+                    `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"${rootAttrs}><title>X</title>${body}</svg>`,
+                ),
+                'icon',
+            ).find((check) => check.label === 'Fill rules').pass
+        for (const body of [
+            '<path fill-rule="evenodd" d="M1 1"/>',
+            // Overrides its group's evenodd
+            '<g fill-rule="evenodd"><path fill-rule="nonzero" d="M1 1"/></g>',
+            // Inherited by the <clipPath>'s shapes
+            '<g clip-rule="evenodd"><clipPath id="c"><path d="M1 1"/></clipPath></g>',
+            '<clipPath id="c"><path clip-rule="evenodd" d="M1 1"/></clipPath>',
+        ]) {
+            assert.equal(fillRules(body), true, body)
+        }
+        for (const body of [
+            '<path fill-rule="nonzero" d="M1 1"/>',
+            '<path fill-rule="inherit" d="M1 1"/>',
+            '<g fill-rule="evenodd"><path fill-rule="evenodd" d="M1 1"/></g>',
+            '<path fill-rule="evenodd" clip-rule="evenodd" d="M1 1"/>',
+            '<clipPath id="c"><path clip-rule="nonzero" d="M1 1"/></clipPath>',
+        ]) {
+            assert.equal(fillRules(body), false, body)
+        }
+        assert.equal(
+            fillRules('<path d="M1 1"/>', ' clip-rule="evenodd"'),
+            false,
+        )
+    })
+
     // Every lint rule has a browser check and every browser check (geometry
     // aside, which the CLI doesn't check yet) a rule, at the same level
     it('has a browser check for every lint rule', async () => {
@@ -2676,6 +2710,11 @@ describe('svg-fixer', () => {
             'a -mono.svg with its own color',
             `<svg role="img" viewBox="0 0 24 24" ${NS}><title>Test Air</title><path fill="#000000" d="M0 0h24v24H0z"/></svg>`,
             { type: 'icon', fileName: 'icon-mono.svg' },
+        ],
+        [
+            'a redundant fill-rule and a clip-rule with no <clipPath>',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456" fill-rule="evenodd" clip-rule="evenodd"><title>Test Air</title><path fill-rule="evenodd" d="M0 0h24v24H0zm6 6v12h12V6z"/><path fill-rule="nonzero" d="M8 8h8v8H8z"/></svg>`,
+            { type: 'icon' },
         ],
         [
             'long decimals, kept at four',

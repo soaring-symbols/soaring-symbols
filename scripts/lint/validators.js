@@ -435,6 +435,52 @@ export function validateNoStrokes(svg) {
     }
 }
 
+// Check: fill-rule and clip-rule only where they change something. Both are
+// inherited and default to nonzero, so one that equals what the element
+// inherits anyway (nonzero under nothing, evenodd under an evenodd group) is
+// redundant, as is any value but evenodd or nonzero (inherit, or an invalid
+// one, which is ignored). An evenodd that decides how a path's subpaths
+// fill (the holes in an O) stays, as does a nonzero under an evenodd group.
+// clip-rule only applies to the shapes of a <clipPath>, so on an element
+// with no <clipPath> around or inside it, it does nothing. `redundant` lists
+// them all ({ el, name, value, dead }); removing them changes nothing drawn.
+export function validateFillRules(svg) {
+    const isClipPath = (el) => el.tagName.toLowerCase() === 'clippath'
+    const redundant = []
+    const walk = (el, inherited, inClip) => {
+        const clip = inClip || isClipPath(el)
+        const own = { ...inherited }
+        for (const name of ['fill-rule', 'clip-rule']) {
+            if (!el.hasAttribute(name)) continue
+            const value = el.getAttribute(name)
+            const keyword = value.trim().toLowerCase()
+            if (keyword === 'evenodd' || keyword === 'nonzero')
+                own[name] = keyword
+            const dead =
+                name === 'clip-rule' &&
+                !clip &&
+                ![...el.querySelectorAll('*')].some(isClipPath)
+            if (dead || own[name] === inherited[name])
+                redundant.push({ el, name, value, dead })
+        }
+        for (const child of el.children) walk(child, own, clip)
+    }
+    walk(svg, { 'fill-rule': 'nonzero', 'clip-rule': 'nonzero' }, false)
+
+    return {
+        pass: redundant.length === 0,
+        detail: redundant.length
+            ? redundant
+                  .map(
+                      ({ el, name, value }) =>
+                          `<${el.tagName.toLowerCase()}> ${name}="${value}"`,
+                  )
+                  .join(' · ')
+            : 'clean',
+        redundant,
+    }
+}
+
 // Check: a single-color SVG sets its fill once, on the root <svg>
 // (currentColor for a -mono file), and none of its children has one; a
 // multi-color SVG has no fill on the root. A gradient (url(#…)) counts as a
