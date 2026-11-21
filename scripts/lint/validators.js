@@ -14,6 +14,65 @@ const GRADIENT = /^url\(#[^)]+\)$/i
 // Paint keywords that are not colors to check or move
 const PAINT_KEYWORDS = /^(none|currentColor|transparent|inherit)$/i
 
+// The elements an SVG may hold and the attributes each may carry
+// (validateAttributes). Presentation attributes shared by shapes, groups,
+// <clipPath> and <mask>; `id` is allowed on any element something refers to.
+const PAINT_ATTRS = [
+    'fill',
+    'fill-rule',
+    'clip-rule',
+    'opacity',
+    'fill-opacity',
+    'clip-path',
+    'mask',
+]
+const GRADIENT_ATTRS = [
+    'gradientUnits',
+    'gradientTransform',
+    'spreadMethod',
+    'href',
+]
+const ALLOWED_ATTRS = {
+    svg: ['role', 'viewBox', 'xmlns', 'fill', 'fill-rule', 'clip-rule'],
+    title: [],
+    defs: [],
+    g: PAINT_ATTRS,
+    path: [...PAINT_ATTRS, 'd'],
+    circle: [...PAINT_ATTRS, 'cx', 'cy', 'r'],
+    ellipse: [...PAINT_ATTRS, 'cx', 'cy', 'rx', 'ry'],
+    rect: [...PAINT_ATTRS, 'x', 'y', 'width', 'height', 'rx', 'ry'],
+    line: [...PAINT_ATTRS, 'x1', 'y1', 'x2', 'y2'],
+    polygon: [...PAINT_ATTRS, 'points'],
+    polyline: [...PAINT_ATTRS, 'points'],
+    lineargradient: [...GRADIENT_ATTRS, 'x1', 'y1', 'x2', 'y2'],
+    radialgradient: [...GRADIENT_ATTRS, 'cx', 'cy', 'r', 'fx', 'fy', 'fr'],
+    stop: ['offset', 'stop-color', 'stop-opacity'],
+    clippath: [...PAINT_ATTRS, 'clipPathUnits'],
+    mask: [
+        ...PAINT_ATTRS,
+        'maskUnits',
+        'maskContentUnits',
+        'x',
+        'y',
+        'width',
+        'height',
+    ],
+}
+// Attributes that change nothing drawn here: editor and export leftovers,
+// and rendering hints for images and text, which the marks don't have.
+// shape-rendering only when it asks for the default antialiasing.
+const DEAD_ATTRS = [
+    'baseProfile',
+    'version',
+    'xml:space',
+    'enable-background',
+    'image-rendering',
+    'text-rendering',
+    'color-rendering',
+]
+// Elements another check reports (scripts, styles, editor data)
+const OWNED_ELEMENTS = /^(script|style|metadata)$|:/i
+
 // Whether a value is a color as the repo writes it (FULL_HEX)
 export function isFullHex(value) {
     return FULL_HEX.test(value ?? '')
@@ -478,6 +537,93 @@ export function validateFillRules(svg) {
                   .join(' · ')
             : 'clean',
         redundant,
+    }
+}
+
+// Check: only the elements and attributes a mark needs (ALLOWED_ATTRS).
+// `dead` lists the attributes that change nothing drawn, which can simply
+// go: DEAD_ATTRS, shape-rendering at its default antialiasing, data-*, a
+// class with no <style> to match it, an id nothing refers to, and
+// xmlns:xlink, as xlink:href, SVG 1.1's href, is renamed to href (`rename`).
+// <desc> is dead too (`deadElements`). `unknown` and `unknownElements` list
+// the rest, which may change the drawing: --fix removes each only when the
+// SVG renders the same without it. Attributes
+// and elements another check reports (style, transform, strokes, width and
+// height on the root, scripts, styles, editor data) are left to it.
+export function validateAttributes(svg) {
+    const all = [svg, ...svg.querySelectorAll('*')]
+    const hasStyle = all.some((el) => el.tagName.toLowerCase() === 'style')
+    const refs = new Set()
+    for (const el of all) {
+        for (const { value } of el.attributes) {
+            for (const [, id] of value.matchAll(/url\(\s*['"]?#([^)'"\s]+)/g))
+                refs.add(id)
+            if (value.startsWith('#')) refs.add(value.slice(1))
+        }
+    }
+    const isOwnedAttr = (el, name) =>
+        name === 'style' ||
+        name === 'transform' ||
+        /^stroke(-|$)/i.test(name) ||
+        (el === svg && (name === 'width' || name === 'height')) ||
+        (name === 'class' && hasStyle) ||
+        (/^xmlns:/.test(name) && name !== 'xmlns:xlink') ||
+        /^(inkscape|sodipodi|sketch|serif|i|x|graph|a):/.test(name)
+    const dead = []
+    const unknown = []
+    const deadElements = []
+    const unknownElements = []
+    const walk = (el) => {
+        const tag = el.tagName.toLowerCase()
+        if (OWNED_ELEMENTS.test(tag)) return
+        if (tag === 'desc') {
+            deadElements.push(el)
+
+            return
+        }
+        const allowed = ALLOWED_ATTRS[tag]
+        if (!allowed) {
+            unknownElements.push(el)
+
+            return
+        }
+        for (const { name, value } of [...el.attributes]) {
+            if (isOwnedAttr(el, name)) continue
+            if (name === 'id') {
+                if (!refs.has(value)) dead.push({ el, name, value })
+            } else if (name === 'xlink:href') {
+                dead.push({ el, name, value, rename: 'href' })
+            } else if (
+                name === 'xmlns:xlink' ||
+                DEAD_ATTRS.includes(name) ||
+                name.startsWith('data-') ||
+                name === 'class' ||
+                (name === 'shape-rendering' &&
+                    /^(auto|geometricPrecision)$/i.test(value.trim()))
+            ) {
+                dead.push({ el, name, value })
+            } else if (!allowed.includes(name)) {
+                unknown.push({ el, name, value })
+            }
+        }
+        for (const child of el.children) walk(child)
+    }
+    walk(svg)
+    const tagOf = (el) => `<${el.localName}>`
+    const problems = [
+        ...dead.map(({ el, name }) => `${tagOf(el)} ${name}`),
+        ...deadElements.map(tagOf),
+        ...unknown.map(({ el, name }) => `${tagOf(el)} ${name}`),
+        ...unknownElements.map(tagOf),
+    ]
+
+    return {
+        pass: problems.length === 0,
+        detail: problems.length ? problems.join(' · ') : 'clean',
+        dead,
+        deadElements,
+        unknown,
+        unknownElements,
     }
 }
 

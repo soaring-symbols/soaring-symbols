@@ -15,6 +15,7 @@ import {
     validateFillPlacement,
     validateNoStrokes,
     validateFillRules,
+    validateAttributes,
     validateNoStyles,
     validateGeometry,
 } from './scripts/lint/validators.js'
@@ -54,6 +55,8 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         row('Structure', 'Title first', validateTitleFirst(svg)),
         row('Structure', 'No embedded scripts', validateNoScripts(svg)),
         row('Structure', 'No transforms', validateNoTransforms(svg)),
+        // The unknown ones go only where the SVG renders the same without
+        row('Structure', 'Known attributes', validateAttributes(svg)),
         row(
             'Structure',
             'No nested groups',

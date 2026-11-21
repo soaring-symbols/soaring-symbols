@@ -3,8 +3,10 @@ import {
     validateNoTransforms,
     validateNoNestedGroups,
     validateOnePathPerColor,
+    validateAttributes,
 } from './validators.js'
 import { applyIfAlike, flattenGroups, mergePaths } from './fix-structure.js'
+import { rendersAlike } from './render.js'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
@@ -135,4 +137,65 @@ export function ruleOnePathPerColor({
             ? `Structure: Single-color SVG should use one <path>, found ${count} shapes${hint}.`
             : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>${hint}.`,
     )
+}
+
+// RULE: only the elements and attributes a mark needs (validateAttributes).
+//       Those that change nothing drawn are removed: editor and export
+//       leftovers (data-*, baseProfile, xml:space, a class with no <style>,
+//       an id nothing refers to, <desc>) and rendering hints; xlink:href
+//       becomes href and xmlns:xlink goes. Any other attribute or element is
+//       removed too when the SVG renders the same without it, one at a time;
+//       one that changes the drawing stays, for the editor to decide.
+export function ruleAttributes({ svgElement, issues }) {
+    const { dead, deadElements, unknown, unknownElements } =
+        validateAttributes(svgElement)
+    const tag = (el) => `<${el.localName}>`
+    for (const { el, name, value, rename } of dead) {
+        if (rename) {
+            issues.push(
+                `Structure: ${name} on ${tag(el)} should be written ${rename}.`,
+            )
+            el.setAttribute(rename, value)
+        } else {
+            issues.push(
+                `Structure: ${name}="${value}" on ${tag(el)} changes nothing and should be removed.`,
+            )
+        }
+        el.removeAttribute(name)
+    }
+    for (const el of deadElements) {
+        issues.push(`Structure: ${tag(el)} should be removed.`)
+        el.remove()
+    }
+    // Applies `change` to the element's copy in a copy of the SVG, and to
+    // the element itself when the copy renders the same
+    const removeIfAlike = (el, change) => {
+        const copy = svgElement.cloneNode(true)
+        const index = [svgElement, ...svgElement.querySelectorAll('*')].indexOf(
+            el,
+        )
+        change([copy, ...copy.querySelectorAll('*')][index])
+        if (!rendersAlike(svgElement.outerHTML, copy.outerHTML)) return false
+        change(el)
+
+        return true
+    }
+    for (const { el, name, value } of unknown) {
+        const removed = removeIfAlike(el, (target) =>
+            target.removeAttribute(name),
+        )
+        issues.push(
+            removed
+                ? `Structure: Unexpected ${name}="${value}" on ${tag(el)} changes nothing and should be removed.`
+                : `Structure: Unexpected ${name}="${value}" on ${tag(el)} changes the rendering, so --fix left it: redraw it without.`,
+        )
+    }
+    for (const el of unknownElements) {
+        const removed = removeIfAlike(el, (target) => target.remove())
+        issues.push(
+            removed
+                ? `Structure: Unexpected element ${tag(el)} draws nothing and should be removed.`
+                : `Structure: Unexpected element ${tag(el)} changes the rendering, so --fix left it: draw it as a <path>.`,
+        )
+    }
 }

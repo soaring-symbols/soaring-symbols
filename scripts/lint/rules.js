@@ -10,6 +10,7 @@ import {
     ruleNoTransforms,
     ruleOnePathPerColor,
     ruleNoNestedGroups,
+    ruleAttributes,
 } from './rule-structure.js'
 import { ruleNoScripts } from './rule-security.js'
 import {
@@ -44,6 +45,7 @@ export const DOM_RULES = [
     ruleFillPlacement,
     ruleNoStrokes,
     ruleFillRules,
+    ruleAttributes,
     ruleNoDimensions,
     ruleNoEditorData,
     ruleNumberFormat,
@@ -68,6 +70,7 @@ export const BROWSER_CHECKS = new Map([
     [ruleFillPlacement, { labels: ['Fill placement'] }],
     [ruleNoStrokes, { labels: ['No strokes'] }],
     [ruleFillRules, { labels: ['Fill rules'] }],
+    [ruleAttributes, { labels: ['Known attributes'] }],
     [ruleNoDimensions, { labels: ['No width or height'] }],
     [ruleNoEditorData, { labels: ['No editor data'] }],
     [ruleNumberFormat, { labels: ['Number format'] }],

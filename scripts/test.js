@@ -2204,6 +2204,55 @@ describe('svg-validator', () => {
         )
     })
 
+    it('allows only the attributes and elements a mark needs', async () => {
+        const { runSvgValidations } = await import('../dist/svg-validator.js')
+        const XLINK = ' xmlns:xlink="http://www.w3.org/1999/xlink"'
+        const known = (body, rootAttrs = '') => {
+            const xlink = body.includes('xlink:') ? XLINK : ''
+            const check = runSvgValidations(
+                parse(
+                    `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"${xlink}${rootAttrs}><title>X</title>${body}</svg>`,
+                ),
+                'icon',
+            ).find((c) => c.label === 'Known attributes')
+
+            return check.pass ? 'pass' : check.fixable ? 'fixable' : 'error'
+        }
+        for (const body of [
+            '<path fill="#ff0000" fill-rule="evenodd" opacity=".25" d="M1 1"/>',
+            '<defs><linearGradient id="a" x1="0" x2="1" gradientTransform="scale(2)"><stop offset="0" stop-color="#ff0000"/></linearGradient></defs><path fill="url(#a)" d="M1 1"/>',
+            '<defs><linearGradient id="a"/><linearGradient id="b" href="#a"/></defs><path fill="url(#b)" d="M1 1"/>',
+            '<circle cx="1" cy="1" r="1"/>',
+            // Left to the checks that report them
+            '<path style="fill:red" transform="scale(2)" stroke="#000000" d="M1 1"/>',
+        ]) {
+            assert.equal(known(body), 'pass', body)
+        }
+        for (const [body, rootAttrs] of [
+            ['<path class="a" d="M1 1"/>'],
+            ['<path id="unused" d="M1 1"/>'],
+            ['<desc>Made in X</desc><path d="M1 1"/>'],
+            ['<path d="M1 1"/>', ' data-name="Layer 1"'],
+            ['<path d="M1 1"/>', ' xml:space="preserve" baseProfile="tiny"'],
+            ['<path d="M1 1"/>', ' shape-rendering="geometricPrecision"'],
+            ['<path d="M1 1"/>', XLINK],
+            [
+                '<defs><linearGradient id="a"/><linearGradient id="b" xlink:href="#a"/></defs><path fill="url(#b)" d="M1 1"/>',
+            ],
+        ]) {
+            assert.equal(known(body, rootAttrs), 'fixable', body + rootAttrs)
+        }
+        // Unknown: --fix removes them where the SVG renders the same
+        for (const [body, rootAttrs] of [
+            ['<path display="none" d="M1 1"/>'],
+            ['<path onclick="x()" d="M1 1"/>'],
+            ['<image href="a.png"/>'],
+            ['<path d="M1 1"/>', ' shape-rendering="crispEdges"'],
+        ]) {
+            assert.equal(known(body, rootAttrs), 'fixable', body + rootAttrs)
+        }
+    })
+
     // Every lint rule has a browser check and every browser check (geometry
     // aside, which the CLI doesn't check yet) a rule, at the same level
     it('has a browser check for every lint rule', async () => {
@@ -2717,6 +2766,11 @@ describe('svg-fixer', () => {
             { type: 'icon' },
         ],
         [
+            'export leftovers and xlink:href',
+            `<svg role="img" viewBox="0 0 24 24" ${NS} xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" data-name="Layer 1"><title>Test Air</title><desc>Made in X</desc><defs><linearGradient id="a" x2="1"><stop offset="0" stop-color="#ff0000"/><stop offset="1" stop-color="#0000ff"/></linearGradient><linearGradient id="b" xlink:href="#a"/></defs><path id="unused" class="cls-1" aria-hidden="true" fill="url(#b)" d="M0 0h24v24H0z"/><foo/></svg>`,
+            { type: 'icon' },
+        ],
+        [
             'long decimals, kept at four',
             `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`,
             { type: 'icon', precision: 4 },
@@ -2801,6 +2855,26 @@ describe('svg-fixer', () => {
             browser.fixSvg(source, { fileName: 'logo.svg', mono: true })
                 .errorCount,
             0,
+        )
+    })
+
+    it('removes an unknown attribute only where the SVG renders the same', () => {
+        const fix = (body) =>
+            cli.fixSvg(
+                `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title>${body}</svg>`,
+                { type: 'icon', parse },
+            ).content
+        // Draws nothing different: removed
+        assert.ok(
+            !fix('<path aria-hidden="true" d="M0 0h24v24H0z"/>').includes(
+                'aria-hidden',
+            ),
+        )
+        // Hides the shape: kept for the editor
+        assert.ok(
+            fix('<path visibility="hidden" d="M0 0h24v24H0z"/>').includes(
+                'visibility',
+            ),
         )
     })
 
