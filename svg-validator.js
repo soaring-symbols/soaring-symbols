@@ -14,6 +14,7 @@ import {
     validateHexColors,
     validateFillPlacement,
     validateNoStrokes,
+    validateFillRules,
     validateNoStyles,
     validateGeometry,
 } from './scripts/lint/validators.js'
@@ -89,6 +90,7 @@ export function runSvgValidations(svg, type, bbox = null, options = {}) {
         ),
         // Only strokes that paint nothing can go; the rest need converting
         row('Style', 'No strokes', strokes, 'error', !strokes.found.length),
+        row('Style', 'Fill rules', validateFillRules(svg)),
         ...validateGeometry(type, bbox).map((check) => ({
             group: 'Geometry',
             level: 'error',
