@@ -79,6 +79,8 @@ Patch releases go out weekly, by hand, in a week with something users see since 
 
 Pushing the tag (`git push --atomic origin main v<version>`, the maintainer's call) runs `.github/workflows/release.yml`: it publishes a GitHub release titled `v<version>` with only a compare link to the previous tag (never touching a release that already exists) and, in a job of its own, purges jsDelivr's cache of the files changed since the previous release (`scripts/purge-cdn.js`). Nothing is released automatically or on a schedule; that is not decided yet.
 
+Then release the draw.io libraries ([soaring-symbols/drawio](https://github.com/soaring-symbols/drawio)) from the version just published: `npm run release -- <version>` there publishes `soaring-symbols-drawio` under the same version. It is done by hand for now; whether this workflow should trigger it, or a schedule there, is not decided ("Releasing automatically" in its README).
+
 The release notes are written afterwards, when the maintainer asks. Start from the draft `node scripts/release-notes.js --to v<version>` prints (the commits since the previous tag, grouped into breaking changes, features, airlines and fixes) and rewrite it for readers of the package, the way the existing releases read:
 
 - A one-sentence summary first, before any section: what is new for a patch ("Three new airlines: Air Arabia Abu Dhabi, Air Arabia Egypt and Air Arabia Maroc."), what breaks and what readers must do for a minor (the website's changelog shows it under the version, and feed readers see it first).
@@ -97,3 +99,5 @@ The Raycast extension ([soaring-symbols/raycast](https://github.com/soaring-symb
 - A new value in a field that lists its values (an alliance in `AllianceName`, a type in `AssetType`) is new data, so it is a patch too: readers that don't know it yet keep showing the rest. Only TypeScript code that lists every value (`Record<AllianceName, …>`, an exhaustive `switch`) stops compiling, so the release notes name the new value.
 - Treat anything that can break a reader of the previous release as breaking and release it as a minor: removing or renaming a field in `airlines.json`, changing a field's meaning or type, moving or renaming files under `assets/`, or changing the exported functions.
 - Before a minor release, prepare the extension and plugin updates for the new line (each one's `AGENTS.md` lists the steps) so they can be published right after the release.
+
+The draw.io libraries don't read a release line: each of their releases is built from the soaring-symbols release of the same version, from its `dist/` (`airlines.json` and `alliances.json` with `assets`, the files at each slug, the derived monos). A change to that layout breaks their build, not their users, so fix the build there before releasing them.
