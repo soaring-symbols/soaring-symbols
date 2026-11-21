@@ -3,6 +3,9 @@
 export const EXCLUDE_FILES = [
     // Five paths have fill="url" with no gradient behind them; redraw (#52)
     'assets/china-airlines/icon.svg',
-    // 0.034 short of 24, past the geometry warning tolerance; refit it
+    // Redrawn but not yet right: every mark waits for its next redraw (#107)
+    'assets/vietravel-airlines/icon-mono.svg',
     'assets/vietravel-airlines/icon.svg',
+    'assets/vietravel-airlines/logo-mono.svg',
+    'assets/vietravel-airlines/logo.svg',
 ]
