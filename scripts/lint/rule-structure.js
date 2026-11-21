@@ -3,6 +3,7 @@ import {
     validateNoTransforms,
     validateNoNestedGroups,
     validateOnePathPerColor,
+    validateAttributes,
 } from './validators.js'
 import { applyIfAlike, flattenGroups, mergePaths } from './fix-structure.js'
 
@@ -135,4 +136,43 @@ export function ruleOnePathPerColor({
             ? `Structure: Single-color SVG should use one <path>, found ${count} shapes${hint}.`
             : `Structure: ${merges} shape${merges === 1 ? '' : 's'} share${merges === 1 ? 's' : ''} a color with the shape before; merge each run into one <path>${hint}.`,
     )
+}
+
+// RULE: only the elements and attributes a mark needs (validateAttributes).
+//       Those that change nothing drawn are removed: editor and export
+//       leftovers (data-*, baseProfile, xml:space, a class with no <style>,
+//       an id nothing refers to, <desc>) and rendering hints; xlink:href
+//       becomes href and xmlns:xlink goes. Any other attribute or element
+//       may change the drawing, so it is left for the editor.
+export function ruleAttributes({ svgElement, issues }) {
+    const { dead, deadElements, unknown, unknownElements } =
+        validateAttributes(svgElement)
+    const tag = (el) => `<${el.localName}>`
+    for (const { el, name, value, rename } of dead) {
+        if (rename) {
+            issues.push(
+                `Structure: ${name} on ${tag(el)} should be written ${rename}.`,
+            )
+            el.setAttribute(rename, value)
+        } else {
+            issues.push(
+                `Structure: ${name}="${value}" on ${tag(el)} changes nothing and should be removed.`,
+            )
+        }
+        el.removeAttribute(name)
+    }
+    for (const el of deadElements) {
+        issues.push(`Structure: ${tag(el)} should be removed.`)
+        el.remove()
+    }
+    for (const { el, name } of unknown) {
+        issues.push(
+            `Structure: Unexpected attribute ${name} on ${tag(el)}. Remove it in your editor if it changes nothing. Not fixable with --fix.`,
+        )
+    }
+    for (const el of unknownElements) {
+        issues.push(
+            `Structure: Unexpected element ${tag(el)}. Draw it as a <path> or remove it. Not fixable with --fix.`,
+        )
+    }
 }
