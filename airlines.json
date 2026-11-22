@@ -823,6 +823,23 @@
         }
     },
     {
+        "name": "Belavia",
+        "slug": "belavia",
+        "iata": "B2",
+        "icao": "BRU",
+        "callsign": "BELARUS AVIA",
+        "country": "BY",
+        "flag_carrier": true,
+        "website": "https://belavia.by",
+        "hubs": [
+            "MSQ"
+        ],
+        "founded": 1996,
+        "branding": {
+            "primary_color": "#455cc7"
+        }
+    },
+    {
         "name": "Binter Canarias",
         "slug": "binter-canarias",
         "iata": "NT",
