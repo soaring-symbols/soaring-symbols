@@ -1158,6 +1158,23 @@
         }
     },
     {
+        "name": "El Al",
+        "slug": "el-al",
+        "iata": "LY",
+        "icao": "ELY",
+        "callsign": "ELAL",
+        "country": "IL",
+        "flag_carrier": true,
+        "website": "https://elal.com",
+        "hubs": [
+            "TLV"
+        ],
+        "founded": 1948,
+        "branding": {
+            "primary_color": "#1b358f"
+        }
+    },
+    {
         "name": "Emirates",
         "slug": "emirates",
         "iata": "EK",
