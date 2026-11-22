@@ -1084,6 +1084,23 @@
         }
     },
     {
+        "name": "Cyprus Airways",
+        "slug": "cyprus-airways",
+        "iata": "CY",
+        "icao": "CYP",
+        "callsign": "CYPRUS",
+        "country": "CY",
+        "flag_carrier": true,
+        "website": "https://cyprusairways.com",
+        "hubs": [
+            "LCA"
+        ],
+        "founded": 2016,
+        "branding": {
+            "primary_color": "#082d24"
+        }
+    },
+    {
         "name": "Delta Air Lines",
         "slug": "delta-air-lines",
         "iata": "DL",
