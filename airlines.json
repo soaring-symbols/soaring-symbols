@@ -894,6 +894,23 @@
         }
     },
     {
+        "name": "Bulgaria Air",
+        "slug": "bulgaria-air",
+        "iata": "FB",
+        "icao": "LZB",
+        "callsign": "FLYING BULGARIA",
+        "country": "BG",
+        "flag_carrier": true,
+        "website": "https://air.bg",
+        "hubs": [
+            "SOF"
+        ],
+        "founded": 2002,
+        "branding": {
+            "primary_color": "#e31d25"
+        }
+    },
+    {
         "name": "Cargolux",
         "slug": "cargolux",
         "iata": "CV",
