@@ -19,7 +19,7 @@ A curated collection of airline logos, icons and tail designs in SVG, for travel
 
 Browse the collection, download any airline's or alliance's marks from its page, and check new SVGs against the contribution guidelines at <https://soaringsymbols.org>. The site's source is in [soaring-symbols/website](https://github.com/soaring-symbols/website).
 
-The site also serves a JSON and image API, no key needed: [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN) for an airline's data and links to its marks, [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png) for a mark as SVG, or PNG for apps that can't render SVG, with monochrome marks in any color, [`/api/airlines?code=SL`](https://soaringsymbols.org/api/airlines?code=SL) for every airline holding a code, and alliances at [`/api/alliances`](https://soaringsymbols.org/api/alliances) and [`/api/alliances/skyteam/icon.png`](https://soaringsymbols.org/api/alliances/skyteam/icon.png). The [ecosystem page](https://soaringsymbols.org/ecosystem) lists every parameter.
+The site also serves a JSON and image API, no key needed: [`/api/airlines/VN`](https://soaringsymbols.org/api/airlines/VN) for an airline's data and links to its marks, [`/api/airlines/VN/icon.png`](https://soaringsymbols.org/api/airlines/VN/icon.png) for a mark as SVG, or PNG for apps that can't render SVG, with monochrome marks in any color and `?viewbox=auto` to crop a mark to its drawing, [`/api/airlines?code=SL`](https://soaringsymbols.org/api/airlines?code=SL) for every airline holding a code, and alliances at [`/api/alliances`](https://soaringsymbols.org/api/alliances) and [`/api/alliances/skyteam/icon.png`](https://soaringsymbols.org/api/alliances/skyteam/icon.png). The [ecosystem page](https://soaringsymbols.org/ecosystem) lists every parameter.
 
 ## Roadmap
 
@@ -52,17 +52,20 @@ bun add soaring-symbols
 
 ## Ecosystem
 
-| Tool / Integration                                                                                                                                                              | Author                               |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------- |
-| [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 />                   | [anhthang]                           |
-| [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 /> | [jsDelivr](https://www.jsdelivr.com) |
-| [unpkg CDN](https://app.unpkg.com/soaring-symbols) <img src="https://cdn.simpleicons.org/unpkg/000/000000" alt="unpkg" align=left width=24 height=24 />                         | [unpkg](https://unpkg.com)           |
-| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />  | [anhthang]                           |
-| [draw.io Libraries](https://github.com/soaring-symbols/drawio) <img src="https://cdn.simpleicons.org/diagramsdotnet/000/F08705" alt="draw.io" align=left width=24 height=24 />  | [anhthang]                           |
+| Tool / Integration                                                                                                                                                                                     | Author                                    |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------- |
+| [npm Package](https://www.npmjs.com/package/soaring-symbols) <img src="https://cdn.simpleicons.org/npm/000/CB3837" alt="npm" align=left width=24 height=24 />                                          | [anhthang]                                |
+| [jsDelivr CDN](https://www.jsdelivr.com/package/npm/soaring-symbols) <img src="https://cdn.simpleicons.org/jsdelivr/000/E84D3D" alt="jsDelivr" align=left width=24 height=24 />                        | [jsDelivr](https://www.jsdelivr.com)      |
+| [unpkg CDN](https://app.unpkg.com/soaring-symbols) <img src="https://cdn.simpleicons.org/unpkg/000/000000" alt="unpkg" align=left width=24 height=24 />                                                | [unpkg](https://unpkg.com)                |
+| [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />                         | [anhthang]                                |
+| [draw.io Libraries](https://github.com/soaring-symbols/drawio) <img src="https://cdn.simpleicons.org/diagramsdotnet/000/F08705" alt="draw.io" align=left width=24 height=24 />                         | [anhthang]                                |
+| [Home Assistant](https://github.com/Springvar/home-assistant-flightradar24-card) <img src="https://cdn.simpleicons.org/homeassistant/000/18BCF2" alt="Home Assistant" align=left width=24 height=24 /> | [Springvar](https://github.com/Springvar) |
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). The [ecosystem page on the website](https://soaringsymbols.org/ecosystem#raycast) explains how to use each.
 
 The draw.io libraries (`@soaring-symbols/drawio`) hold every airline's icons, logos and tails, and the alliance marks, searchable by name or code in draw.io's shape search, with mono versions that can be recolored: [open them in app.diagrams.net](https://app.diagrams.net/?clibs=Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/icons.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/logos.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/tails.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/alliances.xml), or see [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio) for each library's link.
+
+In Home Assistant, the [Flightradar24 card](https://github.com/Springvar/home-assistant-flightradar24-card) can show each flight's airline beside it, loaded from the image API by the flight's ICAO code: the [ecosystem page](https://soaringsymbols.org/ecosystem#home-assistant) has templates to paste into the card's YAML.
 
 ### CDN
 
