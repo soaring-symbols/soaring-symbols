@@ -216,17 +216,17 @@ const markPath = (root, types, entry, type, options) => {
 
 /**
  * Package path of one asset file, e.g.
- * 'soaring-symbols/assets/vietnam-airlines/logo.svg'. With `mono`, the
+ * 'soaring-symbols/airlines/vietnam-airlines/logo.svg'. With `mono`, the
  * monochrome file; with `dark`, the one for dark backgrounds
  * ('.../logo-dark.svg'); never both. With `since`, the file
  * of an older mark from the airline's `history`, e.g.
- * 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'.
+ * 'soaring-symbols/airlines/sun-phuquoc-airways/history/2025/logo.svg'.
  * Returns undefined when the airline, that mark or that file does not exist.
  */
 function getAssetPath(airline, type, options = {}) {
     const entry = typeof airline === 'string' ? getAirline(airline) : airline
 
-    return markPath('assets', ASSET_TYPES, entry, type, options)
+    return markPath('airlines', ASSET_TYPES, entry, type, options)
 }
 
 /**

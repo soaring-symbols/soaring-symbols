@@ -3,7 +3,7 @@ Soaring Symbols is made of two kinds of material, which are licensed differently
 - The source code and the catalog data (airline, alliance and airport data,
   such as airlines.json, alliances.json and airports.json) are licensed under
   the MIT License below.
-- The logos, icons, tail designs and other marks (the SVG files in assets/ and
+- The logos, icons, tail designs and other marks (the SVG files in airlines/ and
   alliances/, and their copies in dist/) are NOT licensed under the MIT License
   or any other license by this project. They are trademarks and, where
   applicable, copyrighted works of their respective owners, included for

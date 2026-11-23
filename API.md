@@ -79,16 +79,16 @@ Returns the package path of one SVG, ready for `require.resolve`, `import.meta.r
 - **Returns:** `string`, or `undefined` if the airline is unknown, has no older mark from `since`, or the file doesn't exist.
 
 ```js
-getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
-getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-mono.svg'
-getAssetPath('VN', 'logo', { dark: true }) // 'soaring-symbols/assets/vietnam-airlines/logo-dark.svg'
+getAssetPath('VN', 'logo') // 'soaring-symbols/airlines/vietnam-airlines/logo.svg'
+getAssetPath('VN', 'logo', { mono: true }) // 'soaring-symbols/airlines/vietnam-airlines/logo-mono.svg'
+getAssetPath('VN', 'logo', { dark: true }) // 'soaring-symbols/airlines/vietnam-airlines/logo-dark.svg'
 getAssetPath('VN', 'tail') // undefined: Vietnam Airlines has no tail asset
 
 // The stacked logo for a square slot, else the horizontal one
 getAssetPath('VN', 'logo-stacked') ?? getAssetPath('VN', 'logo')
 
 // An older mark, once the airline has one in its history
-getAssetPath('9G', 'logo', { since: 2025 }) // 'soaring-symbols/assets/sun-phuquoc-airways/history/2025/logo.svg'
+getAssetPath('9G', 'logo', { since: 2025 }) // 'soaring-symbols/airlines/sun-phuquoc-airways/history/2025/logo.svg'
 ```
 
 #### Using the path
@@ -107,14 +107,14 @@ const svg = readFileSync(
 const svg = readFileSync(require.resolve(getAssetPath('VN', 'logo')), 'utf8')
 
 // Bundlers (Vite, webpack, ...) take the same path as a static import
-import logoUrl from 'soaring-symbols/assets/vietnam-airlines/logo.svg'
+import logoUrl from 'soaring-symbols/airlines/vietnam-airlines/logo.svg'
 ```
 
 For a browser URL, link the file on jsDelivr or unpkg by the airline's `slug`, with no install:
 
 ```js
-const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
-const unpkgUrl = `https://unpkg.com/soaring-symbols/dist/assets/${airline.slug}/logo.svg`
+const url = `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/airlines/${airline.slug}/logo.svg`
+const unpkgUrl = `https://unpkg.com/soaring-symbols/dist/airlines/${airline.slug}/logo.svg`
 ```
 
 Without a bundler, a page can import the library from unpkg as an ES module. Name `dist/index.js`: the bare `https://unpkg.com/soaring-symbols` serves the CommonJS build.
@@ -265,7 +265,7 @@ Every single-color asset ships a `-mono.svg` generated from its color file; a mu
 The asset folder:
 
 ```plaintext
-assets/<slug>/
+airlines/<slug>/
 ├── icon.svg
 ├── icon-mono.svg   # generated when icon.svg is single-color
 ├── icon-dark.svg   # generated, or the airline's own version
@@ -315,12 +315,12 @@ An airline that changed its logo may list its older marks in `history`, oldest f
 The files sit under `history/<since>/` next to the current ones; `getAssetPath(airline, type, { since })` returns their path:
 
 ```plaintext
-assets/<slug>/history/<since>/
+airlines/<slug>/history/<since>/
 ├── icon.svg
 └── logo.svg
 ```
 
-On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/${airline.slug}/history/${mark.since}/logo.svg`; on unpkg, the same path after `https://unpkg.com/soaring-symbols/`.
+On jsDelivr: `https://cdn.jsdelivr.net/npm/soaring-symbols/dist/airlines/${airline.slug}/history/${mark.since}/logo.svg`; on unpkg, the same path after `https://unpkg.com/soaring-symbols/`.
 
 ### Hub coordinates
 
@@ -366,7 +366,7 @@ Every hub in the catalog has an entry, and only hubs do. Coordinates come from W
 // SWISS is the short name of Swiss International Air Lines
 getAirline('SWISS').slug // 'swiss-international-air-lines'
 getAirline('swiss').aliases // [{ name: 'SWISS', slug: 'swiss' }]
-getAssetPath('swiss', 'logo') // 'soaring-symbols/assets/swiss-international-air-lines/logo.svg'
+getAssetPath('swiss', 'logo') // 'soaring-symbols/airlines/swiss-international-air-lines/logo.svg'
 ```
 
 ### Renames and mergers
@@ -382,9 +382,9 @@ Each entry is one airline. A renamed airline takes the new name and its slug and
 | `callsign` | `string?` | A former callsign.                                                                   |
 | `until`    | `number`  | Year it stopped using them.                                                          |
 
-An item has at least one of `name`, `iata`, `icao` and `callsign`, and only what changed then. Old slugs stay valid: `getAirline()` finds the airline by them or an old name, and by an old code no airline holds now. When an old slug shipped in a release, the package also ships the airline's files at `assets/<old slug>/`, so links keep working.
+An item has at least one of `name`, `iata`, `icao` and `callsign`, and only what changed then. Old slugs stay valid: `getAirline()` finds the airline by them or an old name, and by an old code no airline holds now. When an old slug shipped in a release, the package also ships the airline's files at `airlines/<old slug>/`, so links keep working.
 
-An old slug follows the airline like a redirect: its files are the airline's **current** marks under its current name, so `assets/tway-air/logo.svg` shows Trinity Airways' logo after the rename. The logo it had then is in [`history`](#history) (`assets/trinity-airways/history/2010/logo.svg`). To keep a file exactly as it was, link an exact release (`soaring-symbols@0.2.4/dist/assets/tway-air/logo.svg`), which never changes.
+An old slug follows the airline like a redirect: its files are the airline's **current** marks under its current name, so `airlines/tway-air/logo.svg` shows Trinity Airways' logo after the rename. The logo it had then is in [`history`](#history) (`airlines/trinity-airways/history/2010/logo.svg`). To keep a file exactly as it was, link an exact release (`soaring-symbols@0.2.4/dist/assets/tway-air/logo.svg`), which never changes.
 
 ```js
 // Trinity Airways flew as Hansung Airlines, then T'way Air until 2026
@@ -392,7 +392,7 @@ getAirline('tway-air').former
 // [{ name: 'Hansung Airlines', slug: 'hansung-airlines', until: 2010 },
 //  { name: "T'way Air", slug: 'tway-air', until: 2026 }]
 getAirline("T'way Air").slug // 'trinity-airways'
-getAssetPath('tway-air', 'logo') // 'soaring-symbols/assets/trinity-airways/logo.svg'
+getAssetPath('tway-air', 'logo') // 'soaring-symbols/airlines/trinity-airways/logo.svg'
 getAssetPath('TW', 'logo', { since: 2010 }) // the T'way Air logo
 
 // Air Serbia flew as Jat Airways, ICAO JAT, until 2013
@@ -435,6 +435,14 @@ Any release, a patch included, may add to the package without breaking code writ
   In TypeScript, a `switch` covering every value (with `assertNever` in `default`) stops compiling after such a release until it has the new case; one with a plain `default` keeps working.
 
 - **SVG rules tighten.** `soaring-symbols/svg-validator` and `soaring-symbols/svg-fixer` hold files to the [contribution guidelines](CONTRIBUTING.md), so a release may add or change a rule and an SVG that passed may fail. That isn't a breaking change: fix the file. The shape of their results (`issues`, `warnings`, each check's `group`, `level` and `fixable`) changes only in a breaking release.
+
+## Changes in 0.6
+
+Airline marks moved from `assets/` to `airlines/`, beside `alliances/`, `airlines.json` and `alliances.json`. Nothing else in the data changed: the `assets` field keeps its name.
+
+- **`getAssetPath()` returns `soaring-symbols/airlines/<slug>/…`.** Code that passes its result to `require.resolve`, `import.meta.resolve` or a bundler keeps working; a path written out by hand (`import logo from 'soaring-symbols/assets/…'`) needs `airlines/` instead.
+- **CDN links use `dist/airlines/`.** `https://cdn.jsdelivr.net/npm/soaring-symbols@0.5/dist/airlines/vietnam-airlines/logo.svg`. Links to an earlier release (`soaring-symbols@0.5.2/dist/assets/…`) keep working, and so do those on its release line until you move to this one; a link without a version broke with this release.
+- **Alliance marks are unchanged**, in `alliances/<slug>/`, and so is the website's image API (`/api/airlines/VN/logo.svg`).
 
 ## Changes in 0.5
 

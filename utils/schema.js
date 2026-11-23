@@ -117,7 +117,7 @@ const findWrongSlugs = (airlines) =>
 // Slugs name the asset folders and what `parent` and `marks` point at, so no
 // two airlines may share one, defunct or not. The slugs of aliases and former
 // names count too, since the package keeps them working: a link to
-// assets/<old slug>/ must lead to one airline.
+// airlines/<old slug>/ must lead to one airline.
 const findDuplicateSlugs = (airlines) => {
     const seen = new Map()
 

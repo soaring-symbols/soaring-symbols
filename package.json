@@ -38,7 +38,7 @@
       "import": "./dist/svg-fixer.js"
     },
     "./package.json": "./package.json",
-    "./assets/*": "./dist/assets/*",
+    "./airlines/*": "./dist/airlines/*",
     "./alliances/*": "./dist/alliances/*"
   },
   "homepage": "https://github.com/soaring-symbols/soaring-symbols",

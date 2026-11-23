@@ -44,7 +44,7 @@ export type AssetMap = Readonly<Partial<Record<AssetType, AssetInfo>>>
 /**
  * One of the marks an airline used before its current ones. It was used from
  * `since` until the next entry's `since`, the last entry until the current
- * marks. Its files are at `assets/<slug>/history/<since>/`.
+ * marks. Its files are at `airlines/<slug>/history/<since>/`.
  */
 export interface HistoricalMarks {
     /** Year the mark was introduced (e.g. 1984). */

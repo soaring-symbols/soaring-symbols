@@ -11,7 +11,7 @@ const git = (...gitArgs) =>
         .split('\n')
         .filter(Boolean)
 
-// SVGs under assets/ and alliances/ (MARK_DIRS) added or modified since
+// SVGs under airlines/ and alliances/ (MARK_DIRS) added or modified since
 // `ref`, including uncommitted and untracked files
 
 export const changedSince = (ref) => {

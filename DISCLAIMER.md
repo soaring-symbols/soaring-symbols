@@ -4,7 +4,7 @@ Please read this before using any logo, icon or tail design from Soaring Symbols
 
 ## Trademarks and copyright
 
-Every airline and alliance mark in this collection (the SVG files in `assets/` and `alliances/`, and their copies published in `dist/`) is a trademark and, where applicable, a copyrighted work of its owner. Soaring Symbols does not own these marks, is not affiliated with or endorsed by any of their owners, and grants no license to use them. The MIT License in [LICENSE](LICENSE) covers only the project's source code and catalog data.
+Every airline and alliance mark in this collection (the SVG files in `airlines/` and `alliances/`, and their copies published in `dist/`) is a trademark and, where applicable, a copyrighted work of its owner. Soaring Symbols does not own these marks, is not affiliated with or endorsed by any of their owners, and grants no license to use them. The MIT License in [LICENSE](LICENSE) covers only the project's source code and catalog data.
 
 Redrawing, recoloring or optimizing a mark for this collection does not change who owns it. A monochrome version, an icon cropped from a logo or an older mark from `history/` belongs to the same owner as the original.
 

@@ -187,7 +187,7 @@ for (const [format, api] of [
                 assert.equal(getAirline('FD')?.name, 'Thai AirAsia')
                 assert.equal(
                     getAssetPath('FD', 'logo'),
-                    'soaring-symbols/assets/thai-airasia/logo.svg',
+                    'soaring-symbols/airlines/thai-airasia/logo.svg',
                 )
             })
 
@@ -238,12 +238,12 @@ for (const [format, api] of [
                 assert.equal(api.getAirline('TW'), trinity)
                 assert.equal(
                     api.getAssetPath('tway-air', 'logo'),
-                    'soaring-symbols/assets/trinity-airways/logo.svg',
+                    'soaring-symbols/airlines/trinity-airways/logo.svg',
                 )
                 // Its T'way Air logo is in its history, under the new slug
                 assert.equal(
                     api.getAssetPath('tway-air', 'logo', { since: 2010 }),
-                    'soaring-symbols/assets/trinity-airways/history/2010/logo.svg',
+                    'soaring-symbols/airlines/trinity-airways/history/2010/logo.svg',
                 )
             })
 
@@ -265,7 +265,7 @@ for (const [format, api] of [
                 )
                 assert.equal(
                     api.getAssetPath('scandinavian-airlines-connect', 'logo'),
-                    'soaring-symbols/assets/sas-connect/logo.svg',
+                    'soaring-symbols/airlines/sas-connect/logo.svg',
                 )
                 // SWISS was its name in releases before it took its full one:
                 // the old slug keeps finding it and its files
@@ -277,7 +277,7 @@ for (const [format, api] of [
                 assert.equal(api.getAirline('swiss'), swiss)
                 assert.equal(
                     api.getAssetPath('swiss', 'logo'),
-                    'soaring-symbols/assets/swiss-international-air-lines/logo.svg',
+                    'soaring-symbols/airlines/swiss-international-air-lines/logo.svg',
                 )
             })
 
@@ -341,21 +341,21 @@ for (const [format, api] of [
             it('returns the package path of a color asset', () => {
                 assert.equal(
                     getAssetPath('VN', 'logo'),
-                    'soaring-symbols/assets/vietnam-airlines/logo.svg',
+                    'soaring-symbols/airlines/vietnam-airlines/logo.svg',
                 )
             })
 
             it('returns the mono variant when asked', () => {
                 assert.equal(
                     getAssetPath('VN', 'logo', { mono: true }),
-                    'soaring-symbols/assets/vietnam-airlines/logo-mono.svg',
+                    'soaring-symbols/airlines/vietnam-airlines/logo-mono.svg',
                 )
             })
 
             it('returns the dark variant when asked', () => {
                 assert.equal(
                     getAssetPath('VN', 'logo', { dark: true }),
-                    'soaring-symbols/assets/vietnam-airlines/logo-dark.svg',
+                    'soaring-symbols/airlines/vietnam-airlines/logo-dark.svg',
                 )
                 // Bamboo Airways' logo neither reads on dark nor has a mono
                 assert.equal(
@@ -375,7 +375,7 @@ for (const [format, api] of [
             it('returns a stacked logo only where there is one', () => {
                 assert.equal(
                     getAssetPath('VN', 'logo-stacked', { dark: true }),
-                    'soaring-symbols/assets/vietnam-airlines/logo-stacked-dark.svg',
+                    'soaring-symbols/airlines/vietnam-airlines/logo-stacked-dark.svg',
                 )
                 // Bamboo Airways has only its horizontal logo
                 assert.equal(getAssetPath('QH', 'logo-stacked'), undefined)
@@ -434,7 +434,7 @@ for (const [format, api] of [
                 }
                 assert.equal(
                     getAssetPath(airline, 'logo', { since: 1989 }),
-                    'soaring-symbols/assets/vietnam-airlines/history/1989/logo.svg',
+                    'soaring-symbols/airlines/vietnam-airlines/history/1989/logo.svg',
                 )
                 assert.equal(
                     getAssetPath(airline, 'logo', { since: 1989, mono: true }),
@@ -1315,7 +1315,7 @@ describe('renames and mergers (successor)', () => {
 })
 
 describe('airlines.json assets metadata', () => {
-    const assetsDir = new URL('../dist/assets/', import.meta.url)
+    const assetsDir = new URL('../dist/airlines/', import.meta.url)
 
     it('matches the files in dist/assets', () => {
         for (const a of cjs.listAirlines()) {
@@ -1338,7 +1338,7 @@ describe('airlines.json assets metadata', () => {
     })
 
     it('ships the -dark.svg the metadata names, from the right file', () => {
-        const repo = new URL('../assets/', import.meta.url)
+        const repo = new URL('../airlines/', import.meta.url)
         const own = cjs.listAirlines().filter((a) => !a.marks || a.marks_types)
         for (const a of own) {
             for (const [type, info] of Object.entries(a.assets)) {
@@ -1500,12 +1500,12 @@ describe('airlines.json assets metadata', () => {
             'only directories',
         )
         for (const { name: dir } of dirs) {
-            assert.ok(slugs.has(dir), `assets/${dir} has no airline`)
+            assert.ok(slugs.has(dir), `airlines/${dir} has no airline`)
         }
     })
 })
 
-describe('asset history (assets/<slug>/history/<year>/)', () => {
+describe('asset history (airlines/<slug>/history/<year>/)', () => {
     const svg = (color) =>
         `<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 64 64"><title>Korean Air</title><path fill="${color}" d="M0 0h64v64H0z"/></svg>`
     let assetsDir
@@ -1934,13 +1934,13 @@ describe('lint file selection (lint-svg --changed)', () => {
     it('keeps listed SVGs that exist, normalized and deduplicated', () => {
         const { listed, files } = selectSvgs([
             '--fix',
-            './assets/iberia/icon.svg',
-            'assets/iberia/icon.svg',
-            'assets/iberia/missing.svg',
+            './airlines/iberia/icon.svg',
+            'airlines/iberia/icon.svg',
+            'airlines/iberia/missing.svg',
             'README.md',
         ])
         assert.equal(listed, true)
-        assert.deepEqual(files, ['assets/iberia/icon.svg'])
+        assert.deepEqual(files, ['airlines/iberia/icon.svg'])
     })
 
     it('reads --base as the ref, not as a file', () => {
@@ -1993,7 +1993,7 @@ describe('release notes (release-notes.js)', () => {
             commit('feat!: replace getAssets with getAssetPath (#44)'),
             commit('feat: add Juneyao Air (#20) and its tail (#21)', [
                 'airlines.json',
-                'assets/juneyao-air/logo.svg',
+                'airlines/juneyao-air/logo.svg',
             ]),
             commit('fix: drop the hubs', ['airlines.json', 'airports.json']),
             commit('chore(data): sync airline data from wikipedia (#45)', [
@@ -2069,7 +2069,7 @@ describe('svg-validator', () => {
         parser.parseFromString(source, 'image/svg+xml').documentElement
     const svg = parse(
         readFileSync(
-            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            require.resolve('soaring-symbols/airlines/vietnam-airlines/logo.svg'),
             'utf8',
         ),
     )
@@ -2085,7 +2085,7 @@ describe('svg-validator', () => {
         }
     })
 
-    const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+    const assetsDir = fileURLToPath(new URL('../airlines', import.meta.url))
 
     // lint-svg.js --check passes in CI, so every SVG it lints must pass the
     // same error-level checks in the browser
@@ -2099,7 +2099,7 @@ describe('svg-validator', () => {
             for (const file of readdirSync(`${assetsDir}/${dir}`)) {
                 const path = `${assetsDir}/${dir}/${file}`
                 if (!file.endsWith('.svg')) continue
-                if (EXCLUDE_FILES.includes(`assets/${dir}/${file}`)) continue
+                if (EXCLUDE_FILES.includes(`airlines/${dir}/${file}`)) continue
                 const source = readFileSync(path, 'utf8')
                 const type = /icon|tail/.test(file) ? 'icon' : 'logo'
                 const checks = runSvgValidations(parse(source), type, null, {
@@ -2275,7 +2275,7 @@ describe('svg-validator', () => {
     it('has a browser check for every lint rule', async () => {
         const { runSvgValidations } = await import('../dist/svg-validator.js')
         const source = readFileSync(
-            require.resolve('soaring-symbols/assets/vietnam-airlines/logo.svg'),
+            require.resolve('soaring-symbols/airlines/vietnam-airlines/logo.svg'),
             'utf8',
         )
         const checks = runSvgValidations(parse(source), 'logo', null, {
@@ -2557,7 +2557,7 @@ describe('svg-validator', () => {
         const optimizeAsset = (file) =>
             optimizeSvg(
                 readFileSync(
-                    new URL(`../assets/${file}`, import.meta.url),
+                    new URL(`../airlines/${file}`, import.meta.url),
                     'utf8',
                 ),
             )
@@ -2593,7 +2593,10 @@ describe('svg-validator', () => {
 
     it('keeps the artwork on the edges of the viewBox it filled', () => {
         const read = (file) =>
-            readFileSync(new URL(`../assets/${file}`, import.meta.url), 'utf8')
+            readFileSync(
+                new URL(`../airlines/${file}`, import.meta.url),
+                'utf8',
+            )
         const edges = (svg) => {
             const { x, y, width, height } = measureBBox(svg)
 
@@ -2636,7 +2639,7 @@ describe('svg-validator', () => {
         // getBBox() and the same curve as a cubic put it at 24
         const source = readFileSync(
             new URL(
-                '../assets/aerolineas-argentinas/icon.svg',
+                '../airlines/aerolineas-argentinas/icon.svg',
                 import.meta.url,
             ),
             'utf8',
@@ -2668,7 +2671,7 @@ describe('svg-validator', () => {
             'shandong-airlines/logo-mono.svg',
         ]) {
             const source = readFileSync(
-                new URL(`../assets/${file}`, import.meta.url),
+                new URL(`../airlines/${file}`, import.meta.url),
                 'utf8',
             )
             const result = optimizeSvg(source)
@@ -3006,7 +3009,7 @@ describe('svg-fixer', () => {
     })
 
     it('leaves every asset as lint-svg.js does', () => {
-        const assetsDir = fileURLToPath(new URL('../assets', import.meta.url))
+        const assetsDir = fileURLToPath(new URL('../airlines', import.meta.url))
         const differences = []
         const dirs = readdirSync(assetsDir, { withFileTypes: true })
             .filter((entry) => entry.isDirectory())
@@ -3015,7 +3018,7 @@ describe('svg-fixer', () => {
             for (const folder of getAssetDirs(dir, assetsDir)) {
                 for (const file of readdirSync(`${assetsDir}/${folder}`)) {
                     if (!file.endsWith('.svg')) continue
-                    const path = `assets/${folder}/${file}`
+                    const path = `airlines/${folder}/${file}`
                     if (EXCLUDE_FILES.includes(path)) continue
                     const source = readFileSync(
                         `${assetsDir}/${folder}/${file}`,

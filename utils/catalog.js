@@ -7,6 +7,7 @@
 // airline only touches its own entry.
 import sortBy from 'lodash.sortby'
 import {
+    AIRLINES_DIR,
     ALLIANCES_DIR,
     assetTypes,
     borrowedTypes,
@@ -134,7 +135,7 @@ const sharedTypes = (own, shared, types) =>
             .filter(([, info]) => info),
     )
 
-const publishCatalog = (airlines, assetsDir = 'assets') => {
+const publishCatalog = (airlines, assetsDir = AIRLINES_DIR) => {
     const catalog = normalizeCatalog(airlines)
     const predecessorsOf = getPredecessors(catalog)
     const bySlug = new Map(catalog.map((a) => [a.slug, a]))

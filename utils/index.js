@@ -107,21 +107,21 @@ const darkSource = ({ colors, mono, keepColor = false }) => {
 // when it also has the horizontal one in logo.svg
 const assetTypes = ['icon', 'logo', 'logo-stacked', 'tail']
 
-// Alliance marks live apart from the airlines' assets/, in
+// Alliance marks live apart from the airlines' airlines/, in
 // alliances/<slug>/, with the same file names and history/ folders; an
 // alliance has no tail (index.js keeps its own copy of both type lists)
-const ASSETS_DIR = 'assets'
+const AIRLINES_DIR = 'airlines'
 const ALLIANCES_DIR = 'alliances'
 const ALLIANCE_TYPES = ['icon', 'logo']
 // Every folder of marks, for the tools that walk them all
-const MARK_DIRS = [ASSETS_DIR, ALLIANCES_DIR]
+const MARK_DIRS = [AIRLINES_DIR, ALLIANCES_DIR]
 
 // The mark types an airline takes from the airline in `marks`: every one, or
 // only those in `marks_types`; none without `marks`
 const borrowedTypes = (airline) =>
     airline.marks ? (airline.marks_types ?? assetTypes) : []
 
-// Whether an airline keeps marks of its own in assets/<slug>/: every one
+// Whether an airline keeps marks of its own in airlines/<slug>/: every one
 // without `marks`, the types it doesn't borrow with `marks_types`
 const hasOwnMarks = (airline) => !airline.marks || Boolean(airline.marks_types)
 
@@ -178,7 +178,7 @@ const writeDerivedMonos = (slug, assetsDir) => {
 
 // Delete -mono.svg files the build derives anyway, so a hand-made one for a
 // single-color asset can't drift from its color file. Returns what it removed.
-const removeDerivedMonos = (slug, assetsDir = 'assets') =>
+const removeDerivedMonos = (slug, assetsDir = AIRLINES_DIR) =>
     derivedMonoPairs(slug, assetsDir)
         .map(({ monoPath }) => monoPath)
         .filter((monoPath) => {
@@ -220,7 +220,7 @@ const writeDerivedDarks = (slug, assetsDir, keepColor = []) => {
 // and `dark` is true whenever the build ships a -dark.svg (darkSource, with
 // `keepColor` the types of branding.dark_color).
 // Repo tooling only: the published library reads this from airlines.json.
-const getAirlineAssets = (slug, assetsDir = 'assets', keepColor = []) => {
+const getAirlineAssets = (slug, assetsDir = AIRLINES_DIR, keepColor = []) => {
     const airlineDir = join(assetsDir, slug)
 
     const assets = {}
@@ -256,7 +256,7 @@ const viewBoxOf = (svg) => svg.match(/viewBox="([^"]*)"/)?.[1]
 // another viewBox, a copy of the color file, one color only, which is a
 // monochrome version, or a type branding.dark_color (`keepColor`) keeps in
 // color. `warnings` lists colors that hardly read on dark.
-const findDarkProblems = (dir, assetsDir = 'assets', keepColor = []) => {
+const findDarkProblems = (dir, assetsDir = AIRLINES_DIR, keepColor = []) => {
     const problems = []
     const warnings = []
     for (const assetType of assetTypes) {
@@ -300,15 +300,15 @@ const findDarkProblems = (dir, assetsDir = 'assets', keepColor = []) => {
     return { problems, warnings }
 }
 
-// Older marks live in assets/<slug>/history/<year>/, one folder per year a
+// Older marks live in airlines/<slug>/history/<year>/, one folder per year a
 // mark was introduced, with the same file names as the current ones. The
-// current files stay in assets/<slug>/, so nothing that links them changes.
+// current files stay in airlines/<slug>/, so nothing that links them changes.
 const HISTORY_DIR = 'history'
 
 // The asset folders of an airline relative to `assetsDir`: its own, then one
 // per history year, oldest first. writeDerivedMonos and removeDerivedMonos run
 // on each.
-const getHistoryYears = (slug, assetsDir = 'assets') => {
+const getHistoryYears = (slug, assetsDir = AIRLINES_DIR) => {
     const historyDir = join(assetsDir, slug, HISTORY_DIR)
     if (!existsSync(historyDir)) return []
 
@@ -321,7 +321,7 @@ const getHistoryYears = (slug, assetsDir = 'assets') => {
     )
 }
 
-const getAssetDirs = (slug, assetsDir = 'assets') => [
+const getAssetDirs = (slug, assetsDir = AIRLINES_DIR) => [
     slug,
     ...getHistoryYears(slug, assetsDir).map((year) =>
         join(slug, HISTORY_DIR, year),
@@ -332,7 +332,7 @@ const getAssetDirs = (slug, assetsDir = 'assets') => [
 // [{ since: 1984, assets: { logo: { color, mono, colors } } }]. Each entry
 // was used from `since` until the next one's `since`, the last one until the
 // current marks.
-const getAirlineHistory = (slug, assetsDir = 'assets') =>
+const getAirlineHistory = (slug, assetsDir = AIRLINES_DIR) =>
     getHistoryYears(slug, assetsDir).map((year) => ({
         since: Number(year),
         name: getMarkName(join(assetsDir, slug, HISTORY_DIR, year)),
@@ -362,7 +362,7 @@ const getMarkName = (dir) => {
 // `types` are the marks the folder may hold: an alliance's have no tail.
 const findHistoryProblems = (
     slug,
-    assetsDir = 'assets',
+    assetsDir = AIRLINES_DIR,
     types = assetTypes,
 ) => {
     const historyDir = join(assetsDir, slug, HISTORY_DIR)
@@ -412,7 +412,7 @@ export {
     markFile,
     ALLIANCE_TYPES,
     ALLIANCES_DIR,
-    ASSETS_DIR,
+    AIRLINES_DIR,
     MARK_DIRS,
     findAllianceFileProblems,
     HISTORY_DIR,

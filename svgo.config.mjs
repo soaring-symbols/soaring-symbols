@@ -1,4 +1,4 @@
-// SVGO config for airline assets: npm run optimize -- assets/<slug>/*.svg
+// SVGO config for airline assets: npm run optimize -- airlines/<slug>/*.svg
 // runs it through scripts/lint/optimize.js, which tries three decimals first
 // and four or five for the shapes that move at three, visibly or off the
 // edge of the viewBox. Used on its own
