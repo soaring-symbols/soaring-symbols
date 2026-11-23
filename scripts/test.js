@@ -2842,6 +2842,13 @@ describe('svg-fixer', () => {
             { type: 'icon' },
         ],
         [
+            // SVGO rounds the viewBox to 64, which optimizeSvg once took for
+            // an icon's and refused, so only a second --fix optimized it
+            'a viewBox a hair off 64 and editor data, as Inkscape saves it',
+            `<svg viewBox="0 0 63.999999 64" ${NS} xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" inkscape:version="1.4"><title>Test Air</title><path fill="#123456" d="M0 26.123456H64V37.876544H0Z"/></svg>`,
+            { type: 'logo' },
+        ],
+        [
             'long decimals, kept at four',
             `<svg role="img" viewBox="0 0 24 24" ${NS} fill="#123456"><title>Test Air</title><path d="M0 2.0006123 L24 2.0006123 L12.0000123 21.9996123 Z"/></svg>`,
             { type: 'icon', precision: 4 },

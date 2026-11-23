@@ -141,7 +141,11 @@ const geometryOf = (svg) => {
     const matches = measured.map((value, i) =>
         Math.abs(value - viewBox[i]) < ON_VIEWBOX ? 1 : 0,
     )
-    const failing = validateGeometry(width === 64 ? 'logo' : 'icon', box)
+    // The nearer size: a viewBox a hair off (0 0 63.999999 64, from
+    // Inkscape) is a logo's, which SVGO rounds to 64, and judging it as an
+    // icon's would make every result differ from it
+    const type = Math.abs(width - 64) < Math.abs(width - 24) ? 'logo' : 'icon'
+    const failing = validateGeometry(type, box)
         .filter((check) => !check.pass)
         .map((check) => check.label)
 
