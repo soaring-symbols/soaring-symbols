@@ -784,6 +784,23 @@
         }
     },
     {
+        "name": "Bahamasair",
+        "slug": "bahamasair",
+        "iata": "UP",
+        "icao": "BHS",
+        "callsign": "BAHAMAS",
+        "country": "BS",
+        "flag_carrier": true,
+        "website": "https://www.bahamasair.com",
+        "hubs": [
+            "NAS"
+        ],
+        "founded": 1973,
+        "branding": {
+            "primary_color": "#0399d7"
+        }
+    },
+    {
         "name": "Bamboo Airways",
         "slug": "bamboo-airways",
         "iata": "QH",
