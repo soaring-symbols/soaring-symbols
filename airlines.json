@@ -2346,6 +2346,22 @@
         }
     },
     {
+        "name": "Nordwind Airlines",
+        "slug": "nordwind-airlines",
+        "iata": "N4",
+        "icao": "NWS",
+        "callsign": "NORDLAND",
+        "country": "RU",
+        "website": "https://nordwindairlines.ru",
+        "hubs": [
+            "SVO"
+        ],
+        "founded": 2008,
+        "branding": {
+            "primary_color": "#d6181e"
+        }
+    },
+    {
         "name": "Norwegian Air Shuttle",
         "slug": "norwegian-air-shuttle",
         "iata": "DY",
