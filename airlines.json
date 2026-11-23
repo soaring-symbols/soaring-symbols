@@ -3109,6 +3109,128 @@
         }
     },
     {
+        "name": "TUI Airways",
+        "slug": "tui-airways",
+        "iata": "BY",
+        "icao": "TOM",
+        "callsign": "TOMJET",
+        "former": [
+            {
+                "name": "Euravia",
+                "until": 1964
+            },
+            {
+                "name": "Britannia Airways",
+                "until": 2005
+            },
+            {
+                "name": "Thomsonfly",
+                "until": 2009
+            },
+            {
+                "name": "Thomson Airways",
+                "until": 2017,
+                "callsign": "TOMSON"
+            },
+            {
+                "callsign": "TUI AIR",
+                "until": 2017
+            }
+        ],
+        "country": "GB",
+        "website": "https://www.tui.co.uk",
+        "founded": 1962,
+        "branding": {
+            "primary_color": "#d40e14"
+        }
+    },
+    {
+        "name": "TUI fly Belgium",
+        "slug": "tui-fly-belgium",
+        "iata": "TB",
+        "icao": "JAF",
+        "callsign": "BEAUTY",
+        "former": [
+            {
+                "name": "Jetairfly",
+                "until": 2016
+            }
+        ],
+        "country": "BE",
+        "website": "https://www.tuifly.be",
+        "marks": "tui-airways",
+        "marks_types": [
+            "icon"
+        ],
+        "founded": 2003,
+        "branding": {
+            "primary_color": "#d40e14"
+        }
+    },
+    {
+        "name": "TUI fly Deutschland",
+        "slug": "tui-fly-deutschland",
+        "aliases": [
+            {
+                "name": "TUI fly"
+            }
+        ],
+        "iata": "X3",
+        "icao": "TUI",
+        "callsign": "TUI JET",
+        "country": "DE",
+        "website": "https://www.tui.com",
+        "marks": "tui-airways",
+        "founded": 2007,
+        "branding": {
+            "primary_color": "#d40e14"
+        }
+    },
+    {
+        "name": "TUI fly Netherlands",
+        "slug": "tui-fly-netherlands",
+        "iata": "OR",
+        "icao": "TFL",
+        "callsign": "ORANGE",
+        "former": [
+            {
+                "name": "Arkefly",
+                "until": 2015
+            }
+        ],
+        "country": "NL",
+        "website": "https://www.tui.nl",
+        "marks": "tui-airways",
+        "founded": 2005,
+        "branding": {
+            "primary_color": "#d40e14"
+        }
+    },
+    {
+        "name": "TUI fly Nordic",
+        "slug": "tui-fly-nordic",
+        "iata": "6B",
+        "icao": "BLX",
+        "callsign": "BLUESCAN",
+        "former": [
+            {
+                "name": "Blue Scandinavia",
+                "until": 1998
+            },
+            {
+                "name": "Britannia Nordic",
+                "until": 2006
+            }
+        ],
+        "country": "SE",
+        "website": "https://www.tui.se",
+        "marks": "tui-airways",
+        "founded": 1996,
+        "branding": {
+            "primary_color": "#d40e14"
+        }
+    },
+    {
         "name": "Turkish Airlines",
         "slug": "turkish-airlines",
         "iata": "TK",
