@@ -63,7 +63,7 @@ bun add soaring-symbols
 
 The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). The [ecosystem page on the website](https://soaringsymbols.org/ecosystem#raycast) explains how to use each.
 
-The draw.io libraries (`@soaring-symbols/drawio`) hold every airline's icons, logos and tails, and the alliance marks, searchable by name or code in draw.io's shape search, with mono versions that can be recolored: [open them in app.diagrams.net](https://app.diagrams.net/?clibs=Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/icons.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/logos.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/tails.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.5/dist/alliances.xml), or see [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio) for each library's link.
+The draw.io libraries (`@soaring-symbols/drawio`) hold every airline's icons, logos and tails, and the alliance marks, searchable by name or code in draw.io's shape search, with mono versions that can be recolored: [open them in app.diagrams.net](https://app.diagrams.net/?clibs=Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/icons.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/logos.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/tails.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/alliances.xml), or see [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio) for each library's link.
 
 In Home Assistant, the [Flightradar24 card](https://github.com/Springvar/home-assistant-flightradar24-card) can show each flight's airline beside it, loaded from the image API by the flight's ICAO code: the [ecosystem page](https://soaringsymbols.org/ecosystem#home-assistant) has templates to paste into the card's YAML.
 
@@ -85,7 +85,7 @@ https://cdn.jsdelivr.net/npm/soaring-symbols/dist/alliances/skyteam/icon.svg
 > [!NOTE]
 > Until 0.6, airline marks were in `dist/assets/`: links to an earlier release keep that path, and [Changes in 0.6](API.md#changes-in-06) says what to update.
 
-Both serve any release: add a release line (`soaring-symbols@0.5`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.4.0`) to freeze the files. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect only a few minutes.
+Both serve any release: add a release line (`soaring-symbols@0.6`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.4.0`) to freeze the files. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect only a few minutes.
 
 ## Usage
 

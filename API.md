@@ -120,7 +120,7 @@ const unpkgUrl = `https://unpkg.com/soaring-symbols/dist/airlines/${airline.slug
 Without a bundler, a page can import the library from unpkg as an ES module. Name `dist/index.js`: the bare `https://unpkg.com/soaring-symbols` serves the CommonJS build.
 
 ```js
-import { getAirline } from 'https://unpkg.com/soaring-symbols@0.5/dist/index.js'
+import { getAirline } from 'https://unpkg.com/soaring-symbols@0.6/dist/index.js'
 ```
 
 ### `listAlliances()`
@@ -167,7 +167,7 @@ const { content, fixed, issues, warnings } = fixSvg(svgText, {
 Without a bundler, import it from unpkg with `?module`, which rewrites its `@resvg/resvg-wasm` import to an unpkg URL for the pinned version:
 
 ```js
-import { initSvgFixer, fixSvg } from 'https://unpkg.com/soaring-symbols@0.5/dist/svg-fixer.js?module'
+import { initSvgFixer, fixSvg } from 'https://unpkg.com/soaring-symbols@0.6/dist/svg-fixer.js?module'
 
 await initSvgFixer(fetch('https://unpkg.com/@resvg/resvg-wasm@2.6.2/index_bg.wasm'))
 ```
@@ -441,7 +441,7 @@ Any release, a patch included, may add to the package without breaking code writ
 Airline marks moved from `assets/` to `airlines/`, beside `alliances/`, `airlines.json` and `alliances.json`. Nothing else in the data changed: the `assets` field keeps its name.
 
 - **`getAssetPath()` returns `soaring-symbols/airlines/<slug>/…`.** Code that passes its result to `require.resolve`, `import.meta.resolve` or a bundler keeps working; a path written out by hand (`import logo from 'soaring-symbols/assets/…'`) needs `airlines/` instead.
-- **CDN links use `dist/airlines/`.** `https://cdn.jsdelivr.net/npm/soaring-symbols@0.5/dist/airlines/vietnam-airlines/logo.svg`. Links to an earlier release (`soaring-symbols@0.5.2/dist/assets/…`) keep working, and so do those on its release line until you move to this one; a link without a version broke with this release.
+- **CDN links use `dist/airlines/`.** `https://cdn.jsdelivr.net/npm/soaring-symbols@0.6/dist/airlines/vietnam-airlines/logo.svg`. Links to an earlier release (`soaring-symbols@0.5.2/dist/assets/…`) keep working, and so do those on its release line until you move to this one; a link without a version broke with this release.
 - **Alliance marks are unchanged**, in `alliances/<slug>/`, and so is the website's image API (`/api/airlines/VN/logo.svg`).
 
 ## Changes in 0.5
