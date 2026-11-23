@@ -857,6 +857,23 @@
         }
     },
     {
+        "name": "BermudAir",
+        "slug": "bermudair",
+        "iata": "2T",
+        "icao": "BMA",
+        "callsign": "GOSLING",
+        "country": "BM",
+        "flag_carrier": true,
+        "website": "https://www.flybermudair.com",
+        "hubs": [
+            "BDA"
+        ],
+        "founded": 2023,
+        "branding": {
+            "primary_color": "#12d4d9"
+        }
+    },
+    {
         "name": "Biman Bangladesh Airlines",
         "slug": "biman-bangladesh-airlines",
         "aliases": [
