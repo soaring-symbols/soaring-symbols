@@ -155,8 +155,7 @@ const geometryOf = (svg) => {
 // (fewest decimals) that keeps the artwork as exactly on the edges and
 // center it sat on as the source does wins; when none does, the one closest
 // to them. `precision` is the fewest decimals to try (3, the default, or 4
-// or 5): a result at three decimals can sit 0.0005 off where the source was
-// exact, which passes but four may avoid.
+// or 5), for keeping more decimals than placement alone asks for.
 export function optimizeSvg(source, path, { precision: fewest = 3 } = {}) {
     const precisions = PRECISIONS.filter((p) => p >= fewest)
     const geometry = geometryOf(source)
@@ -165,17 +164,25 @@ export function optimizeSvg(source, path, { precision: fewest = 3 } = {}) {
     const run = (svg, precision) => optimizeAt(svg, precision, path)
 
     // The edges and center the source sits on (within EXACT), and how far
-    // a result is from them: the source's own offset, plus what reads as
-    // equal at three decimals, is exact enough
+    // a result is from them: up to the source's own offset plus what reads
+    // as equal at three decimals is exact enough, but reaching that full
+    // amount is not. Rounding to three decimals moves a coordinate by up to
+    // 0.0005, so a mark centered exactly can come out 0.0005 off (12 →
+    // 11.9995, Nordwind's icon); four decimals keep it on. Misses are
+    // rounded to 1e-5, as rule-geometry.js does, so resvg's float32 boxes
+    // don't decide which side of the line they fall on.
     const aimed = (placementOf(source) ?? []).map((d) => Math.abs(d) <= EXACT)
+    const snap = (n) => Math.round(n * 1e5) / 1e5
     const missOf = (svg) =>
-        Math.max(
-            0,
-            ...(placementOf(svg) ?? [])
-                .filter((_, i) => aimed[i])
-                .map(Math.abs),
+        snap(
+            Math.max(
+                0,
+                ...(placementOf(svg) ?? [])
+                    .filter((_, i) => aimed[i])
+                    .map(Math.abs),
+            ),
         )
-    const tolerance = missOf(source) + ON_VIEWBOX
+    const tolerance = snap(missOf(source) + ON_VIEWBOX)
 
     let closest
     let result
@@ -195,7 +202,7 @@ export function optimizeSvg(source, path, { precision: fewest = 3 } = {}) {
         for (const candidate of candidates) {
             if (candidate.data !== data && !keeps(candidate.data)) continue
             const miss = missOf(candidate.data)
-            if (miss <= tolerance) return { ...candidate, alike: true }
+            if (miss < tolerance) return { ...candidate, alike: true }
             if (!closest || miss < closest.miss)
                 closest = { ...candidate, miss }
         }

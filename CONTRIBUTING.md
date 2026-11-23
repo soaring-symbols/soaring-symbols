@@ -73,13 +73,13 @@ airlines/
 
 ### 2. SVG Specifications
 
-- **SVG Optimization**: Optimize every SVG with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes. It writes three decimals, like SVGOMG, and four or five only when shapes would move at three, visibly or just enough to take the artwork off the viewBox edge (63.999 instead of 64):
+- **SVG Optimization**: Optimize every SVG with [SVGO](https://github.com/svg/svgo). The simplest way is the project's config, which keeps `role="img"`, strips editor metadata (Inkscape, Sodipodi), `width`/`height`, raster images, `<style>` and scripts, and avoids path merging that can shift shapes. It writes three decimals, like SVGOMG, and four or five only when shapes would move at three, visibly or just enough to take the artwork off the viewBox edge (63.999 instead of 64) or its center (31.9995 instead of 32):
 
   ```bash
   npm run optimize -- airlines/vietnam-airlines/*.svg
   ```
 
-  If the checks pass at three decimals but the artwork sits 0.0005 off an edge or the center where your original was exact, the [validator page](https://soaringsymbols.org/validate) says so: optimize the original again with one more decimal, `npm run optimize -- --precision=4 <file>` (or `node scripts/lint-svg.js --fix --precision=4 <file>`).
+  If you optimized with another tool and the artwork sits 0.0005 off an edge or the center where your original was exact, the [validator page](https://soaringsymbols.org/validate) says so: optimize the original again with `npm run optimize -- <file>`, which keeps the decimals it needs. `--precision=4` (or `5`) keeps at least that many in any case.
 
   Online tools such as [SVGOMG](https://svgomg.net) work too, but SVGO's defaults drop `role="img"` and may write a color as a name (`red`); run `node scripts/lint-svg.js --fix` afterwards to add `role="img"` back and turn named colors into hex.
 

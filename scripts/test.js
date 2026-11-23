@@ -2663,12 +2663,15 @@ describe('svg-validator', () => {
     })
 
     it('keeps the artwork on the center it sat on', () => {
-        // Three decimals leave each of these 0.0007-0.0014 off center
-        // (31.999 instead of 32); four keep them on it
+        // Three decimals leave each of these 0.0005-0.0014 off center
+        // (31.999 instead of 32); four keep them on it. A miss of exactly
+        // 0.0005, which reads as equal at three decimals, still takes four
+        // (Singapore Airlines, Nordwind's icon: 12 → 11.9995)
         for (const file of [
             'aeromexico/logo.svg',
             'korean-air/history/1984/logo.svg',
             'shandong-airlines/logo-mono.svg',
+            'singapore-airlines/logo.svg',
         ]) {
             const source = readFileSync(
                 new URL(`../airlines/${file}`, import.meta.url),
