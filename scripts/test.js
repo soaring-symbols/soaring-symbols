@@ -1317,7 +1317,7 @@ describe('renames and mergers (successor)', () => {
 describe('airlines.json assets metadata', () => {
     const assetsDir = new URL('../dist/airlines/', import.meta.url)
 
-    it('matches the files in dist/assets', () => {
+    it('matches the files in dist/airlines', () => {
         for (const a of cjs.listAirlines()) {
             assert.deepEqual(
                 a.assets,

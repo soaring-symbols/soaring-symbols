@@ -169,7 +169,7 @@ const derivedMonoPairs = (slug, assetsDir) =>
 
 // Write <type>-mono.svg next to every single-color <type>.svg, so each such
 // asset ships a monochrome file. Multi-color assets keep their hand-made
-// -mono.svg. The build runs it on dist/assets; the repo keeps no copies.
+// -mono.svg. The build runs it on dist/airlines; the repo keeps no copies.
 const writeDerivedMonos = (slug, assetsDir) => {
     for (const { colorPath, monoPath } of derivedMonoPairs(slug, assetsDir)) {
         writeFileSync(monoPath, toMonoSvg(readFileSync(colorPath, 'utf8')))
