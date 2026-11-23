@@ -14,7 +14,7 @@ Adds **Airline Name** (IATA `XX`, ICAO `XXX`, Country).
 <!-- prettier-ignore -->
 | Airline | Files | Source | Changes |
 | --- | --- | --- | --- |
-| Airline Name | `logo.svg`, `icon.svg` | [airline.com: logo.svg](https://www.airline.com/airlines/logo.svg) | None |
+| Airline Name | `logo.svg`, `icon.svg` | [airline.com: logo.svg](https://www.airline.com/assets/logo.svg) | None |
 
 <!--
 Source: the airline's own SVG, brand guideline or press kit first; Wikimedia Commons
