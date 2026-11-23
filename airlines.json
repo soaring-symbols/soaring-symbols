@@ -857,6 +857,28 @@
         }
     },
     {
+        "name": "Biman Bangladesh Airlines",
+        "slug": "biman-bangladesh-airlines",
+        "aliases": [
+            {
+                "name": "Biman"
+            }
+        ],
+        "iata": "BG",
+        "icao": "BBC",
+        "callsign": "BANGLADESH",
+        "country": "BD",
+        "flag_carrier": true,
+        "website": "https://www.biman-airlines.com",
+        "hubs": [
+            "DAC"
+        ],
+        "founded": 1972,
+        "branding": {
+            "primary_color": "#eb1923"
+        }
+    },
+    {
         "name": "Binter Canarias",
         "slug": "binter-canarias",
         "iata": "NT",
