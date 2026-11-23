@@ -1,0 +1,6 @@
+{
+  // Paragraphs stay on one line; Prettier keeps them that way
+  "MD013": false,
+  // GitHub renders these, and Markdown has no equivalent
+  "MD033": { "allowed_elements": ["img"] }
+}

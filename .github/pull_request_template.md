@@ -3,6 +3,7 @@ Adding or updating airlines: fill in the Sources table, one row per airline
 (or per file, when its files came from different places).
 Anything else (tooling, docs, data fixes): delete the Sources section and describe the change.
 -->
+<!-- markdownlint-disable-file first-line-heading -->
 
 ## Summary
 
