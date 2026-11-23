@@ -217,6 +217,23 @@
         }
     },
     {
+        "name": "Air Botswana",
+        "slug": "air-botswana",
+        "iata": "BP",
+        "icao": "BOT",
+        "callsign": "BOTSWANA",
+        "country": "BW",
+        "flag_carrier": true,
+        "website": "https://www.airbotswana.co.bw",
+        "hubs": [
+            "GBE"
+        ],
+        "founded": 1972,
+        "branding": {
+            "primary_color": "#3cb4e5"
+        }
+    },
+    {
         "name": "Air Canada",
         "slug": "air-canada",
         "iata": "AC",
