@@ -2968,6 +2968,29 @@
         }
     },
     {
+        "name": "TAAG Angola Airlines",
+        "slug": "taag-angola-airlines",
+        "iata": "DT",
+        "icao": "DTA",
+        "callsign": "DTA",
+        "former": [
+            {
+                "name": "Divisão dos Transportes Aéreos",
+                "until": 1973
+            }
+        ],
+        "country": "AO",
+        "flag_carrier": true,
+        "website": "https://flytaag.com",
+        "hubs": [
+            "NBJ"
+        ],
+        "founded": 1938,
+        "branding": {
+            "primary_color": "#ff3c00"
+        }
+    },
+    {
         "name": "TAP Air Portugal",
         "slug": "tap-air-portugal",
         "iata": "TP",
