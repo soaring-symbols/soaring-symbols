@@ -3,7 +3,7 @@ import { basename, dirname, join, relative } from 'path'
 import { JSDOM } from 'jsdom'
 import {
     ALLIANCES_DIR,
-    ASSETS_DIR,
+    AIRLINES_DIR,
     HISTORY_DIR,
     MARK_DIRS,
     formerNames,
@@ -44,11 +44,11 @@ const readCatalog = (file) =>
         ]),
     )
 const catalogs = {
-    [ASSETS_DIR]: readCatalog('airlines.json'),
+    [AIRLINES_DIR]: readCatalog('airlines.json'),
     [ALLIANCES_DIR]: readCatalog('alliances.json'),
 }
 
-// The root, folder and subfolder of an SVG: assets/<slug>/logo.svg gives
+// The root, folder and subfolder of an SVG: airlines/<slug>/logo.svg gives
 // [assets, <slug>, logo.svg], alliances/<slug>/history/<year>/logo.svg
 // [alliances, <slug>, history, ...]
 const splitPath = (filePath) => relative('.', filePath).split(/[\\/]/)
@@ -81,7 +81,7 @@ const lintSvgFile = (filePath) => {
         type: ['icon', 'tail'].find((kind) => name.includes(kind)) ?? 'logo',
         airlineName: getAirlineName(filePath),
         isCatalogName: Boolean(airline),
-        // Only an older mark (assets/<slug>/history/<year>/) may keep a
+        // Only an older mark (airlines/<slug>/history/<year>/) may keep a
         // former name as its title
         formerNames: inHistory && airline ? formerNames(airline) : undefined,
         mergePaths: MERGE_PATHS,
@@ -151,8 +151,8 @@ const main = () => {
                   ),
           )
     for (const file of files.sort()) {
-        const dir = file.startsWith(`${ASSETS_DIR}/`)
-            ? relative(ASSETS_DIR, dirname(file))
+        const dir = file.startsWith(`${AIRLINES_DIR}/`)
+            ? relative(AIRLINES_DIR, dirname(file))
             : dirname(file)
         if (!byDir.has(dir)) byDir.set(dir, [])
         byDir.get(dir).push(file)

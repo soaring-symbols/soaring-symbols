@@ -16,6 +16,7 @@ import {
 } from 'fs'
 import {
     ALLIANCE_TYPES,
+    AIRLINES_DIR,
     ALLIANCES_DIR,
     borrowedTypes,
     findAllianceFileProblems,
@@ -107,17 +108,17 @@ for (const airline of airlines) {
     // the files of the airline it names to its slug. With `marks_types` it
     // copies only those types, and the others are the airline's own.
     const own = hasOwnMarks(airline)
-    if (!own && existsSync(`assets/${slug}`)) {
+    if (!own && existsSync(`airlines/${slug}`)) {
         console.error(
-            `❌ ${name} has both marks "${marks}" and its own assets/${slug}; keep one, or list the types it takes from "${marks}" in marks_types`,
+            `❌ ${name} has both marks "${marks}" and its own airlines/${slug}; keep one, or list the types it takes from "${marks}" in marks_types`,
         )
         process.exit(1)
     }
-    if (own && !existsSync(`assets/${slug}`)) {
+    if (own && !existsSync(`airlines/${slug}`)) {
         console.error(
             marks
-                ? `❌ ${name} takes only ${borrowedTypes(airline).join(', ')} from "${marks}" but has no assets/${slug} folder for its own marks`
-                : `❌ ${name} has slug "${slug}" but no assets/${slug} folder; add it, or set marks`,
+                ? `❌ ${name} takes only ${borrowedTypes(airline).join(', ')} from "${marks}" but has no airlines/${slug} folder for its own marks`
+                : `❌ ${name} has slug "${slug}" but no airlines/${slug} folder; add it, or set marks`,
         )
         process.exit(1)
     }
@@ -125,7 +126,7 @@ for (const airline of airlines) {
     // A type it takes from `marks` has no file of its own
     const borrowed = borrowedTypes(airline)
     const doubled = borrowed.length
-        ? readdirSync(`assets/${slug}`).filter((file) =>
+        ? readdirSync(`airlines/${slug}`).filter((file) =>
               markFile(borrowed).test(file),
           )
         : []
@@ -137,13 +138,13 @@ for (const airline of airlines) {
     }
     const historyProblems = findHistoryProblems(slug)
     if (historyProblems.length) {
-        console.error(`❌ ${name} has a malformed assets/${slug}/history:`)
+        console.error(`❌ ${name} has a malformed airlines/${slug}/history:`)
         historyProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
     const dirs = getAssetDirs(slug)
-    checkDarks(name, dirs, 'assets', branding?.dark_color)
-    monoFolders.push(...dirs.map((dir) => [dir, 'assets']))
+    checkDarks(name, dirs, AIRLINES_DIR, branding?.dark_color)
+    monoFolders.push(...dirs.map((dir) => [dir, AIRLINES_DIR]))
 }
 
 // An alliance needs no folder until its SVGs come, but a folder needs an

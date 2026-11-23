@@ -169,7 +169,7 @@
                     "description": "Full name of the airline; the array is sorted by it."
                 },
                 "slug": {
-                    "description": "Identifier of the airline and the name of its assets/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
+                    "description": "Identifier of the airline and the name of its airlines/<slug>/ folder. Must be the slugified name; `npm run generate` fills it in when missing.",
                     "$ref": "#/$defs/slug"
                 },
                 "aliases": {
@@ -230,7 +230,7 @@
                     "$ref": "#/$defs/slug"
                 },
                 "marks_types": {
-                    "description": "Only these mark types come from the airline in `marks`, e.g. [\"icon\"] for a cargo brand drawn with its own logo and its parent's icon; the others are this airline's own, in its assets/<slug>/ folder. Without it, every mark comes from `marks`.",
+                    "description": "Only these mark types come from the airline in `marks`, e.g. [\"icon\"] for a cargo brand drawn with its own logo and its parent's icon; the others are this airline's own, in its airlines/<slug>/ folder. Without it, every mark comes from `marks`.",
                     "type": "array",
                     "minItems": 1,
                     "uniqueItems": true,
@@ -272,7 +272,7 @@
                     "$ref": "#/$defs/assets"
                 },
                 "history": {
-                    "description": "Added by the build from assets/<slug>/history/<year>/ when the airline has older marks; only in the published catalog.",
+                    "description": "Added by the build from airlines/<slug>/history/<year>/ when the airline has older marks; only in the published catalog.",
                     "$ref": "#/$defs/history"
                 }
             }
@@ -308,7 +308,7 @@
             }
         },
         "assets": {
-            "description": "Added by the build from the files in assets/<slug>/.",
+            "description": "Added by the build from the files in airlines/<slug>/.",
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -322,7 +322,7 @@
             }
         },
         "history": {
-            "description": "The marks an airline used before its current ones, oldest first, each from `since` until `until`; its files are at assets/<slug>/history/<since>/.",
+            "description": "The marks an airline used before its current ones, oldest first, each from `since` until `until`; its files are at airlines/<slug>/history/<since>/.",
             "type": "array",
             "minItems": 1,
             "items": {

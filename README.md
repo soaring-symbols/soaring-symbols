@@ -9,7 +9,7 @@ A curated collection of airline logos, icons and tail designs in SVG, for travel
 
 - Airline logos, icons and tail designs as SVG, drawn to one set of rules ([CONTRIBUTING.md](CONTRIBUTING.md)), with a stacked logo beside the horizontal one where the airline has its own, a monochrome version in `currentColor` for every single-color mark and many multi-color ones, and a dark-background version wherever one can be made.
 - A catalog of every airline with its IATA and ICAO codes, callsign, country, hubs, alliance, founding year, brand color, shorter names (SWISS, THAI) and whether it flies only cargo, plus a small JS API to look airlines up by code, slug or name ([API.md](API.md)).
-- Earlier logos, by the year each came in, in `assets/<slug>/history/<year>/` ([Older marks](CONTRIBUTING.md#older-marks-logo-history)).
+- Earlier logos, by the year each came in, in `airlines/<slug>/history/<year>/` ([Older marks](CONTRIBUTING.md#older-marks-logo-history)).
 - Renames and mergers: an old name or slug still finds the airline and its files, and a merged airline points to its `successor` ([Renames and mergers](CONTRIBUTING.md#renames-and-mergers)).
 - Alliance marks, starting with the oneworld, SkyTeam and Star Alliance icons, in `alliances/<slug>/` ([Alliance marks](CONTRIBUTING.md#alliance-marks)).
 - Hub coordinates in `airports.json`, for maps.
@@ -72,8 +72,8 @@ In Home Assistant, the [Flightradar24 card](https://github.com/Springvar/home-as
 Link any mark from the npm package through jsDelivr or unpkg, with nothing to install. `<slug>` is the airline's name in lowercase with hyphens (e.g. `vietnam-airlines`; every airline's page on [soaringsymbols.org](https://soaringsymbols.org) shows it); swap `logo` for `icon` or `tail` for the other marks, or `logo-stacked` for the vertical lockup of an airline that has one.
 
 ```text
-https://cdn.jsdelivr.net/npm/soaring-symbols/dist/assets/<slug>/logo.svg
-https://unpkg.com/soaring-symbols/dist/assets/<slug>/logo.svg
+https://cdn.jsdelivr.net/npm/soaring-symbols/dist/airlines/<slug>/logo.svg
+https://unpkg.com/soaring-symbols/dist/airlines/<slug>/logo.svg
 ```
 
 Alliance marks sit beside them under `alliances/`, with an icon and, for some, a logo:
@@ -81,6 +81,9 @@ Alliance marks sit beside them under `alliances/`, with an icon and, for some, a
 ```text
 https://cdn.jsdelivr.net/npm/soaring-symbols/dist/alliances/skyteam/icon.svg
 ```
+
+> [!NOTE]
+> Until 0.6, airline marks were in `dist/assets/`: links to an earlier release keep that path, and [Changes in 0.6](API.md#changes-in-06) says what to update.
 
 Both serve any release: add a release line (`soaring-symbols@0.5`) for fixes without breaking changes, or an exact release (`soaring-symbols@0.4.0`) to freeze the files. jsDelivr caches a release line for up to 12 hours, so each release purges the files it changed there; unpkg redirects a release line to the exact release and caches that redirect only a few minutes.
 
@@ -122,7 +125,7 @@ const vna = getAirline('VN')
 */
 
 // Package path of an SVG, or undefined if the airline has no such file
-getAssetPath('VN', 'logo') // 'soaring-symbols/assets/vietnam-airlines/logo.svg'
+getAssetPath('VN', 'logo') // 'soaring-symbols/airlines/vietnam-airlines/logo.svg'
 getAssetPath('VN', 'logo', { mono: true }) // '.../logo-mono.svg'
 getAssetPath('VN', 'logo', { dark: true }) // '.../logo-dark.svg', for dark backgrounds
 

@@ -21,8 +21,9 @@ import { parseArgs } from 'util'
 export const REPO_URL = 'https://github.com/soaring-symbols/soaring-symbols'
 
 // Files that make a commit an airline change rather than a tooling one
+// (airline marks were in assets/ before 0.6)
 const DATA_FILE =
-    /^(airlines\.json|alliances\.json|airports\.json|published-slugs\.json|assets\/|alliances\/)/
+    /^(airlines\.json|alliances\.json|airports\.json|published-slugs\.json|airlines\/|assets\/|alliances\/)/
 
 const SUBJECT =
     /^(?<type>\w+)(?:\((?<scope>[^)]*)\))?(?<bang>!)?: (?<summary>.+)$/

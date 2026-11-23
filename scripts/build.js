@@ -2,6 +2,7 @@ import { existsSync, promises as fs } from 'fs'
 import path from 'path'
 import { build as esbuild } from 'esbuild'
 import {
+    AIRLINES_DIR,
     ALLIANCES_DIR,
     assetTypes,
     borrowedTypes,
@@ -102,7 +103,7 @@ async function copyFiles() {
     ]
 
     const dirsToCopy = [
-        { src: './assets', dest: 'assets' },
+        { src: `./${AIRLINES_DIR}`, dest: AIRLINES_DIR },
         { src: `./${ALLIANCES_DIR}`, dest: ALLIANCES_DIR },
     ]
 
@@ -125,7 +126,7 @@ async function copyFiles() {
     const sources = [
         {
             entries: catalog.filter(hasOwnMarks),
-            root: 'assets',
+            root: AIRLINES_DIR,
         },
         { entries: alliances, root: ALLIANCES_DIR },
     ]
@@ -147,12 +148,12 @@ async function copyFiles() {
 const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-// Copy an airline's current files (never history/) from dist/assets/<from>/
-// to dist/assets/<to>/, titled with the airline's name: those of `types`
+// Copy an airline's current files (never history/) from dist/airlines/<from>/
+// to dist/airlines/<to>/, titled with the airline's name: those of `types`
 // (icon.svg, icon-mono.svg, icon-dark.svg), by default every type's
 async function copyCurrentMarks(from, to, name, types = assetTypes) {
-    const src = path.join(distDir, 'assets', from)
-    const dest = path.join(distDir, 'assets', to)
+    const src = path.join(distDir, AIRLINES_DIR, from)
+    const dest = path.join(distDir, AIRLINES_DIR, to)
     await fs.mkdir(dest, { recursive: true })
     const ofTypes = markFile(types)
     const files = (await fs.readdir(src, { withFileTypes: true }))
@@ -173,7 +174,7 @@ async function copyCurrentMarks(from, to, name, types = assetTypes) {
 // Airlines with `marks` use another airline's SVGs: all of them, or only the
 // types in `marks_types` beside their own. Copy those files to their own
 // slug in dist (never in the repo), titled with their own name, so every
-// airline's files live at assets/<slug>/ like any other. Only the current
+// airline's files live at airlines/<slug>/ like any other. Only the current
 // marks are shared, never the history/ folder. They are copied from dist, so
 // an airline that borrows from one that itself borrows some types
 // (`marks_types`) is copied after it and gets those types too.

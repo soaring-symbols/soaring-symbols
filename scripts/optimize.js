@@ -1,4 +1,4 @@
-// Optimize SVGs in place: npm run optimize -- assets/<slug>/*.svg
+// Optimize SVGs in place: npm run optimize -- airlines/<slug>/*.svg
 //
 // Runs svgo.config.mjs at the lowest precision that still renders like the
 // original with the artwork's edges in place (see scripts/lint/optimize.js).
