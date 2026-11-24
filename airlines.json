@@ -131,7 +131,8 @@
         "website": "https://www.airarabia.com",
         "founded": 2003,
         "branding": {
-            "primary_color": "#ed1b48"
+            "primary_color": "#ed1b48",
+            "since": 2018
         }
     },
     {
@@ -349,7 +350,8 @@
             "primary_color": "#da0e29",
             "dark_color": [
                 "icon"
-            ]
+            ],
+            "since": 2023
         }
     },
     {
@@ -2083,7 +2085,8 @@
         ],
         "founded": 1929,
         "branding": {
-            "primary_color": "#1b0088"
+            "primary_color": "#1b0088",
+            "since": 2016
         }
     },
     {
@@ -2245,7 +2248,8 @@
         ],
         "founded": 1970,
         "branding": {
-            "primary_color": "#1b0088"
+            "primary_color": "#1b0088",
+            "since": 2016
         }
     },
     {
@@ -2334,7 +2338,8 @@
         ],
         "founded": 1953,
         "branding": {
-            "primary_color": "#05164d"
+            "primary_color": "#05164d",
+            "since": 2018
         }
     },
     {
@@ -3255,7 +3260,8 @@
         "website": "https://www.tui.co.uk",
         "founded": 1962,
         "branding": {
-            "primary_color": "#d40e14"
+            "primary_color": "#d40e14",
+            "since": 2017
         }
     },
     {
@@ -3633,7 +3639,8 @@
         "website": "https://www.wizzair.com",
         "founded": 2003,
         "branding": {
-            "primary_color": "#c6007e"
+            "primary_color": "#c6007e",
+            "since": 2015
         }
     },
     {
