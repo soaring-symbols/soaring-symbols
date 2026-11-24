@@ -1005,6 +1005,29 @@
         }
     },
     {
+        "name": "Cabo Verde Airlines",
+        "slug": "cabo-verde-airlines",
+        "iata": "VR",
+        "icao": "TCV",
+        "callsign": "CABOVERDE",
+        "former": [
+            {
+                "name": "Transportes Aéreos de Cabo Verde",
+                "until": 2018
+            }
+        ],
+        "country": "CV",
+        "flag_carrier": true,
+        "website": "https://www.caboverdeairlines.com",
+        "hubs": [
+            "SID"
+        ],
+        "founded": 1958,
+        "branding": {
+            "primary_color": "#62d6c2"
+        }
+    },
+    {
         "name": "Cargolux",
         "slug": "cargolux",
         "iata": "CV",
