@@ -63,11 +63,12 @@ airlines/
             └── logo-mono.svg
 ```
 
+- **Set `branding.since` early:** add it whenever you know the year the current marks came in, even before there is any history, so the folder is named right when they are replaced and a defunct airline borrowing them keeps the marks it flew with. `npm run generate` warns about the airlines without it, naming those others borrow from.
 - **One folder per mark**, named after the four-digit year it was introduced (see the airline's Wikipedia article or press release). A mark counts as used until the next one's year; the newest history folder until the current marks.
 - **Only `icon`, `logo`, `logo-stacked` and `tail`** (`.svg`, or a hand-made `-mono.svg` or `-dark.svg`) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
 - **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's name, or to the name the mark was used under when the airline was renamed and lists it in `former` (T'way Air for Trinity Airways' 2010 logo); `lint-svg.js --fix` writes the current name when it is neither. As in `airlines/<slug>/`, the build adds `-mono.svg` for single-color marks and `-dark.svg` wherever one can be made.
 - **Set `branding.since`** in `airlines.json` to the year the current marks came in: the last older mark was used until then. The build publishes the folders as the airline's `history`, each mark with the years it was used (`since`, `until`) and the name on it. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files or has no color file, or if `branding.since` is missing or not after the last folder's year.
-- **Never move the current files into `history/` without new ones:** `airlines/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
+- **Never move the current files into `history/` without new ones:** `airlines/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets the current ones unless it ceased before them.
 - **When the name changes too**, rename the airline first (see [Renames and mergers](#renames-and-mergers)); its old marks then go in the new slug's `history/`.
 - Say in the pull request where each old mark came from, as for any SVG.
 

@@ -37,6 +37,7 @@ import {
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import {
     findDarkColorWarnings,
+    findMissingSince,
     validateAirlines,
     validateAlliances,
 } from '../utils/schema.js'
@@ -225,6 +226,17 @@ if (removedMonos.length) {
     )
 }
 darkWarnings.forEach((warning) => console.warn(`⚠️  ${warning}`))
+const missingSince = findMissingSince(airlines)
+if (missingSince.lenders.length) {
+    console.warn(
+        `⚠️  No branding.since on marks other airlines borrow: ${missingSince.lenders.join(', ')}; add the year their current marks came in`,
+    )
+}
+if (missingSince.others) {
+    console.warn(
+        `⚠️  ${missingSince.others} more airline(s) have no branding.since; add it when you know the year`,
+    )
+}
 console.log(
     '✅ airlines.json, alliances.json and airports.json are sorted and valid',
 )

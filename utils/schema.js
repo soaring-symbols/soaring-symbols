@@ -7,6 +7,7 @@ import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
     borrowedTypes,
+    hasOwnMarks,
     MIN_DARK_CONTRAST,
     aliasNames,
     aliasSlugs,
@@ -381,6 +382,23 @@ const findDarkColorWarnings = (entries) =>
         }),
     )
 
+// Airlines with marks of their own but no branding.since, the year their
+// current marks came in. It is wanted before they change: their files then
+// move to history/<since>/, and an airline borrowing them (`marks`) that
+// ceased before the next ones gets them only by that year
+// (borrowedMarksFolder). `lenders` names those others borrow from, where it
+// matters now; `others` counts the rest. Warnings only: the year is often
+// hard to find.
+const findMissingSince = (airlines) => {
+    const lent = new Set(airlines.map((a) => a.marks).filter(Boolean))
+    const missing = airlines.filter((a) => hasOwnMarks(a) && !a.branding?.since)
+
+    return {
+        lenders: missing.filter((a) => lent.has(a.slug)).map((a) => a.name),
+        others: missing.filter((a) => !lent.has(a.slug)).length,
+    }
+}
+
 // An alliance may wait for its primary color until its SVGs are in the
 // collection, but no longer: like every airline, one with marks has a color.
 // Only the published copy has `assets` to tell.
@@ -428,6 +446,7 @@ const validateAlliances = (alliances, { published = false } = {}) => {
 
 export {
     findDarkColorWarnings,
+    findMissingSince,
     airlineFields,
     allianceFields,
     isValidField,

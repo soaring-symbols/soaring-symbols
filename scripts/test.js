@@ -35,6 +35,7 @@ import {
 } from '../utils/catalog.js'
 import {
     findDarkColorWarnings,
+    findMissingSince,
     validateAirlines,
     validateAlliances,
 } from '../utils/schema.js'
@@ -625,6 +626,20 @@ describe('airlines.json schema', () => {
             [
                 "TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e; check it against the airline's own use",
             ],
+        )
+        // Marks without branding.since: named when others borrow them
+        const lender = { name: 'A', slug: 'a', branding: {} }
+        const dated = { name: 'B', slug: 'b', branding: { since: 2020 } }
+        assert.deepEqual(
+            findMissingSince([
+                lender,
+                dated,
+                { name: 'C', slug: 'c', marks: 'a' },
+                { name: 'D', slug: 'd', marks: 'b' },
+                { name: 'E', slug: 'e' },
+                { name: 'F', slug: 'f', marks: 'a', marks_types: ['icon'] },
+            ]),
+            { lenders: ['A'], others: 2 },
         )
         // Vietnam Airlines has no tail
         assert.deepEqual(
