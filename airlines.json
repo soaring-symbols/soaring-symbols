@@ -2756,6 +2756,30 @@
         }
     },
     {
+        "name": "S7 Airlines",
+        "slug": "s7-airlines",
+        "iata": "S7",
+        "icao": "SBI",
+        "callsign": "SIBERIAN AIRLINES",
+        "country": "RU",
+        "website": "https://www.s7.ru",
+        "alliance_history": [
+            {
+                "alliance": "oneworld",
+                "since": 2010,
+                "until": 2022
+            }
+        ],
+        "hubs": [
+            "OVB",
+            "DME"
+        ],
+        "founded": 1992,
+        "branding": {
+            "primary_color": "#c4d600"
+        }
+    },
+    {
         "name": "SAS Connect",
         "slug": "sas-connect",
         "aliases": [

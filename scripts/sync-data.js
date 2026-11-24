@@ -63,6 +63,13 @@ const IGNORE = {
     // Oman Aviation Services from 1981; Oman co-owned Gulf Air until 2007
     'Oman Air': { founded: 1949, former: ['Gulf Aviation'] },
     'Peach Aviation': { former: ['A&F Aviation'] },
+    // The Tolmachevo squadron was an Aeroflot unit, not the airline, which
+    // was founded in 1992; oneworld suspended its membership in 2022
+    'S7 Airlines': {
+        alliance: 'oneworld',
+        founded: 1957,
+        former: ['Tolmachevsky squadron'],
+    },
     'Singapore Airlines': { former: ['Malayan Airways'] },
     // ModiLuft, the company SpiceJet grew out of, and the year it was founded
     SpiceJet: { founded: 1994, former: ['ModiLuft'] },
