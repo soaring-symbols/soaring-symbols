@@ -617,6 +617,23 @@
         }
     },
     {
+        "name": "Ariana Afghan Airlines",
+        "slug": "ariana-afghan-airlines",
+        "iata": "FG",
+        "icao": "AFG",
+        "callsign": "ARIANA",
+        "country": "AF",
+        "flag_carrier": true,
+        "website": "https://www.flyariana.af",
+        "hubs": [
+            "KBL"
+        ],
+        "founded": 1955,
+        "branding": {
+            "primary_color": "#0082c9"
+        }
+    },
+    {
         "name": "Asiana Airlines",
         "slug": "asiana-airlines",
         "iata": "OZ",
