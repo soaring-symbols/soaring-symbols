@@ -339,25 +339,20 @@ const getAirlineHistory = (slug, assetsDir = AIRLINES_DIR) =>
         assets: getAirlineAssets(join(slug, HISTORY_DIR, year), assetsDir),
     }))
 
-// The folder, relative to `assetsDir`, of the marks the airline in `marks`
-// (`lender`) used when a defunct airline borrowing them ceased: its current
-// folder unless `branding.since` says they came later, else the last
-// history/<year>/ introduced by then, or null when the folder has none that
-// old, which generate reports. Only an airline with marks of its own is
-// looked up this way; one that itself borrows (`marks_types`) lends its
-// current files. An active airline always borrows the current marks.
-const borrowedMarksFolder = (airline, lender, assetsDir = AIRLINES_DIR) => {
-    const { ceased } = airline
+// The older mark, from the published `history` of the airline in `marks`
+// (`lender`), that a defunct airline borrowing its marks flew with: the last
+// one introduced by the year it ceased, when that was before the lender's
+// current marks (`branding.since`). Undefined for the current marks, null
+// when the lender has no mark that old (validateAirlines reports it). Only a
+// lender with marks of its own lends older ones; one that itself borrows
+// lends its current files.
+const borrowedEra = ({ ceased }, lender) => {
     const since = lender.branding?.since
-    if (!airline.defunct || !ceased || lender.marks || !since) {
-        return lender.slug
-    }
-    if (ceased >= since) return lender.slug
-    const year = getHistoryYears(lender.slug, assetsDir)
-        .filter((y) => Number(y) <= ceased)
-        .at(-1)
+    if (!ceased || !since || ceased >= since || lender.marks) return undefined
 
-    return year ? join(lender.slug, HISTORY_DIR, year) : null
+    return (
+        (lender.history ?? []).findLast((mark) => mark.since <= ceased) ?? null
+    )
 }
 
 // The airline name on a set of marks: the <title> of its first SVG, which
@@ -439,7 +434,7 @@ export {
     HISTORY_DIR,
     getAssetDirs,
     getAirlineHistory,
-    borrowedMarksFolder,
+    borrowedEra,
     findHistoryProblems,
     assetTypes,
     toSlug,

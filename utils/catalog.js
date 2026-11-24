@@ -11,7 +11,7 @@ import {
     ALLIANCES_DIR,
     assetTypes,
     borrowedTypes,
-    borrowedMarksFolder,
+    borrowedEra,
     getAirlineAssets,
     hasOwnMarks,
     getAirlineHistory,
@@ -121,7 +121,7 @@ const publishedHistory = (entry, assetsDir) => {
 // when it carried on a defunct airline. An airline with
 // `marks` reports the current files of the airline it names (for a defunct
 // one that ceased before those came in, the older ones it flew with:
-// borrowedMarksFolder), which the build copies to its own slug, and no
+// borrowedEra), which the build copies to its own slug, and no
 // history; with `marks_types`, only
 // those types come from there, the others and any history from its own
 // folder. The airline it names may itself take types from another
@@ -142,6 +142,27 @@ const publishCatalog = (airlines, assetsDir = AIRLINES_DIR) => {
     const catalog = normalizeCatalog(airlines)
     const predecessorsOf = getPredecessors(catalog)
     const bySlug = new Map(catalog.map((a) => [a.slug, a]))
+    const historyOf = new Map(
+        catalog
+            .filter(hasOwnMarks)
+            .map((a) => [a.slug, publishedHistory(a, assetsDir)]),
+    )
+
+    // The assets an airline takes from the one in `marks`: the older ones
+    // it flew with when it ceased before that airline's current marks
+    // (borrowedEra), else that airline's published assets
+    const borrowedAssets = (airline, depth) => {
+        const owner = bySlug.get(airline.marks)
+        if (!owner) return {}
+        const era = borrowedEra(airline, {
+            ...owner,
+            history: historyOf.get(owner.slug),
+        })
+        if (era !== undefined) return era?.assets ?? {}
+
+        // A chain longer than the catalog must loop; the schema reports it
+        return depth < catalog.length ? assetsOf(owner, depth + 1) : {}
+    }
 
     // An airline's assets: its own, with the types it borrows taken from
     // the published assets of the airline in `marks`. Shared marks keep the
@@ -154,20 +175,7 @@ const publishCatalog = (airlines, assetsDir = AIRLINES_DIR) => {
                   airline.branding?.dark_color,
               )
             : {}
-        const owner = bySlug.get(airline.marks)
-        // A defunct airline that ceased before its owner's current marks
-        // came in gets the older ones it flew with
-        const folder = owner && borrowedMarksFolder(airline, owner, assetsDir)
-        const shared = !owner
-            ? {}
-            : folder !== owner.slug
-              ? folder
-                  ? getAirlineAssets(folder, assetsDir)
-                  : {}
-              : // A chain longer than the catalog must loop; the schema reports it
-                depth < catalog.length
-                ? assetsOf(owner, depth + 1)
-                : {}
+        const shared = borrowedAssets(airline, depth)
 
         return sharedTypes(own, shared, borrowedTypes(airline))
     }
@@ -175,9 +183,7 @@ const publishCatalog = (airlines, assetsDir = AIRLINES_DIR) => {
     return catalog.map((airline) => {
         const assets = assetsOf(airline)
 
-        const history = hasOwnMarks(airline)
-            ? publishedHistory(airline, assetsDir)
-            : []
+        const history = historyOf.get(airline.slug) ?? []
 
         const predecessors = predecessorsOf.get(airline.slug)
 

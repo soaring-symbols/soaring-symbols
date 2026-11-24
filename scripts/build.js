@@ -5,9 +5,10 @@ import {
     AIRLINES_DIR,
     ALLIANCES_DIR,
     assetTypes,
-    borrowedMarksFolder,
+    borrowedEra,
     borrowedTypes,
     getAssetDirs,
+    HISTORY_DIR,
     hasOwnMarks,
     markFile,
     writeDerivedDarks,
@@ -149,11 +150,10 @@ async function copyFiles() {
 const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-// Copy an airline's current files (never history/) from dist/airlines/<from>/,
-// or those of one of its history/<year>/ folders when `from` names it,
-// to dist/airlines/<to>/, titled with the airline's name: those of `types`
+// Copy the marks in dist/airlines/<from>/ (an airline's current files, never
+// its history/, or one history/<year>/ folder) to dist/airlines/<to>/, titled with the airline's name: those of `types`
 // (icon.svg, icon-mono.svg, icon-dark.svg), by default every type's
-async function copyCurrentMarks(from, to, name, types = assetTypes) {
+async function copyMarks(from, to, name, types = assetTypes) {
     const src = path.join(distDir, AIRLINES_DIR, from)
     const dest = path.join(distDir, AIRLINES_DIR, to)
     await fs.mkdir(dest, { recursive: true })
@@ -179,7 +179,7 @@ async function copyCurrentMarks(from, to, name, types = assetTypes) {
 // airline's files live at airlines/<slug>/ like any other. Only the current
 // marks are shared, never the history/ folder, except for a defunct airline
 // that ceased before them, which gets the older ones it flew with
-// (borrowedMarksFolder). They are copied from dist, so
+// (borrowedEra). They are copied from dist, so
 // an airline that borrows from one that itself borrows some types
 // (`marks_types`) is copied after it and gets those types too.
 async function copySharedMarks(airlines) {
@@ -190,8 +190,11 @@ async function copySharedMarks(airlines) {
         ...sharing.filter((a) => !chained(a)),
         ...sharing.filter(chained),
     ]) {
-        await copyCurrentMarks(
-            borrowedMarksFolder(airline, bySlug.get(airline.marks)),
+        const era = borrowedEra(airline, bySlug.get(airline.marks))
+        await copyMarks(
+            era
+                ? path.join(airline.marks, HISTORY_DIR, String(era.since))
+                : airline.marks,
             airline.slug,
             airline.name,
             borrowedTypes(airline),
@@ -213,7 +216,7 @@ async function copyFormerSlugs(airlines) {
         const names = [...(airline.aliases ?? []), ...(airline.former ?? [])]
         for (const { slug } of names) {
             if (slug && published.has(slug)) {
-                await copyCurrentMarks(airline.slug, slug, airline.name)
+                await copyMarks(airline.slug, slug, airline.name)
             }
         }
     }

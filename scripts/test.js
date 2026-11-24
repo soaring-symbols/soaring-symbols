@@ -19,7 +19,7 @@ import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
 import {
     ALLIANCE_TYPES,
-    borrowedMarksFolder,
+    borrowedEra,
     darkSource,
     findDarkProblems,
     findHistoryProblems,
@@ -628,18 +628,19 @@ describe('airlines.json schema', () => {
             ],
         )
         // Marks without branding.since: named when others borrow them
-        const lender = { name: 'A', slug: 'a', branding: {} }
-        const dated = { name: 'B', slug: 'b', branding: { since: 2020 } }
         assert.deepEqual(
             findMissingSince([
-                lender,
-                dated,
+                { name: 'A', slug: 'a', branding: {} },
+                { name: 'B', slug: 'b', branding: { since: 2020 } },
                 { name: 'C', slug: 'c', marks: 'a' },
                 { name: 'D', slug: 'd', marks: 'b' },
                 { name: 'E', slug: 'e' },
                 { name: 'F', slug: 'f', marks: 'a', marks_types: ['icon'] },
             ]),
-            { lenders: ['A'], others: 2 },
+            [
+                'No branding.since on marks other airlines borrow: A; add the year their current marks came in',
+                '2 more airline(s) have no branding.since; add it when you know the year',
+            ],
         )
         // Vietnam Airlines has no tail
         assert.deepEqual(
@@ -1646,24 +1647,28 @@ describe('asset history (airlines/<slug>/history/<year>/)', () => {
             ...(ceased && { defunct: true, ceased }),
             branding: { primary_color: '#051766' },
         })
-        const folderFor = (ceased) =>
-            borrowedMarksFolder(borrower(ceased), lender, assetsDir)
-        const history = (year) => join('korean-air', 'history', year)
-        assert.equal(folderFor(), 'korean-air')
-        assert.equal(folderFor(2010), 'korean-air')
-        assert.equal(folderFor(2005), history('2002'))
-        assert.equal(folderFor(2001), history('1984'))
-        assert.equal(folderFor(1984), history('1984'))
-        // Older than any mark it has: generate stops on it
-        assert.equal(folderFor(1980), null)
+        const [published] = publishCatalog([lender], assetsDir)
+        // The year of the older mark it borrows; undefined for the current
+        // marks, null when there is none
+        const eraFor = (ceased, from = published) => {
+            const era = borrowedEra(borrower(ceased), from)
+
+            return era && era.since
+        }
+        assert.equal(eraFor(), undefined)
+        assert.equal(eraFor(2010), undefined)
+        assert.equal(eraFor(2005), 2002)
+        assert.equal(eraFor(2001), 1984)
+        assert.equal(eraFor(1984), 1984)
+        // Older than any mark it has: validation stops on it
+        assert.equal(eraFor(1980), null)
         // Without branding.since nothing says the current marks are newer
         assert.equal(
-            borrowedMarksFolder(
-                borrower(1990),
-                { ...lender, branding: { primary_color: '#051766' } },
-                assetsDir,
-            ),
-            'korean-air',
+            eraFor(1990, {
+                ...published,
+                branding: { primary_color: '#051766' },
+            }),
+            undefined,
         )
 
         const catalog = publishCatalog(
@@ -1689,6 +1694,15 @@ describe('asset history (airlines/<slug>/history/<year>/)', () => {
         assert.equal(
             catalog.find((a) => a.slug === 'korean-air-1990').history,
             undefined,
+        )
+        assert.deepEqual(
+            validateAirlines(
+                publishCatalog([lender, borrower(1980)], assetsDir),
+                { published: true },
+            ),
+            [
+                "Korean Air 1980: ceased in 1980, before Korean Air's current marks (2010); add the marks it flew with to airlines/korean-air/history/<year>/, or leave it out until they come",
+            ],
         )
     })
 
