@@ -1201,6 +1201,28 @@
         }
     },
     {
+        "name": "Cubana de Aviación",
+        "slug": "cubana-de-aviacion",
+        "aliases": [
+            {
+                "name": "Cubana"
+            }
+        ],
+        "iata": "CU",
+        "icao": "CUB",
+        "callsign": "CUBANA",
+        "country": "CU",
+        "flag_carrier": true,
+        "website": "https://www.cubana.cu",
+        "hubs": [
+            "HAV"
+        ],
+        "founded": 1929,
+        "branding": {
+            "primary_color": "#03208f"
+        }
+    },
+    {
         "name": "Cyprus Airways",
         "slug": "cyprus-airways",
         "iata": "CY",
