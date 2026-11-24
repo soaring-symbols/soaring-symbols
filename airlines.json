@@ -666,7 +666,9 @@
         ],
         "founded": 1923,
         "branding": {
-            "primary_color": "#d81824"
+            "primary_color": "#d81e05",
+            "since": 2018,
+            "tagline": "Feels like Flying"
         }
     },
     {
