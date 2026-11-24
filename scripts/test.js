@@ -19,6 +19,7 @@ import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
 import {
     ALLIANCE_TYPES,
+    borrowedEra,
     darkSource,
     findDarkProblems,
     findHistoryProblems,
@@ -34,6 +35,7 @@ import {
 } from '../utils/catalog.js'
 import {
     findDarkColorWarnings,
+    findMissingSince,
     validateAirlines,
     validateAlliances,
 } from '../utils/schema.js'
@@ -623,6 +625,21 @@ describe('airlines.json schema', () => {
             findDarkColorWarnings(tarom.filter((a) => a.slug === 'tarom')),
             [
                 "TAROM: branding.dark_color keeps the logo in color, but #003366 is under 3:1 on #1e1e1e; check it against the airline's own use",
+            ],
+        )
+        // Marks without branding.since: named when others borrow them
+        assert.deepEqual(
+            findMissingSince([
+                { name: 'A', slug: 'a', branding: {} },
+                { name: 'B', slug: 'b', branding: { since: 2020 } },
+                { name: 'C', slug: 'c', marks: 'a' },
+                { name: 'D', slug: 'd', marks: 'b' },
+                { name: 'E', slug: 'e' },
+                { name: 'F', slug: 'f', marks: 'a', marks_types: ['icon'] },
+            ]),
+            [
+                'No branding.since on marks other airlines borrow: A; add the year their current marks came in',
+                '2 more airline(s) have no branding.since; add it when you know the year',
             ],
         )
         // Vietnam Airlines has no tail
@@ -1609,6 +1626,82 @@ describe('asset history (airlines/<slug>/history/<year>/)', () => {
             errorsWith({ primary_color: '#051766', since: 2002 }),
             [
                 'Korean Air: branding.since (2002) must come after its last older mark (2002)',
+            ],
+        )
+    })
+
+    it('lends a defunct airline the marks it flew with', () => {
+        const lender = {
+            ...koreanAir,
+            branding: { primary_color: '#051766', since: 2010 },
+        }
+        const borrower = (ceased) => ({
+            name: `Korean Air ${ceased ?? 'Now'}`,
+            slug: `korean-air-${ceased ?? 'now'}`,
+            iata: 'ZZ',
+            icao: 'ZZZ',
+            country: 'KR',
+            website: 'https://www.koreanair.com',
+            parent: 'korean-air',
+            marks: 'korean-air',
+            ...(ceased && { defunct: true, ceased }),
+            branding: { primary_color: '#051766' },
+        })
+        const [published] = publishCatalog([lender], assetsDir)
+        // The year of the older mark it borrows; undefined for the current
+        // marks, null when there is none
+        const eraFor = (ceased, from = published) => {
+            const era = borrowedEra(borrower(ceased), from)
+
+            return era && era.since
+        }
+        assert.equal(eraFor(), undefined)
+        assert.equal(eraFor(2010), undefined)
+        assert.equal(eraFor(2005), 2002)
+        assert.equal(eraFor(2001), 1984)
+        assert.equal(eraFor(1984), 1984)
+        // Older than any mark it has: validation stops on it
+        assert.equal(eraFor(1980), null)
+        // Without branding.since nothing says the current marks are newer
+        assert.equal(
+            eraFor(1990, {
+                ...published,
+                branding: { primary_color: '#051766' },
+            }),
+            undefined,
+        )
+
+        const catalog = publishCatalog(
+            [lender, borrower(1990), borrower(2005), borrower()],
+            assetsDir,
+        )
+        const colorsOf = (slug) => {
+            const { assets } = catalog.find((a) => a.slug === slug)
+
+            return Object.fromEntries(
+                Object.entries(assets).map(([type, { colors }]) => [
+                    type,
+                    colors,
+                ]),
+            )
+        }
+        assert.deepEqual(colorsOf('korean-air-1990'), {
+            icon: ['#c60c30'],
+            logo: ['#c60c30'],
+        })
+        assert.deepEqual(colorsOf('korean-air-2005'), { logo: ['#00256c'] })
+        assert.deepEqual(colorsOf('korean-air-now'), { logo: ['#051766'] })
+        assert.equal(
+            catalog.find((a) => a.slug === 'korean-air-1990').history,
+            undefined,
+        )
+        assert.deepEqual(
+            validateAirlines(
+                publishCatalog([lender, borrower(1980)], assetsDir),
+                { published: true },
+            ),
+            [
+                "Korean Air 1980: ceased in 1980, before Korean Air's current marks (2010); add the marks it flew with to airlines/korean-air/history/<year>/, or leave it out until they come",
             ],
         )
     })

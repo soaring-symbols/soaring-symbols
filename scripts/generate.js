@@ -36,6 +36,7 @@ import {
 import { findAirportProblems, normalizeAirports } from '../utils/airports.js'
 import {
     findDarkColorWarnings,
+    findMissingSince,
     validateAirlines,
     validateAlliances,
 } from '../utils/schema.js'
@@ -207,6 +208,7 @@ if (removedMonos.length) {
     )
 }
 darkWarnings.forEach((warning) => console.warn(`⚠️  ${warning}`))
+findMissingSince(airlines).forEach((warning) => console.warn(`⚠️  ${warning}`))
 console.log(
     '✅ airlines.json, alliances.json and airports.json are sorted and valid',
 )

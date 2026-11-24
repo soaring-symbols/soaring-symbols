@@ -6,7 +6,9 @@ import Ajv2020 from 'ajv/dist/2020.js'
 import {
     ALLIANCES_DIR,
     DARK_BACKGROUND,
+    borrowedEra,
     borrowedTypes,
+    hasOwnMarks,
     MIN_DARK_CONTRAST,
     aliasNames,
     aliasSlugs,
@@ -314,6 +316,7 @@ const validateAirlines = (airlines, { published = false } = {}) => {
         ...findBrokenReferences(airlines),
         ...findDarkColorProblems(airlines),
         ...findLoneStackedLogos(airlines),
+        ...(published ? findMissingEras(airlines) : []),
     ]
 }
 
@@ -381,6 +384,49 @@ const findDarkColorWarnings = (entries) =>
         }),
     )
 
+// A defunct airline borrowing marks shows those its lender used when it
+// ceased: one that ceased before the lender's current marks needs the older
+// ones in the lender's history/ (borrowedEra), or it would show marks it
+// never flew with. Published copy only, which has `history`.
+const findMissingEras = (airlines) => {
+    const bySlug = new Map(airlines.map((a) => [a.slug, a]))
+
+    return airlines
+        .filter((a) => bySlug.has(a.marks))
+        .filter((a) => borrowedEra(a, bySlug.get(a.marks)) === null)
+        .map((a) => {
+            const lender = bySlug.get(a.marks)
+
+            return `${a.name}: ceased in ${a.ceased}, before ${lender.name}'s current marks (${lender.branding.since}); add the marks it flew with to airlines/${lender.slug}/history/<year>/, or leave it out until they come`
+        })
+}
+
+// Airlines with marks of their own but no branding.since, the year their
+// current marks came in. It is wanted before they change: their files then
+// move to history/<since>/, where a defunct airline borrowing them finds
+// the ones it flew with (borrowedEra). Names those others borrow from, where
+// it matters now, and counts the rest. Warnings only: the year is often hard
+// to find.
+const findMissingSince = (airlines) => {
+    const lent = new Set(airlines.map((a) => a.marks))
+    const missing = airlines.filter((a) => hasOwnMarks(a) && !a.branding?.since)
+    const lenders = missing.filter((a) => lent.has(a.slug)).map((a) => a.name)
+    const others = missing.length - lenders.length
+
+    return [
+        ...(lenders.length
+            ? [
+                  `No branding.since on marks other airlines borrow: ${lenders.join(', ')}; add the year their current marks came in`,
+              ]
+            : []),
+        ...(others
+            ? [
+                  `${others} more airline(s) have no branding.since; add it when you know the year`,
+              ]
+            : []),
+    ]
+}
+
 // An alliance may wait for its primary color until its SVGs are in the
 // collection, but no longer: like every airline, one with marks has a color.
 // Only the published copy has `assets` to tell.
@@ -428,6 +474,7 @@ const validateAlliances = (alliances, { published = false } = {}) => {
 
 export {
     findDarkColorWarnings,
+    findMissingSince,
     airlineFields,
     allianceFields,
     isValidField,

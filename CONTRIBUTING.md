@@ -63,11 +63,12 @@ airlines/
             └── logo-mono.svg
 ```
 
+- **Set `branding.since` early,** even without history: it names the year folder when the marks are replaced, and keeps defunct airlines that borrow them on the marks they flew with. `npm run generate` warns about airlines without it.
 - **One folder per mark**, named after the four-digit year it was introduced (see the airline's Wikipedia article or press release). A mark counts as used until the next one's year; the newest history folder until the current marks.
 - **Only `icon`, `logo`, `logo-stacked` and `tail`** (`.svg`, or a hand-made `-mono.svg` or `-dark.svg`) belong in a year folder. A mark can have fewer types than the current ones, e.g. only a logo.
 - **Same rules as current marks:** the SVG specifications below, optimized with `npm run optimize`, and `<title>` set to the airline's name, or to the name the mark was used under when the airline was renamed and lists it in `former` (T'way Air for Trinity Airways' 2010 logo); `lint-svg.js --fix` writes the current name when it is neither. As in `airlines/<slug>/`, the build adds `-mono.svg` for single-color marks and `-dark.svg` wherever one can be made.
 - **Set `branding.since`** in `airlines.json` to the year the current marks came in: the last older mark was used until then. The build publishes the folders as the airline's `history`, each mark with the years it was used (`since`, `until`) and the name on it. `npm run generate` stops if a folder isn't a year up to this one, holds a file other than the asset files or has no color file, or if `branding.since` is missing or not after the last folder's year.
-- **Never move the current files into `history/` without new ones:** `airlines/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets only the current ones.
+- **Never move the current files into `history/` without new ones:** `airlines/<slug>/` always holds the marks in use today, and an airline that borrows another's marks (`marks`) gets the current ones unless it ceased before them.
 - **When the name changes too**, rename the airline first (see [Renames and mergers](#renames-and-mergers)); its old marks then go in the new slug's `history/`.
 - Say in the pull request where each old mark came from, as for any SVG.
 
@@ -218,6 +219,7 @@ A subsidiary needs SVGs only when its logo differs:
 
 - **Same logo as another airline:** no `airlines/<slug>/` folder; set `marks` to the slug of the airline whose SVGs it uses, usually the parent. The build copies those files to the subsidiary's slug in the published package, so the repository keeps one copy.
 - **Its own logo:** add `airlines/<slug>/` as for any airline, without `marks`.
+- **A defunct subsidiary gets the logo it flew with:** if it ceased before the current marks of the airline in `marks` (that airline's `branding.since`), it borrows that airline's last [older mark](#older-marks-logo-history) from before then. Norwegian Air UK (ceased 2020) would need Norwegian's pre-2024 logo in `airlines/norwegian-air-shuttle/history/<year>/`; `npm run generate` stops until it is there, so leave such an airline out until then.
 - **A logo shared by sister airlines but not the parent:** put the SVGs in one of them and point the others' `marks` at it. `marks` must name an airline with SVGs of its own.
 - **Its own logo, another airline's icon or tail:** add `airlines/<slug>/` with its own files, set `marks` to the airline it shares the rest with, and list the shared types in `marks_types`, e.g. `["icon"]` for Cargolux Italia, which flies Cargolux's icon beside its own logo. Only the listed types are copied, so a mark it has but nobody has drawn yet stays missing instead of showing the other airline's. Its folder holds no file of a listed type. Its sister airlines can share all of it, its own files and the types it takes, by pointing `marks` at it: LATAM Cargo Brasil and LATAM Cargo Colombia share LATAM Cargo Chile's cargo logo and the LATAM icon it takes from LATAM Airlines Chile. That is the only chain allowed: an airline that takes every type from another can't be shared on.
 
