@@ -5,6 +5,7 @@ import {
     AIRLINES_DIR,
     ALLIANCES_DIR,
     assetTypes,
+    borrowedMarksFolder,
     borrowedTypes,
     getAssetDirs,
     hasOwnMarks,
@@ -148,7 +149,8 @@ async function copyFiles() {
 const escapeXml = (text) =>
     text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-// Copy an airline's current files (never history/) from dist/airlines/<from>/
+// Copy an airline's current files (never history/) from dist/airlines/<from>/,
+// or those of one of its history/<year>/ folders when `from` names it,
 // to dist/airlines/<to>/, titled with the airline's name: those of `types`
 // (icon.svg, icon-mono.svg, icon-dark.svg), by default every type's
 async function copyCurrentMarks(from, to, name, types = assetTypes) {
@@ -175,7 +177,9 @@ async function copyCurrentMarks(from, to, name, types = assetTypes) {
 // types in `marks_types` beside their own. Copy those files to their own
 // slug in dist (never in the repo), titled with their own name, so every
 // airline's files live at airlines/<slug>/ like any other. Only the current
-// marks are shared, never the history/ folder. They are copied from dist, so
+// marks are shared, never the history/ folder, except for a defunct airline
+// that ceased before them, which gets the older ones it flew with
+// (borrowedMarksFolder). They are copied from dist, so
 // an airline that borrows from one that itself borrows some types
 // (`marks_types`) is copied after it and gets those types too.
 async function copySharedMarks(airlines) {
@@ -187,7 +191,7 @@ async function copySharedMarks(airlines) {
         ...sharing.filter(chained),
     ]) {
         await copyCurrentMarks(
-            airline.marks,
+            borrowedMarksFolder(airline, bySlug.get(airline.marks)),
             airline.slug,
             airline.name,
             borrowedTypes(airline),

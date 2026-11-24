@@ -18,6 +18,7 @@ import {
     ALLIANCE_TYPES,
     AIRLINES_DIR,
     ALLIANCES_DIR,
+    borrowedMarksFolder,
     borrowedTypes,
     findAllianceFileProblems,
     findDarkProblems,
@@ -100,6 +101,23 @@ const checkDarks = (where, dirs, assetsDir, keepColor) => {
         darkProblems.forEach((problem) => console.error(`  - ${problem}`))
         process.exit(1)
     }
+}
+
+// A defunct airline borrowing marks gets those its lender used when it
+// ceased: one that ceased before the lender's branding.since needs the older
+// marks in the lender's history/, or it would show marks it never flew with
+const missingEra = airlines.flatMap((airline) => {
+    const lender = airlines.find((a) => a.slug === airline.marks)
+    if (!lender || borrowedMarksFolder(airline, lender) !== null) return []
+
+    return [
+        `${airline.name} ceased in ${airline.ceased}, before ${lender.name}'s current marks (${lender.branding.since}); add the marks it flew with to airlines/${lender.slug}/history/<year>/, or leave it out until they come`,
+    ]
+})
+if (missingEra.length) {
+    console.error('❌ Airlines without the marks they flew with:')
+    missingEra.forEach((problem) => console.error(`  - ${problem}`))
+    process.exit(1)
 }
 
 for (const airline of airlines) {

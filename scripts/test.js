@@ -19,6 +19,7 @@ import { optimize } from 'svgo'
 import svgoConfig from '../svgo.config.mjs'
 import {
     ALLIANCE_TYPES,
+    borrowedMarksFolder,
     darkSource,
     findDarkProblems,
     findHistoryProblems,
@@ -1610,6 +1611,69 @@ describe('asset history (airlines/<slug>/history/<year>/)', () => {
             [
                 'Korean Air: branding.since (2002) must come after its last older mark (2002)',
             ],
+        )
+    })
+
+    it('lends a defunct airline the marks it flew with', () => {
+        const lender = {
+            ...koreanAir,
+            branding: { primary_color: '#051766', since: 2010 },
+        }
+        const borrower = (ceased) => ({
+            name: `Korean Air ${ceased ?? 'Now'}`,
+            slug: `korean-air-${ceased ?? 'now'}`,
+            iata: 'ZZ',
+            icao: 'ZZZ',
+            country: 'KR',
+            website: 'https://www.koreanair.com',
+            parent: 'korean-air',
+            marks: 'korean-air',
+            ...(ceased && { defunct: true, ceased }),
+            branding: { primary_color: '#051766' },
+        })
+        const folderFor = (ceased) =>
+            borrowedMarksFolder(borrower(ceased), lender, assetsDir)
+        const history = (year) => join('korean-air', 'history', year)
+        assert.equal(folderFor(), 'korean-air')
+        assert.equal(folderFor(2010), 'korean-air')
+        assert.equal(folderFor(2005), history('2002'))
+        assert.equal(folderFor(2001), history('1984'))
+        assert.equal(folderFor(1984), history('1984'))
+        // Older than any mark it has: generate stops on it
+        assert.equal(folderFor(1980), null)
+        // Without branding.since nothing says the current marks are newer
+        assert.equal(
+            borrowedMarksFolder(
+                borrower(1990),
+                { ...lender, branding: { primary_color: '#051766' } },
+                assetsDir,
+            ),
+            'korean-air',
+        )
+
+        const catalog = publishCatalog(
+            [lender, borrower(1990), borrower(2005), borrower()],
+            assetsDir,
+        )
+        const colorsOf = (slug) => {
+            const { assets } = catalog.find((a) => a.slug === slug)
+
+            return Object.fromEntries(
+                Object.entries(assets).map(([type, { colors }]) => [
+                    type,
+                    colors,
+                ]),
+            )
+        }
+        assert.deepEqual(colorsOf('korean-air-1990'), {
+            icon: ['#c60c30'],
+            logo: ['#c60c30'],
+        })
+        assert.deepEqual(colorsOf('korean-air-2005'), { logo: ['#00256c'] })
+        assert.deepEqual(colorsOf('korean-air-now'), { logo: ['#051766'] })
+        assert.equal(
+            catalog.find((a) => a.slug === 'korean-air-1990').history,
+            undefined,
         )
     })
 
