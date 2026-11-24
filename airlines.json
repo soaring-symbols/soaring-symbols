@@ -2446,7 +2446,23 @@
         "website": "https://www.norwegian.com",
         "founded": 1993,
         "branding": {
-            "primary_color": "#d81939"
+            "primary_color": "#e5212d",
+            "since": 2024
+        }
+    },
+    {
+        "name": "Norwegian Air Sweden",
+        "slug": "norwegian-air-sweden",
+        "iata": "D8",
+        "icao": "NSZ",
+        "callsign": "REDNOSE",
+        "country": "SE",
+        "website": "https://www.norwegian.com",
+        "parent": "norwegian-air-shuttle",
+        "marks": "norwegian-air-shuttle",
+        "founded": 2018,
+        "branding": {
+            "primary_color": "#e5212d"
         }
     },
     {
