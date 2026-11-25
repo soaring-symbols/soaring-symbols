@@ -64,13 +64,7 @@ bun add soaring-symbols
 | [draw.io Libraries](https://github.com/soaring-symbols/drawio) <img src="https://cdn.simpleicons.org/diagramsdotnet/000/F08705" alt="draw.io" align=left width=24 height=24 />                         | [anhthang]                                |
 | [Home Assistant](https://github.com/Springvar/home-assistant-flightradar24-card) <img src="https://cdn.simpleicons.org/homeassistant/000/18BCF2" alt="Home Assistant" align=left width=24 height=24 /> | [Springvar](https://github.com/Springvar) |
 
-The Raycast extension also works in launchers that run Raycast extensions, such as [Vicinae](https://www.vicinae.com), [SuperCmd](https://supercmd.sh) and [Tinycast](https://tinycast.dev). The [ecosystem page on the website](https://soaringsymbols.org/ecosystem#raycast) explains how to use each.
-
-The [Framer plugin](https://www.framer.com/marketplace/plugins/soaring-symbols/) searches airlines by name, IATA or ICAO code and alliances by name, and inserts their marks as SVG layers, by click or drag: color, mono (in any color or the airline's own) and dark-background versions, stacked logos and earlier logos included.
-
-The draw.io libraries (`@soaring-symbols/drawio`) hold every airline's icons, logos and tails, and the alliance marks, searchable by name or code in draw.io's shape search, with mono versions that can be recolored: [open them in app.diagrams.net](https://app.diagrams.net/?clibs=Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/icons.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/logos.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/tails.xml;Uhttps://cdn.jsdelivr.net/npm/@soaring-symbols/drawio@0.6/dist/alliances.xml), or see [soaring-symbols/drawio](https://github.com/soaring-symbols/drawio) for each library's link.
-
-In Home Assistant, the [Flightradar24 card](https://github.com/Springvar/home-assistant-flightradar24-card) can show each flight's airline beside it, loaded from the image API by the flight's ICAO code: the [ecosystem page](https://soaringsymbols.org/ecosystem#home-assistant) has templates to paste into the card's YAML.
+The [ecosystem page](https://soaringsymbols.org/ecosystem) explains how to use each one, with snippets and setup steps: the launchers besides Raycast that run its extension, the draw.io libraries opened in one click, the Home Assistant card's templates.
 
 ### CDN
 
