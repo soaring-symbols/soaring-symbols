@@ -23,12 +23,11 @@ The site also serves a JSON and image API, no key needed: [`/api/airlines/VN`](h
 
 ## Roadmap
 
-The one roadmap for the collection and every integration around it, including those in other repositories (the website's API, the Raycast extension, the Figma and Framer plugins, the draw.io libraries). What exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
+The one roadmap for the collection and every integration around it, including those in other repositories (the website's API, the Raycast extension, the Figma and Framer plugins, the Webflow app, the draw.io libraries). What exists is under [Features](#features), [Website](#website) and [Ecosystem](#ecosystem); plans for the website itself are in the [website's README](https://github.com/soaring-symbols/website#roadmap).
 
 - [ ] Figma plugin, to search airlines by name or IATA code and drop their marks into designs: built in [soaring-symbols/figma](https://github.com/soaring-symbols/figma), [in review on the Figma Community](https://www.figma.com/community/plugin/1701522206126108009)
 - [ ] Automatic patch releases, so a merged airline reaches npm, the CDNs, the website and the apps without a manual release
 - [ ] React, Vue and Svelte packages, with one component per framework that renders an airline's mark by slug or code (`<AirlineLogo code="VN" type="icon" />`), released with the same version as `soaring-symbols`
-- [ ] Webflow app, to search airlines and drop their marks into a site the way the Framer plugin does
 - [ ] Tails on one shared fin shape, so they line up in a grid: each airline's livery placed on a common outline instead of the fin of the aircraft it was drawn from, with the outline as a template in the repository
 
 ### Not planned
@@ -61,6 +60,7 @@ bun add soaring-symbols
 | [unpkg CDN](https://app.unpkg.com/soaring-symbols) <img src="https://cdn.simpleicons.org/unpkg/000/000000" alt="unpkg" align=left width=24 height=24 />                                                | [unpkg](https://unpkg.com)                |
 | [Raycast Extension](https://www.raycast.com/anhthang/soaring-symbols) <img src="https://cdn.simpleicons.org/raycast/000/FF6363" alt="Raycast" align=left width=24 height=24 />                         | [anhthang]                                |
 | [Framer Plugin](https://www.framer.com/marketplace/plugins/soaring-symbols/) <img src="https://cdn.simpleicons.org/framer/000/0055FF" alt="Framer" align=left width=24 height=24 />                    | [anhthang]                                |
+| [Webflow App](https://github.com/soaring-symbols/webflow#add-it-to-your-workspace) <img src="https://cdn.simpleicons.org/webflow/000/146EF5" alt="Webflow" align=left width=24 height=24 />            | [anhthang]                                |
 | [draw.io Libraries](https://github.com/soaring-symbols/drawio) <img src="https://cdn.simpleicons.org/diagramsdotnet/000/F08705" alt="draw.io" align=left width=24 height=24 />                         | [anhthang]                                |
 | [Home Assistant](https://github.com/Springvar/home-assistant-flightradar24-card) <img src="https://cdn.simpleicons.org/homeassistant/000/18BCF2" alt="Home Assistant" align=left width=24 height=24 /> | [Springvar](https://github.com/Springvar) |
 
