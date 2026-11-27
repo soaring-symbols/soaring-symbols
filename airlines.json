@@ -462,6 +462,23 @@
         }
     },
     {
+        "name": "Air Zimbabwe",
+        "slug": "air-zimbabwe",
+        "iata": "UM",
+        "icao": "AZW",
+        "callsign": "AIR ZIMBABWE",
+        "country": "ZW",
+        "flag_carrier": true,
+        "website": "https://www.airzimbabwe.aero",
+        "hubs": [
+            "HRE"
+        ],
+        "founded": 1967,
+        "branding": {
+            "primary_color": "#fde449"
+        }
+    },
+    {
         "name": "AirAsia",
         "slug": "airasia",
         "iata": "AK",
