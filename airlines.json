@@ -3044,6 +3044,28 @@
         "website": "https://www.southwest.com",
         "founded": 1967,
         "branding": {
+            "primary_color": "#304cb2",
+            "guidelines": "https://relayto.com/explore/southwest-airlines-brand-book-oencohq6wqro8",
+            "dark_color": [
+                "icon"
+            ]
+        }
+    },
+    {
+        "name": "Southwest Cargo",
+        "slug": "southwest-cargo",
+        "iata": "WN",
+        "icao": "SWA",
+        "callsign": "SOUTHWEST",
+        "country": "US",
+        "cargo": true,
+        "website": "https://www.swacargo.com",
+        "parent": "southwest-airlines",
+        "marks": "southwest-airlines",
+        "marks_types": [
+            "icon"
+        ],
+        "branding": {
             "primary_color": "#304cb2"
         }
     },
