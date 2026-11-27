@@ -91,7 +91,8 @@
     "*.js": [
       "prettier --write",
       "eslint --fix"
-    ]
+    ],
+    "{airlines,alliances}/**/*.svg": "node scripts/check-optimized.js"
   },
   "peerDependencies": {
     "@resvg/resvg-wasm": "2.6.2"
