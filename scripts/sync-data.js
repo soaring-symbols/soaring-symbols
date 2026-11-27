@@ -44,6 +44,14 @@ const PAGE_TITLES = {
     Viva: 'Viva (airline)',
 }
 
+// Airlines with no Wikipedia page of their own, named after their own
+// trademark or website instead: not checked, so they aren't reported as
+// missing an infobox every month
+const NO_PAGE = new Set([
+    // A division of Southwest Airlines, flying under its codes
+    'Southwest Cargo',
+])
+
 // Wikipedia values reviewed and rejected, so they stop coming back, e.g.
 // { 'Some Airline': { icao: 'XYZ' } }. A different value is reported again.
 // `former` lists names from the "(as ...)" notes that aren't the airline's
@@ -90,15 +98,16 @@ const ALLIANCES = JSON.parse(
     readFileSync(new URL('../airlines.schema.json', import.meta.url), 'utf8'),
 ).$defs.alliance.enum
 const airlines = JSON.parse(readFileSync(airlinesPath, 'utf8'))
+const checked = airlines.filter((a) => !NO_PAGE.has(a.name))
 const titleOf = (airline) => PAGE_TITLES[airline.name] ?? airline.name
 
 const sameList = (a = [], b = []) =>
     a.length === b.length && [...a].sort().join() === [...b].sort().join()
 
-console.log(`Fetching ${airlines.length} Wikipedia pages...`)
-const pages = await fetchPages(airlines.map(titleOf))
+console.log(`Fetching ${checked.length} Wikipedia pages...`)
+const pages = await fetchPages(checked.map(titleOf))
 const paramsByName = Object.fromEntries(
-    airlines.map((a) => {
+    checked.map((a) => {
         const params = infoboxParams(extractInfobox(pages[titleOf(a)], a.name))
         // Some infoboxes use the singular name
         params.hubs ??= params.hub
@@ -127,7 +136,7 @@ const placeByCode = Object.fromEntries(
 const proposals = [] // { airline, changes: [{ field, from, to }] }
 const notes = [] // { airline, message }: needs a human
 
-for (const airline of airlines) {
+for (const airline of checked) {
     const params = paramsByName[airline.name]
     const note = (message) => notes.push({ airline, message })
     if (!Object.keys(params).length) {

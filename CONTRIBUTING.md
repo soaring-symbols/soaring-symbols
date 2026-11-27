@@ -232,7 +232,7 @@ Set `cargo: true` on an airline that flies only freight (Cargolux) and on a pass
 
 #### Aliases
 
-`name` is the airline's full name, as on its Wikipedia page. A shorter name it also goes by, often the one on its logo, goes in `aliases`: Swiss International Air Lines flies as SWISS, Thai Airways International as THAI.
+`name` is the airline's full name, as on its Wikipedia page; an airline with no page of its own (Southwest Cargo, a division of Southwest Airlines) takes the name it trades under, from its website or registered trademark. A shorter name it also goes by, often the one on its logo, goes in `aliases`: Swiss International Air Lines flies as SWISS, Thai Airways International as THAI.
 
 ```json
 {
