@@ -3048,7 +3048,8 @@
             "guidelines": "https://relayto.com/explore/southwest-airlines-brand-book-oencohq6wqro8",
             "dark_color": [
                 "icon"
-            ]
+            ],
+            "since": 2014
         }
     },
     {
@@ -3660,7 +3661,8 @@
         "website": "https://www.vivaaerobus.com",
         "founded": 2006,
         "branding": {
-            "primary_color": "#00ae44"
+            "primary_color": "#00ae44",
+            "since": 2024
         }
     },
     {
